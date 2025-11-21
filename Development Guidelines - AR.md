@@ -9,76 +9,65 @@
 	1. مصحف المدينة: من مجمع الملك فهد، متاح بصيغ متعددة. [تصفّحه من هنا](https://qurancomplex.gov.sa/quran-dev/)
 	2. مصحف الشمرلي: متاح على شكل صور PNG لكل صفحة. [تصفّحه من هنا](https://github.com/Mr-DDDAlKilanny/shamraly-images)
 	3. مصحف المدينة: إصدارات مجمع الملك فهد بدقة عالية. [تصفّحه من هنا](https://quraankarem.wordpress.com/qurancomplex/)
-	4. 
+	4. مصحف الشمرلي: نسخة غاية في الوضوح على ملف PDF. [تصفّحه من هنا](https://quraankarem.wordpress.com/shamarly/)
+	5. مصحف المدينة: من موقع EveryAyah.com صور PNG لكل آية. [تصفّحه من هنا](https://everyayah.com/data/quranpngs/)
+	6. مصحف المدينة: من موقع EveryAyah.com صورة JPG لكل آية. [تصفّحه من هنا](https://everyayah.com/data/QuranText_jpg/)
+	7. مصاحف متعددة: من [موقع قٌل](https://qul.tarteel.ai/resources/mushaf-layout) وسكريبت برمجيّ لتحميل صفحات المصحف من قٌل. [استخدمه من هنا](https://github.com/blueheron786/get-quran-mushaf-images)
+2. رواية ورش:
+	1. مصحف المدينة: مجمع الملك فهد للقرآن الكريم. [تصفّحه من هنا](https://qurancomplex.gov.sa/quran-dev/)
+3. رواية شعبة: 
+	1. مصحف المدينة: مجمع الملك فهد للقرآن الكريم. [تصفّحه من هنا](https://qurancomplex.gov.sa/quran-dev/) 
+4. رواية قالون:
+	1. مصحف المدينة: مجمع الملك فهد للقرآن الكريم. [تصفّحه من هنا](https://qurancomplex.gov.sa/quran-dev/) 
+5. رواية الدوري:
+	1. مصحف المدينة: مجمع الملك فهد للقرآن الكريم. [تصفّحه من هنا](https://qurancomplex.gov.sa/quran-dev/)
+6. رواية السوسي:
+	1. مصحف المدينة: مجمع الملك فهد للقرآن الكريم. [تصفّحه من هنا](https://qurancomplex.gov.sa/quran-dev/)
+7. رواية هشام: 
+	1. مصحف المدينة: مجمع الملك فهد للقرآن الكريم. [تصفّحه من هنا](https://qurancomplex.gov.sa/quran-dev/)
 
-When you start developing a Quranic App (mobile or web)
-You will need to take some decisions and make some choices:
+## 2. العلامات في بداية ونهاية كلّ آية
 
-# Content
+> [!NOTE] تنويه
+> بعض المصادر لا تضمّن علامات في بداية ونهاية كلّ آية. قد يكون عليك فصل الآيات بنفسك.
 
-### 1. The narrations (Rewayah) you want to include in your app
-you need to decide if you are going to support one or multiple ones. i.e. (Hafs, Warsh, Shubah, Qaloun, etc...)
-The resources for the quran Layout:
-1. Hafs (حفص):
-    1. Medina Transcript: King Fahd Quran Complex, Multiple Formats  [https://qurancomplex.gov.sa/quran-dev/](https://qurancomplex.gov.sa/quran-dev/)
-    2. Shamarly: PNG image per Page https://github.com/Mr-DDDAlKilanny/shamraly-images
-    3. Medina Transcript: https://quraankarem.wordpress.com/qurancomplex/
-    4. Shamarly Transcript: https://quraankarem.wordpress.com/shamarly/
-    5. Medina: EveryAyah.com, PNG image per Ayah https://everyayah.com/data/quranpngs/  
-    6. Medina: EveryAyah.com, JPG image per Ayah https://everyayah.com/data/QuranText_jpg/
-    7. Multiple: https://qul.tarteel.ai/resources/mushaf-layout
-        1. Script to Download Mushaf pages from QUL https://github.com/blueheron786/get-quran-mushaf-images
-2. Warsh (ورش)
-    1. Medina Transcript: King Fahd Quran Complex  [https://qurancomplex.gov.sa/quran-dev/](https://qurancomplex.gov.sa/quran-dev/)
-3. Shubah (شعبة)
-    1. Medina Transcript: King Fahd Quran Complex  [https://qurancomplex.gov.sa/quran-dev/](https://qurancomplex.gov.sa/quran-dev/)
-4. Qaloun (قالون)
-    1. Medina Transcript: King Fahd Quran Complex  [https://qurancomplex.gov.sa/quran-dev/](https://qurancomplex.gov.sa/quran-dev/)
-5. Duri (الدوري)
-    1. Medina Transcript: King Fahd Quran Complex  [https://qurancomplex.gov.sa/quran-dev/](https://qurancomplex.gov.sa/quran-dev/)
-6. Susi (السوسي)
-    1. Medina Transcript: King Fahd Quran Complex [https://qurancomplex.gov.sa/quran-dev/](https://qurancomplex.gov.sa/quran-dev/)
-7. Hesham (هشام)
-    1. Medina Transcript: King Fahd Quran Complex  [https://qurancomplex.gov.sa/quran-dev/](https://qurancomplex.gov.sa/quran-dev/)
+> [!NOTE] تنويه
+> التلاوات قد تختلف في عدد الآيات لكل رواية.
+> على سبيل المثال: في رواية حفص هناك 6236 آية بينما في رواية ورش هناك 6214 آية. القرآن نفسه، لكنّ الآيات مقسومة بطريقة مختلفة.
+> عليك أخذ هذا بعين الاعتبار عند تطوير تطبيقك
 
-### 2. Get annotations for the start and end of each ayah for the downloaded resource
+### موارد لتعليم أماكن الآيات في رسم القرآن
+1. هذه الأداة تساعدك في تعليم أماكن الآيات. [استخدمها من هنا](https://github.com/quran/ayah-detection)
+2. هذه أداة بالذكاء الاصطناعي تساعدك في تعليم الآيات الموجودة في المصاحف المصوّرة. [استخدمها من هنا](https://github.com/bllfoad/ayahai)
 
-> [!NOTE] Warning
-> Some Resources do not have Ayah start and end annotation. You may need to split them yourself
+## 3. احصل على النصّ القرآني بغرض التحديد النصّي والبحث
+لا يكفي الحصول على النصّ القرآنيّ على شكل صور SVG أو PNG أو JPG، إذ ستبقى بحاجة للنصّ القرآني - QS - كي تكون الآلة قادرة على التفاعل مع النصّ.
+يمكنك الحصول على النصّ القرآنيّ بصيغة JSON أو CSV أو SQL من هذه المصادر:
 
-> [!NOTE] Warning
-> Recitations vary in the number of Ayahs in each transcript
-> i.e. Hafs has 6236 Ayahs, while Warsh has 6214 Ayahs. They Quran is the same, but the Ayahs are split differently 
-> You have to consider this variation whilst developing your app
-> -- TODO: Hassaan: needs resource for this warning
+1. رواية حفص:
+	1. قرآن فاونديشن: [من الرابط التالي](https://api-docs.quran.foundation/docs/content_apis_versioned/quran-verses-indopak) [API]
+	2. مجمع الملك فهد للقرآن الكريم: [من الرابط التالي](https://qurancomplex.gov.sa/quran-dev/) [csv, html, json, sql, txt, xlsx, xml] - [Downloadable]
+	3. كلّ آية - Every Ayah: [من الرابط التالي](https://everyayah.com/data/XML/Arabic/) [XML]
+	4. تنزيل: [من الرابط التالي](https://tanzil.net/download/) [Bar Seperated Values, XML, SQL (MySql dump)]
+	5. مصحف موري: [من الرابط التالي](https://github.com/Zizwar/mushaf-mauri/tree/main/assets/pages/hafsTajweed) 
+2. رواية ورش:
+	1. مصحف المدينة: مجمع الملك فهد للقرآن الكريم: [من الرابط التالي](https://qurancomplex.gov.sa/quran-dev/) [csv, html, json, sql, txt, xlsx, xml] - [Downloadable]
+	2. مصحف موري: [من الرابط التالي](https://github.com/Zizwar/mushaf-mauri/tree/main/assets/pages/muhammadi)
+3. رواية شعبة:
+	1. 
 
-#### Resources to annotate Quran Layout's ayah location
-1. This tool https://github.com/quran/ayah-detection can help you in annotating the Ayahs
-2. AI tool to detect annotation from Image Mushafs https://github.com/bllfoad/ayahai
 
-### 3. Get the Quran Script for highlighting and naive search purposes
-having the images of the Quran as SVG, PNG,  or JPG is not enough, you still need to have the Quran Script (QS) in order for the machine to understand it as well
-you can get the content of the Quran as json, csv or SQL fromat from
-1. Hafs (حفص):
-    1. Quran Foundation, https://api-docs.quran.foundation/docs/content_apis_versioned/quran-verses-indopak [API]
-    2. King Fahd Quran Complex, [csv, html, json, sql, txt, xlsx, xml]  [https://qurancomplex.gov.sa/quran-dev/](https://qurancomplex.gov.sa/quran-dev/) [Downloadable]
-    3. Every Ayah [XML] https://everyayah.com/data/XML/Arabic/ 
-    4. Tanzil[Bar Seperated Values, XML, SQL (MySql dump)] https://tanzil.net/download/
-    5. Mushaf Mauri: https://github.com/Zizwar/mushaf-mauri/tree/main/assets/pages/hafsTajweed
-2. Warsh (ورش)
+4. Shubah (شعبة)
     1. Medina Transcript: King Fahd Quran Complex, [csv, html, json, sql, txt, xlsx, xml]  [https://qurancomplex.gov.sa/quran-dev/](https://qurancomplex.gov.sa/quran-dev/) [Downloadable]
-    2. Mushaf Mauri: https://github.com/Zizwar/mushaf-mauri/tree/main/assets/pages/muhammadi -- TODO: Hassaan: needs verification if this is warsh
-3. Shubah (شعبة)
+5. Qaloun (قالون)
     1. Medina Transcript: King Fahd Quran Complex, [csv, html, json, sql, txt, xlsx, xml]  [https://qurancomplex.gov.sa/quran-dev/](https://qurancomplex.gov.sa/quran-dev/) [Downloadable]
-4. Qaloun (قالون)
+6. Duri (الدوري)
     1. Medina Transcript: King Fahd Quran Complex, [csv, html, json, sql, txt, xlsx, xml]  [https://qurancomplex.gov.sa/quran-dev/](https://qurancomplex.gov.sa/quran-dev/) [Downloadable]
-5. Duri (الدوري)
-    1. Medina Transcript: King Fahd Quran Complex, [csv, html, json, sql, txt, xlsx, xml]  [https://qurancomplex.gov.sa/quran-dev/](https://qurancomplex.gov.sa/quran-dev/) [Downloadable]
-6. Susi (السوسي)
+7. Susi (السوسي)
     1. Medina Transcript: King Fahd Quran Complex, [csv, html, json, sql, txt, xlsx, xml] [https://qurancomplex.gov.sa/quran-dev/](https://qurancomplex.gov.sa/quran-dev/) [Downloadable]
-7. Hesham (هشام)
+8. Hesham (هشام)
     1. Medina Transcript: King Fahd Quran Complex, [csv, html, json, sql, txt, xlsx, xml]  [https://qurancomplex.gov.sa/quran-dev/](https://qurancomplex.gov.sa/quran-dev/) [Downloadable]
-8. Collection: https://qul.tarteel.ai/resources/quran-script
+9. Collection: https://qul.tarteel.ai/resources/quran-script
 
 
 ### 4. Search
