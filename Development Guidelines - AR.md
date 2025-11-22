@@ -54,87 +54,71 @@
 	1. مصحف المدينة: مجمع الملك فهد للقرآن الكريم: [من الرابط التالي](https://qurancomplex.gov.sa/quran-dev/) [csv, html, json, sql, txt, xlsx, xml] - [Downloadable]
 	2. مصحف موري: [من الرابط التالي](https://github.com/Zizwar/mushaf-mauri/tree/main/assets/pages/muhammadi)
 3. رواية شعبة:
-	1. 
+	1. مصحف المدينة: مجمع الملك فهد للقرآن الكريم: [من الرابط التالي](https://qurancomplex.gov.sa/quran-dev/) [csv, html, json, sql, txt, xlsx, xml] - [Downloadable]
+4. رواية قالون:
+	1. مصحف المدينة: مجمع الملك فهد للقرآن الكريم: [من الرابط التالي](https://qurancomplex.gov.sa/quran-dev/) [csv, html, json, sql, txt, xlsx, xml] - [Downloadable]
+5. رواية الدوري:
+	1. مصحف المدينة: مجمع الملك فهد للقرآن الكريم: [من الرابط التالي](https://qurancomplex.gov.sa/quran-dev/) [csv, html, json, sql, txt, xlsx, xml] - [Downloadable]
+6. رواية السوسي:
+	1. مصحف المدينة: مجمع الملك فهد للقرآن الكريم: [من الرابط التالي](https://qurancomplex.gov.sa/quran-dev/) [csv, html, json, sql, txt, xlsx, xml] - [Downloadable]
+7. رواية هشام:
+	1. مصحف المدينة: مجمع الملك فهد للقرآن الكريم: [من الرابط التالي](https://qurancomplex.gov.sa/quran-dev/) [csv, html, json, sql, txt, xlsx, xml] - [Downloadable]
+8. مجموعة: من موقع قُل: [من الرابط التالي](https://qul.tarteel.ai/resources/quran-script)
 
+## 4. البحث
+في حال رغبت بإضافة ميزة البحث في المصحف، فعليك إضافتها يدوياً، ولكن احذر من المصاعب التي ستواجهك: كالهمزة والتاء المربوطة. ينصح دوماً باستخدام البحث الجاهز للاستخدام في بيئة النشر. يمكن تقسيم محركات البحث المتاحة للنصّ القرآني إلى قسمين: البحث النصّيّ الكامل، والبحث الدلالي.
 
-4. Shubah (شعبة)
-    1. Medina Transcript: King Fahd Quran Complex, [csv, html, json, sql, txt, xlsx, xml]  [https://qurancomplex.gov.sa/quran-dev/](https://qurancomplex.gov.sa/quran-dev/) [Downloadable]
-5. Qaloun (قالون)
-    1. Medina Transcript: King Fahd Quran Complex, [csv, html, json, sql, txt, xlsx, xml]  [https://qurancomplex.gov.sa/quran-dev/](https://qurancomplex.gov.sa/quran-dev/) [Downloadable]
-6. Duri (الدوري)
-    1. Medina Transcript: King Fahd Quran Complex, [csv, html, json, sql, txt, xlsx, xml]  [https://qurancomplex.gov.sa/quran-dev/](https://qurancomplex.gov.sa/quran-dev/) [Downloadable]
-7. Susi (السوسي)
-    1. Medina Transcript: King Fahd Quran Complex, [csv, html, json, sql, txt, xlsx, xml] [https://qurancomplex.gov.sa/quran-dev/](https://qurancomplex.gov.sa/quran-dev/) [Downloadable]
-8. Hesham (هشام)
-    1. Medina Transcript: King Fahd Quran Complex, [csv, html, json, sql, txt, xlsx, xml]  [https://qurancomplex.gov.sa/quran-dev/](https://qurancomplex.gov.sa/quran-dev/) [Downloadable]
-9. Collection: https://qul.tarteel.ai/resources/quran-script
+### البحث النصّي الكامل
+في البحث النصّي الكامل يمكن للمستخدم البحث عن كلمة أو عبارة حتى ولو كان في عبارة البحث أخطاء إملائية، سيقوم محرك البحث بالعثور على النتائج المرتبطة بعبارة البحث رغم ذلك.
+1. العربية:
+	1. كلمات - Kalimat.dev: قد لا يكون دقيقاً في بعض الحالات، على سبيل المثال: البحث عن "عرب" قد يعيد نتائج لا علاقة لها بعبارة البحث. [من الرابط التالي](https://www.kalimat.dev/)
+	2. قرآن فاونديشن: [من الرابط التالي](https://api-docs.quran.foundation/docs/content_apis_versioned/search)
+2. الإنجليزية:
+	1. كلمات - Kalimat.dev: نظرياً، يمكن استخدام محرك بحث كلمات للبحث في كلّ اللغات، لكنّ الـAPI تردّ بجواب 500 لأي طلب بحث (آخر تحقق 01-10-2025)
 
+### البحث الدلالي
 
-### 4. Search
-If you want to add search functionality, you can do it manually but be aware of the pitfalls, such as Hamza (ء) and Taa marbota (ة). It is always recommended to use a production ready search.
-Available search engines are divided into Full Text Search and Semantic Search.
-#### Full Text Search
-Full text search: User can search for a word or a phrase and even if the user has typos in their search query, the search engine will stay return relevant results
-1. Arabic:
-    1. Kalimat.dev https://www.kalimat.dev/ 
-        1. sometimes is not accurate for instance searching for "عرب" returns results that are not related to search
-    2. Quran Foundation: https://api-docs.quran.foundation/docs/content_apis_versioned/search
-2. English:
-    1. https://www.kalimat.dev/
-    -- Hypothetically kalimat.dev supports many languages, but their search api returns 500 response for any search request as of this writing 2025-10-01
-#### Semantic Search
-Semantic Search (Search by Meaning): The search will not be applied on the quran script but you can search by Meaning or the root of the word (الجذر اللغوي), this type of search is particularly helpful for users who do not know for certain what they are looking for, and/or for quran translations.
-1. https://www.alfanous.org/en/aya/
+البحث الدلالي أو البحث في المعاني: لن يتم تطبيق هذا البحث على النصّ القرآني مباشرة ولكن يمكنك البحث عن المعاني أو جذور الكلمات، أسلوب البحث هذا مفيد للمستخدمين الذين لا يعرفون بدقة ما يبحثون عنه، ومن أجل البحث في ترجمات القرآن.
+1. الفانوس: [من الرابط التالي](https://www.alfanous.org/en/aya/)
 
+### الترجمات
 
-### Translations
+> [!NOTE] أخطاء!
+> الترجمات مكتوبة بأيدي البشر، لذا وجود خطأ في هذه الترجمات متوقع. وبالتالي: توقّع تحديثات متواترة لهذه الترجمات، تأكد من فضلك أن تستخدم النسخة الأحدث من الترجمة، وأن تتابع تحديث تطبيقك بأحدث النسخ المصححة من الترجمات، وأن تستخدم التصحيحات من أفضل المصادر المعروفة.
+> نشجّع كلّ المطورين على استخدام الـAPI أو أي نظام إدارة محتوى CMS للمحافظة على أحدث النسخ. لتجنّب نشر المعلومات الخاطئة.
 
-> [!NOTE] Errors!
-> Translations are written by human, thus there are errors in these translation. Subsequently these translations are updated frequently, please make sure that you use an up-to-date version of the translation and continue updating your app to have the latest corrections from well-known resources. 
-> We encourage any developer to use an API or any CMS to maintain the latest versions. In order to avoid spreading any misinformation.
+#### الموارد المتاحة
 
-#### Available Resources
-1. https://tanzil.net/trans/
-2. https://qul.tarteel.ai/resources/translation
-3. https://github.com/fawazahmed0/quran-api
-4. https://api-docs.quran.foundation/docs/content_apis_versioned/list-surah-translations
-5. [QuranEnc](https://quranenc.com/en/home)
+1. ترجمات تنزيل: [من الرابط التالي](https://tanzil.net/trans/)
+2. ترجمات قُل: [من الرابط التالي](https://qul.tarteel.ai/resources/translation)
+3. ترجمات قرآن API: [من الرابط التالي](https://github.com/fawazahmed0/quran-api)
+4. ترجمات قرآن فاونديشن: [من الرابط التالي](https://api-docs.quran.foundation/docs/content_apis_versioned/list-surah-translations)
+5. ترجمات موسوعة القرآن الكريم: [من الرابط التالي](https://quranenc.com/en/home)
 
-### Tafsir
-You may also want to include Tafsir in your application.
-There are multiple Tafsir books. Some are more famous than others. The list also can grow as more books get published.
+### تفسير القرآن
+قد ترغب أيضاً بتضمن تفسير للقرآن الكريم في تطبيقك. هناك العديد من كتب التفسير المتاحة. بعضهم أشهر من الآخر، وقد تزداد هذه القائمة من التفاسير مع نشر المزيد من كتب التفسير.
 
+> [!NOTE] حقوق النشر!
+> التفاسير كتب محمية بقوانين حقوق النشر، تأكد من تحققك من حقوق النشر لكل كتاب تفسير ترغب باستخدامه وتضمينه في تطبيقك. إن لم تكن الرخصة تسمح باستخدام الكتاب، حاول التواصل مع الناشرين واحصل على موافقتهم.
 
-> [!NOTE] Copyrights!
-> Tafsirs are books and they may be protected by copyright laws, make sure that you check the copyright license of each book you want to include. if the license does not allow you to use a book, try to reach out to the publisher to get their approval.
+> [!NOTE] أخطاء!
+> في التفاسير مشاكل مشابهة لمشاكل الترجمات، حيث قد يطرأ على نصّ التفاسير أخطاء ويصدر لها تصحيحات مع الوقت. تأكد من استخدامك لأحدث نسخة من بيانات الكتاب الذي ستسخدمه. حتى الكتب القديمة جداً تتلقى بعض التحديثات للأخطاء الطباعية والإملائية والتصويرية.
 
-> [!NOTE] Errors!
-> Tafsirs are also is susceptible to the same issue as Translations, where there may be some errors that get fixed overtime. so make sure that you are getting an up to date copy of any book.
-> Even very old books, sometimes get some fixes related to a typo or some content that was misread by OCR.
+#### مصادر
+1. واجهة API من Spa5k: [من الرابط التالي](https://github.com/spa5k/tafsir_api)
+2. قُل: [من الرابط التالي](https://qul.tarteel.ai/resources/tafsir)
+3. قرآن فاونديشن: [من الرابط التالي](https://api-docs.quran.foundation/docs/content_apis_versioned/list-surah-tafsirs)
 
-#### Sources:
-1. Spa5k: https://github.com/spa5k/tafsir_api
-2. QUL: https://qul.tarteel.ai/resources/tafsir
-3. Quran Foundation: https://api-docs.quran.foundation/docs/content_apis_versioned/list-surah-tafsirs
+### التلاوات الصوتية
+سيرغب المستخدمون أيضاً بالاستماع لقرّائهم المفضّلين من خلال التطبيق، ويمكنك أيضاً تضمين هذا في تطبيقك.
+ 
+> [!NOTE] أخطاء!
+> التلاوات الصوتية عرضة لنفس المشاكل الموجودة في الترجمات والتفاسير، فهي مصنوعة من بشر، وقد يحصل فيها أخطاء في التلاوة كأخطاء التجويد وأخطاء اللفظ وغيرها. تأكد من استخدامك أحدث نسخة من التلاوة إن كنت تحمّل الملفّات لتستخدمها في التطبيق مباشرة، أو استخدم API للحصول على أحدث نسخة ممكنة من التلاوة.
 
-### Audio Recitations
-People Also like to listen to their favorite reciters, you can also 
+#### مصادر
 
-> [!NOTE] Errors!
-> Audio Recitation are also is susceptible to the same issue as Translations, They are made by humans and there could be various errors in each recitation. i.e. Tajwid, Mispronunciation, etc...
-> Make sure that you are using an up to date version if you are downloading the assets or use an API to get an up to date version of the Recitation
+1. موقع MP3Quran: [من الرابط التالي](https://www.mp3quran.net/eng/api)
 
-#### Resources:
-1. MP3Quran https://www.mp3quran.net/eng/api
-2. 
-
---TODO: Hassaan: add postman collection for Quran Foundation API
-# Technologies
-These can vary by Technology, we need to have a list most popular frameworks, 
-Address any known difficulties in them.
-Kotlin, Swift, Flutter, React.
-### Best Practices for Displaying Mushaf 
-### Audio Players
-### Video Players
+## التقنيات
 
 
