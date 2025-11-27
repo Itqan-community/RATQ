@@ -5,6 +5,92 @@
 
 const MarkdownRenderer = {
   cache: new Map(),
+  currentTitle: null,
+  
+  /**
+   * Parse YAML front matter from markdown
+   * @param {string} markdown - Markdown content
+   * @returns {Object} Object with metadata and content
+   */
+  parseFrontMatter(markdown) {
+    // Check for YAML front matter (--- at start and end)
+    const frontMatterRegex = /^---\s*\n([\s\S]*?)\n---\s*\n([\s\S]*)$/;
+    const match = markdown.match(frontMatterRegex);
+    
+    if (match) {
+      const yaml = match[1];
+      const content = match[2];
+      const metadata = {};
+      
+      // Simple YAML parser for title field
+      yaml.split('\n').forEach(line => {
+        const trimmed = line.trim();
+        if (!trimmed || trimmed.startsWith('#')) return;
+        
+        const colonIndex = trimmed.indexOf(':');
+        if (colonIndex > 0) {
+          const key = trimmed.substring(0, colonIndex).trim();
+          let value = trimmed.substring(colonIndex + 1).trim();
+          
+          // Remove quotes if present
+          if ((value.startsWith('"') && value.endsWith('"')) ||
+              (value.startsWith("'") && value.endsWith("'"))) {
+            value = value.slice(1, -1);
+          }
+          
+          metadata[key] = value;
+        }
+      });
+      
+      return { metadata, content };
+    }
+    
+    return { metadata: {}, content: markdown };
+  },
+  
+  /**
+   * Extract title from markdown (H1 heading)
+   * @param {string} markdown - Markdown content
+   * @returns {string|null} Title or null
+   */
+  extractTitleFromH1(markdown) {
+    const h1Match = markdown.match(/^#\s+(.+)$/m);
+    return h1Match ? h1Match[1].trim() : null;
+  },
+  
+  /**
+   * Get title from file path (filename without extension and path)
+   * @param {string} filePath - File path
+   * @returns {string} Title from filename
+   */
+  getTitleFromFilename(filePath) {
+    // Get filename without path
+    const filename = filePath.split('/').pop();
+    // Remove .md extension and -AR suffix
+    let title = filename.replace(/\.md$/, '').replace(/\s*-\s*AR$/, '');
+    return title;
+  },
+  
+  /**
+   * Extract title for Arabic pages
+   * @param {string} markdown - Markdown content
+   * @param {string} filePath - File path
+   * @returns {string} Title
+   */
+  extractTitle(markdown, filePath) {
+    // Parse front matter
+    const { metadata } = this.parseFrontMatter(markdown);
+    
+    // For Arabic pages, check front matter first
+    if (window.LanguageManager && window.LanguageManager.getCurrentLanguage() === 'ar') {
+      if (metadata.title) {
+        return metadata.title;
+      }
+    }
+    
+    // Fallback to filename
+    return this.getTitleFromFilename(filePath);
+  },
   
   /**
    * Configure marked options
@@ -163,7 +249,7 @@ const MarkdownRenderer = {
   /**
    * Load and render markdown file
    * @param {string} filePath - Path to markdown file
-   * @returns {Promise<string>} Rendered HTML
+   * @returns {Promise<Object>} Object with html and title
    */
   async loadAndRender(filePath) {
     try {
@@ -176,10 +262,28 @@ const MarkdownRenderer = {
         : filePath;
       
       // Fetch markdown
-      const markdown = await this.fetchMarkdown(localizedPath);
+      const rawMarkdown = await this.fetchMarkdown(localizedPath);
+      
+      // Parse front matter and extract title (for Arabic pages)
+      const { metadata, content } = this.parseFrontMatter(rawMarkdown);
+      const markdownToRender = content || rawMarkdown;
+      
+      // Extract title - for Arabic pages, use front matter title or filename
+      let title = null;
+      if (window.LanguageManager && window.LanguageManager.getCurrentLanguage() === 'ar') {
+        title = metadata.title || this.getTitleFromFilename(localizedPath);
+      } else {
+        // For English, use navigation manager title or filename
+        title = window.NavigationManager 
+          ? window.NavigationManager.getFileTitle(localizedPath)
+          : this.getTitleFromFilename(localizedPath);
+      }
+      
+      // Store title
+      this.currentTitle = title;
       
       // Render to HTML
-      let html = this.renderMarkdown(markdown);
+      let html = this.renderMarkdown(markdownToRender);
       
       // Process HTML (fix links, etc.)
       html = this.processHTML(html, localizedPath);
@@ -187,11 +291,19 @@ const MarkdownRenderer = {
       // Hide loading, show content
       this.hideLoading();
       
-      return html;
+      return { html, title };
     } catch (error) {
       this.showError(error.message);
       throw error;
     }
+  },
+  
+  /**
+   * Get current title
+   * @returns {string|null} Current title
+   */
+  getCurrentTitle() {
+    return this.currentTitle;
   },
   
   /**

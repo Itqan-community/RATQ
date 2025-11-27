@@ -228,12 +228,24 @@ const Router = {
     
     // Load and render markdown
     try {
-      const html = await window.MarkdownRenderer.loadAndRender(baseFilePath);
-      window.MarkdownRenderer.displayContent(html);
+      const result = await window.MarkdownRenderer.loadAndRender(baseFilePath);
+      window.MarkdownRenderer.displayContent(result.html);
       
-      // Update page title
-      const title = window.NavigationManager.getFileTitle(baseFilePath);
-      document.title = title ? `${title} - RATQ` : 'RATQ';
+      // Update page title - use extracted title if available, otherwise fallback
+      let title = result.title;
+      if (!title) {
+        // Fallback to navigation manager title
+        title = window.NavigationManager 
+          ? window.NavigationManager.getFileTitle(baseFilePath)
+          : null;
+      }
+      
+      // Get site name based on language
+      const siteName = window.LanguageManager && window.LanguageManager.getCurrentLanguage() === 'ar' 
+        ? 'رتق' 
+        : 'RATQ';
+      
+      document.title = title ? `${title} - ${siteName}` : siteName;
     } catch (error) {
       console.error('Error loading route:', error);
       // Error is already handled by MarkdownRenderer
