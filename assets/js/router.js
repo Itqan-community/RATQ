@@ -46,15 +46,36 @@ const Router = {
       sessionStorage.removeItem('redirectPath');
       // Remove base path from redirect path
       let route = redirectPath.replace(this.basePath, '').replace(/^\/+|\/+$/g, '');
+      // Remove query string for route processing
+      route = route.split('?')[0].split('#')[0];
       this.navigate(route, true);
       return;
     }
     
-    // Handle initial load
-    this.handleRoute();
+    // Handle initial load - preserve language parameter if present
+    const currentPath = this.getCurrentPath();
+    const urlParams = new URLSearchParams(window.location.search);
+    const lang = urlParams.get('lang');
+    
+    // If language is in URL but not in path, update URL to include it
+    if (lang === 'ar' && window.LanguageManager && window.LanguageManager.getCurrentLanguage() === 'ar') {
+      // Ensure URL has language parameter
+      this.navigate(currentPath, true);
+    } else {
+      // Handle initial load normally
+      this.handleRoute();
+    }
     
     // Listen for popstate (back/forward buttons)
     window.addEventListener('popstate', () => {
+      // Update language from URL if changed
+      if (window.LanguageManager) {
+        const urlParams = new URLSearchParams(window.location.search);
+        const urlLang = urlParams.get('lang');
+        if (urlLang === 'ar' || urlLang === 'en') {
+          window.LanguageManager.setLanguage(urlLang);
+        }
+      }
       this.handleRoute();
     });
     
@@ -148,7 +169,14 @@ const Router = {
       : '';
     
     // Prepend base path
-    const fullPath = this.basePath + encodedRoute;
+    let fullPath = this.basePath + encodedRoute;
+    
+    // Preserve language query parameter if present
+    if (window.LanguageManager && window.LanguageManager.getCurrentLanguage() === 'ar') {
+      const url = new URL(fullPath, window.location.origin);
+      url.searchParams.set('lang', 'ar');
+      fullPath = url.pathname + url.search;
+    }
     
     if (replace) {
       window.history.replaceState({ route }, '', fullPath);

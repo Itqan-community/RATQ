@@ -96,6 +96,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (window.Router) {
           // Remove leading slash and base path for navigation
           let route = href.replace(/^\/+/, '');
+          // Remove query string and hash for route processing
+          route = route.split('?')[0].split('#')[0];
           // Remove base path if present
           if (window.Router.basePath && window.Router.basePath !== '/') {
             const basePathWithoutSlash = window.Router.basePath.replace(/^\/+|\/+$/g, '');
@@ -103,6 +105,7 @@ document.addEventListener('DOMContentLoaded', async () => {
               route = route.substring(basePathWithoutSlash.length + 1);
             }
           }
+          // Navigate - router will preserve language parameter
           window.Router.navigate(route);
         }
       }

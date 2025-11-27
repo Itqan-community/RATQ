@@ -11,10 +11,19 @@ const LanguageManager = {
    * Initialize language manager
    */
   init() {
-    // Load language preference from localStorage
-    const savedLang = localStorage.getItem('ratq-language');
-    if (savedLang === 'ar' || savedLang === 'en') {
-      this.currentLanguage = savedLang;
+    // Check URL for language parameter first
+    const urlParams = new URLSearchParams(window.location.search);
+    const urlLang = urlParams.get('lang');
+    
+    if (urlLang === 'ar' || urlLang === 'en') {
+      this.currentLanguage = urlLang;
+      localStorage.setItem('ratq-language', this.currentLanguage);
+    } else {
+      // Load language preference from localStorage
+      const savedLang = localStorage.getItem('ratq-language');
+      if (savedLang === 'ar' || savedLang === 'en') {
+        this.currentLanguage = savedLang;
+      }
     }
     
     // Update UI
@@ -96,6 +105,9 @@ const LanguageManager = {
     localStorage.setItem('ratq-language', this.currentLanguage);
     this.updateLanguageUI();
     
+    // Update URL with language parameter
+    this.updateURL();
+    
     // Dispatch language change event
     window.dispatchEvent(new CustomEvent('languagechange', {
       detail: { language: this.currentLanguage }
@@ -112,10 +124,42 @@ const LanguageManager = {
       localStorage.setItem('ratq-language', this.currentLanguage);
       this.updateLanguageUI();
       
+      // Update URL with language parameter
+      this.updateURL();
+      
       window.dispatchEvent(new CustomEvent('languagechange', {
         detail: { language: this.currentLanguage }
       }));
     }
+  },
+  
+  /**
+   * Update URL with language parameter
+   */
+  updateURL() {
+    if (!window.Router) return;
+    
+    // Get current route
+    const currentRoute = window.Router.getCurrentRoute();
+    
+    // Build new URL with language parameter using router's navigate method
+    // This ensures proper encoding and base path handling
+    const basePath = window.Router.basePath || '/';
+    let encodedRoute = currentRoute 
+      ? currentRoute.split('/').map(segment => encodeURIComponent(segment)).join('/')
+      : '';
+    
+    let fullPath = basePath + encodedRoute;
+    
+    // Add language parameter
+    if (this.currentLanguage === 'ar') {
+      const url = new URL(fullPath, window.location.origin);
+      url.searchParams.set('lang', 'ar');
+      fullPath = url.pathname + url.search;
+    }
+    
+    // Update URL without reload (replace to avoid adding to history)
+    window.history.replaceState({ route: currentRoute }, '', fullPath);
   },
   
   /**
