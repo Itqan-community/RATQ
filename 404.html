@@ -10,6 +10,13 @@
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Noto+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="assets/css/shadcn.css">
     <link rel="stylesheet" href="assets/css/main.css">
+    <script>
+        // Preserve the original path before redirecting
+        const originalPath = window.location.pathname + window.location.search + window.location.hash;
+        sessionStorage.setItem('redirectPath', originalPath);
+        // Redirect to index.html
+        window.location.replace('/RATQ/index.html' + window.location.search + window.location.hash);
+    </script>
 </head>
 <body>
     <div class="app-container">

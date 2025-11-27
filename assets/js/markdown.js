@@ -33,6 +33,9 @@ const MarkdownRenderer = {
     }
     
     try {
+      // Get base path from router
+      const basePath = window.Router ? window.Router.basePath : '/';
+      
       // Ensure path is absolute from root (starts with /)
       // This prevents relative path resolution issues
       let normalizedPath = filePath;
@@ -47,8 +50,8 @@ const MarkdownRenderer = {
         .map(segment => encodeURIComponent(segment))
         .join('/');
       
-      // Ensure leading slash for absolute path
-      const finalPath = '/' + encodedPath;
+      // Prepend base path (e.g., /RATQ/)
+      const finalPath = basePath + encodedPath;
       
       const response = await fetch(finalPath);
       

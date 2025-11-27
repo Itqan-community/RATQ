@@ -52,6 +52,14 @@ document.addEventListener('DOMContentLoaded', async () => {
       });
     }
     
+    // Set up "Go to Home" button
+    const goHomeBtn = document.getElementById('go-home-btn');
+    if (goHomeBtn && window.Router) {
+      goHomeBtn.addEventListener('click', () => {
+        window.Router.navigate('', true);
+      });
+    }
+    
     // Listen for language changes to update sidebar and reload content
     window.addEventListener('languagechange', () => {
       // Update sidebar
@@ -86,8 +94,15 @@ document.addEventListener('DOMContentLoaded', async () => {
       if (isInternal || (href.startsWith('/') && !href.startsWith('//'))) {
         e.preventDefault();
         if (window.Router) {
-          // Remove leading slash for navigation
-          const route = href.replace(/^\/+/, '');
+          // Remove leading slash and base path for navigation
+          let route = href.replace(/^\/+/, '');
+          // Remove base path if present
+          if (window.Router.basePath && window.Router.basePath !== '/') {
+            const basePathWithoutSlash = window.Router.basePath.replace(/^\/+|\/+$/g, '');
+            if (route.startsWith(basePathWithoutSlash + '/')) {
+              route = route.substring(basePathWithoutSlash.length + 1);
+            }
+          }
           window.Router.navigate(route);
         }
       }

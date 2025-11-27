@@ -6,11 +6,50 @@
 const Router = {
   currentPath: '',
   routes: new Map(),
+  basePath: '/RATQ/', // GitHub Pages base path
+  
+  /**
+   * Get base path from script tag or default
+   */
+  getBasePath() {
+    // Try to get base path from script tag data attribute or meta tag
+    const script = document.querySelector('script[data-base-path]');
+    if (script) {
+      const basePath = script.getAttribute('data-base-path');
+      if (basePath) {
+        this.basePath = basePath.endsWith('/') ? basePath : basePath + '/';
+        return this.basePath;
+      }
+    }
+    
+    // Auto-detect base path from current location
+    const pathname = window.location.pathname;
+    if (pathname.startsWith('/RATQ/')) {
+      this.basePath = '/RATQ/';
+    } else {
+      this.basePath = '/';
+    }
+    
+    return this.basePath;
+  },
   
   /**
    * Initialize router
    */
   init() {
+    // Get base path
+    this.getBasePath();
+    
+    // Check for redirect path from 404.html
+    const redirectPath = sessionStorage.getItem('redirectPath');
+    if (redirectPath) {
+      sessionStorage.removeItem('redirectPath');
+      // Remove base path from redirect path
+      let route = redirectPath.replace(this.basePath, '').replace(/^\/+|\/+$/g, '');
+      this.navigate(route, true);
+      return;
+    }
+    
     // Handle initial load
     this.handleRoute();
     
@@ -27,10 +66,19 @@ const Router = {
   
   /**
    * Get current path from URL
-   * @returns {string} Current path
+   * @returns {string} Current path (without base path)
    */
   getCurrentPath() {
     let path = window.location.pathname;
+    
+    // Remove base path
+    if (this.basePath !== '/' && path.startsWith(this.basePath)) {
+      path = path.substring(this.basePath.length);
+      // Ensure path starts with / for processing
+      if (!path.startsWith('/')) {
+        path = '/' + path;
+      }
+    }
     
     // Decode URL-encoded characters (handles %20 for spaces, etc.)
     try {
@@ -95,14 +143,17 @@ const Router = {
     
     // Encode each path segment separately to handle spaces and special chars
     // This preserves slashes while encoding spaces and other special characters
-    const encodedRoute = route 
-      ? '/' + route.split('/').map(segment => encodeURIComponent(segment)).join('/')
-      : '/';
+    let encodedRoute = route 
+      ? route.split('/').map(segment => encodeURIComponent(segment)).join('/')
+      : '';
+    
+    // Prepend base path
+    const fullPath = this.basePath + encodedRoute;
     
     if (replace) {
-      window.history.replaceState({ route }, '', encodedRoute);
+      window.history.replaceState({ route }, '', fullPath);
     } else {
-      window.history.pushState({ route }, '', encodedRoute);
+      window.history.pushState({ route }, '', fullPath);
     }
     
     // Handle route
