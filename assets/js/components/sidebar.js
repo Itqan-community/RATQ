@@ -10,11 +10,17 @@ const SidebarComponent = {
   /**
    * Initialize sidebar
    */
-  init() {
+  async init() {
     this.sidebarNav = document.getElementById('sidebar-nav');
     if (!this.sidebarNav) {
       console.error('Sidebar nav element not found');
       return;
+    }
+    
+    // Preload Arabic titles if needed
+    if (window.NavigationManager && window.LanguageManager && 
+        window.LanguageManager.getCurrentLanguage() === 'ar') {
+      await window.NavigationManager.preloadArabicTitles();
     }
     
     this.render();
@@ -71,8 +77,17 @@ const SidebarComponent = {
     const localizedPath = window.LanguageManager.getLocalizedFile(file.path);
     const route = window.Router.filePathToRoute(localizedPath);
     
+    // Get title - use cached title from markdown if available (for Arabic), otherwise use fileManifest title
+    let title = file.title;
+    if (currentLang === 'ar' && window.NavigationManager) {
+      const cachedTitle = window.NavigationManager.titleCache.get(localizedPath);
+      if (cachedTitle) {
+        title = cachedTitle;
+      }
+    }
+    
     // Set item text
-    item.textContent = file.title;
+    item.textContent = title;
     
     // Set data attribute for file path
     item.setAttribute('data-file-path', file.path);
@@ -115,7 +130,13 @@ const SidebarComponent = {
   /**
    * Update sidebar for language change
    */
-  updateForLanguage() {
+  async updateForLanguage() {
+    // Preload Arabic titles if switching to Arabic
+    if (window.NavigationManager && window.LanguageManager && 
+        window.LanguageManager.getCurrentLanguage() === 'ar') {
+      await window.NavigationManager.preloadArabicTitles();
+    }
+    
     this.render();
     // Re-set active item after render
     if (this.activePath) {

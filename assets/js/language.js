@@ -65,13 +65,26 @@ const LanguageManager = {
    */
   getLocalizedFile(filePath) {
     if (this.currentLanguage === 'ar') {
-      // Try to find AR version
-      const arVersion = filePath.replace(/\.md$/, ' - AR.md');
+      // Get base file path (remove AR suffix if already present)
+      const baseFile = this.getBaseFile(filePath);
+      
+      // Check if language map has an AR version for this base file
+      if (this.languageMap.has(baseFile)) {
+        const mappedFile = this.languageMap.get(baseFile);
+        // If mapped file is an AR version, return it
+        if (mappedFile.includes(' - AR.md') || mappedFile.includes(' -AR.md')) {
+          return mappedFile;
+        }
+      }
+      
+      // Try constructing AR version and check if it exists in map
+      const arVersion = baseFile.replace(/\.md$/, ' - AR.md');
       if (this.languageMap.has(arVersion)) {
         return arVersion;
       }
+      
       // Fallback to base file if AR doesn't exist
-      return filePath;
+      return baseFile;
     } else {
       // For English, remove -AR suffix if present
       return filePath.replace(/ - AR\.md$/, '.md').replace(/ -AR\.md$/, '.md');

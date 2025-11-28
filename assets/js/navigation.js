@@ -6,6 +6,7 @@
 const NavigationManager = {
   fileTree: [],
   allFiles: [],
+  titleCache: new Map(), // Cache for titles from markdown files
   
   /**
    * File structure manifest
@@ -47,9 +48,46 @@ const NavigationManager = {
     this.allFiles = this.fileManifest.map(f => f.path);
     
     // Add AR versions to file list
+    // First, add explicit hasAR files
     this.fileManifest.forEach(file => {
       if (file.hasAR) {
         const arPath = file.path.replace(/\.md$/, ' - AR.md');
+        if (!this.allFiles.includes(arPath)) {
+          this.allFiles.push(arPath);
+        }
+      }
+    });
+    
+    // Also add any AR files that are explicitly in the manifest
+    this.fileManifest.forEach(file => {
+      if (file.path.includes(' - AR.md') || file.path.includes(' -AR.md')) {
+        if (!this.allFiles.includes(file.path)) {
+          this.allFiles.push(file.path);
+        }
+      }
+    });
+    
+    // Auto-detect AR versions for all base files (not just those with hasAR flag)
+    // This handles cases where AR files exist but aren't explicitly marked or listed
+    this.fileManifest.forEach(file => {
+      // Skip if already has hasAR flag (already processed above)
+      if (file.hasAR) return;
+      
+      // Skip if this is already an AR file
+      if (file.path.includes(' - AR.md') || file.path.includes(' -AR.md')) return;
+      
+      // Construct potential AR path
+      const arPath = file.path.replace(/\.md$/, ' - AR.md');
+      
+      // Check if AR file exists in manifest (some AR files might be listed separately)
+      const arFileInManifest = this.fileManifest.some(f => f.path === arPath);
+      
+      // Add to allFiles if found in manifest OR if we want to auto-detect
+      // We'll add it and let the file system/fetch handle if it doesn't exist
+      // This allows AR files to work even if not explicitly in manifest
+      if (!this.allFiles.includes(arPath)) {
+        // Add potential AR file - the language manager will handle mapping
+        // If file doesn't exist, fetch will fail gracefully
         this.allFiles.push(arPath);
       }
     });
@@ -114,6 +152,11 @@ const NavigationManager = {
    * @returns {string} File title
    */
   getFileTitle(path) {
+    // Check cache first (for Arabic pages with YAML front matter)
+    if (this.titleCache.has(path)) {
+      return this.titleCache.get(path);
+    }
+    
     const file = this.findFile(path);
     if (file) {
       return file.title;
@@ -121,6 +164,94 @@ const NavigationManager = {
     // Fallback: extract title from filename
     const baseName = path.split('/').pop().replace(/\.md$/, '').replace(/ - AR$/, '');
     return baseName;
+  },
+  
+  /**
+   * Fetch title from markdown file (for Arabic pages with YAML front matter)
+   * @param {string} filePath - File path
+   * @returns {Promise<string|null>} Title or null if not found
+   */
+  async fetchTitleFromFile(filePath) {
+    // Only fetch for Arabic pages
+    if (!window.LanguageManager || window.LanguageManager.getCurrentLanguage() !== 'ar') {
+      return null;
+    }
+    
+    // Check if file has -AR suffix
+    if (!filePath.includes(' - AR.md') && !filePath.includes(' -AR.md')) {
+      return null;
+    }
+    
+    // Check cache first
+    if (this.titleCache.has(filePath)) {
+      return this.titleCache.get(filePath);
+    }
+    
+    try {
+      // Get base path from router
+      const basePath = window.Router ? window.Router.basePath : '/';
+      
+      // Ensure path is absolute
+      let normalizedPath = filePath;
+      if (!normalizedPath.startsWith('/')) {
+        normalizedPath = '/' + normalizedPath;
+      }
+      
+      // Encode path
+      const encodedPath = normalizedPath.split('/')
+        .filter(segment => segment)
+        .map(segment => encodeURIComponent(segment))
+        .join('/');
+      
+      const finalPath = basePath + encodedPath;
+      
+      // Fetch the file
+      const response = await fetch(finalPath);
+      
+      if (!response.ok) {
+        return null;
+      }
+      
+      // Get text - we only need the first part for front matter
+      const fullText = await response.text();
+      
+      // Extract first 2KB (enough for front matter)
+      const text = fullText.substring(0, 2048);
+      
+      // Parse front matter using MarkdownRenderer's method
+      if (window.MarkdownRenderer && window.MarkdownRenderer.parseFrontMatter) {
+        const { metadata } = window.MarkdownRenderer.parseFrontMatter(text);
+        if (metadata.title) {
+          // Cache the title
+          this.titleCache.set(filePath, metadata.title);
+          return metadata.title;
+        }
+      }
+      
+      return null;
+    } catch (error) {
+      console.warn('Error fetching title from file:', filePath, error);
+      return null;
+    }
+  },
+  
+  /**
+   * Preload titles for all Arabic files
+   * @returns {Promise<void>}
+   */
+  async preloadArabicTitles() {
+    if (!window.LanguageManager || window.LanguageManager.getCurrentLanguage() !== 'ar') {
+      return;
+    }
+    
+    const promises = this.fileManifest
+      .filter(file => file.hasAR)
+      .map(file => {
+        const arPath = file.path.replace(/\.md$/, ' - AR.md');
+        return this.fetchTitleFromFile(arPath);
+      });
+    
+    await Promise.allSettled(promises);
   },
   
   /**

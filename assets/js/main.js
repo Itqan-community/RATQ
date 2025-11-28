@@ -26,9 +26,9 @@ document.addEventListener('DOMContentLoaded', async () => {
       window.MarkdownRenderer.configureMarked();
     }
     
-    // Initialize Sidebar
+    // Initialize Sidebar (async - will preload titles)
     if (window.SidebarComponent) {
-      window.SidebarComponent.init();
+      await window.SidebarComponent.init();
     }
     
     // Initialize Router
@@ -61,10 +61,10 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
     
     // Listen for language changes to update sidebar and reload content
-    window.addEventListener('languagechange', () => {
-      // Update sidebar
+    window.addEventListener('languagechange', async () => {
+      // Update sidebar (async - will preload titles)
       if (window.SidebarComponent) {
-        window.SidebarComponent.updateForLanguage();
+        await window.SidebarComponent.updateForLanguage();
       }
       
       // Reload current page with new language

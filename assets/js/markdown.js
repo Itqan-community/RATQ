@@ -272,6 +272,11 @@ const MarkdownRenderer = {
       let title = null;
       if (window.LanguageManager && window.LanguageManager.getCurrentLanguage() === 'ar') {
         title = metadata.title || this.getTitleFromFilename(localizedPath);
+        
+        // Cache the title in NavigationManager for sidebar use
+        if (metadata.title && window.NavigationManager) {
+          window.NavigationManager.titleCache.set(localizedPath, metadata.title);
+        }
       } else {
         // For English, use navigation manager title or filename
         title = window.NavigationManager 
