@@ -91,10 +91,16 @@
       "hasAR": true
     },
     {
-      "path": "Technologies/QuranAnalysis.md",
+      "path": "Technologies/QuranAnalysis - AR.md",
       "title": "QuranAnalysis",
       "group": "technologies",
       "hasAR": false
+    },
+    {
+      "path": "Technologies/QuranAnalysis.md",
+      "title": "QuranAnalysis",
+      "group": "technologies",
+      "hasAR": true
     },
     {
       "path": "Technologies/Technologies.md",
@@ -139,8 +145,20 @@
       "hasAR": true
     },
     {
+      "path": "Technologies/quran.com-api - AR.md",
+      "title": "quran.com-api",
+      "group": "technologies",
+      "hasAR": false
+    },
+    {
       "path": "Technologies/quran.com-api.md",
       "title": "quran.com-api",
+      "group": "technologies",
+      "hasAR": true
+    },
+    {
+      "path": "Technologies/quranic - AR.md",
+      "title": "quranic",
       "group": "technologies",
       "hasAR": false
     },
@@ -160,13 +178,19 @@
       "path": "Technologies/quranic.md",
       "title": "quranic",
       "group": "technologies",
+      "hasAR": true
+    },
+    {
+      "path": "Technologies/tanzil - AR.md",
+      "title": "tanzil",
+      "group": "technologies",
       "hasAR": false
     },
     {
       "path": "Technologies/tanzil.md",
       "title": "tanzil",
       "group": "technologies",
-      "hasAR": false
+      "hasAR": true
     }
   ]
 }
