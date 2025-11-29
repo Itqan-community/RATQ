@@ -104,14 +104,23 @@ const NavigationManager = {
       technologies: []
     };
     
-    // Track which base files have AR versions
+    // Track which base files have AR versions (from explicit AR files in manifest or hasAR flag)
     const baseFilesWithAR = new Set();
     
     // First pass: identify base files that have AR versions
     this.fileManifest.forEach(file => {
-      if (file.path.includes(' - AR.md') || file.path.includes(' -AR.md')) {
+      const isARFile = file.path.includes(' - AR.md') || file.path.includes(' -AR.md');
+      if (isARFile) {
+        // Explicit AR file in manifest
         const baseFile = file.path.replace(/ - AR\.md$/, '.md').replace(/ -AR\.md$/, '.md');
         baseFilesWithAR.add(baseFile);
+      } else if (file.hasAR === true) {
+        // Base file with hasAR flag - check if AR file exists in manifest
+        const arPath = file.path.replace(/\.md$/, ' - AR.md');
+        const arFileExists = this.fileManifest.some(f => f.path === arPath);
+        if (arFileExists) {
+          baseFilesWithAR.add(file.path);
+        }
       }
     });
     
@@ -145,7 +154,9 @@ const NavigationManager = {
           }
         } else {
           // Add base file only if we haven't added its AR version
-          if (groups[file.group] && !addedBaseFiles.has(baseFile)) {
+          // Check both: if AR file was explicitly added, or if base file has hasAR flag
+          const hasARVersion = baseFilesWithAR.has(baseFile);
+          if (groups[file.group] && !addedBaseFiles.has(baseFile) && !hasARVersion) {
             groups[file.group].push(file);
             addedBaseFiles.add(baseFile);
           }
@@ -299,7 +310,21 @@ const NavigationManager = {
    * @returns {boolean} True if file exists
    */
   fileExists(path) {
-    return this.fileManifest.some(f => f.path === path);
+    // Check if file is explicitly in manifest
+    if (this.fileManifest.some(f => f.path === path)) {
+      return true;
+    }
+    
+    // For AR files: check if base file has hasAR flag (AR file might not be explicitly listed)
+    if (path.includes(' - AR.md') || path.includes(' -AR.md')) {
+      const baseFile = path.replace(/ - AR\.md$/, '.md').replace(/ -AR\.md$/, '.md');
+      const baseFileEntry = this.fileManifest.find(f => f.path === baseFile);
+      if (baseFileEntry && baseFileEntry.hasAR === true) {
+        return true;
+      }
+    }
+    
+    return false;
   }
 };
 

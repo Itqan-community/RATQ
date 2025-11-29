@@ -86,26 +86,9 @@ const SidebarComponent = {
     const localizedPath = window.LanguageManager.getLocalizedFile(file.path);
     
     // File availability: if file appears in tree, it's available
-    // buildFileTree() already filters by language, so trust that filtering
-    // Only disable if file explicitly shouldn't be shown (edge case handling)
-    const isARFile = file.path.includes(' - AR.md') || file.path.includes(' -AR.md');
-    let isAvailable = true;
-    
-    if (currentLang === 'ar') {
-      // In Arabic mode: if this is a base file and it has AR version, it shouldn't be shown
-      // Use manifest's hasAR property directly (set by GitHub Action)
-      if (!isARFile && file.hasAR === true) {
-        // Base file with AR version shouldn't appear in Arabic mode
-        // buildFileTree should filter it, but if it appears, disable it
-        isAvailable = false;
-      }
-    }
-    // In English mode: all shown files are base files and are available
-    
-    // If not available in current language, make it disabled
-    if (!isAvailable) {
-      item.classList.add('disabled');
-    }
+    // buildFileTree() already filters by language correctly, so trust that filtering
+    // All files that appear in the tree should be available
+    const isAvailable = true;
     
     const route = window.Router.filePathToRoute(localizedPath);
     
