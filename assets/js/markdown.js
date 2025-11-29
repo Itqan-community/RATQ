@@ -367,6 +367,31 @@ const MarkdownRenderer = {
   },
   
   /**
+   * Scroll to hash target
+   * @param {string} hash - Hash fragment (with or without #)
+   */
+  scrollToHash(hash) {
+    if (!hash) return;
+    
+    // Remove # if present
+    const anchorId = hash.startsWith('#') ? hash.substring(1) : hash;
+    if (!anchorId) return;
+    
+    const targetElement = document.getElementById(anchorId);
+    if (targetElement) {
+      // Use requestAnimationFrame to ensure DOM is ready
+      requestAnimationFrame(() => {
+        // Small additional delay to ensure layout is complete
+        setTimeout(() => {
+          targetElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }, 50);
+      });
+      return true;
+    }
+    return false;
+  },
+
+  /**
    * Display rendered content
    * @param {string} html - HTML content
    */
@@ -392,29 +417,41 @@ const MarkdownRenderer = {
               targetElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
               // Update URL hash without triggering navigation
               if (window.history && window.history.pushState) {
-                window.history.pushState(null, null, href);
+                const currentUrl = new URL(window.location.href);
+                currentUrl.hash = href;
+                window.history.pushState(null, null, currentUrl.toString());
               }
             }
           }
         });
       });
       
-      // Handle initial hash in URL
-      if (window.location.hash) {
-        const hash = window.location.hash.substring(1);
-        const targetElement = document.getElementById(hash);
-        if (targetElement) {
-          // Small delay to ensure layout is complete
-          setTimeout(() => {
-            targetElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
-          }, 100);
+      // Handle hash in URL after content is loaded
+      // Use multiple attempts with increasing delays to handle async rendering
+      const hash = window.location.hash;
+      if (hash) {
+        // Try immediately
+        if (this.scrollToHash(hash)) {
+          return; // Success, skip scroll to top
         }
+        
+        // Try after a short delay (for async content)
+        setTimeout(() => {
+          if (this.scrollToHash(hash)) {
+            return; // Success
+          }
+          
+          // Try one more time after longer delay
+          setTimeout(() => {
+            this.scrollToHash(hash);
+          }, 200);
+        }, 100);
       }
     }
     if (error) error.style.display = 'none';
     if (loading) loading.style.display = 'none';
     
-    // Only scroll to top if there's no hash
+    // Only scroll to top if there's no hash or hash scroll failed
     if (!window.location.hash) {
       window.scrollTo(0, 0);
     }

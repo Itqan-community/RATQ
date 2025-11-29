@@ -46,9 +46,12 @@ const Router = {
       sessionStorage.removeItem('redirectPath');
       // Remove base path from redirect path
       let route = redirectPath.replace(this.basePath, '').replace(/^\/+|\/+$/g, '');
-      // Remove query string for route processing
+      // Extract hash before removing it from route
+      const hashMatch = route.match(/#(.+)$/);
+      const hash = hashMatch ? '#' + hashMatch[1] : '';
+      // Remove query string and hash for route processing
       route = route.split('?')[0].split('#')[0];
-      this.navigate(route, true);
+      this.navigate(route, true, hash);
       return;
     }
     
@@ -157,8 +160,9 @@ const Router = {
    * Navigate to a route
    * @param {string} route - Route path
    * @param {boolean} replace - Whether to replace history entry
+   * @param {string} hash - Optional hash fragment to preserve
    */
-  navigate(route, replace = false) {
+  navigate(route, replace = false, hash = null) {
     // Normalize route - remove leading/trailing slashes
     route = route.replace(/^\/+|\/+$/g, '');
     
@@ -176,6 +180,14 @@ const Router = {
       const url = new URL(fullPath, window.location.origin);
       url.searchParams.set('lang', 'ar');
       fullPath = url.pathname + url.search;
+    }
+    
+    // Preserve hash if provided, otherwise preserve existing hash
+    if (hash === null) {
+      hash = window.location.hash;
+    }
+    if (hash) {
+      fullPath += hash;
     }
     
     if (replace) {
