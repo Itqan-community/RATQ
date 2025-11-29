@@ -90,20 +90,28 @@ const SidebarComponent = {
     let isAvailable = true;
     
     if (currentLang === 'ar') {
-      // In Arabic mode: file is available if it's an AR file, or if it's a base file without an AR version
-      if (!isARFile) {
-        // This is a base file - check if AR version exists
-        const hasARVersion = window.LanguageManager && window.LanguageManager.hasArabicVersion(baseFilePath);
+      // In Arabic mode: AR files are always available
+      if (isARFile) {
+        isAvailable = true;
+      } else {
+        // This is a base file - check if it has an AR version
+        // Use file.hasAR property first (set by GitHub Action), then check manifest
+        let hasARVersion = file.hasAR === true;
+        
+        if (!hasARVersion && window.NavigationManager) {
+          // Check manifest for AR file
+          const arPath = baseFilePath.replace(/\.md$/, ' - AR.md');
+          hasARVersion = window.NavigationManager.fileManifest.some(f => f.path === arPath);
+        }
+        
+        // If base file has AR version, it shouldn't be shown (buildFileTree should filter it)
+        // But if it appears anyway, disable it
         if (hasARVersion) {
-          // Base file has AR version, so this base file is not available
           isAvailable = false;
         }
       }
-    } else {
-      // In English mode: all shown files should be base files (AR files are filtered out)
-      // So they're all available
-      isAvailable = true;
     }
+    // In English mode: all shown files are base files and are available
     
     // If not available in current language, make it disabled
     if (!isAvailable) {
