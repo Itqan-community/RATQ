@@ -85,30 +85,19 @@ const SidebarComponent = {
     // Get localized file path
     const localizedPath = window.LanguageManager.getLocalizedFile(file.path);
     
-    // Check if file is available in current language
+    // File availability: if file appears in tree, it's available
+    // buildFileTree() already filters by language, so trust that filtering
+    // Only disable if file explicitly shouldn't be shown (edge case handling)
     const isARFile = file.path.includes(' - AR.md') || file.path.includes(' -AR.md');
     let isAvailable = true;
     
     if (currentLang === 'ar') {
-      // In Arabic mode: AR files are always available
-      if (isARFile) {
-        isAvailable = true;
-      } else {
-        // This is a base file - check if it has an AR version
-        // Use file.hasAR property first (set by GitHub Action), then check manifest
-        let hasARVersion = file.hasAR === true;
-        
-        if (!hasARVersion && window.NavigationManager) {
-          // Check manifest for AR file
-          const arPath = baseFilePath.replace(/\.md$/, ' - AR.md');
-          hasARVersion = window.NavigationManager.fileManifest.some(f => f.path === arPath);
-        }
-        
-        // If base file has AR version, it shouldn't be shown (buildFileTree should filter it)
-        // But if it appears anyway, disable it
-        if (hasARVersion) {
-          isAvailable = false;
-        }
+      // In Arabic mode: if this is a base file and it has AR version, it shouldn't be shown
+      // Use manifest's hasAR property directly (set by GitHub Action)
+      if (!isARFile && file.hasAR === true) {
+        // Base file with AR version shouldn't appear in Arabic mode
+        // buildFileTree should filter it, but if it appears, disable it
+        isAvailable = false;
       }
     }
     // In English mode: all shown files are base files and are available
@@ -145,8 +134,15 @@ const SidebarComponent = {
       });
     }
     
-    // Check if this is the active item (compare base paths)
-    if (this.activePath === baseFilePath || this.activePath === file.path) {
+    // Check if this is the active item (normalize both paths to base paths for comparison)
+    const normalizedActivePath = window.LanguageManager 
+      ? window.LanguageManager.getBaseFile(this.activePath)
+      : this.activePath;
+    const normalizedFilePath = window.LanguageManager 
+      ? window.LanguageManager.getBaseFile(file.path)
+      : file.path;
+    
+    if (normalizedActivePath === baseFilePath || normalizedActivePath === normalizedFilePath) {
       item.classList.add('active');
     }
     
@@ -155,16 +151,21 @@ const SidebarComponent = {
   
   /**
    * Set active sidebar item
-   * @param {string} filePath - Active file path
+   * @param {string} filePath - Active file path (may be base or localized)
    */
   setActive(filePath) {
-    this.activePath = filePath;
+    // Normalize to base path for consistent comparison
+    const basePath = window.LanguageManager 
+      ? window.LanguageManager.getBaseFile(filePath)
+      : filePath;
+    this.activePath = basePath;
     
     // Update all sidebar items
     const items = this.sidebarNav.querySelectorAll('.sidebar-item');
     items.forEach(item => {
       const itemPath = item.getAttribute('data-file-path');
-      if (itemPath === filePath) {
+      // itemPath is already base path (set in createSidebarItem), so compare directly
+      if (itemPath === basePath) {
         item.classList.add('active');
       } else {
         item.classList.remove('active');

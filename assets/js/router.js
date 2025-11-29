@@ -210,10 +210,15 @@ const Router = {
       ? window.LanguageManager.getBaseFile(filePath)
       : filePath;
     
-    // Check if file exists
-    if (!window.NavigationManager.fileExists(baseFilePath)) {
+    // Get localized file path (for existence check and title fetching)
+    const localizedFilePath = window.LanguageManager 
+      ? window.LanguageManager.getLocalizedFile(baseFilePath)
+      : baseFilePath;
+    
+    // Check if localized file exists using manifest
+    if (!window.NavigationManager.fileExists(localizedFilePath)) {
       // File doesn't exist, show 404 or redirect to home
-      console.warn(`File not found: ${baseFilePath}`);
+      console.warn(`File not found: ${localizedFilePath}`);
       if (route !== '') {
         // Redirect to home if not already there
         this.navigate('', true);
@@ -221,12 +226,18 @@ const Router = {
       }
     }
     
+    // Normalize to base path for active state matching (consistent comparison)
+    const baseForActive = window.LanguageManager 
+      ? window.LanguageManager.getBaseFile(localizedFilePath)
+      : localizedFilePath;
+    
     // Update active sidebar item
     if (window.SidebarComponent) {
-      window.SidebarComponent.setActive(baseFilePath);
+      window.SidebarComponent.setActive(baseForActive);
     }
     
     // Load and render markdown
+    // Note: MarkdownRenderer.loadAndRender() handles localization internally, so passing baseFilePath is acceptable
     try {
       const result = await window.MarkdownRenderer.loadAndRender(baseFilePath);
       window.MarkdownRenderer.displayContent(result.html);
@@ -234,9 +245,9 @@ const Router = {
       // Update page title - use extracted title if available, otherwise fallback
       let title = result.title;
       if (!title) {
-        // Fallback to navigation manager title
+        // Fallback to navigation manager title (use localized path for correct title)
         title = window.NavigationManager 
-          ? window.NavigationManager.getFileTitle(baseFilePath)
+          ? window.NavigationManager.getFileTitle(localizedFilePath)
           : null;
       }
       

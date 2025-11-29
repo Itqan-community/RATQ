@@ -82,52 +82,10 @@ const NavigationManager = {
     // Build file tree with current language
     const currentLang = window.LanguageManager ? window.LanguageManager.getCurrentLanguage() : 'en';
     this.buildFileTree(currentLang);
+    
+    // Build allFiles array directly from manifest (manifest is source of truth)
+    // All files (base and AR) are explicitly listed in manifest
     this.allFiles = this.fileManifest.map(f => f.path);
-    
-    // Add AR versions to file list
-    // First, add explicit hasAR files
-    this.fileManifest.forEach(file => {
-      if (file.hasAR) {
-        const arPath = file.path.replace(/\.md$/, ' - AR.md');
-        if (!this.allFiles.includes(arPath)) {
-          this.allFiles.push(arPath);
-        }
-      }
-    });
-    
-    // Also add any AR files that are explicitly in the manifest
-    this.fileManifest.forEach(file => {
-      if (file.path.includes(' - AR.md') || file.path.includes(' -AR.md')) {
-        if (!this.allFiles.includes(file.path)) {
-          this.allFiles.push(file.path);
-        }
-      }
-    });
-    
-    // Auto-detect AR versions for all base files (not just those with hasAR flag)
-    // This handles cases where AR files exist but aren't explicitly marked or listed
-    this.fileManifest.forEach(file => {
-      // Skip if already has hasAR flag (already processed above)
-      if (file.hasAR) return;
-      
-      // Skip if this is already an AR file
-      if (file.path.includes(' - AR.md') || file.path.includes(' -AR.md')) return;
-      
-      // Construct potential AR path
-      const arPath = file.path.replace(/\.md$/, ' - AR.md');
-      
-      // Check if AR file exists in manifest (some AR files might be listed separately)
-      const arFileInManifest = this.fileManifest.some(f => f.path === arPath);
-      
-      // Add to allFiles if found in manifest OR if we want to auto-detect
-      // We'll add it and let the file system/fetch handle if it doesn't exist
-      // This allows AR files to work even if not explicitly in manifest
-      if (!this.allFiles.includes(arPath)) {
-        // Add potential AR file - the language manager will handle mapping
-        // If file doesn't exist, fetch will fail gracefully
-        this.allFiles.push(arPath);
-      }
-    });
     
     // Build language map
     if (window.LanguageManager) {
@@ -341,7 +299,7 @@ const NavigationManager = {
    * @returns {boolean} True if file exists
    */
   fileExists(path) {
-    return this.allFiles.includes(path);
+    return this.fileManifest.some(f => f.path === path);
   }
 };
 
