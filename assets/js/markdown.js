@@ -440,17 +440,28 @@ const MarkdownRenderer = {
       content.innerHTML = html;
       content.style.display = 'block';
       
-      // Post-process: Ensure headings have correct IDs
+      // Post-process: Ensure headings have correct IDs and map anchor links
       const headings = content.querySelectorAll('h1, h2, h3, h4, h5, h6');
+      const headingMap = new Map(); // Maps heading text to heading element
+      
       headings.forEach(heading => {
+        // Get text content (excluding anchor tags for ID generation)
+        let text = heading.textContent || heading.innerText || '';
+        // Clean text for mapping (remove extra whitespace)
+        const cleanText = text.trim().replace(/\s+/g, ' ');
+        
         // If heading doesn't have an ID, generate one from its text content
         if (!heading.id) {
-          // Get text content (excluding anchor tags for ID generation)
-          let text = heading.textContent || heading.innerText || '';
           // Generate ID from the actual heading text
           const generatedId = this.generateHeaderId(text, parseInt(heading.tagName.charAt(1)));
           heading.id = generatedId;
         }
+        
+        // Store mapping: text -> heading element and ID
+        headingMap.set(cleanText.toLowerCase(), { element: heading, id: heading.id });
+        
+        // Also store by the heading's current ID (in case links use the ID directly)
+        headingMap.set(heading.id.toLowerCase(), { element: heading, id: heading.id });
         
         // Update any anchor tags inside the heading to point to the heading's ID
         const anchors = heading.querySelectorAll('a[href^="#"]');
@@ -461,6 +472,36 @@ const MarkdownRenderer = {
             anchor.setAttribute('href', '#' + heading.id);
           }
         });
+      });
+      
+      // Update all anchor links to point to correct heading IDs
+      // This fixes table of contents links that might have wrong anchor IDs
+      const allAnchorLinks = content.querySelectorAll('a[href^="#"]');
+      allAnchorLinks.forEach(link => {
+        const href = link.getAttribute('href');
+        if (href && href.startsWith('#')) {
+          const targetId = href.substring(1);
+          
+          // Try to find matching heading by link text
+          const linkText = (link.textContent || link.innerText || '').trim().toLowerCase();
+          const headingMatch = headingMap.get(linkText);
+          
+          if (headingMatch) {
+            // Update link to point to the correct heading ID
+            link.setAttribute('href', '#' + headingMatch.id);
+          } else {
+            // If no text match, check if the target ID exists
+            const targetElement = document.getElementById(targetId);
+            if (!targetElement) {
+              // Try to find heading by partial text match or by generated ID from link text
+              const generatedId = this.generateHeaderId(linkText, 2);
+              const generatedMatch = headingMap.get(generatedId.toLowerCase());
+              if (generatedMatch) {
+                link.setAttribute('href', '#' + generatedMatch.id);
+              }
+            }
+          }
+        }
       });
       
       // Handle anchor links after content is inserted
