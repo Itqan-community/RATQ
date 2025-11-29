@@ -25,10 +25,16 @@
       "hasAR": false
     },
     {
-      "path": "Available Apps.md",
+      "path": "Available Apps - AR.md",
       "title": "Available Apps",
       "group": "root",
       "hasAR": false
+    },
+    {
+      "path": "Available Apps.md",
+      "title": "Available Apps",
+      "group": "root",
+      "hasAR": true
     },
     {
       "path": "Development Guidelines - AR.md",
@@ -109,10 +115,16 @@
       "hasAR": true
     },
     {
-      "path": "Technologies/othman.md",
+      "path": "Technologies/othman - AR.md",
       "title": "othman",
       "group": "technologies",
       "hasAR": false
+    },
+    {
+      "path": "Technologies/othman.md",
+      "title": "othman",
+      "group": "technologies",
+      "hasAR": true
     },
     {
       "path": "Technologies/quran-json - AR.md",
@@ -133,10 +145,16 @@
       "hasAR": false
     },
     {
-      "path": "Technologies/quranic-search-v2.md",
+      "path": "Technologies/quranic-search-v2 - AR.md",
       "title": "quranic-search-v2",
       "group": "technologies",
       "hasAR": false
+    },
+    {
+      "path": "Technologies/quranic-search-v2.md",
+      "title": "quranic-search-v2",
+      "group": "technologies",
+      "hasAR": true
     },
     {
       "path": "Technologies/quranic.md",
