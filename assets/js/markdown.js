@@ -101,10 +101,15 @@ const MarkdownRenderer = {
   generateHeaderId(text, level) {
     // Remove markdown formatting (bold, italic, etc.)
     text = text.replace(/[*_`]/g, '');
+    // Trim whitespace
+    text = text.trim();
     // Replace spaces with hyphens
     text = text.replace(/\s+/g, '-');
     // Remove leading/trailing hyphens
     text = text.replace(/^-+|-+$/g, '');
+    // Lowercase only ASCII characters (preserves Arabic/Unicode)
+    // This matches the format used in markdown anchor links
+    text = text.replace(/[A-Z]/g, (char) => char.toLowerCase());
     return text;
   },
 
