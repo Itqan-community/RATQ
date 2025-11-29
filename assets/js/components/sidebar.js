@@ -32,8 +32,14 @@ const SidebarComponent = {
   render() {
     if (!this.sidebarNav) return;
     
-    const fileTree = window.NavigationManager.getFileTree();
     const currentLang = window.LanguageManager.getCurrentLanguage();
+    
+    // Rebuild file tree with current language to filter properly
+    if (window.NavigationManager) {
+      window.NavigationManager.buildFileTree(currentLang);
+    }
+    
+    const fileTree = window.NavigationManager.getFileTree();
     
     // Clear existing content
     this.sidebarNav.innerHTML = '';
@@ -73,8 +79,37 @@ const SidebarComponent = {
     item.className = 'sidebar-item';
     item.href = '#';
     
+    // Get base file path (without language suffix)
+    const baseFilePath = window.LanguageManager ? window.LanguageManager.getBaseFile(file.path) : file.path;
+    
     // Get localized file path
     const localizedPath = window.LanguageManager.getLocalizedFile(file.path);
+    
+    // Check if file is available in current language
+    const isARFile = file.path.includes(' - AR.md') || file.path.includes(' -AR.md');
+    let isAvailable = true;
+    
+    if (currentLang === 'ar') {
+      // In Arabic mode: file is available if it's an AR file, or if it's a base file without an AR version
+      if (!isARFile) {
+        // This is a base file - check if AR version exists
+        const hasARVersion = window.LanguageManager && window.LanguageManager.hasArabicVersion(baseFilePath);
+        if (hasARVersion) {
+          // Base file has AR version, so this base file is not available
+          isAvailable = false;
+        }
+      }
+    } else {
+      // In English mode: all shown files should be base files (AR files are filtered out)
+      // So they're all available
+      isAvailable = true;
+    }
+    
+    // If not available in current language, make it disabled
+    if (!isAvailable) {
+      item.classList.add('disabled');
+    }
+    
     const route = window.Router.filePathToRoute(localizedPath);
     
     // Get title - use cached title from markdown if available (for Arabic), otherwise use fileManifest title
@@ -89,19 +124,21 @@ const SidebarComponent = {
     // Set item text
     item.textContent = title;
     
-    // Set data attribute for file path
-    item.setAttribute('data-file-path', file.path);
+    // Set data attribute for file path (use base path for active state matching)
+    item.setAttribute('data-file-path', baseFilePath);
     item.setAttribute('data-route', route || '');
     
-    // Handle click
-    item.addEventListener('click', (e) => {
-      e.preventDefault();
-      const route = item.getAttribute('data-route');
-      window.Router.navigate(route);
-    });
+    // Handle click (only if available)
+    if (isAvailable) {
+      item.addEventListener('click', (e) => {
+        e.preventDefault();
+        const route = item.getAttribute('data-route');
+        window.Router.navigate(route);
+      });
+    }
     
-    // Check if this is the active item
-    if (this.activePath === file.path) {
+    // Check if this is the active item (compare base paths)
+    if (this.activePath === baseFilePath || this.activePath === file.path) {
       item.classList.add('active');
     }
     

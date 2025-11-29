@@ -79,7 +79,9 @@ const NavigationManager = {
     // Try to load generated manifest first, fallback to hardcoded manifest
     await this.loadManifest();
     
-    this.buildFileTree();
+    // Build file tree with current language
+    const currentLang = window.LanguageManager ? window.LanguageManager.getCurrentLanguage() : 'en';
+    this.buildFileTree(currentLang);
     this.allFiles = this.fileManifest.map(f => f.path);
     
     // Add AR versions to file list
@@ -135,17 +137,61 @@ const NavigationManager = {
   
   /**
    * Build file tree structure
+   * @param {string} currentLang - Current language ('en' or 'ar')
    */
-  buildFileTree() {
+  buildFileTree(currentLang = 'en') {
     const groups = {
       root: [],
       apps: [],
       technologies: []
     };
     
+    // Track which base files have AR versions
+    const baseFilesWithAR = new Set();
+    
+    // First pass: identify base files that have AR versions
     this.fileManifest.forEach(file => {
-      if (groups[file.group]) {
-        groups[file.group].push(file);
+      if (file.path.includes(' - AR.md') || file.path.includes(' -AR.md')) {
+        const baseFile = file.path.replace(/ - AR\.md$/, '.md').replace(/ -AR\.md$/, '.md');
+        baseFilesWithAR.add(baseFile);
+      }
+    });
+    
+    // Track which base files we've added to avoid duplicates
+    const addedBaseFiles = new Set();
+    
+    // Second pass: add files based on language
+    this.fileManifest.forEach(file => {
+      const isARFile = file.path.includes(' - AR.md') || file.path.includes(' -AR.md');
+      const baseFile = isARFile 
+        ? file.path.replace(/ - AR\.md$/, '.md').replace(/ -AR\.md$/, '.md')
+        : file.path;
+      
+      if (currentLang === 'en') {
+        // In English mode: only show base files (not AR files)
+        if (isARFile) {
+          return;
+        }
+        // Add base file
+        if (groups[file.group] && !addedBaseFiles.has(baseFile)) {
+          groups[file.group].push(file);
+          addedBaseFiles.add(baseFile);
+        }
+      } else {
+        // In Arabic mode: prefer AR files, but show base files if no AR exists
+        if (isARFile) {
+          // Add AR file and mark base as added
+          if (groups[file.group] && !addedBaseFiles.has(baseFile)) {
+            groups[file.group].push(file);
+            addedBaseFiles.add(baseFile);
+          }
+        } else {
+          // Add base file only if we haven't added its AR version
+          if (groups[file.group] && !addedBaseFiles.has(baseFile)) {
+            groups[file.group].push(file);
+            addedBaseFiles.add(baseFile);
+          }
+        }
       }
     });
     

@@ -114,6 +114,13 @@
   font-weight: 500;
 }
 
+.sidebar-item.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
+  filter: grayscale(100%);
+}
+
 .sidebar-item-nested {
   padding-left: var(--spacing-xl);
   font-size: 0.8125rem;
