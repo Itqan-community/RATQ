@@ -94,13 +94,24 @@ const MarkdownRenderer = {
   
   /**
    * Generate header ID from text (matches markdown anchor format)
-   * @param {string} text - Header text
+   * @param {string} text - Header text (may contain HTML)
    * @param {number} level - Header level (1-6)
    * @returns {string} Header ID
    */
   generateHeaderId(text, level) {
+    // If text contains HTML, extract text content
+    if (text.includes('<') || text.includes('&')) {
+      // Create temporary element to extract text
+      const temp = document.createElement('div');
+      temp.innerHTML = text;
+      text = temp.textContent || temp.innerText || text;
+    }
+    
     // Remove markdown formatting (bold, italic, etc.)
     text = text.replace(/[*_`]/g, '');
+    // Remove HTML entities and tags if any remain
+    text = text.replace(/<[^>]*>/g, '');
+    text = text.replace(/&[^;]+;/g, '');
     // Trim whitespace
     text = text.trim();
     // Replace spaces with hyphens
@@ -429,20 +440,27 @@ const MarkdownRenderer = {
       content.innerHTML = html;
       content.style.display = 'block';
       
-      // Post-process: Ensure headings with anchor tags have IDs
+      // Post-process: Ensure headings have correct IDs
       const headings = content.querySelectorAll('h1, h2, h3, h4, h5, h6');
       headings.forEach(heading => {
-        // If heading doesn't have an ID but contains an anchor with href
+        // If heading doesn't have an ID, generate one from its text content
         if (!heading.id) {
-          const anchor = heading.querySelector('a[href^="#"]');
-          if (anchor) {
-            const href = anchor.getAttribute('href');
-            if (href && href.startsWith('#')) {
-              const anchorId = href.substring(1);
-              heading.id = anchorId;
-            }
-          }
+          // Get text content (excluding anchor tags for ID generation)
+          let text = heading.textContent || heading.innerText || '';
+          // Generate ID from the actual heading text
+          const generatedId = this.generateHeaderId(text, parseInt(heading.tagName.charAt(1)));
+          heading.id = generatedId;
         }
+        
+        // Update any anchor tags inside the heading to point to the heading's ID
+        const anchors = heading.querySelectorAll('a[href^="#"]');
+        anchors.forEach(anchor => {
+          const href = anchor.getAttribute('href');
+          if (href && href.startsWith('#')) {
+            // Update anchor href to match the heading's ID
+            anchor.setAttribute('href', '#' + heading.id);
+          }
+        });
       });
       
       // Handle anchor links after content is inserted
