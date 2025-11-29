@@ -18,7 +18,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     
     // Initialize Navigation Manager
     if (window.NavigationManager) {
-      window.NavigationManager.init();
+      await window.NavigationManager.init();
     }
     
     // Configure Markdown Renderer

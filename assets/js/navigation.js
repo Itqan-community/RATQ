@@ -41,9 +41,44 @@ const NavigationManager = {
   ],
   
   /**
+   * Load file manifest from generated JSON
+   * @returns {Promise<boolean>} True if manifest loaded successfully, false otherwise
+   */
+  async loadManifest() {
+    try {
+      // Get base path - Router might not be initialized yet, so detect from location
+      let basePath = '/';
+      if (window.Router && window.Router.basePath) {
+        basePath = window.Router.basePath;
+      } else {
+        // Auto-detect base path from current location
+        const pathname = window.location.pathname;
+        if (pathname.startsWith('/RATQ/')) {
+          basePath = '/RATQ/';
+        }
+      }
+      
+      const response = await fetch(`${basePath}manifest.json`);
+      if (response.ok) {
+        const data = await response.json();
+        if (data && Array.isArray(data.files)) {
+          this.fileManifest = data.files;
+          return true;
+        }
+      }
+    } catch (error) {
+      console.warn('Failed to load manifest.json, using fallback:', error);
+    }
+    return false;
+  },
+  
+  /**
    * Initialize navigation
    */
-  init() {
+  async init() {
+    // Try to load generated manifest first, fallback to hardcoded manifest
+    await this.loadManifest();
+    
     this.buildFileTree();
     this.allFiles = this.fileManifest.map(f => f.path);
     
