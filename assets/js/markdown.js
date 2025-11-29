@@ -93,16 +93,34 @@ const MarkdownRenderer = {
   },
   
   /**
+   * Generate header ID from text (matches markdown anchor format)
+   * @param {string} text - Header text
+   * @param {number} level - Header level (1-6)
+   * @returns {string} Header ID
+   */
+  generateHeaderId(text, level) {
+    // Remove markdown formatting (bold, italic, etc.)
+    text = text.replace(/[*_`]/g, '');
+    // Replace spaces with hyphens
+    text = text.replace(/\s+/g, '-');
+    // Remove leading/trailing hyphens
+    text = text.replace(/^-+|-+$/g, '');
+    return text;
+  },
+
+  /**
    * Configure marked options
    */
   configureMarked() {
     if (typeof marked !== 'undefined') {
+      const self = this;
       // Configure marked with options
       marked.setOptions({
         breaks: true,
         gfm: true,
         headerIds: true,
-        mangle: false
+        mangle: false,
+        headerId: (text, level) => self.generateHeaderId(text, level)
       });
     }
   },
@@ -192,7 +210,7 @@ const MarkdownRenderer = {
     links.forEach(link => {
       const href = link.getAttribute('href');
       
-      // Skip external links and anchors
+      // Skip external links and anchors (anchors handled separately after DOM insertion)
       if (!href || 
           href.startsWith('http://') || 
           href.startsWith('https://') || 
@@ -360,12 +378,46 @@ const MarkdownRenderer = {
     if (content) {
       content.innerHTML = html;
       content.style.display = 'block';
+      
+      // Handle anchor links after content is inserted
+      const anchorLinks = content.querySelectorAll('a[href^="#"]');
+      anchorLinks.forEach(link => {
+        link.addEventListener('click', (e) => {
+          const href = link.getAttribute('href');
+          if (href && href.startsWith('#')) {
+            const anchorId = href.substring(1);
+            const targetElement = document.getElementById(anchorId);
+            if (targetElement) {
+              e.preventDefault();
+              targetElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+              // Update URL hash without triggering navigation
+              if (window.history && window.history.pushState) {
+                window.history.pushState(null, null, href);
+              }
+            }
+          }
+        });
+      });
+      
+      // Handle initial hash in URL
+      if (window.location.hash) {
+        const hash = window.location.hash.substring(1);
+        const targetElement = document.getElementById(hash);
+        if (targetElement) {
+          // Small delay to ensure layout is complete
+          setTimeout(() => {
+            targetElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }, 100);
+        }
+      }
     }
     if (error) error.style.display = 'none';
     if (loading) loading.style.display = 'none';
     
-    // Scroll to top
-    window.scrollTo(0, 0);
+    // Only scroll to top if there's no hash
+    if (!window.location.hash) {
+      window.scrollTo(0, 0);
+    }
   },
   
   /**

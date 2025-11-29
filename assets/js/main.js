@@ -81,11 +81,15 @@ document.addEventListener('DOMContentLoaded', async () => {
       const href = link.getAttribute('href');
       if (!href) return;
       
-      // Skip external links and anchors
+      // Skip external links and mailto
       if (href.startsWith('http://') || 
           href.startsWith('https://') || 
-          href.startsWith('mailto:') ||
-          href.startsWith('#')) {
+          href.startsWith('mailto:')) {
+        return;
+      }
+      
+      // Anchor links are handled in markdown.js displayContent
+      if (href.startsWith('#')) {
         return;
       }
       
