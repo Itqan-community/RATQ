@@ -376,13 +376,33 @@ const MarkdownRenderer = {
    * @param {string} hash - Hash fragment (with or without #)
    */
   scrollToHash(hash) {
-    if (!hash) return;
+    if (!hash) return false;
     
     // Remove # if present
     const anchorId = hash.startsWith('#') ? hash.substring(1) : hash;
-    if (!anchorId) return;
+    if (!anchorId) return false;
     
-    const targetElement = document.getElementById(anchorId);
+    // Try to find element by ID first
+    let targetElement = document.getElementById(anchorId);
+    
+    // If not found, try to find anchor tag with matching href
+    if (!targetElement) {
+      const anchor = document.querySelector(`a[href="#${anchorId}"]`);
+      if (anchor) {
+        // Find the parent heading element
+        targetElement = anchor.closest('h1, h2, h3, h4, h5, h6');
+        // If no heading parent, use the anchor itself
+        if (!targetElement) {
+          targetElement = anchor;
+        }
+      }
+    }
+    
+    // If still not found, try to find any element with name attribute matching
+    if (!targetElement) {
+      targetElement = document.querySelector(`[name="${anchorId}"]`);
+    }
+    
     if (targetElement) {
       // Use requestAnimationFrame to ensure DOM is ready
       requestAnimationFrame(() => {
@@ -409,17 +429,32 @@ const MarkdownRenderer = {
       content.innerHTML = html;
       content.style.display = 'block';
       
+      // Post-process: Ensure headings with anchor tags have IDs
+      const headings = content.querySelectorAll('h1, h2, h3, h4, h5, h6');
+      headings.forEach(heading => {
+        // If heading doesn't have an ID but contains an anchor with href
+        if (!heading.id) {
+          const anchor = heading.querySelector('a[href^="#"]');
+          if (anchor) {
+            const href = anchor.getAttribute('href');
+            if (href && href.startsWith('#')) {
+              const anchorId = href.substring(1);
+              heading.id = anchorId;
+            }
+          }
+        }
+      });
+      
       // Handle anchor links after content is inserted
       const anchorLinks = content.querySelectorAll('a[href^="#"]');
       anchorLinks.forEach(link => {
         link.addEventListener('click', (e) => {
           const href = link.getAttribute('href');
           if (href && href.startsWith('#')) {
-            const anchorId = href.substring(1);
-            const targetElement = document.getElementById(anchorId);
-            if (targetElement) {
-              e.preventDefault();
-              targetElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            e.preventDefault();
+            
+            // Use the scrollToHash method which handles multiple cases
+            if (this.scrollToHash(href)) {
               // Update URL hash without triggering navigation
               if (window.history && window.history.pushState) {
                 const currentUrl = new URL(window.location.href);
