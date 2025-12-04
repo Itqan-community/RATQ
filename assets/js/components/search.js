@@ -22,6 +22,7 @@ const SearchComponent = {
     // Wait for search to be ready
     window.addEventListener('searchready', () => {
       if (this.searchInput) {
+        // Ensure input is enabled (it should already be, but just in case)
         this.searchInput.disabled = false;
         this.updatePlaceholder();
       }
@@ -61,7 +62,9 @@ const SearchComponent = {
     this.searchInput = document.createElement('input');
     this.searchInput.type = 'text';
     this.searchInput.className = 'search-input';
-    this.searchInput.disabled = true;
+    // Don't disable initially - allow user to click and type
+    // We'll handle the "not ready" state in performSearch
+    this.searchInput.disabled = false;
     this.searchInput.setAttribute('aria-label', 'Search documentation');
     this.searchInput.setAttribute('autocomplete', 'off');
     
@@ -140,6 +143,17 @@ const SearchComponent = {
    */
   performSearch(query) {
     if (!window.SearchManager || !window.SearchManager.isReady) {
+      // Search not ready yet - show loading message
+      if (this.resultsContainer) {
+        this.resultsContainer.innerHTML = `
+          <div class="search-result-empty">
+            ${window.LanguageManager && window.LanguageManager.getCurrentLanguage() === 'ar' 
+              ? 'جاري تحميل البحث...' 
+              : 'Loading search...'}
+          </div>
+        `;
+        this.show();
+      }
       return;
     }
     

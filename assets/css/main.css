@@ -434,6 +434,7 @@
   flex: 1;
   max-width: 400px;
   margin: 0 var(--spacing-md);
+  z-index: 101;
 }
 
 .search-input {
@@ -445,6 +446,9 @@
   color: hsl(var(--foreground));
   font-size: 0.875rem;
   transition: all 0.2s;
+  position: relative;
+  z-index: 102;
+  pointer-events: auto;
 }
 
 .search-input:focus {
