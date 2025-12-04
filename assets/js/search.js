@@ -29,6 +29,53 @@ const SearchManager = {
       
       this.documents = await response.json();
       
+      // Create a shared tokenizer function for consistency
+      const arabicTokenizer = function(str) {
+        if (!str) return [];
+        const tokens = new Set();
+        // Split on whitespace, punctuation, and Arabic word boundaries
+        // Include zero-width characters used in Arabic
+        const words = str.split(/[\s\p{P}\u200C\u200D]+/u).filter(w => w.length > 0);
+        
+        words.forEach(word => {
+          if (word.length > 0) {
+            // Always add the full word
+            tokens.add(word);
+            
+            // For Arabic words, handle common patterns for better matching
+            if (/[\u0600-\u06FF]/.test(word)) {
+              // Add the word without common prefixes (ال, ب, ك, ل, etc.)
+              const withoutPrefix = word.replace(/^(ال|ب|ك|ل|و|ف|س|ت|أ|إ|آ)/, '').trim();
+              if (withoutPrefix !== word && withoutPrefix.length > 0) {
+                tokens.add(withoutPrefix);
+              }
+              
+              // For longer Arabic words (4+ chars), add meaningful substrings
+              // Focus on beginning and end sequences for better matching
+              if (word.length >= 4) {
+                // Add 3-5 char sequences from the beginning
+                for (let len = 3; len <= Math.min(5, word.length); len++) {
+                  tokens.add(word.substring(0, len));
+                }
+                // Add 3-5 char sequences from the end (for suffix matching)
+                if (word.length > 3) {
+                  for (let len = 3; len <= Math.min(5, word.length); len++) {
+                    tokens.add(word.substring(word.length - len));
+                  }
+                }
+              } else if (word.length >= 2) {
+                // For shorter words, add all 2-char sequences
+                for (let i = 0; i <= word.length - 2; i++) {
+                  tokens.add(word.substring(i, i + 2));
+                }
+              }
+            }
+          }
+        });
+        
+        return Array.from(tokens);
+      };
+      
       // Create FlexSearch index
       // Configure for both English and Arabic text
       this.index = new FlexSearch.Document({
@@ -37,53 +84,11 @@ const SearchManager = {
           index: [
             {
               field: 'title',
-              // Custom tokenizer for Arabic support
-              // Splits on word boundaries and includes Arabic character sequences
-              tokenize: function(str) {
-                if (!str) return [];
-                const tokens = new Set();
-                // Split on whitespace, punctuation, and Arabic word boundaries
-                const words = str.split(/[\s\p{P}\u200C\u200D]+/u).filter(w => w.length > 0);
-                words.forEach(word => {
-                  if (word.length > 0) {
-                    tokens.add(word);
-                    // For Arabic words, add character n-grams for substring matching
-                    if (/[\u0600-\u06FF]/.test(word) && word.length >= 2) {
-                      // Add 2-4 character sequences (n-grams) for Arabic
-                      for (let i = 0; i <= word.length - 2; i++) {
-                        const maxLen = Math.min(4, word.length - i);
-                        for (let len = 2; len <= maxLen; len++) {
-                          tokens.add(word.substring(i, i + len));
-                        }
-                      }
-                    }
-                  }
-                });
-                return Array.from(tokens);
-              }
+              tokenize: arabicTokenizer
             },
             {
               field: 'content',
-              // Same tokenizer for content
-              tokenize: function(str) {
-                if (!str) return [];
-                const tokens = new Set();
-                const words = str.split(/[\s\p{P}\u200C\u200D]+/u).filter(w => w.length > 0);
-                words.forEach(word => {
-                  if (word.length > 0) {
-                    tokens.add(word);
-                    if (/[\u0600-\u06FF]/.test(word) && word.length >= 2) {
-                      for (let i = 0; i <= word.length - 2; i++) {
-                        const maxLen = Math.min(4, word.length - i);
-                        for (let len = 2; len <= maxLen; len++) {
-                          tokens.add(word.substring(i, i + len));
-                        }
-                      }
-                    }
-                  }
-                });
-                return Array.from(tokens);
-              }
+              tokenize: arabicTokenizer
             }
           ],
           store: ['title', 'path', 'language', 'group']
@@ -127,18 +132,36 @@ const SearchManager = {
     }
     
     try {
-      // Check if query contains Arabic characters
-      const hasArabic = /[\u0600-\u06FF]/.test(trimmedQuery);
+      // FlexSearch will automatically tokenize the query using the same tokenizer
+      // But for Arabic, we also try searching without common prefixes
+      let searchQueries = [trimmedQuery];
       
-      // Perform search with appropriate options
-      const searchOptions = {
-        limit: limit * 2, // Get more results to filter by language
+      // For Arabic queries, also try without common prefixes
+      if (/[\u0600-\u06FF]/.test(trimmedQuery)) {
+        const withoutPrefix = trimmedQuery.replace(/^(ال|ب|ك|ل|و|ف|س|ت|أ|إ|آ)/, '');
+        if (withoutPrefix !== trimmedQuery && withoutPrefix.length > 0) {
+          searchQueries.push(withoutPrefix);
+        }
+      }
+      
+      // Perform search - FlexSearch will handle tokenization
+      // We search with all query variations and combine results
+      const allResults = [];
+      searchQueries.forEach(query => {
+        const results = this.index.search(query, {
+          limit: limit * 2,
+          enrich: true
+        });
+        if (results && results.length > 0) {
+          allResults.push(...results);
+        }
+      });
+      
+      // Use the first query's results (most relevant) or combine if needed
+      const results = allResults.length > 0 ? allResults : this.index.search(trimmedQuery, {
+        limit: limit * 2,
         enrich: true
-      };
-      
-      // For Arabic, we might need to search differently
-      // FlexSearch should handle it, but we ensure proper matching
-      const results = this.index.search(trimmedQuery, searchOptions);
+      });
       
       // Flatten and process results
       const processedResults = [];
@@ -233,6 +256,45 @@ const SearchManager = {
     if (end < content.length) excerpt = excerpt + '...';
     
     return excerpt;
+  },
+  
+  /**
+   * Tokenize search query to match indexed tokens
+   * @param {string} query - Search query
+   * @returns {Array} Tokenized query terms
+   */
+  tokenizeQuery(query) {
+    if (!query) return [];
+    const tokens = new Set();
+    
+    // Split on whitespace, punctuation, and Arabic word boundaries
+    const words = query.split(/[\s\p{P}\u200C\u200D]+/u).filter(w => w.length > 0);
+    
+    words.forEach(word => {
+      if (word.length > 0) {
+        tokens.add(word);
+        
+        // For Arabic words, also add without common prefixes
+        if (/[\u0600-\u06FF]/.test(word)) {
+          const withoutPrefix = word.replace(/^(ال|ب|ك|ل|و|ف|س|ت|أ|إ|آ)/, '');
+          if (withoutPrefix !== word && withoutPrefix.length > 0) {
+            tokens.add(withoutPrefix);
+          }
+          
+          // Add character n-grams for partial matching
+          if (word.length >= 2) {
+            for (let i = 0; i <= word.length - 2; i++) {
+              const maxLen = Math.min(5, word.length - i);
+              for (let len = 2; len <= maxLen; len++) {
+                tokens.add(word.substring(i, i + len));
+              }
+            }
+          }
+        }
+      }
+    });
+    
+    return Array.from(tokens);
   },
   
   /**
