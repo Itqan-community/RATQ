@@ -17,14 +17,35 @@ const SearchComponent = {
     this.createSearchInput();
     this.createResultsDropdown();
     this.attachEventListeners();
+    this.updatePlaceholder();
     
     // Wait for search to be ready
     window.addEventListener('searchready', () => {
       if (this.searchInput) {
         this.searchInput.disabled = false;
-        this.searchInput.placeholder = 'Search...';
+        this.updatePlaceholder();
       }
     });
+    
+    // Update placeholder when language changes
+    window.addEventListener('languagechange', () => {
+      this.updatePlaceholder();
+    });
+  },
+  
+  /**
+   * Update search input placeholder based on current language
+   */
+  updatePlaceholder() {
+    if (!this.searchInput) return;
+    
+    const currentLang = window.LanguageManager 
+      ? window.LanguageManager.getCurrentLanguage() 
+      : 'en';
+    
+    this.searchInput.placeholder = currentLang === 'ar' 
+      ? 'بحث...' 
+      : 'Search...';
   },
   
   /**
@@ -40,7 +61,6 @@ const SearchComponent = {
     this.searchInput = document.createElement('input');
     this.searchInput.type = 'text';
     this.searchInput.className = 'search-input';
-    this.searchInput.placeholder = 'Loading search...';
     this.searchInput.disabled = true;
     this.searchInput.setAttribute('aria-label', 'Search documentation');
     this.searchInput.setAttribute('autocomplete', 'off');

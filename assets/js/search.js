@@ -11,6 +11,26 @@ const SearchManager = {
   cacheMetaKey: 'ratq_search_meta',
   
   /**
+   * Normalize Arabic characters for better search matching
+   * Normalizes: ءأآإ -> أ, ؤ و -> و, ي ى -> ي, ة ه -> ه
+   * @param {string} text - Text to normalize
+   * @returns {string} Normalized text
+   */
+  normalizeArabic(text) {
+    if (!text || typeof text !== 'string') return text;
+    
+    return text
+      // Normalize ءأآإ to أ
+      .replace(/[ءأآإ]/g, 'أ')
+      // Normalize ؤ و to و
+      .replace(/[ؤو]/g, 'و')
+      // Normalize ي ى to ي
+      .replace(/[يى]/g, 'ي')
+      // Normalize ة ه to ه
+      .replace(/[ةه]/g, 'ه');
+  },
+  
+  /**
    * Initialize search index with cache validation
    */
   async init() {
@@ -200,9 +220,12 @@ const SearchManager = {
       }
     });
     
-    // Add documents to index
+    // Add documents to index (with Arabic normalization)
     this.searchData.forEach((doc, idx) => {
-      const searchableText = `${doc.title} ${doc.content}`;
+      // Normalize Arabic characters for better search matching
+      const normalizedTitle = this.normalizeArabic(doc.title);
+      const normalizedContent = this.normalizeArabic(doc.content);
+      const searchableText = `${normalizedTitle} ${normalizedContent}`;
       this.index.add(idx, searchableText);
     });
     
@@ -325,12 +348,14 @@ const SearchManager = {
     }
     
     const trimmedQuery = query.trim();
+    // Normalize Arabic characters in search query
+    const normalizedQuery = this.normalizeArabic(trimmedQuery);
     const currentLang = window.LanguageManager 
       ? window.LanguageManager.getCurrentLanguage() 
       : 'en';
     
-    // Search using FlexSearch
-    const results = this.index.search(trimmedQuery, {
+    // Search using FlexSearch with normalized query
+    const results = this.index.search(normalizedQuery, {
       limit: options.limit || 50,
       suggest: options.suggest || false
     });
@@ -344,12 +369,16 @@ const SearchManager = {
         return true;
       })
       .map(doc => {
-        // Calculate relevance score
-        const titleMatch = doc.title.toLowerCase().includes(trimmedQuery.toLowerCase());
-        const contentMatch = doc.content.toLowerCase().includes(trimmedQuery.toLowerCase());
+        // Normalize for comparison
+        const normalizedTitle = this.normalizeArabic(doc.title);
+        const normalizedContent = this.normalizeArabic(doc.content);
+        
+        // Calculate relevance score (using normalized text for matching)
+        const titleMatch = normalizedTitle.toLowerCase().includes(normalizedQuery.toLowerCase());
+        const contentMatch = normalizedContent.toLowerCase().includes(normalizedQuery.toLowerCase());
         const score = titleMatch ? 2 : (contentMatch ? 1 : 0);
         
-        // Generate snippet
+        // Generate snippet (use original content for display, normalized for matching)
         const snippet = this.getSnippet(doc.content, trimmedQuery, 150);
         
         return {
@@ -374,8 +403,12 @@ const SearchManager = {
    * @returns {string} Snippet text
    */
   getSnippet(content, query, maxLength = 150) {
-    const queryLower = query.toLowerCase();
-    const contentLower = content.toLowerCase();
+    // Normalize both content and query for matching
+    const normalizedContent = this.normalizeArabic(content);
+    const normalizedQuery = this.normalizeArabic(query);
+    
+    const queryLower = normalizedQuery.toLowerCase();
+    const contentLower = normalizedContent.toLowerCase();
     const queryIndex = contentLower.indexOf(queryLower);
     
     if (queryIndex === -1) {
@@ -383,7 +416,7 @@ const SearchManager = {
       return content.substring(0, maxLength).trim() + '...';
     }
     
-    // Find snippet around match
+    // Find snippet around match (use original content for display)
     const start = Math.max(0, queryIndex - maxLength / 2);
     const end = Math.min(content.length, queryIndex + query.length + maxLength / 2);
     
