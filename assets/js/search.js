@@ -1,114 +1,47 @@
 /**
- * Search Module
- * Handles search functionality using FlexSearch
+ * Search Manager Module
+ * Handles search index building, caching, and searching
  */
 
 const SearchManager = {
   index: null,
-  documents: [],
+  searchData: [],
   isReady: false,
+  cacheKey: 'ratq_search_index',
+  cacheMetaKey: 'ratq_search_meta',
   
   /**
-   * Initialize search index
+   * Initialize search index with cache validation
    */
   async init() {
-    if (typeof FlexSearch === 'undefined') {
-      console.error('FlexSearch library not loaded');
-      return;
-    }
-    
     try {
-      // Get base path from router
-      const basePath = window.Router ? window.Router.basePath : '/';
-      
-      // Load search index
-      const response = await fetch(`${basePath}search-index.json`);
-      if (!response.ok) {
-        throw new Error(`Failed to load search index: ${response.status}`);
+      // 1. Get file list from NavigationManager
+      const allFiles = window.NavigationManager.getAllFiles();
+      if (!allFiles || allFiles.length === 0) {
+        console.warn('No files available for indexing');
+        return;
       }
       
-      this.documents = await response.json();
+      // 2. Check file modification dates
+      const fileVersions = await this.checkFileDates(allFiles);
       
-      // Create a shared tokenizer function for consistency
-      const arabicTokenizer = function(str) {
-        if (!str) return [];
-        const tokens = new Set();
-        // Split on whitespace, punctuation, and Arabic word boundaries
-        // Include zero-width characters used in Arabic
-        const words = str.split(/[\s\p{P}\u200C\u200D]+/u).filter(w => w.length > 0);
-        
-        words.forEach(word => {
-          if (word.length > 0) {
-            // Always add the full word
-            tokens.add(word);
-            
-            // For Arabic words, handle common patterns for better matching
-            if (/[\u0600-\u06FF]/.test(word)) {
-              // Add the word without common prefixes (ال, ب, ك, ل, etc.)
-              const withoutPrefix = word.replace(/^(ال|ب|ك|ل|و|ف|س|ت|أ|إ|آ)/, '').trim();
-              if (withoutPrefix !== word && withoutPrefix.length > 0) {
-                tokens.add(withoutPrefix);
-              }
-              
-              // For longer Arabic words (4+ chars), add meaningful substrings
-              // Focus on beginning and end sequences for better matching
-              if (word.length >= 4) {
-                // Add 3-5 char sequences from the beginning
-                for (let len = 3; len <= Math.min(5, word.length); len++) {
-                  tokens.add(word.substring(0, len));
-                }
-                // Add 3-5 char sequences from the end (for suffix matching)
-                if (word.length > 3) {
-                  for (let len = 3; len <= Math.min(5, word.length); len++) {
-                    tokens.add(word.substring(word.length - len));
-                  }
-                }
-              } else if (word.length >= 2) {
-                // For shorter words, add all 2-char sequences
-                for (let i = 0; i <= word.length - 2; i++) {
-                  tokens.add(word.substring(i, i + 2));
-                }
-              }
-            }
-          }
-        });
-        
-        return Array.from(tokens);
-      };
+      // 3. Validate cache
+      const cacheValid = await this.validateCache(fileVersions);
       
-      // Create FlexSearch index
-      // Configure for both English and Arabic text
-      this.index = new FlexSearch.Document({
-        document: {
-          id: 'path',
-          index: [
-            {
-              field: 'title',
-              tokenize: arabicTokenizer
-            },
-            {
-              field: 'content',
-              tokenize: arabicTokenizer
-            }
-          ],
-          store: ['title', 'path', 'language', 'group']
-        },
-        // Enable bidirectional matching for Arabic RTL text
-        context: {
-          resolution: 9,
-          depth: 2,
-          bidirectional: true
-        },
-        cache: 100
-      });
+      if (cacheValid) {
+        // Load from cache
+        const loaded = this.loadCachedIndex();
+        if (loaded) {
+          this.isReady = true;
+          window.dispatchEvent(new CustomEvent('searchready'));
+          return;
+        }
+      }
       
-      // Add all documents to index
-      this.documents.forEach(doc => {
-        this.index.add(doc);
-      });
-      
+      // 4. Build new index
+      await this.buildIndex(allFiles, fileVersions);
       this.isReady = true;
-      console.log('Search index initialized:', this.documents.length, 'documents');
+      window.dispatchEvent(new CustomEvent('searchready'));
     } catch (error) {
       console.error('Error initializing search:', error);
       this.isReady = false;
@@ -116,202 +49,349 @@ const SearchManager = {
   },
   
   /**
-   * Search for documents
-   * @param {string} query - Search query
-   * @param {number} limit - Maximum number of results
-   * @returns {Array} Search results
+   * Check Last-Modified headers via HEAD requests
+   * @param {Array<string>} filePaths - Array of file paths
+   * @returns {Promise<Object>} Map of filePath -> timestamp
    */
-  search(query, limit = 15) {
-    if (!this.isReady || !query || query.trim().length === 0) {
+  async checkFileDates(filePaths) {
+    const basePath = window.Router ? window.Router.basePath : '/';
+    const fileVersions = {};
+    
+    // Make HEAD requests in parallel
+    const requests = filePaths.map(async (filePath) => {
+      try {
+        let normalizedPath = filePath;
+        if (!normalizedPath.startsWith('/')) {
+          normalizedPath = '/' + normalizedPath;
+        }
+        
+        const encodedPath = normalizedPath.split('/')
+          .filter(segment => segment)
+          .map(segment => encodeURIComponent(segment))
+          .join('/');
+        
+        const finalPath = basePath + encodedPath;
+        const response = await fetch(finalPath, { method: 'HEAD' });
+        
+        if (response.ok) {
+          const lastModified = response.headers.get('Last-Modified');
+          fileVersions[filePath] = lastModified ? new Date(lastModified).getTime() : Date.now();
+        } else {
+          fileVersions[filePath] = Date.now(); // Fallback to current time
+        }
+      } catch (error) {
+        console.warn(`Failed to check date for ${filePath}:`, error);
+        fileVersions[filePath] = Date.now(); // Fallback
+      }
+    });
+    
+    await Promise.all(requests);
+    return fileVersions;
+  },
+  
+  /**
+   * Validate cached index against current file dates
+   * @param {Object} fileVersions - Map of filePath -> timestamp
+   * @returns {Promise<boolean>} True if cache is valid
+   */
+  async validateCache(fileVersions) {
+    try {
+      const cacheMeta = localStorage.getItem(this.cacheMetaKey);
+      if (!cacheMeta) return false;
+      
+      const meta = JSON.parse(cacheMeta);
+      if (!meta.timestamp || !meta.fileVersions) return false;
+      
+      // Check if any file is newer than cache
+      for (const [filePath, currentDate] of Object.entries(fileVersions)) {
+        const cachedDate = meta.fileVersions[filePath];
+        if (!cachedDate || currentDate > cachedDate) {
+          return false; // Cache is stale
+        }
+      }
+      
+      // Check if any cached file is missing from current list
+      for (const filePath of Object.keys(meta.fileVersions)) {
+        if (!fileVersions.hasOwnProperty(filePath)) {
+          return false; // File was removed
+        }
+      }
+      
+      return true; // Cache is valid
+    } catch (error) {
+      console.warn('Error validating cache:', error);
+      return false;
+    }
+  },
+  
+  /**
+   * Fetch all markdown files and build FlexSearch index
+   * @param {Array<string>} filePaths - Array of file paths
+   * @param {Object} fileVersions - Map of filePath -> timestamp
+   */
+  async buildIndex(filePaths, fileVersions) {
+    const basePath = window.Router ? window.Router.basePath : '/';
+    const searchData = [];
+    
+    // Fetch all files in parallel
+    const fetchPromises = filePaths.map(async (filePath) => {
+      try {
+        let normalizedPath = filePath;
+        if (!normalizedPath.startsWith('/')) {
+          normalizedPath = '/' + normalizedPath;
+        }
+        
+        const encodedPath = normalizedPath.split('/')
+          .filter(segment => segment)
+          .map(segment => encodeURIComponent(segment))
+          .join('/');
+        
+        const finalPath = basePath + encodedPath;
+        const response = await fetch(finalPath);
+        
+        if (!response.ok) {
+          console.warn(`Failed to fetch ${filePath}`);
+          return null;
+        }
+        
+        const content = await response.text();
+        const parsed = this.parseMarkdownForSearch(filePath, content);
+        
+        if (parsed) {
+          // Determine language from file path
+          const isAR = filePath.includes(' - AR.md') || filePath.includes(' -AR.md');
+          const language = isAR ? 'ar' : 'en';
+          
+          // Get group from NavigationManager
+          const fileInfo = window.NavigationManager.findFile(filePath);
+          const group = fileInfo ? fileInfo.group : 'unknown';
+          
+          return {
+            id: filePath,
+            path: filePath,
+            title: parsed.title,
+            content: parsed.content,
+            language: language,
+            group: group
+          };
+        }
+      } catch (error) {
+        console.warn(`Error processing ${filePath}:`, error);
+      }
+      return null;
+    });
+    
+    const results = await Promise.all(fetchPromises);
+    this.searchData = results.filter(item => item !== null);
+    
+    // Initialize FlexSearch index
+    if (typeof FlexSearch === 'undefined') {
+      console.error('FlexSearch library not loaded');
+      return;
+    }
+    
+    this.index = new FlexSearch.Index({
+      preset: 'performance',
+      tokenize: 'forward',
+      cache: 100,
+      context: {
+        depth: 2,
+        resolution: 9
+      }
+    });
+    
+    // Add documents to index
+    this.searchData.forEach((doc, idx) => {
+      const searchableText = `${doc.title} ${doc.content}`;
+      this.index.add(idx, searchableText);
+    });
+    
+    // Cache the index
+    this.cacheIndex(fileVersions);
+  },
+  
+  /**
+   * Extract title and content from markdown
+   * @param {string} filePath - File path
+   * @param {string} markdown - Markdown content
+   * @returns {Object|null} Object with title and content, or null
+   */
+  parseMarkdownForSearch(filePath, markdown) {
+    // Reuse MarkdownRenderer's front matter parsing
+    if (window.MarkdownRenderer) {
+      const { metadata, content } = window.MarkdownRenderer.parseFrontMatter(markdown);
+      const title = metadata.title || 
+                   window.MarkdownRenderer.extractTitleFromH1(markdown) ||
+                   window.MarkdownRenderer.getTitleFromFilename(filePath);
+      
+      // Remove front matter and clean content
+      const cleanContent = content.trim();
+      
+      return { title, content: cleanContent };
+    }
+    
+    // Fallback parsing
+    const h1Match = markdown.match(/^#\s+(.+)$/m);
+    const title = h1Match ? h1Match[1].trim() : 
+                  filePath.split('/').pop().replace(/\.md$/, '').replace(/\s*-\s*AR$/, '');
+    
+    // Remove front matter if present
+    let content = markdown.replace(/^---\s*\n[\s\S]*?\n---\s*\n/, '');
+    content = content.replace(/^#\s+.*$/m, ''); // Remove H1
+    content = content.trim();
+    
+    return { title, content };
+  },
+  
+  /**
+   * Store index in localStorage
+   * @param {Object} fileVersions - Map of filePath -> timestamp
+   */
+  cacheIndex(fileVersions) {
+    try {
+      // Serialize FlexSearch index
+      const indexExport = this.index.export();
+      
+      const cacheData = {
+        index: indexExport,
+        data: this.searchData,
+        timestamp: Date.now()
+      };
+      
+      const cacheMeta = {
+        timestamp: Date.now(),
+        fileVersions: fileVersions
+      };
+      
+      localStorage.setItem(this.cacheKey, JSON.stringify(cacheData));
+      localStorage.setItem(this.cacheMetaKey, JSON.stringify(cacheMeta));
+    } catch (error) {
+      console.warn('Error caching index:', error);
+      // localStorage might be full, try to clear old cache
+      try {
+        localStorage.removeItem(this.cacheKey);
+        localStorage.removeItem(this.cacheMetaKey);
+      } catch (e) {
+        console.error('Failed to clear cache:', e);
+      }
+    }
+  },
+  
+  /**
+   * Load index from localStorage
+   * @returns {boolean} True if loaded successfully
+   */
+  loadCachedIndex() {
+    try {
+      const cacheData = localStorage.getItem(this.cacheKey);
+      if (!cacheData) return false;
+      
+      const parsed = JSON.parse(cacheData);
+      this.searchData = parsed.data;
+      
+      // Reconstruct FlexSearch index
+      if (typeof FlexSearch === 'undefined') {
+        console.error('FlexSearch library not loaded');
+        return false;
+      }
+      
+      this.index = new FlexSearch.Index({
+        preset: 'performance',
+        tokenize: 'forward',
+        cache: 100,
+        context: {
+          depth: 2,
+          resolution: 9
+        }
+      });
+      
+      this.index.import(parsed.index);
+      return true;
+    } catch (error) {
+      console.warn('Error loading cached index:', error);
+      return false;
+    }
+  },
+  
+  /**
+   * Execute search with language filtering
+   * @param {string} query - Search query
+   * @param {Object} options - Search options
+   * @returns {Array} Array of search results
+   */
+  search(query, options = {}) {
+    if (!this.isReady || !this.index || !query || query.trim().length === 0) {
       return [];
     }
     
     const trimmedQuery = query.trim();
-    if (trimmedQuery.length < 2) {
-      return [];
-    }
+    const currentLang = window.LanguageManager 
+      ? window.LanguageManager.getCurrentLanguage() 
+      : 'en';
     
-    try {
-      // FlexSearch will automatically tokenize the query using the same tokenizer
-      // But for Arabic, we also try searching without common prefixes
-      let searchQueries = [trimmedQuery];
-      
-      // For Arabic queries, also try without common prefixes
-      if (/[\u0600-\u06FF]/.test(trimmedQuery)) {
-        const withoutPrefix = trimmedQuery.replace(/^(ال|ب|ك|ل|و|ف|س|ت|أ|إ|آ)/, '');
-        if (withoutPrefix !== trimmedQuery && withoutPrefix.length > 0) {
-          searchQueries.push(withoutPrefix);
-        }
-      }
-      
-      // Perform search - FlexSearch will handle tokenization
-      // We search with all query variations and combine results
-      const allResults = [];
-      searchQueries.forEach(query => {
-        const results = this.index.search(query, {
-          limit: limit * 2,
-          enrich: true
-        });
-        if (results && results.length > 0) {
-          allResults.push(...results);
-        }
-      });
-      
-      // Use the first query's results (most relevant) or combine if needed
-      const results = allResults.length > 0 ? allResults : this.index.search(trimmedQuery, {
-        limit: limit * 2,
-        enrich: true
-      });
-      
-      // Flatten and process results
-      const processedResults = [];
-      const seenPaths = new Set();
-      
-      // Get current language preference
-      const currentLang = window.LanguageManager 
-        ? window.LanguageManager.getCurrentLanguage() 
-        : 'en';
-      
-      // Process results - prefer current language
-      const currentLangResults = [];
-      const otherLangResults = [];
-      
-      // FlexSearch Document API returns array of field results
-      // Each field result has: { field: 'fieldName', result: [documents] }
-      results.forEach(fieldResult => {
-        if (fieldResult.field === 'title' || fieldResult.field === 'content') {
-          // fieldResult.result is array of matching documents
-          fieldResult.result.forEach(doc => {
-            // With enrich: true, stored fields are directly on doc
-            // doc.id is the document ID (path in our case)
-            const path = doc.id || doc.path;
-            if (!seenPaths.has(path)) {
-              seenPaths.add(path);
-              
-              // Get stored fields (they should be directly on doc with enrich: true)
-              const document = {
-                path: path,
-                title: doc.title || '',
-                language: doc.language || 'en',
-                group: doc.group || 'root',
-                score: doc.score || 0
-              };
-              
-              // Separate by language preference
-              if (document.language === currentLang) {
-                currentLangResults.push(document);
-              } else {
-                otherLangResults.push(document);
-              }
-            }
-          });
-        }
-      });
-      
-      // Combine: current language first, then others
-      processedResults.push(...currentLangResults);
-      processedResults.push(...otherLangResults);
-      
-      // Limit results
-      return processedResults.slice(0, limit);
-    } catch (error) {
-      console.error('Error performing search:', error);
-      return [];
-    }
-  },
-  
-  /**
-   * Get excerpt from content with highlighted matches
-   * @param {string} content - Full content
-   * @param {string} query - Search query
-   * @param {number} maxLength - Maximum excerpt length
-   * @returns {string} Excerpt with highlighted matches
-   */
-  getExcerpt(content, query, maxLength = 150) {
-    if (!content) return '';
-    
-    const queryLower = query.toLowerCase();
-    const contentLower = content.toLowerCase();
-    
-    // Find first occurrence
-    const index = contentLower.indexOf(queryLower);
-    
-    if (index === -1) {
-      // No match found, return beginning
-      return content.substring(0, maxLength) + (content.length > maxLength ? '...' : '');
-    }
-    
-    // Extract excerpt around match
-    const start = Math.max(0, index - maxLength / 2);
-    const end = Math.min(content.length, index + query.length + maxLength / 2);
-    
-    let excerpt = content.substring(start, end);
-    
-    // Highlight matches (simple case-insensitive replacement)
-    const regex = new RegExp(`(${query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi');
-    excerpt = excerpt.replace(regex, '<mark>$1</mark>');
-    
-    // Add ellipsis if needed
-    if (start > 0) excerpt = '...' + excerpt;
-    if (end < content.length) excerpt = excerpt + '...';
-    
-    return excerpt;
-  },
-  
-  /**
-   * Tokenize search query to match indexed tokens
-   * @param {string} query - Search query
-   * @returns {Array} Tokenized query terms
-   */
-  tokenizeQuery(query) {
-    if (!query) return [];
-    const tokens = new Set();
-    
-    // Split on whitespace, punctuation, and Arabic word boundaries
-    const words = query.split(/[\s\p{P}\u200C\u200D]+/u).filter(w => w.length > 0);
-    
-    words.forEach(word => {
-      if (word.length > 0) {
-        tokens.add(word);
-        
-        // For Arabic words, also add without common prefixes
-        if (/[\u0600-\u06FF]/.test(word)) {
-          const withoutPrefix = word.replace(/^(ال|ب|ك|ل|و|ف|س|ت|أ|إ|آ)/, '');
-          if (withoutPrefix !== word && withoutPrefix.length > 0) {
-            tokens.add(withoutPrefix);
-          }
-          
-          // Add character n-grams for partial matching
-          if (word.length >= 2) {
-            for (let i = 0; i <= word.length - 2; i++) {
-              const maxLen = Math.min(5, word.length - i);
-              for (let len = 2; len <= maxLen; len++) {
-                tokens.add(word.substring(i, i + len));
-              }
-            }
-          }
-        }
-      }
+    // Search using FlexSearch
+    const results = this.index.search(trimmedQuery, {
+      limit: options.limit || 50,
+      suggest: options.suggest || false
     });
     
-    return Array.from(tokens);
+    // Map results to full document data
+    const mappedResults = results
+      .map(idx => this.searchData[idx])
+      .filter(doc => {
+        // Filter by current language
+        if (doc.language !== currentLang) return false;
+        return true;
+      })
+      .map(doc => {
+        // Calculate relevance score
+        const titleMatch = doc.title.toLowerCase().includes(trimmedQuery.toLowerCase());
+        const contentMatch = doc.content.toLowerCase().includes(trimmedQuery.toLowerCase());
+        const score = titleMatch ? 2 : (contentMatch ? 1 : 0);
+        
+        // Generate snippet
+        const snippet = this.getSnippet(doc.content, trimmedQuery, 150);
+        
+        return {
+          path: doc.path,
+          title: doc.title,
+          snippet: snippet,
+          group: doc.group,
+          score: score
+        };
+      })
+      .sort((a, b) => b.score - a.score) // Sort by relevance
+      .slice(0, options.limit || 10); // Limit results
+    
+    return mappedResults;
   },
   
   /**
-   * Get document by path
-   * @param {string} path - Document path
-   * @returns {Object|null} Document or null
+   * Generate result snippets with highlights
+   * @param {string} content - Content to snippet
+   * @param {string} query - Search query
+   * @param {number} maxLength - Maximum snippet length
+   * @returns {string} Snippet text
    */
-  getDocument(path) {
-    return this.documents.find(doc => doc.path === path) || null;
-  },
-  
-  /**
-   * Check if search is ready
-   * @returns {boolean} True if search is ready
-   */
-  ready() {
-    return this.isReady;
+  getSnippet(content, query, maxLength = 150) {
+    const queryLower = query.toLowerCase();
+    const contentLower = content.toLowerCase();
+    const queryIndex = contentLower.indexOf(queryLower);
+    
+    if (queryIndex === -1) {
+      // No match, return beginning of content
+      return content.substring(0, maxLength).trim() + '...';
+    }
+    
+    // Find snippet around match
+    const start = Math.max(0, queryIndex - maxLength / 2);
+    const end = Math.min(content.length, queryIndex + query.length + maxLength / 2);
+    
+    let snippet = content.substring(start, end);
+    if (start > 0) snippet = '...' + snippet;
+    if (end < content.length) snippet = snippet + '...';
+    
+    return snippet.trim();
   }
 };
 
