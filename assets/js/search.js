@@ -12,7 +12,7 @@ const SearchManager = {
   
   /**
    * Normalize Arabic characters for better search matching
-   * Normalizes: ءأآإ -> أ, ؤ و -> و, ي ى -> ي, ة ه -> ه
+   * Makes variations interchangeable: ءأآإ, ؤ و, ي ى, ة ه
    * @param {string} text - Text to normalize
    * @returns {string} Normalized text
    */
@@ -20,14 +20,28 @@ const SearchManager = {
     if (!text || typeof text !== 'string') return text;
     
     return text
-      // Normalize ءأآإ to أ
+      // Normalize ءأآإ to أ (all variations become أ)
       .replace(/[ءأآإ]/g, 'أ')
-      // Normalize ؤ و to و
+      // Normalize ؤ و to و (all variations become و)
       .replace(/[ؤو]/g, 'و')
-      // Normalize ي ى to ي
+      // Normalize ي ى to ي (all variations become ي)
       .replace(/[يى]/g, 'ي')
-      // Normalize ة ه to ه
+      // Normalize ة ه to ه (all variations become ه)
       .replace(/[ةه]/g, 'ه');
+  },
+  
+  /**
+   * Create FlexSearch encoder that normalizes Arabic characters
+   * @returns {Function} Encoder function for FlexSearch
+   */
+  createArabicEncoder() {
+    const self = this;
+    return function(str) {
+      // Normalize Arabic characters first
+      const normalized = self.normalizeArabic(str);
+      // Then apply lowercase for case-insensitive search
+      return normalized.toLowerCase();
+    };
   },
   
   /**
@@ -204,28 +218,30 @@ const SearchManager = {
     const results = await Promise.all(fetchPromises);
     this.searchData = results.filter(item => item !== null);
     
-    // Initialize FlexSearch index
+    // Initialize FlexSearch index with Arabic normalization encoder
     if (typeof FlexSearch === 'undefined') {
       console.error('FlexSearch library not loaded');
       return;
     }
     
+    // Create encoder that normalizes Arabic characters
+    const arabicEncoder = this.createArabicEncoder();
+    
     this.index = new FlexSearch.Index({
       preset: 'performance',
       tokenize: 'forward',
       cache: 100,
+      encode: arabicEncoder, // Use custom encoder for Arabic normalization
       context: {
         depth: 2,
         resolution: 9
       }
     });
     
-    // Add documents to index (with Arabic normalization)
+    // Add documents to index (normalization happens via encoder)
     this.searchData.forEach((doc, idx) => {
-      // Normalize Arabic characters for better search matching
-      const normalizedTitle = this.normalizeArabic(doc.title);
-      const normalizedContent = this.normalizeArabic(doc.content);
-      const searchableText = `${normalizedTitle} ${normalizedContent}`;
+      // Encoder will normalize Arabic characters automatically
+      const searchableText = `${doc.title} ${doc.content}`;
       this.index.add(idx, searchableText);
     });
     
@@ -312,16 +328,20 @@ const SearchManager = {
       const parsed = JSON.parse(cacheData);
       this.searchData = parsed.data;
       
-      // Reconstruct FlexSearch index
+      // Reconstruct FlexSearch index with Arabic normalization encoder
       if (typeof FlexSearch === 'undefined') {
         console.error('FlexSearch library not loaded');
         return false;
       }
       
+      // Create encoder that normalizes Arabic characters
+      const arabicEncoder = this.createArabicEncoder();
+      
       this.index = new FlexSearch.Index({
         preset: 'performance',
         tokenize: 'forward',
         cache: 100,
+        encode: arabicEncoder, // Use custom encoder for Arabic normalization
         context: {
           depth: 2,
           resolution: 9
@@ -348,14 +368,14 @@ const SearchManager = {
     }
     
     const trimmedQuery = query.trim();
-    // Normalize Arabic characters in search query
-    const normalizedQuery = this.normalizeArabic(trimmedQuery);
+    // Query normalization happens automatically via FlexSearch encoder
+    // No need to normalize manually - encoder handles it
     const currentLang = window.LanguageManager 
       ? window.LanguageManager.getCurrentLanguage() 
       : 'en';
     
-    // Search using FlexSearch with normalized query
-    const results = this.index.search(normalizedQuery, {
+    // Search using FlexSearch (encoder normalizes query automatically)
+    const results = this.index.search(trimmedQuery, {
       limit: options.limit || 50,
       suggest: options.suggest || false
     });
@@ -369,9 +389,10 @@ const SearchManager = {
         return true;
       })
       .map(doc => {
-        // Normalize for comparison
+        // Normalize for relevance scoring (FlexSearch already matched, but we score for ranking)
         const normalizedTitle = this.normalizeArabic(doc.title);
         const normalizedContent = this.normalizeArabic(doc.content);
+        const normalizedQuery = this.normalizeArabic(trimmedQuery);
         
         // Calculate relevance score (using normalized text for matching)
         const titleMatch = normalizedTitle.toLowerCase().includes(normalizedQuery.toLowerCase());
