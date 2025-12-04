@@ -21,6 +21,11 @@ document.addEventListener('DOMContentLoaded', async () => {
       await window.NavigationManager.init();
     }
     
+    // Initialize Search Manager
+    if (window.SearchManager) {
+      await window.SearchManager.init();
+    }
+    
     // Configure Markdown Renderer
     if (window.MarkdownRenderer) {
       window.MarkdownRenderer.configureMarked();
@@ -29,6 +34,11 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Initialize Sidebar (async - will preload titles)
     if (window.SidebarComponent) {
       await window.SidebarComponent.init();
+    }
+    
+    // Initialize Search Component
+    if (window.SearchComponent) {
+      window.SearchComponent.init();
     }
     
     // Initialize Router
@@ -60,11 +70,33 @@ document.addEventListener('DOMContentLoaded', async () => {
       });
     }
     
+    // Set up keyboard shortcuts
+    document.addEventListener('keydown', (e) => {
+      // Cmd/Ctrl+K to open search
+      if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+        e.preventDefault();
+        if (window.SearchComponent) {
+          window.SearchComponent.open();
+        }
+      }
+      
+      // Escape to close search (if search is open)
+      if (e.key === 'Escape' && window.SearchComponent && window.SearchComponent.isOpen) {
+        window.SearchComponent.hideResults();
+        window.SearchComponent.searchInput?.blur();
+      }
+    });
+    
     // Listen for language changes to update sidebar and reload content
     window.addEventListener('languagechange', async () => {
       // Update sidebar (async - will preload titles)
       if (window.SidebarComponent) {
         await window.SidebarComponent.updateForLanguage();
+      }
+      
+      // Close search if open (results will update on next search)
+      if (window.SearchComponent && window.SearchComponent.isOpen) {
+        window.SearchComponent.hideResults();
       }
       
       // Reload current page with new language
