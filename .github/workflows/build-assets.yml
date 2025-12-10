@@ -1,4 +1,4 @@
-name: Generate File Manifest
+name: Build Assets
 
 on:
   push:
@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  generate-manifest:
+  build-assets:
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -16,8 +16,14 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
       
-      - name: Generate manifest
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+          
+      - name: Generate files
         run: |
+          # 1. Generate Manifest
           # Create temporary file for entries
           temp_file=$(mktemp)
           
@@ -78,16 +84,19 @@ jobs:
           
           # Clean up
           rm -f "$temp_file"
+
+          # 2. Generate Search Index
+          python scripts/generate_search_index.py
       
-      - name: Commit manifest
+      - name: Commit changes
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
-          git add -f manifest.json
+          git add -f manifest.json search-index.json
           if git diff --staged --quiet; then
             echo "No changes to commit"
           else
-            git commit -m "Auto-update file manifest"
+            git commit -m "Auto-update assets (manifest and search index)"
             git push
           fi
 
