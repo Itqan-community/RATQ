@@ -3,6 +3,9 @@ name: Build Assets
 on:
   push:
     branches: [ main, arabic ]
+    paths-ignore:
+      - 'manifest.json'
+      - 'search-index.json'
   workflow_dispatch:
 
 jobs:
