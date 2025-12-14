@@ -17,3 +17,5 @@
 ### This is a living document, please contribute if you know of any resources that are not listed here. Or if you find any errors.
 
 You can use [Obsidian](https://obsidian.md/) to navigate easily through this project
+Or through 
+[https://itqan-community.github.io/RATQ/](https://itqan-community.github.io/RATQ/)
