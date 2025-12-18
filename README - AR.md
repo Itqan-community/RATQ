@@ -20,5 +20,6 @@ title: خارطة الطريق والتقنيات للقرآن
 ### هذا مستند حي، يرجى المساهمة إذا كنت تعرف أي موارد غير مذكورة هنا. أو إذا وجدت أي أخطاء.
 
 يمكنك استخدام [Obsidian](https://obsidian.md/) للتنقل بسهولة عبر هذا المشروع
-او من خلال [https://itqan-community.github.io/RATQ](https://itqan-community.github.io/RATQ/)/
+او من خلال 
+[RATQ.itqan.dev](https://ratq.itqan.dev/)
 

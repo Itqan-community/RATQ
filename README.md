@@ -18,4 +18,4 @@
 
 You can use [Obsidian](https://obsidian.md/) to navigate easily through this project
 Or through 
-[https://itqan-community.github.io/RATQ/](https://itqan-community.github.io/RATQ/)
+[RATQ.itqan.dev](https://ratq.itqan.dev/)
