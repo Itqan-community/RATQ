@@ -1,0 +1,105 @@
+name: Build Assets
+
+on:
+  push:
+    branches: [ main, arabic ]
+    paths-ignore:
+      - 'manifest.json'
+      - 'search-index.json'
+  workflow_dispatch:
+
+jobs:
+  build-assets:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+      
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+          
+      - name: Generate files
+        run: |
+          # 1. Generate Manifest
+          # Create temporary file for entries
+          temp_file=$(mktemp)
+          
+          # Find all .md files, sort them, and process each
+          first=true
+          find . -name "*.md" -type f ! -path "./.git/*" ! -path "./node_modules/*" ! -path "./.github/*" | \
+          sort | \
+          while IFS= read -r file; do
+            # Remove leading ./
+            clean_path="${file#./}"
+            
+            # Extract title from filename (remove .md, remove - AR suffix)
+            filename=$(basename "$clean_path" .md)
+            title=$(echo "$filename" | sed 's/ - AR$//' | sed 's/ -AR$//')
+            
+            # Determine group based on directory
+            if [[ "$clean_path" == "Apps/"* ]]; then
+              group="apps"
+            elif [[ "$clean_path" == "Technologies/"* ]]; then
+              group="technologies"
+            else
+              group="root"
+            fi
+            
+            # Check if AR version exists (only for non-AR files)
+            has_ar="false"
+            if [[ "$clean_path" != *" - AR.md" ]] && [[ "$clean_path" != *"-AR.md" ]]; then
+              ar_path="${clean_path%.md} - AR.md"
+              if [ -f "$ar_path" ]; then
+                has_ar="true"
+              fi
+            fi
+            
+            # Add comma if not first entry
+            if [ "$first" = false ]; then
+              echo ',' >> "$temp_file"
+            fi
+            first=false
+            
+            # Add file entry
+            echo "    {" >> "$temp_file"
+            echo "      \"path\": \"$clean_path\"," >> "$temp_file"
+            echo "      \"title\": \"$title\"," >> "$temp_file"
+            echo "      \"group\": \"$group\"," >> "$temp_file"
+            echo "      \"hasAR\": $has_ar" >> "$temp_file"
+            echo -n "    }" >> "$temp_file"
+          done
+          
+          # Build final JSON
+          echo '{' > manifest.json
+          echo '  "files": [' >> manifest.json
+          if [ -s "$temp_file" ]; then
+            cat "$temp_file" >> manifest.json
+          fi
+          echo '' >> manifest.json
+          echo '  ]' >> manifest.json
+          echo '}' >> manifest.json
+          
+          # Clean up
+          rm -f "$temp_file"
+
+          # 2. Generate Search Index
+          python scripts/generate_search_index.py
+      
+      - name: Commit changes
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add -f manifest.json search-index.json
+          if git diff --staged --quiet; then
+            echo "No changes to commit"
+          else
+            git commit -m "Auto-update assets (manifest and search index)"
+            git push
+          fi
+
