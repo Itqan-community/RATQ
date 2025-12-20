@@ -73,6 +73,12 @@
       "hasAR": true
     },
     {
+      "path": "Technologies/AQQAC.md",
+      "title": "AQQAC",
+      "group": "technologies",
+      "hasAR": false
+    },
+    {
       "path": "Technologies/Alfanous_Build_Process.md",
       "title": "Alfanous_Build_Process",
       "group": "technologies",
