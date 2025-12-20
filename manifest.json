@@ -103,6 +103,12 @@
       "hasAR": true
     },
     {
+      "path": "Technologies/QuranEnc.md",
+      "title": "QuranEnc",
+      "group": "technologies",
+      "hasAR": false
+    },
+    {
       "path": "Technologies/Technologies.md",
       "title": "Technologies",
       "group": "technologies",
