@@ -181,6 +181,12 @@
       "hasAR": true
     },
     {
+      "path": "Technologies/search_engines_benchmarking.md",
+      "title": "search_engines_benchmarking",
+      "group": "technologies",
+      "hasAR": false
+    },
+    {
       "path": "Technologies/tanzil - AR.md",
       "title": "tanzil",
       "group": "technologies",
