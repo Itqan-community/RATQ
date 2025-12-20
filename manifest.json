@@ -97,6 +97,12 @@
       "hasAR": true
     },
     {
+      "path": "Technologies/QQAC.md",
+      "title": "QQAC",
+      "group": "technologies",
+      "hasAR": false
+    },
+    {
       "path": "Technologies/QuranAnalysis - AR.md",
       "title": "QuranAnalysis",
       "group": "technologies",
