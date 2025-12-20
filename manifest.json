@@ -73,6 +73,12 @@
       "hasAR": true
     },
     {
+      "path": "Technologies/AQQAC.md",
+      "title": "AQQAC",
+      "group": "technologies",
+      "hasAR": false
+    },
+    {
       "path": "Technologies/Alfanous_Build_Process.md",
       "title": "Alfanous_Build_Process",
       "group": "technologies",
@@ -91,6 +97,12 @@
       "hasAR": true
     },
     {
+      "path": "Technologies/QQAC.md",
+      "title": "QQAC",
+      "group": "technologies",
+      "hasAR": false
+    },
+    {
       "path": "Technologies/QuranAnalysis - AR.md",
       "title": "QuranAnalysis",
       "group": "technologies",
@@ -101,6 +113,12 @@
       "title": "QuranAnalysis",
       "group": "technologies",
       "hasAR": true
+    },
+    {
+      "path": "Technologies/QuranEnc.md",
+      "title": "QuranEnc",
+      "group": "technologies",
+      "hasAR": false
     },
     {
       "path": "Technologies/Technologies.md",
