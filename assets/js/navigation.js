@@ -26,6 +26,16 @@ const NavigationManager = {
     { path: 'Apps/Quran Revision Companion.md', title: 'Quran Revision Companion', group: 'apps' },
     { path: 'Apps/quran.com.md', title: 'quran.com', group: 'apps' },
 
+    // Resources directory
+    { path: 'resources/AAQQAC.md', title: 'AQQA', group: 'resources' },
+    { path: 'resources/QQAC.md', title: 'QQAC', group: 'resources' },
+    { path: 'resources/quran-json.md', title: 'Quran JSON', group: 'resources' },
+    { path: 'resources/quran.com-api.md', title: 'Quran.com API', group: 'resources' },
+    { path: 'resources/QuranEnc.md', title: 'Quran Encylopedia', group: 'resources' },
+    { path: 'resources/quranic-questions-resources.md', title: 'Quranic Questions Resources', group: 'resources' },
+    { path: 'tanzi.md', title: "Tanzil", group: 'resources' },
+
+
     // Technologies directory
     { path: 'Technologies/Technologies.md', title: 'Technologies', group: 'technologies' },
     { path: 'Technologies/alfanous.md', title: 'Alfanous', group: 'technologies' },
@@ -37,7 +47,6 @@ const NavigationManager = {
     { path: 'Technologies/QuranAnalysis.md', title: 'Quran Analysis', group: 'technologies' },
     { path: 'Technologies/quranic-search-v2.md', title: 'Quranic Search v2', group: 'technologies' },
     { path: 'Technologies/quranic.md', title: 'Quranic', group: 'technologies' },
-    { path: 'Technologies/tanzil.md', title: 'Tanzil', group: 'technologies' }
   ],
 
   /**
@@ -109,14 +118,14 @@ const NavigationManager = {
 
     // First pass: identify base files that have AR versions
     this.fileManifest.forEach(file => {
-      const isARFile = file.path.includes(' - AR.md') || file.path.includes(' -AR.md');
+      const isARFile = file.path.includes('-AR.md');
       if (isARFile) {
         // Explicit AR file in manifest
-        const baseFile = file.path.replace(/ - AR\.md$/, '.md').replace(/ -AR\.md$/, '.md');
+        const baseFile = file.path.replace(/-AR\.md$/, '.md');
         baseFilesWithAR.add(baseFile);
       } else if (file.hasAR === true) {
         // Base file with hasAR flag - check if AR file exists in manifest
-        const arPath = file.path.replace(/\.md$/, ' - AR.md');
+        const arPath = file.path.replace(/\.md$/, '-AR.md');
         const arFileExists = this.fileManifest.some(f => f.path === arPath);
         if (arFileExists) {
           baseFilesWithAR.add(file.path);
@@ -129,9 +138,9 @@ const NavigationManager = {
 
     // Second pass: add files based on language
     this.fileManifest.forEach(file => {
-      const isARFile = file.path.includes(' - AR.md') || file.path.includes(' -AR.md');
+      const isARFile = file.path.includes('-AR.md');
       const baseFile = isARFile
-        ? file.path.replace(/ - AR\.md$/, '.md').replace(/ -AR\.md$/, '.md')
+        ? file.path.replace(/-AR\.md$/, '.md')
         : file.path;
 
       if (currentLang === 'en') {
@@ -218,7 +227,7 @@ const NavigationManager = {
       return file.title;
     }
     // Fallback: extract title from filename
-    const baseName = path.split('/').pop().replace(/\.md$/, '').replace(/ - AR$/, '');
+    const baseName = path.split('/').pop().replace(/\.md$/, '').replace(/-AR$/, '');
     return baseName;
   },
 
@@ -234,7 +243,7 @@ const NavigationManager = {
     }
 
     // Check if file has -AR suffix
-    if (!filePath.includes(' - AR.md') && !filePath.includes(' -AR.md')) {
+    if (!filePath.includes('-AR.md')) {
       return null;
     }
 
@@ -303,7 +312,7 @@ const NavigationManager = {
     const promises = this.fileManifest
       .filter(file => file.hasAR)
       .map(file => {
-        const arPath = file.path.replace(/\.md$/, ' - AR.md');
+        const arPath = file.path.replace(/\.md$/, '-AR.md');
         return this.fetchTitleFromFile(arPath);
       });
 
@@ -322,8 +331,8 @@ const NavigationManager = {
     }
 
     // For AR files: check if base file has hasAR flag (AR file might not be explicitly listed)
-    if (path.includes(' - AR.md') || path.includes(' -AR.md')) {
-      const baseFile = path.replace(/ - AR\.md$/, '.md').replace(/ -AR\.md$/, '.md');
+    if (path.includes('-AR.md')) {
+      const baseFile = path.replace(/-AR\.md$/, '.md');
       const baseFileEntry = this.fileManifest.find(f => f.path === baseFile);
       if (baseFileEntry && baseFileEntry.hasAR === true) {
         return true;
