@@ -7,7 +7,7 @@
       "hasAR": false
     },
     {
-      "path": "Apps/Quran Revision Companion.md",
+      "path": "Apps/Quran-Revision-Companion.md",
       "title": "Quran Revision Companion",
       "group": "apps",
       "hasAR": false
@@ -25,31 +25,31 @@
       "hasAR": false
     },
     {
-      "path": "Available Apps - AR.md",
+      "path": "Available-Apps-AR.md",
       "title": "Available Apps",
       "group": "root",
       "hasAR": false
     },
     {
-      "path": "Available Apps.md",
+      "path": "Available-Apps.md",
       "title": "Available Apps",
       "group": "root",
       "hasAR": true
     },
     {
-      "path": "Development Guidelines - AR.md",
+      "path": "Development-Guidelines-AR.md",
       "title": "Development Guidelines",
       "group": "root",
       "hasAR": false
     },
     {
-      "path": "Development Guidelines.md",
+      "path": "Development-Guidelines.md",
       "title": "Development Guidelines",
       "group": "root",
       "hasAR": true
     },
     {
-      "path": "Quran.Foundation - AR.md",
+      "path": "Quran.Foundation-AR.md",
       "title": "Quran.Foundation",
       "group": "root",
       "hasAR": false
@@ -61,7 +61,7 @@
       "hasAR": true
     },
     {
-      "path": "README - AR.md",
+      "path": "README-AR.md",
       "title": "README",
       "group": "root",
       "hasAR": false
@@ -85,7 +85,7 @@
       "hasAR": false
     },
     {
-      "path": "Technologies/Kalimat - AR.md",
+      "path": "Technologies/Kalimat-AR.md",
       "title": "Kalimat",
       "group": "technologies",
       "hasAR": false
@@ -103,7 +103,7 @@
       "hasAR": false
     },
     {
-      "path": "Technologies/QuranAnalysis - AR.md",
+      "path": "Technologies/QuranAnalysis-AR.md",
       "title": "QuranAnalysis",
       "group": "technologies",
       "hasAR": false
@@ -127,7 +127,7 @@
       "hasAR": false
     },
     {
-      "path": "Technologies/alfanous - AR.md",
+      "path": "Technologies/alfanous-AR.md",
       "title": "alfanous",
       "group": "technologies",
       "hasAR": false
@@ -139,7 +139,7 @@
       "hasAR": true
     },
     {
-      "path": "Technologies/othman - AR.md",
+      "path": "Technologies/othman-AR.md",
       "title": "othman",
       "group": "technologies",
       "hasAR": false
@@ -151,7 +151,7 @@
       "hasAR": true
     },
     {
-      "path": "Technologies/quran-json - AR.md",
+      "path": "Technologies/quran-json-AR.md",
       "title": "quran-json",
       "group": "technologies",
       "hasAR": false
@@ -163,7 +163,7 @@
       "hasAR": true
     },
     {
-      "path": "Technologies/quran.com-api - AR.md",
+      "path": "Technologies/quran.com-api-AR.md",
       "title": "quran.com-api",
       "group": "technologies",
       "hasAR": false
@@ -175,13 +175,13 @@
       "hasAR": true
     },
     {
-      "path": "Technologies/quranic - AR.md",
+      "path": "Technologies/quranic-AR.md",
       "title": "quranic",
       "group": "technologies",
       "hasAR": false
     },
     {
-      "path": "Technologies/quranic-search-v2 - AR.md",
+      "path": "Technologies/quranic-search-v2-AR.md",
       "title": "quranic-search-v2",
       "group": "technologies",
       "hasAR": false
@@ -205,7 +205,7 @@
       "hasAR": false
     },
     {
-      "path": "Technologies/tanzil - AR.md",
+      "path": "Technologies/tanzil-AR.md",
       "title": "tanzil",
       "group": "technologies",
       "hasAR": false
