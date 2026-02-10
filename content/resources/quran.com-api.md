@@ -1,6 +1,6 @@
 # quran.com-API
 
-[quran.com-API](https://api-docs.quran.foundation/docs/category/content-apis/) is a RESTful API provided by [Quran.Foundation](../Quran.Foundation.md) that is designed to empower Muslim App developers to build on top of the same backend that powers Quran Foundation apps. These APIs provide the functionality and content on Quran.com and QuranReflect, facilitating easy access to comprehensive ayah and surah level content. User authentication enhances the App's functionality, enabling the sync of bookmarks, notes, reflections, reading history, streaks, and more. By integrating with this APIs users can enjoy a rich connected experience across Quranic apps, and you can focus on innovating unique solutions that the world needs.
+[quran.com-API](https://api-docs.quran.foundation/docs/category/content-apis/) is a RESTful API provided by [Quran.Foundation](../../docs/en/quran-foundation.md) that is designed to empower Muslim App developers to build on top of the same backend that powers Quran Foundation apps. These APIs provide the functionality and content on Quran.com and QuranReflect, facilitating easy access to comprehensive ayah and surah level content. User authentication enhances the App's functionality, enabling the sync of bookmarks, notes, reflections, reading history, streaks, and more. By integrating with this APIs users can enjoy a rich connected experience across Quranic apps, and you can focus on innovating unique solutions that the world needs.
 
 Quran.Foundation Content APIs offer programmatic access to the Quran's core content like chapters, verses, recitations, translations, and more, distinct from user-specific data like notes and bookmarks provided by User-related APIs.
 
@@ -17,14 +17,14 @@ The code is written in Ruby and you can find is in this repository [quran.com-ap
 - [tanzil](./tanzil.md): An international Quranic project aimed at providing a highly-verified precise Quran text.
 - [QuranComplex](https://qurancomplex.gov.sa/): King Fahd Glorious Qur'an Printing Complex is a leader in serving the Glorious Qur'an and its Sciences, translating its Meanings, and safeguarding the Qur'anic Text from distortion, through the optimal use of advanced technologies in the field of printing, audio recordings, electronic publishing and digital applications.
 - [Collin Fair](https://github.com/cpfair/quran-align): A tool for producing word-precise segmentation of recorded Qur'anic recitation.
-- [QuranEnc](https://quranenc.com/en/home): A portal featuring free and trustworthy translations of the meanings and exegeses of the noble Qur'an in many world languages.
+- [QuranEnc](./QuranEnc.md): A portal featuring free and trustworthy translations of the meanings and exegeses of the noble Qur'an in many world languages.
 - [Zekr](https://zekr.org): An open platform Quran study tool for browsing and researching on the Quran
 - [Tarteel](https://tarteel.ai/): An AI-powered Quran memorization app. It's designed to help you memorize smarter, whether you're searching for a verse, tracking your progress, or following along with your recitation.
 - [Lokalize](https://lokalise.com/): A computer-aided translation system that focuses on productivity and quality assurance and provides a seamless localization workflow.
 
 ## Searching Feature
 
-The architecture of Quran.com search integrates both Elasticsearch and [Kalimat](./Kalimat.md) to leverage their respective strengths, but they serve different roles within the system.
+The architecture of Quran.com search integrates both Elasticsearch and [Kalimat](../technologies/Kalimat.md) to leverage their respective strengths, but they serve different roles within the system.
 
 ### Elasticsearch Components
 
