@@ -13,10 +13,10 @@ const NavigationManager = {
    */
   fileManifest: [
     // Docs
-    { path: 'docs/en/index.md', title: 'RATQ', group: 'docs', hasAR: true },
-    { path: 'docs/en/available-apps.md', title: 'Available Apps', group: 'docs', hasAR: true },
-    { path: 'docs/en/development-guidelines.md', title: 'Development Guidelines', group: 'docs', hasAR: true },
-    { path: 'docs/en/quran-foundation.md', title: 'Quran Foundation', group: 'docs', hasAR: true },
+    { path: 'docs/en/index.md', title: 'RATQ', arTitle: 'خارطة الطريق والتقنيات للقرآن', group: 'docs', hasAR: true },
+    { path: 'docs/en/available-apps.md', title: 'Available Apps', arTitle: 'معايير المقارنة', group: 'docs', hasAR: true },
+    { path: 'docs/en/development-guidelines.md', title: 'Development Guidelines', arTitle: 'دليل التطوير القرآني', group: 'docs', hasAR: true },
+    { path: 'docs/en/quran-foundation.md', title: 'Quran Foundation', arTitle: 'مؤسسة القرآن', group: 'docs', hasAR: true },
 
     // Apps
     { path: 'content/apps/eQuran.md', title: 'eQuran', group: 'apps' },
@@ -28,20 +28,20 @@ const NavigationManager = {
     { path: 'content/resources/AQQAC.md', title: 'AQQAC', group: 'resources' },
     { path: 'content/resources/QQAC.md', title: 'QQAC', group: 'resources' },
     { path: 'content/resources/QuranEnc.md', title: 'QuranEnc', group: 'resources' },
-    { path: 'content/resources/quran-json.md', title: 'Quran JSON', group: 'resources', hasAR: true },
-    { path: 'content/resources/quran.com-api.md', title: 'Quran.com API', group: 'resources', hasAR: true },
+    { path: 'content/resources/quran-json.md', title: 'Quran JSON', arTitle: 'quran-json', group: 'resources', hasAR: true },
+    { path: 'content/resources/quran.com-api.md', title: 'Quran.com API', arTitle: 'واجهة quran.com البرمجية', group: 'resources', hasAR: true },
     { path: 'content/resources/quranic-questions-resources.md', title: 'Quranic Questions Resources', group: 'resources' },
-    { path: 'content/resources/tanzil.md', title: 'Tanzil', group: 'resources', hasAR: true },
+    { path: 'content/resources/tanzil.md', title: 'Tanzil', arTitle: 'تنزيل', group: 'resources', hasAR: true },
 
     // Technologies
     { path: 'content/technologies/Technologies.md', title: 'Technologies', group: 'technologies' },
-    { path: 'content/technologies/alfanous.md', title: 'Alfanous', group: 'technologies', hasAR: true },
+    { path: 'content/technologies/alfanous.md', title: 'Alfanous', arTitle: 'ألفانوس', group: 'technologies', hasAR: true },
     { path: 'content/technologies/Alfanous_Build_Process.md', title: 'Alfanous Build Process', group: 'technologies' },
-    { path: 'content/technologies/Kalimat.md', title: 'Kalimat', group: 'technologies', hasAR: true },
-    { path: 'content/technologies/QuranAnalysis.md', title: 'QuranAnalysis', group: 'technologies', hasAR: true },
-    { path: 'content/technologies/othman.md', title: 'Othman', group: 'technologies', hasAR: true },
-    { path: 'content/technologies/quranic.md', title: 'Quranic', group: 'technologies', hasAR: true },
-    { path: 'content/technologies/quranic-search-v2.md', title: 'Quranic Search v2', group: 'technologies', hasAR: true },
+    { path: 'content/technologies/Kalimat.md', title: 'Kalimat', arTitle: 'كلمات (Kalimat)', group: 'technologies', hasAR: true },
+    { path: 'content/technologies/QuranAnalysis.md', title: 'QuranAnalysis', arTitle: 'تحليل القرآن', group: 'technologies', hasAR: true },
+    { path: 'content/technologies/othman.md', title: 'Othman', arTitle: 'متصفح القرآن عثمان', group: 'technologies', hasAR: true },
+    { path: 'content/technologies/quranic.md', title: 'Quranic', arTitle: 'محرك البحث الدلالي القرآني', group: 'technologies', hasAR: true },
+    { path: 'content/technologies/quranic-search-v2.md', title: 'Quranic Search v2', arTitle: 'البحث القرآني v2', group: 'technologies', hasAR: true },
     { path: 'content/technologies/search_engines_benchmarking.md', title: 'Search Engines Benchmarking', group: 'technologies' },
   ],
 
@@ -169,9 +169,12 @@ const NavigationManager = {
       return this.titleCache.get(path);
     }
 
+    const currentLang = window.LanguageManager ? window.LanguageManager.getCurrentLanguage() : 'en';
+
     // Try direct match
     const file = this.findFile(path);
     if (file) {
+      if (currentLang === 'ar' && file.arTitle) return file.arTitle;
       return file.title;
     }
 
@@ -179,7 +182,10 @@ const NavigationManager = {
     if (window.LanguageManager && window.LanguageManager.isArPath(path)) {
       const enPath = window.LanguageManager.toEnPath(path);
       const enFile = this.findFile(enPath);
-      if (enFile) return enFile.title;
+      if (enFile) {
+        if (currentLang === 'ar' && enFile.arTitle) return enFile.arTitle;
+        return enFile.title;
+      }
     }
 
     // Fallback: extract title from filename
