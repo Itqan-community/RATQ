@@ -1,220 +1,137 @@
 {
   "files": [
     {
-      "path": "Apps/Noor-Ul-Huda.md",
-      "title": "Noor-Ul-Huda",
-      "group": "apps",
-      "hasAR": false
+      "path": "docs/en/index.md",
+      "title": "RATQ",
+      "group": "docs",
+      "hasAR": true
     },
     {
-      "path": "Apps/Quran-Revision-Companion.md",
-      "title": "Quran Revision Companion",
-      "group": "apps",
-      "hasAR": false
+      "path": "docs/en/available-apps.md",
+      "title": "Available Apps",
+      "group": "docs",
+      "hasAR": true
     },
     {
-      "path": "Apps/eQuran.md",
+      "path": "docs/en/development-guidelines.md",
+      "title": "Development Guidelines",
+      "group": "docs",
+      "hasAR": true
+    },
+    {
+      "path": "docs/en/quran-foundation.md",
+      "title": "Quran Foundation",
+      "group": "docs",
+      "hasAR": true
+    },
+    {
+      "path": "content/apps/eQuran.md",
       "title": "eQuran",
-      "group": "apps",
-      "hasAR": false
+      "group": "apps"
     },
     {
-      "path": "Apps/quran.com.md",
+      "path": "content/apps/Noor-Ul-Huda.md",
+      "title": "Noor-Ul-Huda",
+      "group": "apps"
+    },
+    {
+      "path": "content/apps/quran.com.md",
       "title": "quran.com",
-      "group": "apps",
-      "hasAR": false
+      "group": "apps"
     },
     {
-      "path": "Available-Apps-AR.md",
-      "title": "Available Apps",
-      "group": "root",
-      "hasAR": false
+      "path": "content/apps/Quran-Revision-Companion.md",
+      "title": "Quran Revision Companion",
+      "group": "apps"
     },
     {
-      "path": "Available-Apps.md",
-      "title": "Available Apps",
-      "group": "root",
-      "hasAR": true
-    },
-    {
-      "path": "Development-Guidelines-AR.md",
-      "title": "Development Guidelines",
-      "group": "root",
-      "hasAR": false
-    },
-    {
-      "path": "Development-Guidelines.md",
-      "title": "Development Guidelines",
-      "group": "root",
-      "hasAR": true
-    },
-    {
-      "path": "Quran.Foundation-AR.md",
-      "title": "Quran.Foundation",
-      "group": "root",
-      "hasAR": false
-    },
-    {
-      "path": "Quran.Foundation.md",
-      "title": "Quran.Foundation",
-      "group": "root",
-      "hasAR": true
-    },
-    {
-      "path": "README-AR.md",
-      "title": "README",
-      "group": "root",
-      "hasAR": false
-    },
-    {
-      "path": "README.md",
-      "title": "README",
-      "group": "root",
-      "hasAR": true
-    },
-    {
-      "path": "Technologies/AQQAC.md",
+      "path": "content/resources/AQQAC.md",
       "title": "AQQAC",
-      "group": "technologies",
-      "hasAR": false
+      "group": "resources"
     },
     {
-      "path": "Technologies/Alfanous_Build_Process.md",
-      "title": "Alfanous_Build_Process",
-      "group": "technologies",
-      "hasAR": false
-    },
-    {
-      "path": "Technologies/Kalimat-AR.md",
-      "title": "Kalimat",
-      "group": "technologies",
-      "hasAR": false
-    },
-    {
-      "path": "Technologies/Kalimat.md",
-      "title": "Kalimat",
-      "group": "technologies",
-      "hasAR": true
-    },
-    {
-      "path": "Technologies/QQAC.md",
+      "path": "content/resources/QQAC.md",
       "title": "QQAC",
-      "group": "technologies",
-      "hasAR": false
+      "group": "resources"
     },
     {
-      "path": "Technologies/QuranAnalysis-AR.md",
-      "title": "QuranAnalysis",
-      "group": "technologies",
-      "hasAR": false
-    },
-    {
-      "path": "Technologies/QuranAnalysis.md",
-      "title": "QuranAnalysis",
-      "group": "technologies",
-      "hasAR": true
-    },
-    {
-      "path": "Technologies/QuranEnc.md",
+      "path": "content/resources/QuranEnc.md",
       "title": "QuranEnc",
-      "group": "technologies",
-      "hasAR": false
+      "group": "resources"
     },
     {
-      "path": "Technologies/Technologies.md",
+      "path": "content/resources/quran-json.md",
+      "title": "Quran JSON",
+      "group": "resources",
+      "hasAR": true
+    },
+    {
+      "path": "content/resources/quran.com-api.md",
+      "title": "Quran.com API",
+      "group": "resources",
+      "hasAR": true
+    },
+    {
+      "path": "content/resources/quranic-questions-resources.md",
+      "title": "Quranic Questions Resources",
+      "group": "resources"
+    },
+    {
+      "path": "content/resources/tanzil.md",
+      "title": "Tanzil",
+      "group": "resources",
+      "hasAR": true
+    },
+    {
+      "path": "content/technologies/Technologies.md",
       "title": "Technologies",
-      "group": "technologies",
-      "hasAR": false
+      "group": "technologies"
     },
     {
-      "path": "Technologies/alfanous-AR.md",
-      "title": "alfanous",
-      "group": "technologies",
-      "hasAR": false
-    },
-    {
-      "path": "Technologies/alfanous.md",
-      "title": "alfanous",
+      "path": "content/technologies/alfanous.md",
+      "title": "Alfanous",
       "group": "technologies",
       "hasAR": true
     },
     {
-      "path": "Technologies/othman-AR.md",
-      "title": "othman",
-      "group": "technologies",
-      "hasAR": false
+      "path": "content/technologies/Alfanous_Build_Process.md",
+      "title": "Alfanous Build Process",
+      "group": "technologies"
     },
     {
-      "path": "Technologies/othman.md",
-      "title": "othman",
+      "path": "content/technologies/Kalimat.md",
+      "title": "Kalimat",
       "group": "technologies",
       "hasAR": true
     },
     {
-      "path": "Technologies/quran-json-AR.md",
-      "title": "quran-json",
-      "group": "technologies",
-      "hasAR": false
-    },
-    {
-      "path": "Technologies/quran-json.md",
-      "title": "quran-json",
+      "path": "content/technologies/QuranAnalysis.md",
+      "title": "QuranAnalysis",
       "group": "technologies",
       "hasAR": true
     },
     {
-      "path": "Technologies/quran.com-api-AR.md",
-      "title": "quran.com-api",
-      "group": "technologies",
-      "hasAR": false
-    },
-    {
-      "path": "Technologies/quran.com-api.md",
-      "title": "quran.com-api",
+      "path": "content/technologies/othman.md",
+      "title": "Othman",
       "group": "technologies",
       "hasAR": true
     },
     {
-      "path": "Technologies/quranic-AR.md",
-      "title": "quranic",
-      "group": "technologies",
-      "hasAR": false
-    },
-    {
-      "path": "Technologies/quranic-search-v2-AR.md",
-      "title": "quranic-search-v2",
-      "group": "technologies",
-      "hasAR": false
-    },
-    {
-      "path": "Technologies/quranic-search-v2.md",
-      "title": "quranic-search-v2",
+      "path": "content/technologies/quranic.md",
+      "title": "Quranic",
       "group": "technologies",
       "hasAR": true
     },
     {
-      "path": "Technologies/quranic.md",
-      "title": "quranic",
+      "path": "content/technologies/quranic-search-v2.md",
+      "title": "Quranic Search v2",
       "group": "technologies",
       "hasAR": true
     },
     {
-      "path": "Technologies/search_engines_benchmarking.md",
-      "title": "search_engines_benchmarking",
-      "group": "technologies",
-      "hasAR": false
-    },
-    {
-      "path": "Technologies/tanzil-AR.md",
-      "title": "tanzil",
-      "group": "technologies",
-      "hasAR": false
-    },
-    {
-      "path": "Technologies/tanzil.md",
-      "title": "tanzil",
-      "group": "technologies",
-      "hasAR": true
+      "path": "content/technologies/search_engines_benchmarking.md",
+      "title": "Search Engines Benchmarking",
+      "group": "technologies"
     }
   ]
 }

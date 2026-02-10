@@ -37,11 +37,25 @@ def extract_title_from_content(content):
 
 def get_file_group(path):
     """Determine group based on directory"""
-    if path.startswith("Apps/"):
+    if path.startswith("content/apps/"):
         return "apps"
-    elif path.startswith("Technologies/"):
+    elif path.startswith("content/technologies/"):
         return "technologies"
+    elif path.startswith("content/resources/"):
+        return "resources"
+    elif path.startswith("docs/"):
+        return "docs"
     return "root"
+
+
+def is_arabic_file(path):
+    """Check if a file is an Arabic version based on directory path"""
+    # docs/ar/...  or  content/<category>/ar/...
+    if path.startswith("docs/ar/"):
+        return True
+    if path.startswith("content/") and "/ar/" in path:
+        return True
+    return False
 
 
 def generate_index():
@@ -73,14 +87,11 @@ def generate_index():
                 if not title:
                     title = extract_title_from_content(content)
                 if not title:
-                    title = os.path.splitext(filename)[0].replace("-AR", "")
+                    title = os.path.splitext(filename)[0]
 
-                # Determine language
-                is_ar = "-AR.md" in filename
+                # Determine language from directory structure
+                is_ar = is_arabic_file(rel_path)
                 language = "ar" if is_ar else "en"
-
-                # Clean content for search index (remove markdown syntax mostly done by flexsearch,
-                # but we can do basic cleanup if needed, keeping it raw for now as flexsearch handles it well)
 
                 search_data.append(
                     {
