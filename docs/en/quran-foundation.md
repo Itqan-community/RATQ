@@ -8,11 +8,11 @@ Quran.Foundation is run by a board of directors and trustees responsible for its
 
 ## Platforms
 
-1. [Quran.com](./Apps/quran.com.md)
+1. [Quran.com](../../content/apps/quran.com.md)
 
    Quran.com is a web application designed to make the Quran accessible to everyone by providing translations, tafsir (exegesis), recitations, and word-by-word translations. It offers various tools for deeper Quranic study in multiple languages, making it easier to understand the Quran's meanings.
 
-2. [Quran.com-API](./resources/quran.com-api.md)
+2. [Quran.com-API](../../content/resources/quran.com-api.md)
 
    Quran.com-API is a RESTful API that is designed to empower Muslim App developers to build on top of the same backend that powers Quran Foundation apps. These APIs provide the functionality and content on Quran.com and QuranReflect, facilitating easy access to comprehensive ayah-and-surah-level content. User authentication enhances the App's functionality, enabling the sync of bookmarks, notes, reflections, reading history, streaks, and more. By integrating with this APIs users can enjoy a rich connected experience across Quranic apps, and you can focus on innovating unique solutions that the world needs.
 
