@@ -460,7 +460,7 @@ from html import escape as htmlescape
 
 ## Resources
 
-- [Tanzil](./tanzil.md): for Quran text, and translations.
+- [Tanzil](../resources/tanzil.md): for Quran text, and translations.
 - [QuranCorpus](https://corpus.quran.com/): for Quranic corpus.
 
 ## [License](#table-of-contents)

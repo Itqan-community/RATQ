@@ -461,7 +461,7 @@ from html import escape as htmlescape
 
 ## [الموارد](#جدول-المحتويات)
 
-- [Tanzil](../resources/tanzil-AR.md): لنص القرآن والترجمات.
+- [Tanzil](../../resources/ar/tanzil.md): لنص القرآن والترجمات.
 - [QuranCorpus](https://corpus.quran.com/): للمجموعة القرآنية.
 
 ## [الترخيص](#جدول-المحتويات)

@@ -62,7 +62,7 @@ Quran Analysis started as an MSc project at the University of Leeds in 2015, sup
 
 ### External Resources
 
-1. **[Tanzil Project](./tanzil.md)**: Quran text (Simple/Uthmani), translations, transliteration
+1. **[Tanzil Project](../resources/tanzil.md)**: Quran text (Simple/Uthmani), translations, transliteration
 2. **[Quranic Arabic Corpus (QAC)](https://corpus.quran.com/)**: Morphological annotations, POS tagging
 3. **Qurana**: Pronominal anaphora resolution
 4. **WordNet**: English semantic dictionary
