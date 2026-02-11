@@ -219,7 +219,7 @@ const LanguageManager = {
 
     // Update header title based on language
     if (headerTitle) {
-      headerTitle.textContent = this.currentLanguage === 'ar' ? 'رتق' : 'RATQ';
+      headerTitle.firstElementChild.textContent = this.currentLanguage === 'ar' ? 'رتق' : 'RATQ';
     }
 
     // Update document direction for Arabic

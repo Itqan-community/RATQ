@@ -18,6 +18,7 @@
   a {
     color: hsl(var(--foreground));
     text-decoration: none;
+    cursor: pointer;
   }
 }
 
