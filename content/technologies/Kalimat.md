@@ -21,9 +21,41 @@
 
 ## Usage
 
-You can try their search engine through the search field in their home page but most importantly you can use their API.
+You can use Kalimat API in you applcation to search in the Quran and Sunnah nut you need API key first.
 
-The API documentation is provided [here](https://api.kalimat.dev/docs/), but you need user key to be able to use the API. They provided one for visitors `0151df71-9780-4269-91df-7d43c3bb6ccd` but you need to send them an email to [info@kalimat.dev](mailto:info@kalimat.dev) to provide you with your `x-api-key`.
-## Additional Information
+You can request one by clicking the blue button at the end of their home page that will redirect you to a [google form](https://forms.gle/T2qpkdvwKeDVwkDQ8) to fill it and submit it.
 
-Kalimat is not an open-source based on the available information. It appears to be a commercial service offering access primarily via API, with a documentation to support developers. The platform aims to empower access to Islamic knowledge through technological means, facilitating research and learning.
+The data they need are full name, email address, organization or company (not required), website or portfolio (not required), project name, platform (web, mobile, etc..), Detailed Use Case Description, Commertial or Personal, and Estimated Monthly API Requests.
+
+Kalimat is not an open-source based on the available information. It offers access to their API after submitting a request.
+They provide an API documentation to support developers, you can find it [here](https://api.kalimat.dev/docs/).
+The platform aims to provide access to Islamic knowledge through technological means, facilitating research and learning.
+
+
+## API Example
+
+```txt
+https://api.kalimat.dev/api/v2/search?query=allah
+```
+
+```json
+{
+  "data": {
+    "results": [
+      {
+        "id": "2:255",
+        "type": "quran_verse",
+        "text": "اللَّهُ لَا إِلَٰهَ إِلَّا هُوَ الْحَيُّ الْقَيُّومُ",
+        "textHighlighted": "<em>اللَّهُ</em> لَا إِلَٰهَ إِلَّا هُوَ الْحَيُّ الْقَيُّومُ",
+        "translatedText": "Allah - there is no deity except Him, the Ever-Living, the Sustainer",
+        "translatedTextHighlighted": "<em>Allah</em> - there is no deity except Him, the Ever-Living, the Sustainer",
+        "isTransliteration": false
+      }
+    ],
+    "totalResultsNum": 1
+  },
+  "meta": {
+    "version": "2.0"
+  }
+}
+```
