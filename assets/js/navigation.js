@@ -14,35 +14,35 @@ const NavigationManager = {
   fileManifest: [
     // Docs
     { path: 'docs/en/index.md', title: 'RATQ', arTitle: 'خارطة الطريق والتقنيات للقرآن', group: 'docs', hasAR: true },
-    { path: 'docs/en/available-apps.md', title: 'Available Apps', arTitle: 'معايير المقارنة', group: 'docs', hasAR: true },
+    { path: 'docs/en/available-apps.md', title: 'Available Apps', arTitle: 'التطبيقات المتاحة', group: 'docs', hasAR: true },
     { path: 'docs/en/development-guidelines.md', title: 'Development Guidelines', arTitle: 'دليل التطوير القرآني', group: 'docs', hasAR: true },
     { path: 'docs/en/quran-foundation.md', title: 'Quran Foundation', arTitle: 'مؤسسة القرآن', group: 'docs', hasAR: true },
 
     // Apps
-    { path: 'content/apps/eQuran.md', title: 'eQuran', group: 'apps' },
-    { path: 'content/apps/Noor-Ul-Huda.md', title: 'Noor-Ul-Huda', group: 'apps' },
-    { path: 'content/apps/quran.com.md', title: 'quran.com', group: 'apps' },
-    { path: 'content/apps/Quran-Revision-Companion.md', title: 'Quran Revision Companion', group: 'apps' },
+    { path: 'content/apps/eQuran.md', title: 'eQuran', arTitle: 'القرآن الإلكتروني', group: 'apps', hasAR: true },
+    { path: 'content/apps/Noor-Ul-Huda.md', title: 'Noor-Ul-Huda', arTitle: 'نور الهدى', group: 'apps', hasAR: true },
+    { path: 'content/apps/quran.com.md', title: 'quran.com', arTitle: 'قرآن.كوم', group: 'apps', hasAR: true },
+    { path: 'content/apps/Quran-Revision-Companion.md', title: 'Quran Revision Companion', arTitle: 'رفيق مراجعة القرآن', group: 'apps', hasAR: true },
 
     // Resources
-    { path: 'content/resources/AQQAC.md', title: 'AQQAC', group: 'resources' },
-    { path: 'content/resources/QQAC.md', title: 'QQAC', group: 'resources' },
-    { path: 'content/resources/QuranEnc.md', title: 'QuranEnc', group: 'resources' },
-    { path: 'content/resources/quran-json.md', title: 'Quran JSON', arTitle: 'quran-json', group: 'resources', hasAR: true },
+    { path: 'content/resources/AQQAC.md', title: 'Annotated Corpus of Arabic Al-Quran Question and Answer', arTitle: 'مجموعة معجمية للأسئلة والأجوبة القرآنية العربية', group: 'resources', hasAR: true },
+    { path: 'content/resources/QQAC.md', title: 'Quran Question-Answer Context', arTitle: 'سياق أسئلة وأجوبة القرآن', group: 'resources', hasAR: true },
+    { path: 'content/resources/QuranEnc.md', title: 'QuranEnc', arTitle: 'موسوعة القرآن', group: 'resources', hasAR: true },
+    { path: 'content/resources/quran-json.md', title: 'Quran JSON', arTitle: 'قرآن JSON', group: 'resources', hasAR: true },
     { path: 'content/resources/quran.com-api.md', title: 'Quran.com API', arTitle: 'واجهة quran.com البرمجية', group: 'resources', hasAR: true },
-    { path: 'content/resources/quranic-questions-resources.md', title: 'Quranic Questions Resources', group: 'resources' },
+    { path: 'content/resources/quranic-questions-resources.md', title: 'Quranic Questions Resources', arTitle: 'موارد أسئلة القرآن', group: 'resources', hasAR: true },
     { path: 'content/resources/tanzil.md', title: 'Tanzil', arTitle: 'تنزيل', group: 'resources', hasAR: true },
 
     // Technologies
-    { path: 'content/technologies/Technologies.md', title: 'Technologies', group: 'technologies' },
+    { path: 'content/technologies/Technologies.md', title: 'Technologies', arTitle: 'التقنيات', group: 'technologies', hasAR: true },
     { path: 'content/technologies/alfanous.md', title: 'Alfanous', arTitle: 'ألفانوس', group: 'technologies', hasAR: true },
-    { path: 'content/technologies/Alfanous_Build_Process.md', title: 'Alfanous Build Process', group: 'technologies' },
+    { path: 'content/technologies/Alfanous_Build_Process.md', title: 'Alfanous Build Process', arTitle: 'عملية بناء ألفانوس', group: 'technologies', hasAR: true },
     { path: 'content/technologies/Kalimat.md', title: 'Kalimat', arTitle: 'كلمات (Kalimat)', group: 'technologies', hasAR: true },
     { path: 'content/technologies/QuranAnalysis.md', title: 'QuranAnalysis', arTitle: 'تحليل القرآن', group: 'technologies', hasAR: true },
     { path: 'content/technologies/othman.md', title: 'Othman', arTitle: 'متصفح القرآن عثمان', group: 'technologies', hasAR: true },
     { path: 'content/technologies/quranic.md', title: 'Quranic', arTitle: 'محرك البحث الدلالي القرآني', group: 'technologies', hasAR: true },
     { path: 'content/technologies/quranic-search-v2.md', title: 'Quranic Search v2', arTitle: 'البحث القرآني v2', group: 'technologies', hasAR: true },
-    { path: 'content/technologies/search_engines_benchmarking.md', title: 'Search Engines Benchmarking', group: 'technologies' },
+    { path: 'content/technologies/search_engines_benchmarking.md', title: 'Search Engines Benchmarking', arTitle: 'مقارنة محركات البحث', group: 'technologies', hasAR: true },
   ],
 
   /**
