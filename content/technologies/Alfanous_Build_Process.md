@@ -8,7 +8,7 @@ The **[Alfanous](./alfanous.md) build system** automates the process of construc
 
 The Makefile defines a high-level build pipeline that produces the data backbone for Alfanous.
 
-```
+```text
 Raw Quranic Sources (XML, SQL dumps)
         │
         ▼
