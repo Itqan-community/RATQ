@@ -2,12 +2,11 @@
 
 ## المقدمة
 
-توفر هذه الوثيقة نتائج قياس الأداء لمحركات البحث القرآنية في هذا الدليل (Technologies).
-تغطي الاستعلامات المستخدمة لتقييم أداء محركات البحث الأربعة المدرجة تحت دليل Technologies، مع التركيز فقط على محركات البحث الدلالي.
+توفر هذه الوثيقة نتائج قياس الأداء لمحركات البحث القرآنية الموجودة في هذا الدليل (Technologies). وهي تغطي الاستعلامات المستخدمة لتقييم أداء محركات البحث الأربعة المدرجة تحت دليل التقنيات، مع التركيز فقط على محركات البحث الدلالي.
 
 ## الاستعلامات
 
-<ul dir="ltr">
+<ul dir="rtl">
     <li>"عرب"</li>
     <li>"صلوة"</li>
     <li>"عقل"</li>
@@ -37,10 +36,10 @@
 ### alfanous
 
 - النتائج التالية جاءت من استخدام تطبيق الويب مباشرة، وليس محلياً، أو واجهة برمجة التطبيقات حيث يوجد لديهم بعض المشاكل المذكورة في ملف alfanous.md.
-- أثناء استخدام تطبيق الويب، أعاد تجاوز الحدود عدة مرات.
+- أثناء استخدام تطبيق الويب، أعاد (Exceeding limits) عدة مرات.
 - أحياناً يستغرق وقتاً طويلاً جداً لإرجاع النتائج حتى بعد إزالة علامة التلاوة وعلامة الترجمة من الطلب.
 
-<h4 dir="ltr">"عرب"</h4>
+<h4 dir="rtl">"عرب"</h4>
 
 - أعاد النتائج التالية:
 
@@ -52,13 +51,13 @@
 ![alfanous-arab-result-4](../../images/alfanous-arab-result4.png)
 ![alfanous-arab-result-5](../../images/alfanous-arab-result5.png)
 
-<h4 dir="ltr">"صلوة"</h4>
+<h4 dir="rtl">"صلوة"</h4>
 
 - أعاد النتائج التالية:
 
 ![alfanous-salat-results](../../images/alfanous-salat-results.png)
 
-<h4 dir="ltr">"عقل"</h4>
+<h4 dir="rtl">"عقل"</h4>
 
 - أعاد النتائج التالية:
 
@@ -70,17 +69,17 @@
 ![alfanous-aql-result-4](../../images/alfanous-aql-result4.png)
 ![alfanous-aql-result-5](../../images/alfanous-aql-result5.png)
 
-<h4 dir="ltr">"ألباب"</h4>
+<h4 dir="rtl">"ألباب"</h4>
 
 - أعاد النتائج التالية:
 
 ![alfanous-albab-results](../../images/alfanous-albab-results.png)
 
-<h4 dir="ltr">"تل"</h4>
+<h4 dir="rtl">"تل"</h4>
 
 - أعاد الصفحة الرئيسية مع رابط غريب، لذا أتوقع أنه يواجه خطأ مع هذا الاستعلام.
 
-<h4 dir="ltr">"جبل"</h4>
+<h4 dir="rtl">"جبل"</h4>
 
 - أعاد النتائج التالية:
 
@@ -92,7 +91,7 @@
 ![alfanous-jbl-result-4](../../images/alfanous-jbl-result4.png)
 ![alfanous-jbl-result-5](../../images/alfanous-jbl-result5.png)
 
-<h4 dir="ltr">"ربوة"</h4>
+<h4 dir="rtl">"ربوة"</h4>
 
 - أعاد النتائج التالية:
 
@@ -100,11 +99,11 @@
 
 ![alfanous-rabwa-result-1](../../images/alfanous-rabwa-result1.png)
 
-<h4 dir="ltr">"النيل"</h4>
+<h4 dir="rtl">"النيل"</h4>
 
 - أعاد الصفحة الرئيسية مع رابط غريب، لذا أتوقع أنه يواجه خطأ مع هذا الاستعلام.
 
-<h4 dir="ltr">"بحر"</h4>
+<h4 dir="rtl">"بحر"</h4>
 
 - أعاد النتائج التالية:
 ![alfanous-bhr-results](../../images/alfanous-bhr-results.png)
@@ -115,7 +114,7 @@
 ![alfanous-bhr-result-4](../../images/alfanous-bhr-result4.png)
 ![alfanous-bhr-result-5](../../images/alfanous-bhr-result5.png)
 
-<h4 dir="ltr">"جمل"</h4>
+<h4 dir="rtl">"جمل"</h4>
 
 - أعاد النتائج التالية:
 
@@ -123,13 +122,13 @@
 
 ![alfanous-gamal-result-1](../../images/alfanous-gamal-result1.png)
 
-<h4 dir="ltr">"عصفور"</h4>
+<h4 dir="rtl">"عصفور"</h4>
 
 - أعاد النتائج التالية:
 
 ![alfanous-asfor-results](../../images/alfanous-asfor-results.png)
 
-<h4 dir="ltr">"طير"</h4>
+<h4 dir="rtl">"طير"</h4>
 
 - أعاد النتائج التالية:
 
@@ -141,7 +140,7 @@
 ![alfanous-tyr-result-4](../../images/alfanous-tyr-result4.png)
 ![alfanous-tyr-result-5](../../images/alfanous-tyr-result5.png)
 
-<h4 dir="ltr">"غراب"</h4>
+<h4 dir="rtl">"غراب"</h4>
 
 - أعاد النتائج التالية:
 
@@ -150,7 +149,7 @@
 ![alfanous-ghorab-result-1](../../images/alfanous-ghorab-result1.png)
 ![alfanous-ghorab-result-2](../../images/alfanous-ghorab-result2.png)
 
-<h4 dir="ltr">"هدهد"</h4>
+<h4 dir="rtl">"هدهد"</h4>
 
 - أعاد النتائج التالية:
 
@@ -161,85 +160,85 @@
 
 ### kalimat
 
-<h4 dir="ltr">"عرب"</h4>
+<h4 dir="rtl">"عرب"</h4>
 
 - أعاد النتائج التالية:
 
 ![kalimat-arab-results](../../images/kalimat-arab-results.png)
 
-<h4 dir="ltr">"صلوة"</h4>
+<h4 dir="rtl">"صلوة"</h4>
 
 - أعاد النتائج التالية:
 
 ![kalimat-salat-results](../../images/kalimat-salat-results.png)
 
-<h4 dir="ltr">"عقل"</h4>
+<h4 dir="rtl">"عقل"</h4>
 
 - أعاد النتائج التالية:
 
 ![kalimat-aql-results](../../images/kalimat-aql-results.png)
 
-<h4 dir="ltr">"ألباب"</h4>
+<h4 dir="rtl">"ألباب"</h4>
 
 - أعاد النتائج التالية:
 
 ![kalimat-albab-results](../../images/kalimat-albab-results.png)
 
-<h4 dir="ltr">"تل"</h4>
+<h4 dir="rtl">"تل"</h4>
 
 - أعاد النتائج التالية:
 
 ![kalimat-tal-results](../../images/kalimat-tal-results.png)
 
-<h4 dir="ltr">"جبل"</h4>
+<h4 dir="rtl">"جبل"</h4>
 
 - أعاد النتائج التالية:
 
 ![kalimat-jbl-results](../../images/kalimat-jbl-results.png)
 
-<h4 dir="ltr">"ربوة"</h4>
+<h4 dir="rtl">"ربوة"</h4>
 
 - أعاد النتائج التالية:
 
 ![kalimat-rbw-results](../../images/kalimat-rbw-results.png)
 
-<h4 dir="ltr">"النيل"</h4>
+<h4 dir="rtl">"النيل"</h4>
 
 - أعاد النتائج التالية:
 
 ![kalimat-nil-results](../../images/kalimat-nil-results.png)
 
-<h4 dir="ltr">"بحر"</h4>
+<h4 dir="rtl">"بحر"</h4>
 
 - أعاد النتائج التالية:
 
 ![kalimat-bhr-results](../../images/kalimat-bhr-results.png)
 
-<h4 dir="ltr">"جمل"</h4>
+<h4 dir="rtl">"جمل"</h4>
 
 - أعاد النتائج التالية:
 
 ![kalimat-jm-results](../../images/kalimat-jm-results.png)
 
-<h4 dir="ltr">"عصفور"</h4>
+<h4 dir="rtl">"عصفور"</h4>
 
 - أعاد النتائج التالية:
 
 ![kalimat-3sfwr-results](../../images/kalimat-3sfwr-results.png)
 
-<h4 dir="ltr">"طير"</h4>
+<h4 dir="rtl">"طير"</h4>
 
 - أعاد النتائج التالية:
 
 ![kalimat-tyr-results](../../images/kalimat-tyr-results.png)
 
-<h4 dir="ltr">"غراب"</h4>
+<h4 dir="rtl">"غراب"</h4>
 
 - أعاد النتائج التالية:
 
 ![kalimat-grb-results](../../images/kalimat-grb-results.png)
 
-<h4 dir="ltr">"هدهد"</h4>
+<h4 dir="rtl">"هدهد"</h4>
 
 - أعاد النتائج التالية:
 
@@ -247,7 +246,7 @@
 
 ### quranic
 
-- بالنسبة لـ quranic، إليك نتائج ملف الاختبار المقدم:
+- بالنسبة لـ quranic، إليك نتائج ملف الاختبار الذي توفره المكتبة:
 
 ```text
 QUERY: its not the eyes that are blind, but the hearts
@@ -329,85 +328,85 @@ Surah Al-Israâ€™ (the Night Journey)
 
 - النتائج هي:
 
-<h4 dir="ltr">"عرب"</h4>
+<h4 dir="rtl">"عرب"</h4>
 
 - أعاد النتائج التالية:
 
 ![qa-arab-results](../../images/qa-arab-results.png)
 
-<h4 dir="ltr">"صلوة"</h4>
+<h4 dir="rtl">"صلوة"</h4>
 
 - أعاد النتائج التالية:
 
 ![qa-salat-results](../../images/qa-salat-results.png)
 
-<h4 dir="ltr">"عقل"</h4>
+<h4 dir="rtl">"عقل"</h4>
 
 - أعاد النتائج التالية:
 
 ![qa-3ql-results](../../images/qa-3ql-results.png)
 
-<h4 dir="ltr">"ألباب"</h4>
+<h4 dir="rtl">"ألباب"</h4>
 
 - أعاد النتائج التالية:
 
 ![qa-albab-results](../../images/qa-albab-results.png)
 
-<h4 dir="ltr">"تل"</h4>
+<h4 dir="rtl">"تل"</h4>
 
 - أعاد النتائج التالية:
 
 ![qa-tal-results](../../images/qa-tal-results.png)
 
-<h4 dir="ltr">"جبل"</h4>
+<h4 dir="rtl">"جبل"</h4>
 
 - أعاد النتائج التالية:
 
 ![qa-jbl-results](../../images/qa-jbl-results.png)
 
-<h4 dir="ltr">"ربوة"</h4>
+<h4 dir="rtl">"ربوة"</h4>
 
 - أعاد النتائج التالية:
 
 ![qa-rbw-results](../../images/qa-rbw-results.png)
 
-<h4 dir="ltr">"النيل"</h4>
+<h4 dir="rtl">"النيل"</h4>
 
 - أعاد النتائج التالية:
 
 ![qa-nil-results](../../images/qa-nil-results.png)
 
-<h4 dir="ltr">"بحر"</h4>
+<h4 dir="rtl">"بحر"</h4>
 
 - أعاد النتائج التالية:
 
 ![qa-bhr-results](../../images/qa-bhr-results.png)
 
-<h4 dir="ltr">"جمل"</h4>
+<h4 dir="rtl">"جمل"</h4>
 
 - أعاد النتائج التالية:
 
 ![qa-gamal-results](../../images/qa-gamal-results.png)
 
-<h4 dir="ltr">"عصفور"</h4>
+<h4 dir="rtl">"عصفور"</h4>
 
 - أعاد النتائج التالية:
 
 ![qa-asfor-results](../../images/qa-asfor-results.png)
 
-<h4 dir="ltr">"طير"</h4>
+<h4 dir="rtl">"طير"</h4>
 
 - أعاد النتائج التالية:
 
 ![qa-tyr-results](../../images/qa-tyr-results.png)
 
-<h4 dir="ltr">"غراب"</h4>
+<h4 dir="rtl">"غراب"</h4>
 
 - أعاد النتائج التالية:
 
 ![qa-ghorab-results](../../images/qa-ghorab-results.png)
 
-<h4 dir="ltr">"هدهد"</h4>
+<h4 dir="rtl">"هدهد"</h4>
 
 - أعاد النتائج التالية:
 
@@ -419,85 +418,85 @@ Surah Al-Israâ€™ (the Night Journey)
 
 - النتائج هي:
 
-<h4 dir="ltr">"عرب"</h4>
+<h4 dir="rtl">"عرب"</h4>
 
 - أعاد النتائج التالية:
 
 ![sev2-arab-results](../../images/sev2-arab-results.png)
 
-<h4 dir="ltr">"صلوة"</h4>
+<h4 dir="rtl">"صلوة"</h4>
 
 - أعاد النتائج التالية:
 
 ![sev2-salat-results](../../images/sev2-salat-results.png)
 
-<h4 dir="ltr">"عقل"</h4>
+<h4 dir="rtl">"عقل"</h4>
 
 - أعاد النتائج التالية:
 
 ![sev2-aql-results](../../images/sev2-aql-results.png)
 
-<h4 dir="ltr">"ألباب"</h4>
+<h4 dir="rtl">"ألباب"</h4>
 
 - أعاد النتائج التالية:
 
 ![sev2-albab-results](../../images/sev2-albab-results.png)
 
-<h4 dir="ltr">"تل"</h4>
+<h4 dir="rtl">"تل"</h4>
 
 - أعاد النتائج التالية:
 
 ![sev2-tal-results](../../images/sev2-tal-results.png)
 
-<h4 dir="ltr">"جبل"</h4>
+<h4 dir="rtl">"جبل"</h4>
 
 - أعاد النتائج التالية:
 
 ![sev2-jbl-results](../../images/sev2-jbl-results.png)
 
-<h4 dir="ltr">"ربوة"</h4>
+<h4 dir="rtl">"ربوة"</h4>
 
 - أعاد النتائج التالية:
 
 ![sev2-rabwa-results](../../images/sev2-rabwa-results.png)
 
-<h4 dir="ltr">"النيل"</h4>
+<h4 dir="rtl">"النيل"</h4>
 
 - أعاد النتائج التالية:
 
 ![sev2-nile-results](../../images/sev2-nile-results.png)
 
-<h4 dir="ltr">"بحر"</h4>
+<h4 dir="rtl">"بحر"</h4>
 
 - أعاد النتائج التالية:
 
 ![sev2-bhr-results](../../images/sev2-bhr-results.png)
 
-<h4 dir="ltr">"جمل"</h4>
+<h4 dir="rtl">"جمل"</h4>
 
 - أعاد النتائج التالية:
 
 ![sev2-gamal-results](../../images/sev2-gamal-results.png)
 
-<h4 dir="ltr">"عصفور"</h4>
+<h4 dir="rtl">"عصفور"</h4>
 
 - أعاد النتائج التالية:
 
 ![sev2-asfor-results](../../images/sev2-asfor-results.png)
 
-<h4 dir="ltr">"طير"</h4>
+<h4 dir="rtl">"طير"</h4>
 
 - أعاد النتائج التالية:
 
 ![sev2-tyr-results](../../images/sev2-tyr-results.png)
 
-<h4 dir="ltr">"غراب"</h4>
+<h4 dir="rtl">"غراب"</h4>
 
 - أعاد النتائج التالية:
 
 ![sev2-ghorab-results](../../images/sev2-ghorab-results.png)
 
-<h4 dir="ltr">"هدهد"</h4>
+<h4 dir="rtl">"هدهد"</h4>
 
 - أعاد النتائج التالية:
 

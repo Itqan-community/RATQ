@@ -45,4 +45,4 @@ The source data is a json file in  `equran_app/blob/main/assets/index.json` whic
     }
 ]        
 ```
-The source of this file is `https://cdn.jsdelivr.net/npm/quran-json` which returns this file as a response.
+The source of this file is [quran-json](../resources/quran-json.md) which returns this file as a response.

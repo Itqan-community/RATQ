@@ -21,14 +21,16 @@
 
 ## Usage
 
-You can use Kalimat API in you applcation to search in the Quran and Sunnah nut you need API key first.
+You can use Kalimat API in your application to search in the Quran and Sunnah but you need API key first.
 
 You can request one by clicking the blue button at the end of their home page that will redirect you to a [google form](https://forms.gle/T2qpkdvwKeDVwkDQ8) to fill it and submit it.
 
 The data they need are full name, email address, organization or company (not required), website or portfolio (not required), project name, platform (web, mobile, etc..), Detailed Use Case Description, Commertial or Personal, and Estimated Monthly API Requests.
 
-Kalimat is not an open-source based on the available information. It offers access to their API after submitting a request.
+**Kalimat** is not an open-source based on the available information. It offers access to their API after submitting a request.
+
 They provide an API documentation to support developers, you can find it [here](https://api.kalimat.dev/docs/).
+
 The platform aims to provide access to Islamic knowledge through technological means, facilitating research and learning.
 
 

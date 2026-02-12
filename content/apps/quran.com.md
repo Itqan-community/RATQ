@@ -1,10 +1,10 @@
 # quran.com
 
-[quran.com](https://quran.com/) is a web application provided by [Quran.Foundation](../Quran.Foundation.md) and designed to make the Quran accessible to everyone by providing translations, tafsir (exegesis), recitations, and word-by-word translations. It offers various tools for deeper Quranic study in multiple languages, making it easier to understand the Quran's meanings.
+[quran.com](https://quran.com/) is a web application provided by [Quran.Foundation](../../docs/en/quran-foundation.md) and designed to make the Quran accessible to everyone by providing translations, tafsir (exegesis), recitations, and word-by-word translations. It offers various tools for deeper Quranic study in multiple languages, making it easier to understand the Quran's meanings.
 
 ## Key Features
 
-Quran.com is designed to support every stage of engagement with the Quran—from reading and memorization to study and reflection. Our features include:
+Quran.com is designed to support every stage of engagement with the Quran—from reading and memorization to study and reflection. The features include:
 
 - **User-Friendly Quran Interface**– A clean and intuitive reading experience on any device.
 - **Multiple Translations & Tafsir** – Access to translations in multiple languages, along with tafsir.
