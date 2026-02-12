@@ -32,7 +32,7 @@ const SidebarComponent = {
   render() {
     if (!this.sidebarNav) return;
 
-    const currentLang = window.LanguageManager.getCurrentLanguage();
+    const currentLang = window.LanguageManager ? window.LanguageManager.getCurrentLanguage() : 'en';
 
     // Rebuild file tree with current language to filter properly
     if (window.NavigationManager) {

@@ -28,7 +28,7 @@ This file contains a list of providers to Quranic question banks, you can use in
 
     This document provides 57 questions and answers about general knowledge of the Quran and Islam. It covers topics like the number of surahs and verses in the Quran, important people, places, events, rulings, and stories mentioned in the Quran and early Islamic history. The questions are multiple choice or short answer format and touch on topics ranging from the basic structure of the Quran to details of the Prophet's life and early Islamic caliphates.
 
-    > You can surfe [slideshare.net](https://www.slideshare.net/) to find more resources.
+    > You can surf [slideshare.net](https://www.slideshare.net/) to find more resources.
 
 4. [NOOR ACADEMY](https://nooracademy.com/)
 
@@ -38,5 +38,5 @@ This file contains a list of providers to Quranic question banks, you can use in
 
 5. [Understand Al-Qur’an Academy](https://understandquran.com/downloads/)
 
-    An academy provides many courses in teaching and understanding Quran. They provide downloadable resource for each course in many languages, in which you can find many questions (but not MCQ) at teh end of each pdf, you can get some inspirations from them or use them as you see fit.
+    An academy provides many courses in teaching and understanding Quran. They provide downloadable resource for each course in many languages, in which you can find many questions (but not MCQ) at the end of each pdf, you can get some inspirations from them or use them as you see fit.
 
