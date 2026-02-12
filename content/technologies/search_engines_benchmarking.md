@@ -30,7 +30,7 @@ It covers the used queries to evaluate the performance of the four search engine
 2. [kalimat](./Kalimat.md)
 3. [quranic](./quranic.md)
 4. [QuranAnalysis](./QuranAnalysis.md)
-3. [quranic-search-v2](./quranic-search-v2.md)
+5. [quranic-search-v2](./quranic-search-v2.md)
 
 ## Results
 
