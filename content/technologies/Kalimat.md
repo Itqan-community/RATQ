@@ -25,7 +25,7 @@ You can use Kalimat API in your application to search in the Quran and Sunnah bu
 
 You can request one by clicking the blue button at the end of their home page that will redirect you to a [google form](https://forms.gle/T2qpkdvwKeDVwkDQ8) to fill it and submit it.
 
-The data they need are full name, email address, organization or company (not required), website or portfolio (not required), project name, platform (web, mobile, etc..), Detailed Use Case Description, Commertial or Personal, and Estimated Monthly API Requests.
+The data they need are full name, email address, organization or company (not required), website or portfolio (not required), project name, platform (web, mobile, etc..), Detailed Use Case Description, Commercial or Personal, and Estimated Monthly API Requests.
 
 **Kalimat** is not an open-source based on the available information. It offers access to their API after submitting a request.
 

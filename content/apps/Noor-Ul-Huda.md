@@ -49,7 +49,7 @@ you can download it from [here](https://f-droid.org/en/packages/com.mirfatif.noo
 
 ## For Developers
 
-This is an open source mobile app written in Java. You can find the source code [here](https://github.com/ya27hw/equran_app).
+This is an open source mobile app written in Java. You can find the source code [here](https://github.com/mirfatif/NoorUlHuda).
 
 ### Libraries
 

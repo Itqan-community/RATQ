@@ -17,7 +17,7 @@ Quran.com is designed to support every stage of engagement with the Quran—from
 
 ## Development
 
-quran.com is built using NextJs and it is open source and you can find it in [quran.com-frontend-next](https://github.com/quran/quran.com-frontend-next). And for the back-end, it gets its data from the RESTful API [quran.com-api](../resources/quran.com-api.md).
+quran.com is built using Next.js and is open source. You can find the frontend at [quran.com-frontend-next](https://github.com/quran/quran.com-frontend-next) and the backend uses the RESTful API [quran.com-api](../resources/quran.com-api.md).
 
 ## Resources
 

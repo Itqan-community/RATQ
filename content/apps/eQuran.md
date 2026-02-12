@@ -3,6 +3,8 @@
 
 A mobile application for every user.
 
+> [!NOTE] The source code of this application is archived by the owner, but it is still available as read only on github.
+
 ## Features
 
 - List all the quran by surah, juz', or your favorites.

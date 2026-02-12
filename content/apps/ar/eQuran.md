@@ -2,6 +2,8 @@
 
 تطبيق هاتف محمول لكل مستخدم.
 
+> تنويه: مصدر التطبيق تمت أرشفته بواسطة المالك ولكن يمكنك الاطلاع عليه على github حيث أنه أصبح للإطلاع فقط
+
 ## المميزات
 
 - عرض القرآن الكريم كاملاً حسب السورة، الجزء، أو المفضلة.
@@ -37,10 +39,7 @@
         "transliteration": "Al-Fatihah",
         "type": "meccan",
         "total_verses": 7,
-        "link": "https://cdn.jsdelivr.net/npm/quran-json@3.1.2/dist/chapters/1.json",
-    },
-    {
-        ...
+        "link": "https://cdn.jsdelivr.net/npm/quran-json@3.1.2/dist/chapters/1.json"
     }
 ]        
 ```
