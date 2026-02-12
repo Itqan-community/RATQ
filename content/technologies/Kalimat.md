@@ -29,7 +29,7 @@ The data they need are full name, email address, organization or company (not re
 
 **Kalimat** is not an open-source based on the available information. It offers access to their API after submitting a request.
 
-They provide an API documentation to support developers, you can find it [here](https://api.kalimat.dev/docs/).
+They provide an API documentation to support developers, you can find the [Kalimat API documentation](https://api.kalimat.dev/docs/).
 
 The platform aims to provide access to Islamic knowledge through technological means, facilitating research and learning.
 

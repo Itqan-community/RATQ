@@ -56,7 +56,7 @@
 * [Android Jetpack](https://github.com/androidx/androidx)
 * [Material Components for Android](https://github.com/material-components/material-components-android)
 * [Adhan Java](https://github.com/batoulapps/adhan-java)
-* [Time4A](https://github.com/batoulapps/adhan-java)
+* [Time4A](https://github.com/MenoData/Time4A)
 * [BetterLinkMovementMethod](https://github.com/saket/Better-Link-Movement-Method)
 * [LeakCanary](https://github.com/square/leakcanary)
 * [Google Java Format](https://github.com/sherter/google-java-format-gradle-plugin)

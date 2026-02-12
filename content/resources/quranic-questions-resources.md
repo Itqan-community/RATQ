@@ -1,8 +1,8 @@
 # Quranic Questions Resources
 
-This file contains a list of providers to Quranic question banks, you can use in your app. some of the resources are free and some need subscription, so getting the access to these resource is up to you.
+This file contains a list of providers to Quranic question banks, you can use in your app. Some of the resources are free and some need subscription, so getting the access to these resource is up to you.
 
-> **NOTE**: I didn't review the answers of the provided questions, so its validation is up to you. Make sure to validate them before using them.
+> **NOTE**: I didn't review the answers of the provided questions, so their validation is up to you. Make sure to validate them before using them.
 
 1. [https://khuddam.org.uk/](https://khuddam.org.uk/)
     

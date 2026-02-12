@@ -55,7 +55,7 @@ make build
 - استخدام واجهة سطر الأوامر (Importer CLI) لتوليد قائمة بالترجمات المفهرسة.
 
 #### ج. `update_dynamic_resources_prebuild`
-- ملء مجلد `dynamic_resources/` بقواميس Python المُنشأة تلقائياً لكل من:
+- ملء مجلد `dynamic_resources/` بقواميس Python المُنشأة تلقائيًا لكل من:
   - كلمات التوقف (Stopwords).
   - المترادفات.
   - خصائص الكلمات.
@@ -118,7 +118,7 @@ make build
 | `resources/databases/main.sql` | مخطط SQL + بيانات محتوى القرآن |
 | `src/alfanous/resources/` | قوالب الموارد الثابتة وملفات إعدادات JSON |
 | `store/translations/` | ملفات XML الخاصة بالترجمات |
-| `src/alfanous/dynamic_resources/` | وحدات Python البرمجية المولدة تلقائياً (المترادفات، إلخ) |
+| `src/alfanous/dynamic_resources/` | وحدات Python البرمجية المولدة تلقائيًا (المترادفات، إلخ) |
 | `src/alfanous/indexes/` | فهارس بحث بأسلوب Lucene |
 
 ---
@@ -130,7 +130,7 @@ make build
 ```
 
 ينفذ هذا الأمر سلسلة العمليات التالية:
-```
+```text
 construct_database ➜ update_translations_indexed_list ➜ transfer_prebuild ➜ index_main ➜ index_extend ➜ speller_all ➜ transfer_postbuild
 ```
 **المخرجات:**

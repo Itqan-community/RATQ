@@ -39,7 +39,7 @@ const SidebarComponent = {
       window.NavigationManager.buildFileTree(currentLang);
     }
 
-    const fileTree = window.NavigationManager.getFileTree();
+    const fileTree = window.NavigationManager?.getFileTree() ?? [];
 
     // Clear existing content
     this.sidebarNav.innerHTML = '';
@@ -83,12 +83,7 @@ const SidebarComponent = {
     const baseFilePath = window.LanguageManager ? window.LanguageManager.getBaseFile(file.path) : file.path;
 
     // Get localized file path
-    const localizedPath = window.LanguageManager.getLocalizedFile(file.path);
-
-    // File availability: if file appears in tree, it's available
-    // buildFileTree() already filters by language correctly, so trust that filtering
-    // All files that appear in the tree should be available
-    const isAvailable = true;
+    const localizedPath = window.LanguageManager ? window.LanguageManager.getLocalizedFile(file.path) : file.path;
 
     const route = window.Router.filePathToRoute(localizedPath);
 
@@ -112,14 +107,12 @@ const SidebarComponent = {
     item.setAttribute('data-file-path', baseFilePath);
     item.setAttribute('data-route', route || '');
 
-    // Handle click (only if available)
-    if (isAvailable) {
-      item.addEventListener('click', (e) => {
-        e.preventDefault();
-        const route = item.getAttribute('data-route');
-        window.Router.navigate(route);
-      });
-    }
+    // Handle click
+    item.addEventListener('click', (e) => {
+      e.preventDefault();
+      const route = item.getAttribute('data-route');
+      window.Router.navigate(route);
+    });
 
     // Check if this is the active item (normalize both paths to base paths for comparison)
     const normalizedActivePath = window.LanguageManager
