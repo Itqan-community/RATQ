@@ -6,6 +6,7 @@
 const MarkdownRenderer = {
   cache: new Map(),
   currentTitle: null,
+  activeDataTables: [],
 
   /**
    * Parse YAML front matter from markdown
@@ -546,6 +547,9 @@ const MarkdownRenderer = {
           }, 200);
         }, 100);
       }
+
+      // Enhance tables with Simple-DataTables (sort + filter)
+      this.enhanceTables(content);
     }
     if (error) error.style.display = 'none';
     if (loading) loading.style.display = 'none';
@@ -554,6 +558,58 @@ const MarkdownRenderer = {
     if (!window.location.hash) {
       window.scrollTo(0, 0);
     }
+  },
+
+  /**
+   * Enhance tables with Simple-DataTables (sort + filter)
+   * @param {HTMLElement} container - The content container
+   */
+  enhanceTables(container) {
+    // Destroy any previously active DataTable instances
+    this.activeDataTables.forEach(dt => {
+      try { dt.destroy(); } catch (e) { /* already destroyed */ }
+    });
+    this.activeDataTables = [];
+
+    // Check if Simple-DataTables is available
+    if (typeof simpleDatatables === 'undefined') {
+      return;
+    }
+
+    const tables = container.querySelectorAll('table');
+    tables.forEach(table => {
+      // Only enhance tables that have a header row and at least 1 data row
+      const headerCells = table.querySelectorAll('thead th, thead td');
+      const bodyRows = table.querySelectorAll('tbody tr');
+      if (headerCells.length === 0 || bodyRows.length < 1) return;
+
+      // Wrap table in a scrollable container for wide tables
+      const wrapper = document.createElement('div');
+      wrapper.className = 'datatable-scroll-wrapper';
+      table.parentNode.insertBefore(wrapper, table);
+      wrapper.appendChild(table);
+
+      // Determine language for labels
+      const isArabic = window.LanguageManager &&
+        window.LanguageManager.getCurrentLanguage() === 'ar';
+
+      const dt = new simpleDatatables.DataTable(table, {
+        searchable: true,
+        sortable: true,
+        paging: false,
+        labels: isArabic ? {
+          placeholder: 'بحث في الجدول...',
+          noRows: 'لا توجد نتائج',
+          info: '',
+        } : {
+          placeholder: 'Filter table...',
+          noRows: 'No matching entries found',
+          info: '',
+        },
+      });
+
+      this.activeDataTables.push(dt);
+    });
   },
 
   /**
