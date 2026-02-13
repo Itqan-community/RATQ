@@ -38,7 +38,7 @@ const NavigationManager = {
     { path: 'content/technologies/alfanous.md', title: 'Alfanous', arTitle: 'ألفانوس', group: 'technologies', hasAR: true },
     { path: 'content/technologies/Alfanous_Build_Process.md', title: 'Alfanous Build Process', arTitle: 'عملية بناء ألفانوس', group: 'technologies', hasAR: true },
     { path: 'content/technologies/Kalimat.md', title: 'Kalimat', arTitle: 'كلمات (Kalimat)', group: 'technologies', hasAR: true },
-    { path: 'content/technologies/MushafImad.md', title: 'MushafImad', arTitle: 'مصحف عماد', group: 'technologies', hasAr: true},
+    { path: 'content/technologies/MushafImad.md', title: 'MushafImad', arTitle: 'مصحف عماد', group: 'technologies', hasAR: true},
     { path: 'content/technologies/othman.md', title: 'Othman', arTitle: 'متصفح القرآن عثمان', group: 'technologies', hasAR: true },
     { path: 'content/technologies/search_engines_benchmarking.md', title: 'Search Engines Benchmarking', arTitle: 'مقارنة محركات البحث', group: 'technologies', hasAR: true },
     { path: 'content/technologies/QuranAnalysis.md', title: 'QuranAnalysis', arTitle: 'تحليل القرآن', group: 'technologies', hasAR: true },

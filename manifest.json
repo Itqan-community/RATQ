@@ -167,6 +167,13 @@
       "arTitle": "مقارنة محركات البحث",
       "group": "technologies",
       "hasAR": true
+    },
+    {
+      "path": "content/technologies/MushafImad.md",
+      "title": "MushafImad",
+      "arTitle": "مصحف عماد",
+      "group": "technologies",
+      "hasAR": true
     }
   ]
 }
