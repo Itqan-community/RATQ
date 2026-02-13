@@ -154,3 +154,5 @@ These can vary by Technology, we need to have a list most popular frameworks, Ad
 ### Resource
 
   1. [MushafImad](../../content/technologies/MushafImad.md): it is a swift package that ships your IOS application with mushaf displayer, audio player, and all the features that any quranic application must have.
+
+  2. [mushaf-imad-android](../../content/technologies/MushafImad.md): is the kotlin version of MushafImad providing the same features but for android.
