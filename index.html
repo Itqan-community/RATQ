@@ -1,56 +1,82 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="RATQ: Roadmap and Technologies for Quran - A comprehensive guide to developing Quranic applications">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="RATQ: Roadmap and Technologies for Quran - A comprehensive guide to developing Quranic applications"
+    />
     <title>RATQ - Roadmap and Technologies for Quran</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Noto+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="assets/css/shadcn.css">
-    <link rel="stylesheet" href="assets/css/main.css">
-</head>
-<body>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Noto+Sans+Arabic:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="assets/css/shadcn.css" />
+    <link rel="stylesheet" href="assets/css/main.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/simple-datatables@9/dist/style.css"
+    />
+  </head>
+  <body>
     <div class="app-container">
-        <header class="app-header">
-            <div class="header-content">
-                <h1 class="header-title" id="header-title">RATQ</h1>
-                <div class="header-actions">
-                    <button id="theme-toggle" class="btn btn-ghost" aria-label="Toggle dark mode">
-                        <span id="theme-icon">🌙</span>
-                    </button>
-                    <button id="language-toggle" class="btn btn-outline" aria-label="Toggle language">
-                        <span id="language-text">AR</span>
-                    </button>
-                </div>
-            </div>
-        </header>
-        
-        <div class="app-layout">
-            <aside class="sidebar" id="sidebar" aria-label="Navigation sidebar">
-                <nav class="sidebar-nav" id="sidebar-nav">
-                    <div class="sidebar-loading">Loading navigation...</div>
-                </nav>
-            </aside>
-            
-            <main class="content-area" id="content-area">
-                <div class="content-loading" id="content-loading">
-                    <div class="loading-spinner"></div>
-                    <p>Loading content...</p>
-                </div>
-                <article class="markdown-content" id="markdown-content" style="display: none;"></article>
-                <div class="content-error" id="content-error" style="display: none;">
-                    <div class="error-card">
-                        <h2>Error loading content</h2>
-                        <p id="error-message"></p>
-                        <button class="btn btn-primary" id="go-home-btn">Go to Home</button>
-                    </div>
-                </div>
-            </main>
+      <header class="app-header">
+        <div class="header-content">
+          <h1 class="header-title" id="header-title">
+            <a href="/RATQ/">RATQ</a>
+          </h1>
+          <div class="header-actions">
+            <button
+              id="theme-toggle"
+              class="btn btn-ghost"
+              aria-label="Toggle dark mode"
+            >
+              <span id="theme-icon">🌙</span>
+            </button>
+            <button
+              id="language-toggle"
+              class="btn btn-outline"
+              aria-label="Toggle language"
+            >
+              <span id="language-text">AR</span>
+            </button>
+          </div>
         </div>
+      </header>
+
+      <div class="app-layout">
+        <aside class="sidebar" id="sidebar" aria-label="Navigation sidebar">
+          <nav class="sidebar-nav" id="sidebar-nav">
+            <div class="sidebar-loading">Loading navigation...</div>
+          </nav>
+        </aside>
+
+        <main class="content-area" id="content-area">
+          <div class="content-loading" id="content-loading">
+            <div class="loading-spinner"></div>
+            <p>Loading content...</p>
+          </div>
+          <article
+            class="markdown-content"
+            id="markdown-content"
+            style="display: none"
+          ></article>
+          <div class="content-error" id="content-error" style="display: none">
+            <div class="error-card">
+              <h2>Error loading content</h2>
+              <p id="error-message"></p>
+              <button class="btn btn-primary" id="go-home-btn">
+                Go to Home
+              </button>
+            </div>
+          </div>
+        </main>
+      </div>
     </div>
-    
+
     <script src="https://cdn.jsdelivr.net/npm/marked@11.1.1/marked.min.js"></script>
     <script src="assets/js/theme.js"></script>
     <script src="assets/js/language.js"></script>
@@ -63,7 +89,7 @@
     <script src="assets/js/flexsearch.bundle.min.js"></script>
     <script src="assets/js/search.js"></script>
     <script src="assets/js/components/search.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/simple-datatables@9"></script>
     <script src="assets/js/main.js"></script>
-</body>
+  </body>
 </html>
-

@@ -256,7 +256,9 @@ const SearchManager = {
 
         if (parsed) {
           // Determine language from file path
-          const isAR = filePath.includes(' - AR.md') || filePath.includes(' -AR.md');
+          const isAR = window.LanguageManager
+            ? window.LanguageManager.isArPath(filePath)
+            : (filePath.includes('/ar/'));
           const language = isAR ? 'ar' : 'en';
 
           // Get group from NavigationManager

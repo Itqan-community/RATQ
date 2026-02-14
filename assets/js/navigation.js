@@ -9,35 +9,41 @@ const NavigationManager = {
   titleCache: new Map(), // Cache for titles from markdown files
 
   /**
-   * File structure manifest
-   * Since we can't dynamically list directories in static hosting,
-   * we'll define the structure here
+   * File structure manifest (fallback – overridden by manifest.json)
    */
   fileManifest: [
-    // Root files
-    { path: 'README.md', title: 'RATQ', group: 'root' },
-    { path: 'Available Apps.md', title: 'Available Apps', group: 'root' },
-    { path: 'Development Guidelines.md', title: 'Development Guidelines', group: 'root', hasAR: true },
-    { path: 'Quran.Foundation.md', title: 'Quran Foundation', group: 'root', hasAR: true },
+    // Docs
+    { path: 'docs/en/index.md', title: 'RATQ', arTitle: 'خارطة الطريق والتقنيات للقرآن', group: 'docs', hasAR: true },
+    { path: 'docs/en/available-apps.md', title: 'Available Apps', arTitle: 'التطبيقات المتاحة', group: 'docs', hasAR: true },
+    { path: 'docs/en/development-guidelines.md', title: 'Development Guidelines', arTitle: 'دليل التطوير القرآني', group: 'docs', hasAR: true },
+    { path: 'docs/en/quran-foundation.md', title: 'Quran Foundation', arTitle: 'مؤسسة القرآن', group: 'docs', hasAR: true },
 
-    // Apps directory
-    { path: 'Apps/eQuran.md', title: 'eQuran', group: 'apps' },
-    { path: 'Apps/Noor-Ul-Huda.md', title: 'Noor-Ul-Huda', group: 'apps' },
-    { path: 'Apps/Quran Revision Companion.md', title: 'Quran Revision Companion', group: 'apps' },
-    { path: 'Apps/quran.com.md', title: 'quran.com', group: 'apps' },
+    // Apps
+    { path: 'content/apps/eQuran.md', title: 'eQuran', arTitle: 'القرآن الإلكتروني', group: 'apps', hasAR: true },
+    { path: 'content/apps/Noor-Ul-Huda.md', title: 'Noor-Ul-Huda', arTitle: 'نور الهدى', group: 'apps', hasAR: true },
+    { path: 'content/apps/quran.com.md', title: 'quran.com', arTitle: 'قرآن.كوم', group: 'apps', hasAR: true },
+    { path: 'content/apps/Quran-Revision-Companion.md', title: 'Quran Revision Companion', arTitle: 'رفيق مراجعة القرآن', group: 'apps', hasAR: true },
 
-    // Technologies directory
-    { path: 'Technologies/Technologies.md', title: 'Technologies', group: 'technologies' },
-    { path: 'Technologies/alfanous.md', title: 'Alfanous', group: 'technologies' },
-    { path: 'Technologies/Alfanous_Build_Process.md', title: 'Alfanous Build Process', group: 'technologies' },
-    { path: 'Technologies/Kalimat.md', title: 'Kalimat', group: 'technologies' },
-    { path: 'Technologies/othman.md', title: 'Othman', group: 'technologies' },
-    { path: 'Technologies/quran-json.md', title: 'Quran JSON', group: 'technologies' },
-    { path: 'Technologies/quran.com-api.md', title: 'Quran.com API', group: 'technologies' },
-    { path: 'Technologies/QuranAnalysis.md', title: 'Quran Analysis', group: 'technologies' },
-    { path: 'Technologies/quranic-search-v2.md', title: 'Quranic Search v2', group: 'technologies' },
-    { path: 'Technologies/quranic.md', title: 'Quranic', group: 'technologies' },
-    { path: 'Technologies/tanzil.md', title: 'Tanzil', group: 'technologies' }
+    // Resources
+    { path: 'content/resources/AQQAC.md', title: 'Annotated Corpus of Arabic Al-Quran Question and Answer', arTitle: 'مجموعة معجمية للأسئلة والأجوبة القرآنية العربية', group: 'resources', hasAR: true },
+    { path: 'content/resources/QQAC.md', title: 'Quran Question-Answer Context', arTitle: 'سياق أسئلة وأجوبة القرآن', group: 'resources', hasAR: true },
+    { path: 'content/resources/QuranEnc.md', title: 'QuranEnc', arTitle: 'موسوعة القرآن', group: 'resources', hasAR: true },
+    { path: 'content/resources/quran-json.md', title: 'Quran JSON', arTitle: 'قرآن JSON', group: 'resources', hasAR: true },
+    { path: 'content/resources/quran.com-api.md', title: 'Quran.com API', arTitle: 'واجهة quran.com البرمجية', group: 'resources', hasAR: true },
+    { path: 'content/resources/quranic-questions-resources.md', title: 'Quranic Questions Resources', arTitle: 'موارد أسئلة القرآن', group: 'resources', hasAR: true },
+    { path: 'content/resources/tanzil.md', title: 'Tanzil', arTitle: 'تنزيل', group: 'resources', hasAR: true },
+
+    // Technologies
+    { path: 'content/technologies/Technologies.md', title: 'Technologies', arTitle: 'التقنيات', group: 'technologies', hasAR: true },
+    { path: 'content/technologies/alfanous.md', title: 'Alfanous', arTitle: 'ألفانوس', group: 'technologies', hasAR: true },
+    { path: 'content/technologies/Alfanous_Build_Process.md', title: 'Alfanous Build Process', arTitle: 'عملية بناء ألفانوس', group: 'technologies', hasAR: true },
+    { path: 'content/technologies/Kalimat.md', title: 'Kalimat', arTitle: 'كلمات (Kalimat)', group: 'technologies', hasAR: true },
+    { path: 'content/technologies/MushafImad.md', title: 'MushafImad', arTitle: 'مصحف عماد', group: 'technologies', hasAR: true},
+    { path: 'content/technologies/othman.md', title: 'Othman', arTitle: 'متصفح القرآن عثمان', group: 'technologies', hasAR: true },
+    { path: 'content/technologies/search_engines_benchmarking.md', title: 'Search Engines Benchmarking', arTitle: 'مقارنة محركات البحث', group: 'technologies', hasAR: true },
+    { path: 'content/technologies/QuranAnalysis.md', title: 'QuranAnalysis', arTitle: 'تحليل القرآن', group: 'technologies', hasAR: true },
+    { path: 'content/technologies/quranic.md', title: 'Quranic', arTitle: 'محرك البحث الدلالي القرآني', group: 'technologies', hasAR: true },
+    { path: 'content/technologies/quranic-search-v2.md', title: 'Quranic Search v2', arTitle: 'البحث القرآني v2', group: 'technologies', hasAR: true },
   ],
 
   /**
@@ -83,96 +89,47 @@ const NavigationManager = {
     const currentLang = window.LanguageManager ? window.LanguageManager.getCurrentLanguage() : 'en';
     this.buildFileTree(currentLang);
 
-    // Build allFiles array directly from manifest (manifest is source of truth)
-    // All files (base and AR) are explicitly listed in manifest
+    // Build allFiles array from manifest (all are EN base files)
     this.allFiles = this.fileManifest.map(f => f.path);
 
-    // Build language map
+    // Build language map (no-op in new structure, kept for compatibility)
     if (window.LanguageManager) {
       window.LanguageManager.buildLanguageMap(this.allFiles);
     }
   },
 
   /**
-   * Build file tree structure
+   * Build file tree structure.
+   * In the new structure the manifest only contains EN base files.
+   * buildFileTree simply groups them – language resolution happens at render time.
    * @param {string} currentLang - Current language ('en' or 'ar')
    */
   buildFileTree(currentLang = 'en') {
     const groups = {
-      root: [],
+      docs: [],
       apps: [],
+      resources: [],
       technologies: []
     };
 
-    // Track which base files have AR versions (from explicit AR files in manifest or hasAR flag)
-    const baseFilesWithAR = new Set();
-
-    // First pass: identify base files that have AR versions
+    // All manifest entries are EN base files – just group them
     this.fileManifest.forEach(file => {
-      const isARFile = file.path.includes(' - AR.md') || file.path.includes(' -AR.md');
-      if (isARFile) {
-        // Explicit AR file in manifest
-        const baseFile = file.path.replace(/ - AR\.md$/, '.md').replace(/ -AR\.md$/, '.md');
-        baseFilesWithAR.add(baseFile);
-      } else if (file.hasAR === true) {
-        // Base file with hasAR flag - check if AR file exists in manifest
-        const arPath = file.path.replace(/\.md$/, ' - AR.md');
-        const arFileExists = this.fileManifest.some(f => f.path === arPath);
-        if (arFileExists) {
-          baseFilesWithAR.add(file.path);
-        }
-      }
-    });
-
-    // Track which base files we've added to avoid duplicates
-    const addedBaseFiles = new Set();
-
-    // Second pass: add files based on language
-    this.fileManifest.forEach(file => {
-      const isARFile = file.path.includes(' - AR.md') || file.path.includes(' -AR.md');
-      const baseFile = isARFile
-        ? file.path.replace(/ - AR\.md$/, '.md').replace(/ -AR\.md$/, '.md')
-        : file.path;
-
-      if (currentLang === 'en') {
-        // In English mode: only show base files (not AR files)
-        if (isARFile) {
-          return;
-        }
-        // Add base file
-        if (groups[file.group] && !addedBaseFiles.has(baseFile)) {
-          groups[file.group].push(file);
-          addedBaseFiles.add(baseFile);
-        }
-      } else {
-        // In Arabic mode: prefer AR files, but show base files if no AR exists
-        if (isARFile) {
-          // Add AR file and mark base as added
-          if (groups[file.group] && !addedBaseFiles.has(baseFile)) {
-            groups[file.group].push(file);
-            addedBaseFiles.add(baseFile);
-          }
-        } else {
-          // Add base file only if we haven't added its AR version
-          // Check both: if AR file was explicitly added, or if base file has hasAR flag
-          const hasARVersion = baseFilesWithAR.has(baseFile);
-          if (groups[file.group] && !addedBaseFiles.has(baseFile) && !hasARVersion) {
-            groups[file.group].push(file);
-            addedBaseFiles.add(baseFile);
-          }
-        }
+      if (groups[file.group]) {
+        groups[file.group].push(file);
       }
     });
 
     const groupNames = {
-      root: currentLang === 'ar' ? 'الرئيسية' : 'Main',
+      docs: currentLang === 'ar' ? 'الرئيسية' : 'Main',
       apps: currentLang === 'ar' ? 'التطبيقات' : 'Apps',
+      resources: currentLang === 'ar' ? 'الموارد' : 'Resources',
       technologies: currentLang === 'ar' ? 'التقنيات' : 'Technologies'
     };
 
     this.fileTree = [
-      { name: groupNames.root, files: groups.root },
+      { name: groupNames.docs, files: groups.docs },
       { name: groupNames.apps, files: groups.apps },
+      { name: groupNames.resources, files: groups.resources },
       { name: groupNames.technologies, files: groups.technologies }
     ];
   },
@@ -213,12 +170,27 @@ const NavigationManager = {
       return this.titleCache.get(path);
     }
 
+    const currentLang = window.LanguageManager ? window.LanguageManager.getCurrentLanguage() : 'en';
+
+    // Try direct match
     const file = this.findFile(path);
     if (file) {
+      if (currentLang === 'ar' && file.arTitle) return file.arTitle;
       return file.title;
     }
+
+    // If AR path, look up the EN base entry
+    if (window.LanguageManager && window.LanguageManager.isArPath(path)) {
+      const enPath = window.LanguageManager.toEnPath(path);
+      const enFile = this.findFile(enPath);
+      if (enFile) {
+        if (currentLang === 'ar' && enFile.arTitle) return enFile.arTitle;
+        return enFile.title;
+      }
+    }
+
     // Fallback: extract title from filename
-    const baseName = path.split('/').pop().replace(/\.md$/, '').replace(/ - AR$/, '');
+    const baseName = path.split('/').pop().replace(/\.md$/, '');
     return baseName;
   },
 
@@ -233,8 +205,8 @@ const NavigationManager = {
       return null;
     }
 
-    // Check if file has -AR suffix
-    if (!filePath.includes(' - AR.md') && !filePath.includes(' -AR.md')) {
+    // Only fetch for AR files
+    if (!window.LanguageManager.isArPath(filePath)) {
       return null;
     }
 
@@ -303,8 +275,9 @@ const NavigationManager = {
     const promises = this.fileManifest
       .filter(file => file.hasAR)
       .map(file => {
-        const arPath = file.path.replace(/\.md$/, ' - AR.md');
-        return this.fetchTitleFromFile(arPath);
+        const arPath = window.LanguageManager.toArPath(file.path);
+        if (arPath) return this.fetchTitleFromFile(arPath);
+        return Promise.resolve(null);
       });
 
     await Promise.allSettled(promises);
@@ -321,10 +294,10 @@ const NavigationManager = {
       return true;
     }
 
-    // For AR files: check if base file has hasAR flag (AR file might not be explicitly listed)
-    if (path.includes(' - AR.md') || path.includes(' -AR.md')) {
-      const baseFile = path.replace(/ - AR\.md$/, '.md').replace(/ -AR\.md$/, '.md');
-      const baseFileEntry = this.fileManifest.find(f => f.path === baseFile);
+    // For AR files: check if EN base file has hasAR flag
+    if (window.LanguageManager && window.LanguageManager.isArPath(path)) {
+      const enPath = window.LanguageManager.toEnPath(path);
+      const baseFileEntry = this.fileManifest.find(f => f.path === enPath);
       if (baseFileEntry && baseFileEntry.hasAR === true) {
         return true;
       }
@@ -338,4 +311,3 @@ const NavigationManager = {
 if (typeof window !== 'undefined') {
   window.NavigationManager = NavigationManager;
 }
-
