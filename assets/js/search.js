@@ -441,7 +441,7 @@ const SearchManager = {
 
     // Search using FlexSearch (encoder normalizes query automatically)
     const results = this.index.search(trimmedQuery, {
-      limit: options.limit || 50,
+      limit: options.limit || 500,
       suggest: options.suggest || false
     });
 

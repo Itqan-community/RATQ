@@ -17,6 +17,8 @@ const SidebarComponent = {
       return;
     }
 
+    const lang = window.LanguageManager ? window.LanguageManager.getCurrentLanguage() : 'en';
+
     // Preload Arabic titles if needed
     if (window.NavigationManager && window.LanguageManager &&
       window.LanguageManager.getCurrentLanguage() === 'ar') {
@@ -40,6 +42,7 @@ const SidebarComponent = {
     }
 
     const fileTree = window.NavigationManager?.getFileTree() ?? [];
+    const totalFiles = fileTree.reduce((sum, g) => sum + g.files.length, 0);
 
     // Clear existing content
     this.sidebarNav.innerHTML = '';
@@ -66,6 +69,7 @@ const SidebarComponent = {
 
       this.sidebarNav.appendChild(groupContainer);
     });
+
   },
 
   /**

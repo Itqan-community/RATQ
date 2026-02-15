@@ -59,8 +59,8 @@ const NavigationManager = {
       } else {
         // Auto-detect base path from current location
         const pathname = window.location.pathname;
-        if (pathname.startsWith('/RATQ/')) {
-          basePath = '/RATQ/';
+        if (pathname.startsWith('/')) {
+          basePath = '/';
         }
       }
 
