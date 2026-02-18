@@ -1,5 +1,8 @@
 # Technologies
 
+> [!TIP]
+> **Need help choosing an API?** Check out our detailed [Quran APIs Comparison Matrix](./Quran_APIs_Comparison.md) for a breakdown of rate limits, features, and authentication.
+
 | TechNology                                  | URL                                                                          | Category                                                                 | Open Source | Programming language | Require Signup | API/UI/MCP/SDK | production-ready/NOT | Documentation | Platform            | Star count | Creation date | Last update date | Contributors count |
 | ------------------------------------------- | ---------------------------------------------------------------------------  | ------------------------------------------------------------------------ | ----------- | -------------------- | -------------- | -------------- | -------------------- | ------------- | ------------------- | ---------- | ------------- | ---------------- | ------------------ |
 | [alfaNous](./alfaNous.md)                   | [url](https://github.com/AlfaNous-team/alfaNous)                             | Semantic Search                                                          | Yes         | Python               | No             | API, UI, SDK   | Yes                  | Very good     | Web                 | 271        | May 6, 2020   | Nov 30, 2021     | 1                  |
