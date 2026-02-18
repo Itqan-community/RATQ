@@ -6,7 +6,7 @@
 const Router = {
   currentPath: '',
   routes: new Map(),
-  basePath: '/RATQ/', // GitHub Pages base path
+  basePath: '/', // GitHub Pages base path
 
   /**
    * Get base path from script tag or default
@@ -24,8 +24,8 @@ const Router = {
 
     // Auto-detect base path from current location
     const pathname = window.location.pathname;
-    if (pathname.startsWith('/RATQ/')) {
-      this.basePath = '/RATQ/';
+    if (pathname.startsWith('/')) {
+      this.basePath = '/';
     } else {
       this.basePath = '/';
     }

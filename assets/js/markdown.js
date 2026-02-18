@@ -171,7 +171,7 @@ const MarkdownRenderer = {
         .map(segment => encodeURIComponent(segment))
         .join('/');
 
-      // Prepend base path (e.g., /RATQ/)
+      // Prepend base path (e.g., /)
       const finalPath = basePath + encodedPath;
 
       const response = await fetch(finalPath);
