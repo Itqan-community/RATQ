@@ -98,7 +98,7 @@ LOCATION\tFORM\tTAG\tFEATURES
 (1:1:2:1)\t{ll~ahi\tPN\tSTEM|POS:PN|LEM:{ll~ah|ROOT:Alh|GEN
 ";
     let qac = QacMorphology::from_str(content).unwrap();
-    // Should have entries for word 1:1:1 and 1:1:2
+    // Check word 1:1:1 has two segments (prefix + stem)
     let entries = qac.get(1, 1, 1).unwrap();
     assert_eq!(entries.len(), 2); // two segments
     assert_eq!(entries[0].tag, "P");

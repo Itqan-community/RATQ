@@ -25,7 +25,7 @@ pub fn parse_query(query: &str, lang: &str) -> Vec<String> {
 /// and add other words sharing the same root.
 pub fn expand_by_roots(
     words: &[String],
-    qac: &QacMorphology,
+    _qac: &QacMorphology,
     quran_words: &std::collections::HashMap<String, Vec<String>>,
 ) -> Vec<String> {
     let mut expanded: Vec<String> = words.to_vec();
@@ -38,17 +38,6 @@ pub fn expand_by_roots(
                     expanded.push(rw.clone());
                 }
             }
-        }
-    }
-
-    // Also check QAC roots directly (Buckwalter encoded)
-    let bw_word = crate::core::transliteration::arabic_to_buckwalter(
-        &words.join(" "),
-    );
-    for bw_part in bw_word.split_whitespace() {
-        if let Some(locs) = qac.find_by_root(bw_part) {
-            // Found a root match — already handled via word map
-            let _ = locs;
         }
     }
 

@@ -68,7 +68,7 @@ Place these in the `data/` directory:
 
 ## Architecture
 
-```
+```text
 src/
 ├── main.rs              # CLI entry point (clap)
 ├── lib.rs               # Public API

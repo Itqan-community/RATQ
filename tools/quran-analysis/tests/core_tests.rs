@@ -5,7 +5,7 @@ use quran_analysis::core::transliteration;
 // ===== Arabic Module Tests =====
 
 #[test]
-fn test_remove_tashkeel_removes_fatha() {
+fn test_remove_tashkeel_removes_diacritics() {
     // Arabic fatha (U+064E) should be removed
     let input = "بِسْمِ";
     let result = arabic::remove_tashkeel(input);

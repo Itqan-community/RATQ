@@ -161,7 +161,13 @@ fn cmd_answer(data_dir: &PathBuf, question: &str, lang_arg: &str, limit: usize) 
         load_or_exit(QuranText::from_file(&data_dir.join("en.sahih")))
     };
 
-    let sw = StopWords::from_str("");
+    let sw = if lang == "ar" {
+        StopWords::from_file(&data_dir.join("quran-stop-words.strict.l1.ar"))
+            .unwrap_or_else(|_| StopWords::from_str(""))
+    } else {
+        StopWords::from_file(&data_dir.join("english-stop-words.en"))
+            .unwrap_or_else(|_| StopWords::from_str(""))
+    };
     let index = if lang == "ar" {
         InvertedIndex::build(&quran, &sw)
     } else {
@@ -205,13 +211,30 @@ fn cmd_analyze(data_dir: &PathBuf, word: &str) {
         println!("Not found in the Quran text.");
     }
 
-    // Try QAC morphology
+    // Try QAC morphology — search entries for the word and display root info
     let qac_path = data_dir.join("quranic-corpus-morphology-0.4.txt");
     if qac_path.exists() {
         if let Ok(qac) = quran_analysis::data::qac::QacMorphology::from_file(&qac_path) {
-            let bw = quran_analysis::core::transliteration::arabic_to_buckwalter(word);
-            if let Some(locs) = qac.find_by_root(&bw) {
-                println!("Root '{}' found in {} locations", bw, locs.len());
+            let normalized = arabic::normalize_arabic(word);
+            let mut found_roots: Vec<String> = Vec::new();
+            for entries in qac.entries.values() {
+                for entry in entries {
+                    let entry_ar = arabic::normalize_arabic(&entry.form_ar);
+                    if entry_ar == normalized && !entry.root.is_empty() {
+                        if !found_roots.contains(&entry.root) {
+                            found_roots.push(entry.root.clone());
+                        }
+                    }
+                }
+            }
+            if found_roots.is_empty() {
+                println!("No morphological root found in QAC.");
+            } else {
+                for root in &found_roots {
+                    if let Some(locs) = qac.find_by_root(root) {
+                        println!("Root '{}' found in {} locations", root, locs.len());
+                    }
+                }
             }
         }
     }
@@ -337,8 +360,8 @@ fn print_results_json(results: &[results::SearchResult]) {
             })
         })
         .collect();
-    println!(
-        "{}",
-        serde_json::to_string_pretty(&json_results).unwrap_or_default()
-    );
+    match serde_json::to_string_pretty(&json_results) {
+        Ok(json) => println!("{}", json),
+        Err(e) => eprintln!("Failed to serialize results to JSON: {}", e),
+    }
 }

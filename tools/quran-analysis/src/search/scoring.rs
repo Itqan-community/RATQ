@@ -58,8 +58,10 @@ pub fn score_search(
                 matched_words: Vec::new(),
             });
 
-            // TF component: each occurrence counts
-            let tf = 1.0;
+            doc.freq += 1;
+
+            // TF component: log-normalized term frequency
+            let tf = 1.0 + (doc.freq as f64).ln();
 
             // Position bonus: words near start get slight boost
             let pos_bonus = 1.0 + (1.0 / entry.word_index as f64) * 0.5;
@@ -68,7 +70,6 @@ pub fn score_search(
             let stop_penalty = if entry.is_stop_word { 0.3 } else { 1.0 };
 
             doc.score += tf * idf * pos_bonus * stop_penalty;
-            doc.freq += 1;
 
             if !doc.matched_words.contains(word) {
                 doc.matched_words.push(word.clone());

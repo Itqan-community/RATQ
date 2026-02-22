@@ -26,10 +26,13 @@ Lives in `tools/quran-analysis/` within the RATQ repo.
 - Scoring formula mirrors PHP: TF-IDF + edit distance + common chars + position bonuses
 
 ## Progress
-- [ ] Phase 1: Project setup + Core utilities
-- [ ] Phase 2: Data loading
-- [ ] Phase 3: Search engine
-- [ ] Phase 4: NLP + Query expansion
-- [ ] Phase 5: Ontology
-- [ ] Phase 6: Question Answering + Analysis
-- [ ] Phase 7: CLI + Polish + PR
+- [x] Phase 1: Project setup + Core utilities (32 tests)
+- [x] Phase 2: Data loading (18 tests, 50 total)
+- [x] Phase 3: Search engine (12 tests, 62 total)
+- [x] Phase 4: NLP + Query expansion (13 tests, 75 total)
+- [x] Phase 5: Ontology (5 tests, 80 total)
+- [x] Phase 6: Question Answering + Analysis (18 tests, 98 total)
+- [x] Phase 7: CLI + Polish + PR
+
+## PR
+https://github.com/Itqan-community/RATQ/pull/24

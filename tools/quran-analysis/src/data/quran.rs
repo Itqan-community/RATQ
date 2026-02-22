@@ -46,6 +46,15 @@ impl QuranText {
                 .map_err(|_| format!("Invalid aya number at line {}", line_num + 1))?;
             let text = parts[2].to_string();
 
+            if index.contains_key(&(sura, aya)) {
+                return Err(format!(
+                    "Duplicate verse ({}:{}) at line {}",
+                    sura,
+                    aya,
+                    line_num + 1
+                ));
+            }
+
             let idx = verses.len();
             verses.push(Verse { sura, aya, text });
             index.insert((sura, aya), idx);
