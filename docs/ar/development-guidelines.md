@@ -152,7 +152,7 @@ title: دليل التطوير القرآني
 2. QuranWBW (Word-by-Word Recitation)
      منصة تتيح تلاوة القرآن كلمة بكلمة.
      [https://quranwbw.com/](https://quranwbw.com/)
-     https://github.com/marwan/quranwbw
+     [https://github.com/marwan/quranwbw](https://github.com/marwan/quranwbw)
 3. Quran Foundation Audio API
      واجهة برمجية توفر تلاوة الآيات مع بيانات طوابع زمنية دقيقة لكل كلمة.
      [https://api-docs.quran.foundation/docs/sdk/audio/](https://api-docs.quran.foundation/docs/sdk/audio/)
