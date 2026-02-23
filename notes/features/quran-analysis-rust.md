@@ -36,3 +36,13 @@ Lives in `tools/quran-analysis/` within the RATQ repo.
 
 ## PR
 https://github.com/Itqan-community/RATQ/pull/24
+
+## CodeRabbit Review Fixes (PR #24)
+- Cargo.toml: enabled LTO for release builds
+- QAC parser: log skipped entries, avoid redundant root clones
+- InvertedIndex: normalize text in lookup method
+- Scoring: pre-compute term sets with HashSet for O(1) dedup
+- Ontology parser: handle XML unescape errors gracefully
+- QuranText::get: log warning when verse not found
+- Query expansion: use HashSet for dedup in root/synonym expansion
+- main.rs: use &Path instead of &PathBuf, eprintln for errors
