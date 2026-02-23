@@ -1,4 +1,4 @@
-use std::collections::HashMap;
+use std::collections::{HashMap, HashSet};
 
 use crate::data::quran::QuranText;
 use crate::search::index::InvertedIndex;
@@ -31,10 +31,14 @@ pub fn score_search(
 
     let total_docs = quran.len() as f64;
 
-    // Accumulate scores per (sura, aya)
-    let mut scores: HashMap<(u16, u16), ScoredDocument> = HashMap::new();
+    // Pre-compute query term set for O(1) membership checks
+    let query_set: HashSet<&str> = query_words.iter().map(|w| w.as_str()).collect();
 
-    for word in query_words {
+    // Accumulate scores per (sura, aya); track matched words in a HashSet
+    let mut scores: HashMap<(u16, u16), ScoredDocument> = HashMap::new();
+    let mut matched_sets: HashMap<(u16, u16), HashSet<String>> = HashMap::new();
+
+    for word in &query_set {
         let entries = index.lookup(word);
         if entries.is_empty() {
             continue;
@@ -71,17 +75,21 @@ pub fn score_search(
 
             doc.score += tf * idf * pos_bonus * stop_penalty;
 
-            if !doc.matched_words.contains(word) {
-                doc.matched_words.push(word.clone());
-            }
+            matched_sets
+                .entry(key)
+                .or_default()
+                .insert((*word).to_string());
         }
     }
 
     // Boost verses that match more unique query words
-    let num_query_words = query_words.len() as f64;
-    for doc in scores.values_mut() {
-        let coverage = doc.matched_words.len() as f64 / num_query_words;
-        doc.score *= 1.0 + coverage;
+    let num_query_words = query_set.len() as f64;
+    for (key, doc) in scores.iter_mut() {
+        if let Some(matched) = matched_sets.remove(key) {
+            let coverage = matched.len() as f64 / num_query_words;
+            doc.score *= 1.0 + coverage;
+            doc.matched_words = matched.into_iter().collect();
+        }
     }
 
     let mut results: Vec<ScoredDocument> = scores.into_values().collect();
