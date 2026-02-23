@@ -2,6 +2,7 @@ use quran_analysis::core::arabic;
 use quran_analysis::data::qac::QacMorphology;
 use quran_analysis::data::quran::QuranText;
 use quran_analysis::nlp::stopwords::StopWords;
+use quran_analysis::search::engine::SearchEngine;
 use quran_analysis::search::index::InvertedIndex;
 use quran_analysis::search::{query, scoring};
 
@@ -317,4 +318,36 @@ fn test_search_arab_with_expansion() {
         !scored.is_empty(),
         "Search for 'عرب' should return results after root expansion"
     );
+}
+
+// ===== SearchEngine Tests =====
+
+#[test]
+fn test_search_engine_from_quran_text() {
+    let quran = sample_quran();
+    let sw = empty_stopwords();
+    let engine = SearchEngine::from_data(quran, sw, None, None, "ar");
+    // Engine should have a non-empty index
+    assert!(engine.search("الله", 10).len() > 0);
+}
+
+#[test]
+fn test_search_engine_search_returns_results() {
+    let quran = sample_quran();
+    let sw = empty_stopwords();
+    let engine = SearchEngine::from_data(quran, sw, None, None, "ar");
+    let results = engine.search("الرحمن الرحيم", 5);
+    assert!(!results.is_empty());
+    // Top result should be verse 1:1 or 1:3
+    let top = &results[0];
+    assert!(top.sura == 1 && (top.aya == 1 || top.aya == 3));
+}
+
+#[test]
+fn test_search_engine_search_empty_query() {
+    let quran = sample_quran();
+    let sw = empty_stopwords();
+    let engine = SearchEngine::from_data(quran, sw, None, None, "ar");
+    let results = engine.search("", 10);
+    assert!(results.is_empty());
 }
