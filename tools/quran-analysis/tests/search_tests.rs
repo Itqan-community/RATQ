@@ -2,6 +2,8 @@ use quran_analysis::core::arabic;
 use quran_analysis::data::qac::QacMorphology;
 use quran_analysis::data::quran::QuranText;
 use quran_analysis::nlp::stopwords::StopWords;
+use quran_analysis::ontology::concepts::{Concept, Relation};
+use quran_analysis::ontology::graph::OntologyGraph;
 use quran_analysis::search::engine::SearchEngine;
 use quran_analysis::search::index::InvertedIndex;
 use quran_analysis::search::{query, scoring};
@@ -318,6 +320,90 @@ fn test_search_arab_with_expansion() {
         !scored.is_empty(),
         "Search for 'عرب' should return results after root expansion"
     );
+}
+
+// ===== Ontology Expansion Tests =====
+
+fn sample_ontology() -> OntologyGraph {
+    let concepts = vec![
+        Concept {
+            id: "Human".to_string(),
+            label_ar: "إنسان".to_string(),
+            label_en: "Human".to_string(),
+            frequency: 65,
+            root: String::new(),
+            lemma: String::new(),
+            synonyms: vec!["بشر".to_string(), "آدمي".to_string()],
+        },
+        Concept {
+            id: "Angel".to_string(),
+            label_ar: "ملائكة".to_string(),
+            label_en: "Angel".to_string(),
+            frequency: 88,
+            root: String::new(),
+            lemma: String::new(),
+            synonyms: vec![],
+        },
+    ];
+    let relations = vec![Relation {
+        subject: "Angel".to_string(),
+        verb: "serves".to_string(),
+        object: "Human".to_string(),
+        frequency: 5,
+        verb_en: "serves".to_string(),
+        verb_uthmani: String::new(),
+    }];
+    OntologyGraph::build(concepts, relations)
+}
+
+#[test]
+fn test_expand_by_ontology_finds_synonyms() {
+    let graph = sample_ontology();
+    let words = vec!["إنسان".to_string()];
+    let expanded = query::expand_by_ontology(&words, &graph);
+    let expanded_words: Vec<&str> = expanded.iter().map(|t| t.word.as_str()).collect();
+    assert!(expanded_words.contains(&"بشر"));
+    assert!(expanded_words.contains(&"آدمي"));
+}
+
+#[test]
+fn test_expand_by_ontology_related_concepts() {
+    let graph = sample_ontology();
+    // "ملائكة" (Angel) is related to "إنسان" (Human) via "serves"
+    let words = vec!["ملائكة".to_string()];
+    let expanded = query::expand_by_ontology(&words, &graph);
+    let expanded_words: Vec<&str> = expanded.iter().map(|t| t.word.as_str()).collect();
+    // Should include the related concept's label
+    assert!(expanded_words.contains(&"إنسان"));
+}
+
+#[test]
+fn test_expand_by_ontology_original_weight_1() {
+    let graph = sample_ontology();
+    let words = vec!["إنسان".to_string()];
+    let expanded = query::expand_by_ontology(&words, &graph);
+    let original = expanded.iter().find(|t| t.word == "إنسان").unwrap();
+    assert_eq!(original.weight, 1.0);
+}
+
+#[test]
+fn test_expand_by_ontology_expansion_weight_half() {
+    let graph = sample_ontology();
+    let words = vec!["إنسان".to_string()];
+    let expanded = query::expand_by_ontology(&words, &graph);
+    let synonym = expanded.iter().find(|t| t.word == "بشر").unwrap();
+    assert_eq!(synonym.weight, 0.5);
+}
+
+#[test]
+fn test_expand_by_ontology_no_match() {
+    let graph = sample_ontology();
+    let words = vec!["كتاب".to_string()];
+    let expanded = query::expand_by_ontology(&words, &graph);
+    // Only the original word should remain
+    assert_eq!(expanded.len(), 1);
+    assert_eq!(expanded[0].word, "كتاب");
+    assert_eq!(expanded[0].weight, 1.0);
 }
 
 // ===== SearchEngine Tests =====

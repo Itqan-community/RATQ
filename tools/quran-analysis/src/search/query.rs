@@ -2,6 +2,8 @@ use crate::core::arabic;
 use crate::data::qac::QacMorphology;
 use crate::nlp::stopwords::StopWords;
 use crate::nlp::wordnet::WordNet;
+use crate::ontology::graph::OntologyGraph;
+use crate::search::scoring::WeightedTerm;
 
 /// Parse and normalize a search query into individual words.
 pub fn parse_query(query: &str, lang: &str) -> Vec<String> {
@@ -72,4 +74,77 @@ pub fn expand_by_synonyms(
     }
 
     expanded
+}
+
+/// Expand query words using ontology synonyms and related concepts.
+///
+/// For each word: find concept by Arabic label/synonym, then add
+/// synonyms (weight 0.5) and 1-hop related concept labels (weight 0.5).
+/// Original words keep weight 1.0.
+pub fn expand_by_ontology(
+    words: &[String],
+    graph: &OntologyGraph,
+) -> Vec<WeightedTerm> {
+    let mut terms: Vec<WeightedTerm> = Vec::new();
+    let mut seen: Vec<String> = Vec::new();
+
+    for word in words {
+        terms.push(WeightedTerm {
+            word: word.clone(),
+            weight: 1.0,
+        });
+        seen.push(word.clone());
+
+        let concept = graph.find_by_arabic(word);
+        if let Some(c) = concept {
+            // Add synonyms at weight 0.5
+            for syn in &c.synonyms {
+                if !seen.contains(syn) {
+                    terms.push(WeightedTerm {
+                        word: syn.clone(),
+                        weight: 0.5,
+                    });
+                    seen.push(syn.clone());
+                }
+            }
+            // Also add label_ar if different from the word
+            if !c.label_ar.is_empty() && !seen.contains(&c.label_ar) {
+                terms.push(WeightedTerm {
+                    word: c.label_ar.clone(),
+                    weight: 0.5,
+                });
+                seen.push(c.label_ar.clone());
+            }
+
+            // Add 1-hop related concept labels at weight 0.5
+            for rel in graph.outgoing_relations(&c.id) {
+                if let Some(target) = graph.get_concept(&rel.object) {
+                    if !target.label_ar.is_empty()
+                        && !seen.contains(&target.label_ar)
+                    {
+                        terms.push(WeightedTerm {
+                            word: target.label_ar.clone(),
+                            weight: 0.5,
+                        });
+                        seen.push(target.label_ar.clone());
+                    }
+                }
+            }
+            for rel in graph.incoming_relations(&c.id) {
+                if let Some(source) = graph.get_concept(&rel.subject) {
+                    if !source.label_ar.is_empty()
+                        && !seen.contains(&source.label_ar)
+                    {
+                        terms.push(WeightedTerm {
+                            word: source.label_ar.clone(),
+                            weight: 0.5,
+                        });
+                        seen.push(source.label_ar.clone());
+                    }
+                }
+            }
+        }
+    }
+
+    terms
 }
