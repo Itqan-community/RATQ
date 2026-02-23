@@ -46,14 +46,13 @@ pub fn is_arabic(text: &str) -> bool {
 
 /// Remove non-alphanumeric characters (keeping Arabic/English letters,
 /// digits, and spaces) and trim whitespace.
+///
+/// Arabic letters and digits are already covered by `is_alphanumeric()`,
+/// so no separate range check is needed.
 pub fn clean_and_trim(text: &str) -> String {
     let cleaned: String = text
         .chars()
-        .filter(|c| {
-            c.is_alphanumeric()
-                || *c == ' '
-                || ('\u{0600}'..='\u{06FF}').contains(c)
-        })
+        .filter(|c| c.is_alphanumeric() || *c == ' ')
         .collect();
     cleaned.trim().to_string()
 }
