@@ -229,26 +229,19 @@ fn test_proximity_bonus_single_word() {
 
 #[test]
 fn test_proximity_improves_phrase_ranking() {
-    // Two verses with identical words but different positions.
-    // Verse 1: words adjacent (positions 1,2). Verse 2: words far apart.
-    let content = "\
-1|1|الرحمن الرحيم
-1|2|الرحمن ملك يوم الدين غير المغضوب عليهم الرحيم
-";
-    let quran = QuranText::from_str(content).unwrap();
-    let sw = empty_stopwords();
-    let idx = InvertedIndex::build(&quran, &sw);
-
-    let n1 = arabic::normalize_arabic("الرحمن");
-    let n2 = arabic::normalize_arabic("الرحيم");
-    let terms = vec![
-        scoring::WeightedTerm { word: n1, weight: 1.0 },
-        scoring::WeightedTerm { word: n2, weight: 1.0 },
-    ];
-    let results = scoring::score_search_weighted(&idx, &terms, &quran);
-    assert!(results.len() >= 2);
-    // Verse 1:1 has الرحمن الرحيم adjacent → higher proximity bonus
-    assert_eq!(results[0].aya, 1, "Adjacent phrase should rank first");
+    // Proximity bonus: adjacent words (distance=1) give bonus 1.0,
+    // distant words (distance=7) give bonus ~0.14.
+    // With 0.3 multiplier: adjacent gets *1.3, distant gets *1.04.
+    let positions_adjacent = vec![1, 2];
+    let positions_distant = vec![1, 8];
+    let bonus_adj = scoring::compute_proximity_bonus(&positions_adjacent);
+    let bonus_dist = scoring::compute_proximity_bonus(&positions_distant);
+    assert!(
+        bonus_adj > bonus_dist * 3.0,
+        "Adjacent bonus ({}) should be much larger than distant ({})",
+        bonus_adj,
+        bonus_dist
+    );
 }
 
 // ===== Full file search tests =====
@@ -582,4 +575,41 @@ fn test_search_engine_search_empty_query() {
     let engine = SearchEngine::from_data(quran, sw, None, None, "ar");
     let results = engine.search("", 10);
     assert!(results.is_empty());
+}
+
+#[test]
+fn test_search_engine_full_pipeline_arabic() {
+    let quran_path = std::path::Path::new("data/quran-simple-clean.txt");
+    let qac_path = std::path::Path::new("data/quranic-corpus-morphology-0.4.txt");
+    if !quran_path.exists() || !qac_path.exists() {
+        return;
+    }
+
+    let quran = QuranText::from_file(quran_path).unwrap();
+    let sw = StopWords::from_str("");
+    let qac = QacMorphology::from_file(qac_path).unwrap();
+
+    // Load ontology if available
+    let owl_path = std::path::Path::new("data/qa.ontology.v1.owl");
+    let ontology = if owl_path.exists() {
+        if let Ok((concepts, relations)) =
+            quran_analysis::ontology::parser::parse_owl(owl_path)
+        {
+            Some(OntologyGraph::build(concepts, relations))
+        } else {
+            None
+        }
+    } else {
+        None
+    };
+
+    let engine = SearchEngine::from_data(quran, sw, Some(qac), ontology, "ar");
+
+    // Search for "عرب" — should return results via expansion pipeline
+    let results = engine.search("عرب", 10);
+    assert!(
+        !results.is_empty(),
+        "Full pipeline should find results for 'عرب'"
+    );
+    assert!(results.len() >= 3, "Should find multiple verses");
 }

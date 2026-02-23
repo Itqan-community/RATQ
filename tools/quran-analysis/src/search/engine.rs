@@ -4,7 +4,7 @@ use crate::nlp::stopwords::StopWords;
 use crate::ontology::graph::OntologyGraph;
 use crate::search::index::InvertedIndex;
 use crate::search::query;
-use crate::search::scoring::{self, ScoredDocument};
+use crate::search::scoring::{self, ScoredDocument, WeightedTerm};
 
 /// Pre-loaded search engine that caches data and indexes.
 pub struct SearchEngine {
@@ -39,25 +39,101 @@ impl SearchEngine {
         }
     }
 
-    /// Run a search query and return scored documents.
+    /// Run a search query through the full expansion pipeline.
+    ///
+    /// Pipeline (Arabic): parse → lemma(0.8) → root(0.7) → ontology(0.5) → fuzzy(0.4) → weighted score
+    /// Pipeline (English): parse → score (with weight 1.0)
     pub fn search(&self, query_str: &str, limit: usize) -> Vec<ScoredDocument> {
         let words = query::parse_query(query_str, &self.lang);
         if words.is_empty() {
             return Vec::new();
         }
 
-        let expanded = if self.lang == "ar" {
-            if let Some(ref qac) = self.qac {
-                query::expand_by_roots(&words, qac)
-            } else {
-                words.clone()
-            }
+        let terms = if self.lang == "ar" {
+            self.expand_arabic(&words)
         } else {
-            words.clone()
+            words
+                .iter()
+                .map(|w| WeightedTerm {
+                    word: w.clone(),
+                    weight: 1.0,
+                })
+                .collect()
         };
 
-        let scored = scoring::score_search(&self.index, &expanded, &self.quran);
+        let scored = scoring::score_search_weighted(
+            &self.index, &terms, &self.quran,
+        );
         scored.into_iter().take(limit).collect()
+    }
+
+    /// Full Arabic expansion pipeline.
+    fn expand_arabic(&self, words: &[String]) -> Vec<WeightedTerm> {
+        let mut terms: Vec<WeightedTerm> = Vec::new();
+        let mut seen: Vec<String> = Vec::new();
+
+        // Original words at weight 1.0
+        for word in words {
+            terms.push(WeightedTerm {
+                word: word.clone(),
+                weight: 1.0,
+            });
+            seen.push(word.clone());
+        }
+
+        if let Some(ref qac) = self.qac {
+            // Lemma expansion (weight 0.8)
+            let lemma_terms = query::expand_by_lemma(words, qac);
+            for t in lemma_terms {
+                if !seen.contains(&t.word) {
+                    terms.push(WeightedTerm {
+                        word: t.word.clone(),
+                        weight: 0.8,
+                    });
+                    seen.push(t.word);
+                }
+            }
+
+            // Root expansion (weight 0.7)
+            let root_forms = query::expand_by_roots(words, qac);
+            for form in root_forms {
+                if !seen.contains(&form) {
+                    terms.push(WeightedTerm {
+                        word: form.clone(),
+                        weight: 0.7,
+                    });
+                    seen.push(form);
+                }
+            }
+        }
+
+        // Ontology expansion (weight 0.5)
+        if let Some(ref graph) = self.ontology {
+            let onto_terms = query::expand_by_ontology(words, graph);
+            for t in onto_terms {
+                if !seen.contains(&t.word) {
+                    terms.push(WeightedTerm {
+                        word: t.word.clone(),
+                        weight: 0.5,
+                    });
+                    seen.push(t.word);
+                }
+            }
+        }
+
+        // Fuzzy matching (weight 0.4)
+        let fuzzy_terms = query::expand_fuzzy(words, &self.index);
+        for t in fuzzy_terms {
+            if !seen.contains(&t.word) {
+                terms.push(WeightedTerm {
+                    word: t.word.clone(),
+                    weight: 0.4,
+                });
+                seen.push(t.word);
+            }
+        }
+
+        terms
     }
 
     /// Access the underlying QuranText.

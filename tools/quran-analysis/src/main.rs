@@ -8,8 +8,8 @@ use quran_analysis::data::quran::QuranText;
 use quran_analysis::nlp::stopwords::StopWords;
 use quran_analysis::ontology::{graph::OntologyGraph, parser as owl_parser};
 use quran_analysis::qa::answering;
-use quran_analysis::search::index::InvertedIndex;
-use quran_analysis::search::{query, results, scoring};
+use quran_analysis::search::engine::SearchEngine;
+use quran_analysis::search::results;
 
 #[derive(Parser)]
 #[command(
@@ -123,31 +123,24 @@ fn cmd_search(data_dir: &PathBuf, q: &str, lang_arg: &str, limit: usize, format:
         (quran, sw)
     };
 
-    let index = if lang == "ar" {
-        InvertedIndex::build(&quran, &sw)
-    } else {
-        InvertedIndex::build_english(&quran, &sw)
-    };
-
-    let query_words = query::parse_query(q, &lang);
-
-    let expanded = if lang == "ar" {
+    // Load QAC morphology for Arabic
+    let qac = if lang == "ar" {
         let qac_path = data_dir.join("quranic-corpus-morphology-0.4.txt");
         if qac_path.exists() {
-            if let Ok(qac) = quran_analysis::data::qac::QacMorphology::from_file(&qac_path) {
-                query::expand_by_roots(&query_words, &qac)
-            } else {
-                query_words.clone()
-            }
+            quran_analysis::data::qac::QacMorphology::from_file(&qac_path).ok()
         } else {
-            query_words.clone()
+            None
         }
     } else {
-        query_words.clone()
+        None
     };
 
-    let scored = scoring::score_search(&index, &expanded, &quran);
-    let formatted = results::format_results(&scored, &quran, limit);
+    // Load ontology if available
+    let ontology = load_ontology(data_dir);
+
+    let engine = SearchEngine::from_data(quran, sw, qac, ontology, &lang);
+    let scored = engine.search(q, limit);
+    let formatted = results::format_results(&scored, engine.quran(), limit);
 
     if format == "json" {
         print_results_json(&formatted);
@@ -185,9 +178,9 @@ fn cmd_answer(data_dir: &PathBuf, question: &str, lang_arg: &str, limit: usize) 
             .unwrap_or_else(|_| StopWords::from_str(""))
     };
     let index = if lang == "ar" {
-        InvertedIndex::build(&quran, &sw)
+        quran_analysis::search::index::InvertedIndex::build(&quran, &sw)
     } else {
-        InvertedIndex::build_english(&quran, &sw)
+        quran_analysis::search::index::InvertedIndex::build_english(&quran, &sw)
     };
 
     let qac = if lang == "ar" {
@@ -377,6 +370,17 @@ fn load_or_exit<T>(result: Result<T, String>) -> T {
             eprintln!("Error: {}", e);
             std::process::exit(1);
         }
+    }
+}
+
+fn load_ontology(data_dir: &PathBuf) -> Option<OntologyGraph> {
+    let owl_path = data_dir.join("qa.ontology.v1.owl");
+    if !owl_path.exists() {
+        return None;
+    }
+    match owl_parser::parse_owl(&owl_path) {
+        Ok((concepts, relations)) => Some(OntologyGraph::build(concepts, relations)),
+        Err(_) => None,
     }
 }
 
