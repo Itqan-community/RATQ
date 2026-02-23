@@ -14,6 +14,9 @@ regex = "1"
 unicode-segmentation = "1"
 unicode-normalization = "0.1"
 
+[profile.release]
+lto = true
+
 [dev-dependencies]
 assert_cmd = "2"
 predicates = "3"
