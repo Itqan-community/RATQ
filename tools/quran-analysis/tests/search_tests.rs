@@ -376,6 +376,40 @@ fn test_search_arab_with_expansion() {
     );
 }
 
+// ===== Lemma Expansion Tests =====
+
+#[test]
+fn test_expand_by_lemma_returns_weighted_terms() {
+    // Two entries with same lemma but different normalized surface forms
+    // kitAbi → "كتاب" (with alef), kutub → "كتب" (without alef)
+    let content = "\
+LOCATION\tFORM\tTAG\tFEATURES
+(2:1:1:1)\tkitAbi\tN\tSTEM|POS:N|LEM:kitAb|ROOT:ktb|M|GEN
+(2:2:1:1)\tkutub\tN\tSTEM|POS:N|LEM:kitAb|ROOT:ktb|MP|NOM
+";
+    let qac = QacMorphology::from_str(content).unwrap();
+
+    let form_ar = arabic::normalize_arabic(
+        &quran_analysis::core::transliteration::buckwalter_to_arabic("kitAbi"),
+    );
+    let words = vec![form_ar.clone()];
+    let expanded = query::expand_by_lemma(&words, &qac);
+
+    // Should include original at weight 1.0
+    let original = expanded.iter().find(|t| t.word == form_ar);
+    assert!(original.is_some());
+    assert_eq!(original.unwrap().weight, 1.0);
+
+    // Should include other forms at weight 0.8
+    assert!(
+        expanded.len() > 1,
+        "Lemma expansion should add related forms, got: {:?}",
+        expanded
+    );
+    let other = expanded.iter().find(|t| t.weight == 0.8);
+    assert!(other.is_some(), "Expansion should have weight 0.8");
+}
+
 // ===== Fuzzy Matching Tests =====
 
 #[test]

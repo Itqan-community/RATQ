@@ -30,6 +30,10 @@ pub struct QacMorphology {
     pub form_to_roots: HashMap<String, Vec<String>>,
     /// Forward index: Arabic root → list of normalized surface forms.
     pub root_to_forms: HashMap<String, Vec<String>>,
+    /// Forward index: lemma (Arabic) → list of normalized surface forms.
+    pub lemma_to_forms: HashMap<String, Vec<String>>,
+    /// Reverse index: normalized form → list of lemmas (Arabic).
+    pub form_to_lemmas: HashMap<String, Vec<String>>,
 }
 
 impl QacMorphology {
@@ -46,6 +50,8 @@ impl QacMorphology {
         let mut roots: HashMap<String, Vec<(u16, u16, u16)>> = HashMap::new();
         let mut form_to_roots: HashMap<String, Vec<String>> = HashMap::new();
         let mut root_to_forms: HashMap<String, Vec<String>> = HashMap::new();
+        let mut lemma_to_forms: HashMap<String, Vec<String>> = HashMap::new();
+        let mut form_to_lemmas: HashMap<String, Vec<String>> = HashMap::new();
 
         for line in content.lines() {
             let line = line.trim();
@@ -85,13 +91,20 @@ impl QacMorphology {
 
             // Extract root and lemma from features
             let root_bw = extract_feature(&features, "ROOT:");
-            let lemma = extract_feature(&features, "LEM:");
+            let lemma_bw = extract_feature(&features, "LEM:");
 
             // Convert root from Buckwalter to Arabic
             let root_ar = if root_bw.is_empty() {
                 String::new()
             } else {
                 transliteration::buckwalter_to_arabic(&root_bw)
+            };
+
+            // Convert lemma from Buckwalter to Arabic
+            let lemma_ar = if lemma_bw.is_empty() {
+                String::new()
+            } else {
+                transliteration::buckwalter_to_arabic(&lemma_bw)
             };
 
             let key = format!("{}:{}:{}", sura, aya, word);
@@ -106,12 +119,14 @@ impl QacMorphology {
                 tag,
                 features,
                 root: root_ar.clone(),
-                lemma,
+                lemma: lemma_ar.clone(),
             };
 
             entries.entry(key).or_default().push(entry);
 
-            if !root_ar.is_empty() {
+            let normalized_form = arabic::normalize_arabic(&form_ar);
+
+            if !root_ar.is_empty() && !normalized_form.is_empty() {
                 let loc_tuple = (sura, aya, word);
                 roots
                     .entry(root_ar.clone())
@@ -119,22 +134,41 @@ impl QacMorphology {
                     .push(loc_tuple);
 
                 // Build form_to_roots: normalized form → roots
-                let normalized_form = arabic::normalize_arabic(&form_ar);
-                if !normalized_form.is_empty() {
-                    let normalized_root = arabic::normalize_arabic(&root_ar);
-                    let form_roots = form_to_roots
-                        .entry(normalized_form.clone())
+                let normalized_root = arabic::normalize_arabic(&root_ar);
+                let form_roots = form_to_roots
+                    .entry(normalized_form.clone())
+                    .or_default();
+                if !form_roots.contains(&normalized_root) {
+                    form_roots.push(normalized_root.clone());
+                }
+
+                // Build root_to_forms: root → normalized forms
+                let root_forms = root_to_forms
+                    .entry(normalized_root)
+                    .or_default();
+                if !root_forms.contains(&normalized_form) {
+                    root_forms.push(normalized_form.clone());
+                }
+            }
+
+            // Build lemma indexes
+            if !lemma_ar.is_empty() && !normalized_form.is_empty() {
+                let normalized_lemma = arabic::normalize_arabic(&lemma_ar);
+                if !normalized_lemma.is_empty() {
+                    // lemma_to_forms
+                    let lem_forms = lemma_to_forms
+                        .entry(normalized_lemma.clone())
                         .or_default();
-                    if !form_roots.contains(&normalized_root) {
-                        form_roots.push(normalized_root.clone());
+                    if !lem_forms.contains(&normalized_form) {
+                        lem_forms.push(normalized_form.clone());
                     }
 
-                    // Build root_to_forms: root → normalized forms
-                    let root_forms = root_to_forms
-                        .entry(normalized_root)
+                    // form_to_lemmas
+                    let form_lems = form_to_lemmas
+                        .entry(normalized_form)
                         .or_default();
-                    if !root_forms.contains(&normalized_form) {
-                        root_forms.push(normalized_form);
+                    if !form_lems.contains(&normalized_lemma) {
+                        form_lems.push(normalized_lemma);
                     }
                 }
             }
@@ -151,6 +185,8 @@ impl QacMorphology {
             roots,
             form_to_roots,
             root_to_forms,
+            lemma_to_forms,
+            form_to_lemmas,
         })
     }
 
@@ -183,6 +219,23 @@ impl QacMorphology {
     pub fn get_surface_forms_for_root(&self, root: &str) -> Vec<String> {
         let normalized = arabic::normalize_arabic(root);
         self.root_to_forms
+            .get(&normalized)
+            .cloned()
+            .unwrap_or_default()
+    }
+
+    /// Find the lemma of a normalized Arabic word form.
+    pub fn find_lemma_by_form(&self, form: &str) -> Option<String> {
+        let normalized = arabic::normalize_arabic(form);
+        self.form_to_lemmas
+            .get(&normalized)
+            .and_then(|lemmas| lemmas.first().cloned())
+    }
+
+    /// Get all unique normalized surface forms sharing a given lemma.
+    pub fn get_surface_forms_for_lemma(&self, lemma: &str) -> Vec<String> {
+        let normalized = arabic::normalize_arabic(lemma);
+        self.lemma_to_forms
             .get(&normalized)
             .cloned()
             .unwrap_or_default()

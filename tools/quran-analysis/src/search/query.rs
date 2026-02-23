@@ -151,6 +151,41 @@ pub fn expand_by_ontology(
     terms
 }
 
+/// Expand query words using lemma-based grouping.
+///
+/// More precise than root expansion: only groups inflections of the
+/// same lexeme. Expansion weight: 0.8.
+pub fn expand_by_lemma(
+    words: &[String],
+    qac: &QacMorphology,
+) -> Vec<WeightedTerm> {
+    let mut terms: Vec<WeightedTerm> = Vec::new();
+    let mut seen: Vec<String> = Vec::new();
+
+    for word in words {
+        terms.push(WeightedTerm {
+            word: word.clone(),
+            weight: 1.0,
+        });
+        seen.push(word.clone());
+
+        if let Some(lemma) = qac.find_lemma_by_form(word) {
+            let forms = qac.get_surface_forms_for_lemma(&lemma);
+            for form in forms {
+                if !seen.contains(&form) {
+                    terms.push(WeightedTerm {
+                        word: form.clone(),
+                        weight: 0.8,
+                    });
+                    seen.push(form);
+                }
+            }
+        }
+    }
+
+    terms
+}
+
 /// Expand query words with fuzzy matches from the index vocabulary.
 ///
 /// Only expands words that have 0 exact hits in the index. Scans

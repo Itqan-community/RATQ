@@ -113,9 +113,11 @@ LOCATION\tFORM\tTAG\tFEATURES
 ";
     let qac = QacMorphology::from_str(content).unwrap();
     let entries = qac.get(1, 1, 1).unwrap();
-    // Root is now converted from Buckwalter to Arabic: smw → سمو
+    // Root is converted from Buckwalter to Arabic: smw → سمو
     assert_eq!(entries[0].root, "سمو");
-    assert_eq!(entries[0].lemma, "{som");
+    // Lemma is now converted from Buckwalter to Arabic: {som → ٱسْم
+    assert!(!entries[0].lemma.is_empty());
+    assert_ne!(entries[0].lemma, "{som"); // Should be Arabic, not BW
 }
 
 #[test]
@@ -155,6 +157,42 @@ fn test_qac_file_load() {
     // Check first verse first word
     let entries = qac.get(1, 1, 1).unwrap();
     assert!(entries.len() >= 2); // at least prefix + stem
+}
+
+// ===== Lemma Index Tests =====
+
+#[test]
+fn test_qac_lemma_to_forms_index() {
+    // Two entries with same lemma but different normalized forms
+    // kitAbi → "كتاب" (with alef), kutub → "كتب" (without)
+    let content = "\
+LOCATION\tFORM\tTAG\tFEATURES
+(2:1:1:1)\tkitAbi\tN\tSTEM|POS:N|LEM:kitAb|ROOT:ktb|M|GEN
+(2:2:1:1)\tkutub\tN\tSTEM|POS:N|LEM:kitAb|ROOT:ktb|MP|NOM
+";
+    let qac = QacMorphology::from_str(content).unwrap();
+    // The lemma "kitAb" should map to two distinct normalized forms
+    let lemma_ar = quran_analysis::core::transliteration::buckwalter_to_arabic("kitAb");
+    let forms = qac.get_surface_forms_for_lemma(&lemma_ar);
+    assert!(
+        forms.len() >= 2,
+        "Lemma 'kitAb' should have multiple surface forms, got: {:?}",
+        forms
+    );
+}
+
+#[test]
+fn test_qac_find_lemma_by_form() {
+    let content = "\
+LOCATION\tFORM\tTAG\tFEATURES
+(2:1:1:1)\tkitabi\tN\tSTEM|POS:N|LEM:kitAb|ROOT:ktb|M|GEN
+";
+    let qac = QacMorphology::from_str(content).unwrap();
+    let form_ar = quran_analysis::core::arabic::normalize_arabic(
+        &quran_analysis::core::transliteration::buckwalter_to_arabic("kitabi"),
+    );
+    let lemma = qac.find_lemma_by_form(&form_ar);
+    assert!(lemma.is_some(), "Should find lemma for form");
 }
 
 // ===== StopWords Tests =====
