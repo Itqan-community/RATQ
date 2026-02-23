@@ -86,6 +86,11 @@ impl InvertedIndex {
         self.index.is_empty()
     }
 
+    /// All unique words in the index.
+    pub fn vocabulary(&self) -> Vec<&str> {
+        self.index.keys().map(|s| s.as_str()).collect()
+    }
+
     /// Number of unique words in the index.
     pub fn vocabulary_size(&self) -> usize {
         self.index.len()

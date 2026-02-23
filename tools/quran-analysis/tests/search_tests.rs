@@ -228,6 +228,23 @@ fn test_document_frequency_cache_nonexistent_word() {
     assert_eq!(cached_df, 0);
 }
 
+// ===== Vocabulary Accessor Tests =====
+
+#[test]
+fn test_vocabulary_returns_all_indexed_words() {
+    let quran = sample_quran();
+    let sw = empty_stopwords();
+    let idx = InvertedIndex::build(&quran, &sw);
+
+    let vocab = idx.vocabulary();
+    // Should contain all unique normalized words
+    assert_eq!(vocab.len(), idx.vocabulary_size());
+    // Every word in vocabulary should be lookupable
+    for word in &vocab {
+        assert!(!idx.lookup(word).is_empty());
+    }
+}
+
 // ===== Root Expansion Tests =====
 
 #[test]
