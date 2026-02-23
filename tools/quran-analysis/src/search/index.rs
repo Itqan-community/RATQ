@@ -73,9 +73,14 @@ impl InvertedIndex {
         InvertedIndex { index }
     }
 
-    /// Look up a normalized word in the index.
+    /// Look up a word in the index.
+    ///
+    /// The word is normalized before lookup so callers don't need to
+    /// pre-normalize.
     pub fn lookup(&self, word: &str) -> &[IndexEntry] {
-        self.index.get(word).map(|v| v.as_slice()).unwrap_or(&[])
+        let normalized = arabic::normalize_arabic(word);
+        let key = if normalized.is_empty() { word } else { &normalized };
+        self.index.get(key).map(|v| v.as_slice()).unwrap_or(&[])
     }
 
     /// Check if the index is empty.
