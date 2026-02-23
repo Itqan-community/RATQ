@@ -322,6 +322,64 @@ fn test_search_arab_with_expansion() {
     );
 }
 
+// ===== Fuzzy Matching Tests =====
+
+#[test]
+fn test_expand_fuzzy_finds_close_match() {
+    // Build index with known words
+    let content = "\
+1|1|بسم الله الرحمن الرحيم
+1|2|الحمد لله رب العالمين
+";
+    let quran = QuranText::from_str(content).unwrap();
+    let sw = empty_stopwords();
+    let idx = InvertedIndex::build(&quran, &sw);
+
+    // A word with 1-char edit distance from a word in the index
+    // "الرحمم" is 1 edit from "الرحمن" (after normalization)
+    let misspelled = arabic::normalize_arabic("الرحمم");
+    let words = vec![misspelled];
+    let expanded = query::expand_fuzzy(&words, &idx);
+    // Should find "الرحمن" or "الرحيم" as close matches
+    assert!(
+        expanded.len() > 1,
+        "Fuzzy expansion should find close matches, got: {:?}",
+        expanded
+    );
+    // Fuzzy matches should have weight 0.4
+    let fuzzy_match = expanded.iter().find(|t| t.weight < 1.0);
+    assert!(fuzzy_match.is_some());
+    assert_eq!(fuzzy_match.unwrap().weight, 0.4);
+}
+
+#[test]
+fn test_expand_fuzzy_no_expansion_for_exact_match() {
+    let quran = sample_quran();
+    let sw = empty_stopwords();
+    let idx = InvertedIndex::build(&quran, &sw);
+
+    let word = arabic::normalize_arabic("الله");
+    let words = vec![word.clone()];
+    let expanded = query::expand_fuzzy(&words, &idx);
+    // Exact match exists, so no fuzzy expansion needed
+    assert_eq!(expanded.len(), 1);
+    assert_eq!(expanded[0].word, word);
+    assert_eq!(expanded[0].weight, 1.0);
+}
+
+#[test]
+fn test_expand_fuzzy_respects_distance_threshold() {
+    let quran = sample_quran();
+    let sw = empty_stopwords();
+    let idx = InvertedIndex::build(&quran, &sw);
+
+    // A word very far from anything in the index
+    let words = vec!["xxxxxxxxxx".to_string()];
+    let expanded = query::expand_fuzzy(&words, &idx);
+    // Should only contain the original word (no close matches)
+    assert_eq!(expanded.len(), 1);
+}
+
 // ===== Ontology Expansion Tests =====
 
 fn sample_ontology() -> OntologyGraph {

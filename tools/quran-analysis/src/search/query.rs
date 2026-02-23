@@ -1,8 +1,10 @@
 use crate::core::arabic;
+use crate::core::similarity::levenshtein_distance;
 use crate::data::qac::QacMorphology;
 use crate::nlp::stopwords::StopWords;
 use crate::nlp::wordnet::WordNet;
 use crate::ontology::graph::OntologyGraph;
+use crate::search::index::InvertedIndex;
 use crate::search::scoring::WeightedTerm;
 
 /// Parse and normalize a search query into individual words.
@@ -142,6 +144,53 @@ pub fn expand_by_ontology(
                         seen.push(source.label_ar.clone());
                     }
                 }
+            }
+        }
+    }
+
+    terms
+}
+
+/// Expand query words with fuzzy matches from the index vocabulary.
+///
+/// Only expands words that have 0 exact hits in the index. Scans
+/// vocabulary for words within edit distance threshold:
+/// - Words with 4+ chars: distance <= 2
+/// - Shorter words: distance <= 1
+/// Fuzzy matches get weight 0.4.
+pub fn expand_fuzzy(
+    words: &[String],
+    index: &InvertedIndex,
+) -> Vec<WeightedTerm> {
+    let mut terms: Vec<WeightedTerm> = Vec::new();
+    let mut seen: Vec<String> = Vec::new();
+
+    for word in words {
+        terms.push(WeightedTerm {
+            word: word.clone(),
+            weight: 1.0,
+        });
+        seen.push(word.clone());
+
+        // Only expand if word has no exact matches
+        if !index.lookup(word).is_empty() {
+            continue;
+        }
+
+        let word_len = word.chars().count();
+        let max_dist = if word_len >= 4 { 2 } else { 1 };
+
+        for vocab_word in index.vocabulary() {
+            if seen.contains(&vocab_word.to_string()) {
+                continue;
+            }
+            let dist = levenshtein_distance(word, vocab_word);
+            if dist > 0 && dist <= max_dist {
+                terms.push(WeightedTerm {
+                    word: vocab_word.to_string(),
+                    weight: 0.4,
+                });
+                seen.push(vocab_word.to_string());
             }
         }
     }
