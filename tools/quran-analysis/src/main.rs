@@ -1,4 +1,4 @@
-use std::path::PathBuf;
+use std::path::{Path, PathBuf};
 
 use clap::{Parser, Subcommand};
 
@@ -105,7 +105,7 @@ fn detect_lang(text: &str, lang_arg: &str) -> String {
     }
 }
 
-fn cmd_search(data_dir: &PathBuf, q: &str, lang_arg: &str, limit: usize, format: &str) {
+fn cmd_search(data_dir: &Path, q: &str, lang_arg: &str, limit: usize, format: &str) {
     let lang = detect_lang(q, lang_arg);
 
     let (quran, sw) = if lang == "ar" {
@@ -166,7 +166,7 @@ fn cmd_search(data_dir: &PathBuf, q: &str, lang_arg: &str, limit: usize, format:
     }
 }
 
-fn cmd_answer(data_dir: &PathBuf, question: &str, lang_arg: &str, limit: usize) {
+fn cmd_answer(data_dir: &Path, question: &str, lang_arg: &str, limit: usize) {
     let lang = detect_lang(question, lang_arg);
 
     let quran = if lang == "ar" {
@@ -210,7 +210,7 @@ fn cmd_answer(data_dir: &PathBuf, question: &str, lang_arg: &str, limit: usize) 
     );
 
     if answers.is_empty() {
-        println!("No answers found for: \"{}\"", question);
+        eprintln!("No answers found for: \"{}\"", question);
         return;
     }
 
@@ -230,7 +230,7 @@ fn cmd_answer(data_dir: &PathBuf, question: &str, lang_arg: &str, limit: usize) 
     }
 }
 
-fn cmd_analyze(data_dir: &PathBuf, word: &str) {
+fn cmd_analyze(data_dir: &Path, word: &str) {
     let quran = load_or_exit(QuranText::from_file(
         &data_dir.join("quran-simple-clean.txt"),
     ));
@@ -241,7 +241,7 @@ fn cmd_analyze(data_dir: &PathBuf, word: &str) {
     if let Some(freq) = frequency::get_word_frequency(&quran, word) {
         println!("Frequency: {} occurrences in {} verses", freq.count, freq.verse_count);
     } else {
-        println!("Not found in the Quran text.");
+        eprintln!("Not found in the Quran text.");
     }
 
     // Try QAC morphology — search entries for the word and display root info
@@ -261,7 +261,7 @@ fn cmd_analyze(data_dir: &PathBuf, word: &str) {
                 }
             }
             if found_roots.is_empty() {
-                println!("No morphological root found in QAC.");
+                eprintln!("No morphological root found in QAC.");
             } else {
                 for root in &found_roots {
                     if let Some(locs) = qac.find_by_root(root) {
@@ -273,7 +273,7 @@ fn cmd_analyze(data_dir: &PathBuf, word: &str) {
     }
 }
 
-fn cmd_ontology(data_dir: &PathBuf, concept: &str, show_relations: bool) {
+fn cmd_ontology(data_dir: &Path, concept: &str, show_relations: bool) {
     let owl_path = data_dir.join("qa.ontology.v1.owl");
     if !owl_path.exists() {
         eprintln!("Ontology file not found: {}", owl_path.display());
@@ -337,11 +337,11 @@ fn cmd_ontology(data_dir: &PathBuf, concept: &str, show_relations: bool) {
                 }
             }
         }
-        None => println!("Concept '{}' not found in ontology.", concept),
+        None => eprintln!("Concept '{}' not found in ontology.", concept),
     }
 }
 
-fn cmd_stats(data_dir: &PathBuf) {
+fn cmd_stats(data_dir: &Path) {
     let quran = load_or_exit(QuranText::from_file(
         &data_dir.join("quran-simple-clean.txt"),
     ));
