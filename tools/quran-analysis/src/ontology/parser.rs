@@ -95,7 +95,13 @@ pub fn parse_owl_str(content: &str) -> Result<(Vec<Concept>, Vec<Relation>), Str
                 }
             }
             Ok(Event::Text(ref e)) => {
-                let text = e.unescape().unwrap_or_default().to_string();
+                let text = match e.unescape() {
+                    Ok(t) => t.to_string(),
+                    Err(_) => {
+                        buf.clear();
+                        continue;
+                    }
+                };
                 if text.is_empty() {
                     buf.clear();
                     continue;
@@ -160,14 +166,12 @@ fn strip_prefix(name: &str) -> &str {
 }
 
 /// Get an attribute value from an XML start element.
+///
+/// Returns `None` if the attribute is not found or cannot be unescaped.
 fn get_attr(e: &quick_xml::events::BytesStart, attr_name: &[u8]) -> Option<String> {
     for attr in e.attributes().flatten() {
         if attr.key.as_ref() == attr_name {
-            return Some(
-                attr.unescape_value()
-                    .unwrap_or_default()
-                    .to_string(),
-            );
+            return attr.unescape_value().ok().map(|v| v.to_string());
         }
     }
     None
