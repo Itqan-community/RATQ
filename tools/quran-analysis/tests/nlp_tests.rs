@@ -108,9 +108,11 @@ fn test_parse_query_english() {
 
 #[test]
 fn test_parse_query_auto_detect() {
-    // Auto-detect language from content
-    let words = query::parse_query("محمد", "ar");
+    // Auto-detect: Arabic content should normalize even with "auto" lang
+    let words = query::parse_query("محمد", "auto");
     assert_eq!(words.len(), 1);
+    // parse_query normalizes Arabic when lang is "ar" or content is Arabic
+    assert_eq!(words[0], quran_analysis::core::arabic::normalize_arabic("محمد"));
 }
 
 #[test]
@@ -124,11 +126,29 @@ fn test_expand_by_synonyms_with_empty_wordnet() {
 
 #[test]
 fn test_expand_by_synonyms_skips_stopwords() {
-    let wn = WordNet::default();
+    // Load real WordNet if available, otherwise skip test
+    let wn_path = std::path::Path::new("data/wordnet");
+    if !wn_path.exists() {
+        // Fallback: with empty WordNet, verify stopwords are kept
+        // but not expanded (trivially true)
+        let wn = WordNet::default();
+        let sw = StopWords::from_str("the\na\n");
+        let words = vec!["the".to_string(), "book".to_string()];
+        let expanded = query::expand_by_synonyms(&words, &wn, &sw);
+        // Both words preserved, no expansion from empty WordNet
+        assert!(expanded.contains(&"the".to_string()));
+        assert!(expanded.contains(&"book".to_string()));
+        assert_eq!(expanded.len(), 2);
+        return;
+    }
+    let wn = WordNet::from_dir(wn_path).unwrap();
     let sw = StopWords::from_str("the\na\n");
     let words = vec!["the".to_string(), "book".to_string()];
     let expanded = query::expand_by_synonyms(&words, &wn, &sw);
-    // "the" should not get synonyms added (it's a stop word)
+    // "the" is a stop word — should remain but not gain synonyms
     assert!(expanded.contains(&"the".to_string()));
     assert!(expanded.contains(&"book".to_string()));
+    // "book" should have synonyms added (if WordNet has any)
+    // so total should be > 2
+    assert!(expanded.len() > 2, "book should get synonyms from WordNet");
 }

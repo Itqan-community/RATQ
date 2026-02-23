@@ -6,7 +6,7 @@ use quran_analysis::core::transliteration;
 
 #[test]
 fn test_remove_tashkeel_removes_diacritics() {
-    // Arabic fatha (U+064E) should be removed
+    // Input contains kasra (U+0650) and sukun (U+0652)
     let input = "بِسْمِ";
     let result = arabic::remove_tashkeel(input);
     assert!(!result.contains('\u{0650}')); // kasra
