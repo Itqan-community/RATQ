@@ -613,3 +613,134 @@ fn test_search_engine_full_pipeline_arabic() {
     );
     assert!(results.len() >= 3, "Should find multiple verses");
 }
+
+// ===== Reviewer-Requested Search Integration Tests =====
+// These test the specific Arabic words flagged by IbrahimMurad
+// to ensure search quality matches the original PHP QuranAnalysis.
+
+/// Helper to build a full SearchEngine from data files.
+/// Returns None if data files are missing (skips test gracefully).
+fn build_full_engine() -> Option<SearchEngine> {
+    let quran_path = std::path::Path::new("data/quran-simple-clean.txt");
+    let qac_path = std::path::Path::new("data/quranic-corpus-morphology-0.4.txt");
+    if !quran_path.exists() || !qac_path.exists() {
+        return None;
+    }
+
+    let quran = QuranText::from_file(quran_path).unwrap();
+    let sw = StopWords::from_str("");
+    let qac = QacMorphology::from_file(qac_path).unwrap();
+
+    let owl_path = std::path::Path::new("data/qa.ontology.v1.owl");
+    let ontology = if owl_path.exists() {
+        quran_analysis::ontology::parser::parse_owl(owl_path)
+            .ok()
+            .map(|(concepts, relations)| OntologyGraph::build(concepts, relations))
+    } else {
+        None
+    };
+
+    Some(SearchEngine::from_data(quran, sw, Some(qac), ontology, "ar"))
+}
+
+#[test]
+fn test_search_arab_returns_results() {
+    let engine = match build_full_engine() {
+        Some(e) => e,
+        None => return,
+    };
+    let results = engine.search("عرب", 20);
+    assert!(
+        !results.is_empty(),
+        "'عرب' (arab) should return results via root/lemma expansion"
+    );
+    // Original PHP returns many — we should find at least a few
+    assert!(
+        results.len() >= 3,
+        "'عرب' should find multiple verses, got {}",
+        results.len()
+    );
+}
+
+#[test]
+fn test_search_aql_returns_results() {
+    let engine = match build_full_engine() {
+        Some(e) => e,
+        None => return,
+    };
+    let results = engine.search("عقل", 20);
+    assert!(
+        !results.is_empty(),
+        "'عقل' (mind/reason) should return results via root/lemma expansion"
+    );
+}
+
+#[test]
+fn test_search_jabal_returns_results() {
+    let engine = match build_full_engine() {
+        Some(e) => e,
+        None => return,
+    };
+    let results = engine.search("جبل", 20);
+    assert!(
+        !results.is_empty(),
+        "'جبل' (mountain) should return results"
+    );
+    // Original PHP finds many mountain references
+    assert!(
+        results.len() >= 3,
+        "'جبل' should find multiple verses, got {}",
+        results.len()
+    );
+}
+
+#[test]
+fn test_search_jamal_returns_results() {
+    let engine = match build_full_engine() {
+        Some(e) => e,
+        None => return,
+    };
+    let results = engine.search("جمل", 20);
+    assert!(
+        !results.is_empty(),
+        "'جمل' (camel) should return results via root/lemma expansion"
+    );
+}
+
+#[test]
+fn test_search_tayr_returns_results() {
+    let engine = match build_full_engine() {
+        Some(e) => e,
+        None => return,
+    };
+    let results = engine.search("طير", 20);
+    assert!(
+        !results.is_empty(),
+        "'طير' (bird) should return results via root/lemma expansion"
+    );
+    // Original PHP finds multiple bird references
+    assert!(
+        results.len() >= 2,
+        "'طير' should find multiple verses, got {}",
+        results.len()
+    );
+}
+
+#[test]
+fn test_search_rabwa_returns_results() {
+    let engine = match build_full_engine() {
+        Some(e) => e,
+        None => return,
+    };
+    let results = engine.search("ربوة", 20);
+    assert!(
+        !results.is_empty(),
+        "'ربوة' (hill) should return at least one result"
+    );
+    // This is a rare word — at minimum sura 23:50
+    let suras: Vec<u16> = results.iter().map(|r| r.sura).collect();
+    assert!(
+        suras.contains(&23),
+        "'ربوة' should match verse 23:50"
+    );
+}
