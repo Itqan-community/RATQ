@@ -64,16 +64,15 @@ pub fn score_search(
 
             doc.freq += 1;
 
-            // TF component: log-normalized term frequency
-            let tf = 1.0 + (doc.freq as f64).ln();
-
             // Position bonus: words near start get slight boost
             let pos_bonus = 1.0 + (1.0 / entry.word_index as f64) * 0.5;
 
             // Stop word penalty
             let stop_penalty = if entry.is_stop_word { 0.3 } else { 1.0 };
 
-            doc.score += tf * idf * pos_bonus * stop_penalty;
+            // Accumulate IDF * position * penalty per posting;
+            // TF is applied once in the post-processing pass.
+            doc.score += idf * pos_bonus * stop_penalty;
 
             matched_sets
                 .entry(key)
@@ -82,9 +81,13 @@ pub fn score_search(
         }
     }
 
-    // Boost verses that match more unique query words
+    // Post-processing: apply log-normalized TF and coverage boost
     let num_query_words = query_set.len() as f64;
     for (key, doc) in scores.iter_mut() {
+        // TF component: log-normalized term frequency applied once
+        let tf = 1.0 + (doc.freq as f64).ln();
+        doc.score *= tf;
+
         if let Some(matched) = matched_sets.remove(key) {
             let coverage = matched.len() as f64 / num_query_words;
             doc.score *= 1.0 + coverage;
