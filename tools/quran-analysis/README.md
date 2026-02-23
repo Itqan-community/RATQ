@@ -14,13 +14,20 @@ A standalone Quran semantic search and analysis tool written in Rust. Ported fro
 ## Building
 
 ```bash
+cd tools/quran-analysis
 cargo build --release
 ```
 
+All data files are included in the `data/` directory. No additional downloads needed.
+
 ## Usage
 
+All commands must be run from the `tools/quran-analysis/` directory:
+
 ```bash
-# Arabic search
+cd tools/quran-analysis
+
+# Arabic search (with root-based expansion via QAC morphology)
 cargo run -- search "الله"
 
 # English search
@@ -55,16 +62,19 @@ cargo run -- stats
 
 ## Data Files
 
-Place these in the `data/` directory:
+All data files are bundled in the `data/` directory:
 
 | File | Description |
 |------|-------------|
 | `quran-simple-clean.txt` | Simple Arabic text (pipe-delimited) |
+| `quran-uthmani.txt` | Uthmani script Arabic text |
 | `en.sahih` | Sahih International English translation |
-| `quranic-corpus-morphology-0.4.txt` | QAC morphology table |
+| `quranic-corpus-morphology-0.4.txt` | QAC morphology table (roots, lemmas, POS) |
 | `qa.ontology.v1.owl` | Quranic concept ontology (OWL/RDF) |
 | `quran-stop-words.strict.l1.ar` | Arabic stop words (level 1) |
+| `quran-stop-words.strict.l2.ar` | Arabic stop words (level 2) |
 | `english-stop-words.en` | English stop words |
+| `pos-lexicon.txt` | POS tagging lexicon |
 
 ## Architecture
 
@@ -87,7 +97,7 @@ src/
 cargo test
 ```
 
-98 tests covering core utilities, data parsing, search, NLP, ontology, and QA.
+100 tests covering core utilities, data parsing, search, NLP, ontology, and QA.
 
 ## License
 
