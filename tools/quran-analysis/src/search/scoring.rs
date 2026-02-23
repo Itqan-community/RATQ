@@ -94,6 +94,12 @@ pub fn score_search_weighted(
             0.0
         };
 
+        // Count per-document term frequency for this term
+        let mut term_freq: HashMap<(u16, u16), u32> = HashMap::new();
+        for entry in entries {
+            *term_freq.entry((entry.sura, entry.aya)).or_insert(0) += 1;
+        }
+
         for entry in entries {
             let key = (entry.sura, entry.aya);
             let doc = scores.entry(key).or_insert_with(|| ScoredDocument {
@@ -106,8 +112,9 @@ pub fn score_search_weighted(
 
             doc.freq += 1;
 
-            // TF component: log-normalized term frequency
-            let tf = 1.0 + (doc.freq as f64).ln();
+            // TF component: log-normalized per-term document frequency
+            let tf_count = term_freq.get(&key).copied().unwrap_or(1);
+            let tf = 1.0 + (tf_count as f64).ln();
 
             // Position bonus: words near start get slight boost
             let pos_bonus = 1.0 + (1.0 / entry.word_index as f64) * 0.5;
@@ -127,7 +134,17 @@ pub fn score_search_weighted(
     }
 
     // Apply coverage boost and proximity bonus
-    let num_terms = terms.len() as f64;
+    // Use original query word count (weight 1.0) to avoid dilution
+    // by expansion terms
+    let original_count = terms
+        .iter()
+        .filter(|t| (t.weight - 1.0).abs() < f64::EPSILON)
+        .count();
+    let num_terms = if original_count > 0 {
+        original_count as f64
+    } else {
+        terms.len() as f64
+    };
     for (key, doc) in scores.iter_mut() {
         let coverage = doc.matched_words.len() as f64 / num_terms;
         doc.score *= 1.0 + coverage;
