@@ -46,6 +46,7 @@ impl QacMorphology {
         let mut roots: HashMap<String, Vec<(u16, u16, u16)>> = HashMap::new();
         let mut form_to_roots: HashMap<String, Vec<String>> = HashMap::new();
         let mut root_to_forms: HashMap<String, Vec<String>> = HashMap::new();
+        let mut skipped: usize = 0;
 
         for line in content.lines() {
             let line = line.trim();
@@ -55,6 +56,7 @@ impl QacMorphology {
 
             let parts: Vec<&str> = line.split('\t').collect();
             if parts.len() < 4 {
+                skipped += 1;
                 continue;
             }
 
@@ -69,6 +71,7 @@ impl QacMorphology {
                 .trim_end_matches(')');
             let loc_parts: Vec<&str> = loc.split(':').collect();
             if loc_parts.len() < 4 {
+                skipped += 1;
                 continue;
             }
 
@@ -78,6 +81,7 @@ impl QacMorphology {
             let segment: u16 = loc_parts[3].parse().unwrap_or(0);
 
             if sura == 0 || aya == 0 || word == 0 {
+                skipped += 1;
                 continue;
             }
 
@@ -113,10 +117,11 @@ impl QacMorphology {
 
             if !root_ar.is_empty() {
                 let loc_tuple = (sura, aya, word);
-                roots
-                    .entry(root_ar.clone())
-                    .or_default()
-                    .push(loc_tuple);
+                if let Some(locs) = roots.get_mut(&root_ar) {
+                    locs.push(loc_tuple);
+                } else {
+                    roots.insert(root_ar.clone(), vec![loc_tuple]);
+                }
 
                 // Build form_to_roots: normalized form → roots
                 let normalized_form = arabic::normalize_arabic(&form_ar);
@@ -138,6 +143,10 @@ impl QacMorphology {
                     }
                 }
             }
+        }
+
+        if skipped > 0 {
+            eprintln!("QAC parser: skipped {} malformed entries", skipped);
         }
 
         // Deduplicate root locations
