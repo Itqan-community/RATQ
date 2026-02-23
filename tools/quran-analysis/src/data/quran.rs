@@ -64,14 +64,8 @@ impl QuranText {
     }
 
     /// Get a verse by sura and aya number.
-    ///
-    /// Logs a warning to stderr if the requested verse is not found.
     pub fn get(&self, sura: u16, aya: u16) -> Option<&Verse> {
-        let result = self.index.get(&(sura, aya)).map(|&i| &self.verses[i]);
-        if result.is_none() {
-            eprintln!("Warning: verse {}:{} not found in corpus", sura, aya);
-        }
-        result
+        self.index.get(&(sura, aya)).map(|&i| &self.verses[i])
     }
 
     /// Total number of verses.
