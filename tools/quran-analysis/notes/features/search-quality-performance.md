@@ -1,7 +1,7 @@
 # Search Quality & Performance Enhancements
 
 ## Overview
-Adding 7 features across search quality and performance for the quran-analysis Rust port.
+Adding 9 features across search quality and performance for the quran-analysis Rust port.
 
 ## Weight Hierarchy
 - Original query words: 1.0
@@ -40,5 +40,5 @@ Adding 7 features across search quality and performance for the quran-analysis R
 - [x] Commit 8: lemma expansion
 - [x] Commit 9: full pipeline + main.rs
 
-## Test Count: 128 (was 100 before)
+## Test Count: 125 (was 100 before)
 ## All tests passing
