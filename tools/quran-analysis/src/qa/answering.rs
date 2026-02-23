@@ -93,8 +93,21 @@ pub fn extract_content_words(query: &str, lang: &str) -> Vec<String> {
 
     let mut cleaned = query.to_string();
     for (pattern, _) in patterns {
-        if cleaned.starts_with(pattern) || cleaned.to_lowercase().starts_with(pattern) {
+        if cleaned.starts_with(pattern) {
             cleaned = cleaned[pattern.len()..].trim().to_string();
+            break;
+        }
+        let lower = cleaned.to_lowercase();
+        if lower.starts_with(pattern) {
+            // Use char count to safely skip the matched prefix,
+            // since to_lowercase() may change byte length
+            let char_count = pattern.chars().count();
+            let byte_offset = cleaned
+                .char_indices()
+                .nth(char_count)
+                .map(|(i, _)| i)
+                .unwrap_or(cleaned.len());
+            cleaned = cleaned[byte_offset..].trim().to_string();
             break;
         }
     }
