@@ -17,6 +17,7 @@ pub struct IndexEntry {
 #[derive(Debug)]
 pub struct InvertedIndex {
     index: HashMap<String, Vec<IndexEntry>>,
+    df_cache: HashMap<String, usize>,
 }
 
 impl InvertedIndex {
@@ -43,7 +44,8 @@ impl InvertedIndex {
             }
         }
 
-        InvertedIndex { index }
+        let df_cache = Self::compute_df_cache(&index);
+        InvertedIndex { index, df_cache }
     }
 
     /// Build an inverted index from English translation text.
@@ -70,7 +72,8 @@ impl InvertedIndex {
             }
         }
 
-        InvertedIndex { index }
+        let df_cache = Self::compute_df_cache(&index);
+        InvertedIndex { index, df_cache }
     }
 
     /// Look up a normalized word in the index.
@@ -100,16 +103,22 @@ impl InvertedIndex {
         docs.len()
     }
 
-    /// Number of documents containing a given word (document frequency).
+    /// Number of documents containing a given word (O(1) cache lookup).
     pub fn document_frequency(&self, word: &str) -> usize {
+        self.df_cache.get(word).copied().unwrap_or(0)
+    }
+
+    /// Pre-compute document frequency for every word in the index.
+    fn compute_df_cache(
+        index: &HashMap<String, Vec<IndexEntry>>,
+    ) -> HashMap<String, usize> {
         use std::collections::HashSet;
-        match self.index.get(word) {
-            Some(entries) => {
-                let docs: HashSet<(u16, u16)> =
-                    entries.iter().map(|e| (e.sura, e.aya)).collect();
-                docs.len()
-            }
-            None => 0,
+        let mut cache = HashMap::new();
+        for (word, entries) in index {
+            let docs: HashSet<(u16, u16)> =
+                entries.iter().map(|e| (e.sura, e.aya)).collect();
+            cache.insert(word.clone(), docs.len());
         }
+        cache
     }
 }

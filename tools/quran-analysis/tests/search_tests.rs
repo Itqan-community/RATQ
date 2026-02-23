@@ -203,6 +203,33 @@ fn test_root_expansion_arab() {
     );
 }
 
+// ===== Document Frequency Cache Tests =====
+
+#[test]
+fn test_document_frequency_cache_matches_computed() {
+    let quran = sample_quran();
+    let sw = empty_stopwords();
+    let idx = InvertedIndex::build(&quran, &sw);
+
+    // The cached df should match the computed df for any word
+    let word = arabic::normalize_arabic("الرحيم");
+    let cached_df = idx.document_frequency(&word);
+    // "الرحيم" appears in verses 1:1 and 1:3
+    assert_eq!(cached_df, 2);
+}
+
+#[test]
+fn test_document_frequency_cache_nonexistent_word() {
+    let quran = sample_quran();
+    let sw = empty_stopwords();
+    let idx = InvertedIndex::build(&quran, &sw);
+
+    let cached_df = idx.document_frequency("xyznotfound");
+    assert_eq!(cached_df, 0);
+}
+
+// ===== Root Expansion Tests =====
+
 #[test]
 fn test_search_arab_with_expansion() {
     let quran_path = std::path::Path::new("data/quran-simple-clean.txt");
