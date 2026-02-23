@@ -145,6 +145,55 @@ fn test_scored_document_fields() {
     assert!(top.freq > 0);
 }
 
+// ===== Weighted Scoring Tests =====
+
+#[test]
+fn test_weighted_term_default_weight() {
+    let term = scoring::WeightedTerm {
+        word: "test".to_string(),
+        weight: 1.0,
+    };
+    assert_eq!(term.weight, 1.0);
+    assert_eq!(term.word, "test");
+}
+
+#[test]
+fn test_score_search_weighted_original_higher_than_expansion() {
+    let quran = sample_quran();
+    let sw = empty_stopwords();
+    let idx = InvertedIndex::build(&quran, &sw);
+
+    let normalized = arabic::normalize_arabic("الله");
+    // Original word at full weight
+    let original = vec![scoring::WeightedTerm {
+        word: normalized.clone(),
+        weight: 1.0,
+    }];
+    // Same word at half weight (as if it were an expansion)
+    let half_weight = vec![scoring::WeightedTerm {
+        word: normalized,
+        weight: 0.5,
+    }];
+
+    let results_orig = scoring::score_search_weighted(&idx, &original, &quran);
+    let results_half = scoring::score_search_weighted(&idx, &half_weight, &quran);
+
+    assert!(!results_orig.is_empty());
+    assert!(!results_half.is_empty());
+    // Original weight should produce higher scores
+    assert!(results_orig[0].score > results_half[0].score);
+}
+
+#[test]
+fn test_score_search_weighted_empty_terms() {
+    let quran = sample_quran();
+    let sw = empty_stopwords();
+    let idx = InvertedIndex::build(&quran, &sw);
+
+    let results = scoring::score_search_weighted(&idx, &[], &quran);
+    assert!(results.is_empty());
+}
+
 // ===== Full file search tests =====
 
 #[test]

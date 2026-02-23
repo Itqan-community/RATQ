@@ -3,6 +3,13 @@ use std::collections::HashMap;
 use crate::data::quran::QuranText;
 use crate::search::index::InvertedIndex;
 
+/// A query term with an associated weight.
+#[derive(Debug, Clone)]
+pub struct WeightedTerm {
+    pub word: String,
+    pub weight: f64,
+}
+
 /// A scored search result.
 #[derive(Debug, Clone)]
 pub struct ScoredDocument {
@@ -16,16 +23,32 @@ pub struct ScoredDocument {
 /// Score search results using TF-IDF-inspired formula.
 ///
 /// For each query word, find matching verses and accumulate scores.
-/// Score factors:
-/// - Term frequency in verse (how many query words appear)
-/// - Inverse document frequency (rare words score higher)
-/// - Position bonus (matches near start of verse score slightly higher)
+/// Delegates to `score_search_weighted` with all weights set to 1.0.
 pub fn score_search(
     index: &InvertedIndex,
     query_words: &[String],
     quran: &QuranText,
 ) -> Vec<ScoredDocument> {
-    if query_words.is_empty() {
+    let weighted: Vec<WeightedTerm> = query_words
+        .iter()
+        .map(|w| WeightedTerm {
+            word: w.clone(),
+            weight: 1.0,
+        })
+        .collect();
+    score_search_weighted(index, &weighted, quran)
+}
+
+/// Score search results using weighted query terms.
+///
+/// Each term's contribution is multiplied by its weight, allowing
+/// expansion terms to contribute less than original query words.
+pub fn score_search_weighted(
+    index: &InvertedIndex,
+    terms: &[WeightedTerm],
+    quran: &QuranText,
+) -> Vec<ScoredDocument> {
+    if terms.is_empty() {
         return Vec::new();
     }
 
@@ -34,14 +57,14 @@ pub fn score_search(
     // Accumulate scores per (sura, aya)
     let mut scores: HashMap<(u16, u16), ScoredDocument> = HashMap::new();
 
-    for word in query_words {
-        let entries = index.lookup(word);
+    for term in terms {
+        let entries = index.lookup(&term.word);
         if entries.is_empty() {
             continue;
         }
 
         // IDF: log(total_docs / doc_freq)
-        let df = index.document_frequency(word) as f64;
+        let df = index.document_frequency(&term.word) as f64;
         let idf = if df > 0.0 {
             (total_docs / df).ln()
         } else {
@@ -69,18 +92,18 @@ pub fn score_search(
             // Stop word penalty
             let stop_penalty = if entry.is_stop_word { 0.3 } else { 1.0 };
 
-            doc.score += tf * idf * pos_bonus * stop_penalty;
+            doc.score += tf * idf * pos_bonus * stop_penalty * term.weight;
 
-            if !doc.matched_words.contains(word) {
-                doc.matched_words.push(word.clone());
+            if !doc.matched_words.contains(&term.word) {
+                doc.matched_words.push(term.word.clone());
             }
         }
     }
 
-    // Boost verses that match more unique query words
-    let num_query_words = query_words.len() as f64;
+    // Boost verses that match more unique query terms
+    let num_terms = terms.len() as f64;
     for doc in scores.values_mut() {
-        let coverage = doc.matched_words.len() as f64 / num_query_words;
+        let coverage = doc.matched_words.len() as f64 / num_terms;
         doc.score *= 1.0 + coverage;
     }
 
