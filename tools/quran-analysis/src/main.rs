@@ -130,7 +130,23 @@ fn cmd_search(data_dir: &PathBuf, q: &str, lang_arg: &str, limit: usize, format:
     };
 
     let query_words = query::parse_query(q, &lang);
-    let scored = scoring::score_search(&index, &query_words, &quran);
+
+    let expanded = if lang == "ar" {
+        let qac_path = data_dir.join("quranic-corpus-morphology-0.4.txt");
+        if qac_path.exists() {
+            if let Ok(qac) = quran_analysis::data::qac::QacMorphology::from_file(&qac_path) {
+                query::expand_by_roots(&query_words, &qac)
+            } else {
+                query_words.clone()
+            }
+        } else {
+            query_words.clone()
+        }
+    } else {
+        query_words.clone()
+    };
+
+    let scored = scoring::score_search(&index, &expanded, &quran);
     let formatted = results::format_results(&scored, &quran, limit);
 
     if format == "json" {
@@ -174,7 +190,24 @@ fn cmd_answer(data_dir: &PathBuf, question: &str, lang_arg: &str, limit: usize) 
         InvertedIndex::build_english(&quran, &sw)
     };
 
-    let answers = answering::answer_question(question, &index, &quran, limit);
+    let qac = if lang == "ar" {
+        let qac_path = data_dir.join("quranic-corpus-morphology-0.4.txt");
+        if qac_path.exists() {
+            quran_analysis::data::qac::QacMorphology::from_file(&qac_path).ok()
+        } else {
+            None
+        }
+    } else {
+        None
+    };
+
+    let answers = answering::answer_question_with_qac(
+        question,
+        &index,
+        &quran,
+        limit,
+        qac.as_ref(),
+    );
 
     if answers.is_empty() {
         println!("No answers found for: \"{}\"", question);

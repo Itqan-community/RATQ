@@ -1,7 +1,9 @@
 use crate::core::arabic;
+use crate::data::qac::QacMorphology;
 use crate::data::quran::QuranText;
 use crate::search::index::InvertedIndex;
-use crate::search::scoring::{self, ScoredDocument};
+use crate::search::{query, scoring};
+use crate::search::scoring::ScoredDocument;
 
 /// Detected question type.
 #[derive(Debug, Clone, PartialEq)]
@@ -115,24 +117,46 @@ pub fn extract_content_words(query: &str, lang: &str) -> Vec<String> {
 
 /// Answer a question by searching for relevant verses and scoring them.
 ///
-/// Returns the top answers ranked by relevance.
+/// Returns the top answers ranked by relevance. If QAC morphology data
+/// is provided, Arabic queries are expanded via root derivations.
 pub fn answer_question(
-    query: &str,
+    q: &str,
     index: &InvertedIndex,
     quran: &QuranText,
     limit: usize,
 ) -> Vec<Answer> {
-    let question_type = detect_question_type(query)
+    answer_question_with_qac(q, index, quran, limit, None)
+}
+
+/// Answer a question with optional QAC root expansion.
+pub fn answer_question_with_qac(
+    q: &str,
+    index: &InvertedIndex,
+    quran: &QuranText,
+    limit: usize,
+    qac: Option<&QacMorphology>,
+) -> Vec<Answer> {
+    let question_type = detect_question_type(q)
         .unwrap_or(QuestionType::General);
 
-    let lang = if arabic::is_arabic(query) { "ar" } else { "en" };
-    let content_words = extract_content_words(query, lang);
+    let lang = if arabic::is_arabic(q) { "ar" } else { "en" };
+    let content_words = extract_content_words(q, lang);
 
     if content_words.is_empty() {
         return Vec::new();
     }
 
-    let scored = scoring::score_search(index, &content_words, quran);
+    let search_words = if lang == "ar" {
+        if let Some(qac_data) = qac {
+            query::expand_by_roots(&content_words, qac_data)
+        } else {
+            content_words
+        }
+    } else {
+        content_words
+    };
+
+    let scored = scoring::score_search(index, &search_words, quran);
 
     scored
         .into_iter()

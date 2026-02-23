@@ -1,6 +1,7 @@
 use std::collections::HashMap;
 use std::path::Path;
 
+use crate::core::arabic;
 use crate::core::transliteration;
 
 /// A single morphology entry from the QAC corpus.
@@ -25,6 +26,10 @@ pub struct QacMorphology {
     pub entries: HashMap<String, Vec<MorphEntry>>,
     /// Root lookup: root → list of (sura, aya, word) locations.
     pub roots: HashMap<String, Vec<(u16, u16, u16)>>,
+    /// Reverse index: normalized Arabic form → list of Arabic roots.
+    pub form_to_roots: HashMap<String, Vec<String>>,
+    /// Forward index: Arabic root → list of normalized surface forms.
+    pub root_to_forms: HashMap<String, Vec<String>>,
 }
 
 impl QacMorphology {
@@ -39,6 +44,8 @@ impl QacMorphology {
     pub fn from_str(content: &str) -> Result<Self, String> {
         let mut entries: HashMap<String, Vec<MorphEntry>> = HashMap::new();
         let mut roots: HashMap<String, Vec<(u16, u16, u16)>> = HashMap::new();
+        let mut form_to_roots: HashMap<String, Vec<String>> = HashMap::new();
+        let mut root_to_forms: HashMap<String, Vec<String>> = HashMap::new();
 
         for line in content.lines() {
             let line = line.trim();
@@ -77,8 +84,15 @@ impl QacMorphology {
             let form_ar = transliteration::buckwalter_to_arabic(&form_bw);
 
             // Extract root and lemma from features
-            let root = extract_feature(&features, "ROOT:");
+            let root_bw = extract_feature(&features, "ROOT:");
             let lemma = extract_feature(&features, "LEM:");
+
+            // Convert root from Buckwalter to Arabic
+            let root_ar = if root_bw.is_empty() {
+                String::new()
+            } else {
+                transliteration::buckwalter_to_arabic(&root_bw)
+            };
 
             let key = format!("{}:{}:{}", sura, aya, word);
 
@@ -88,21 +102,41 @@ impl QacMorphology {
                 word,
                 segment,
                 form_bw,
-                form_ar,
+                form_ar: form_ar.clone(),
                 tag,
                 features,
-                root: root.clone(),
+                root: root_ar.clone(),
                 lemma,
             };
 
             entries.entry(key).or_default().push(entry);
 
-            if !root.is_empty() {
+            if !root_ar.is_empty() {
                 let loc_tuple = (sura, aya, word);
                 roots
-                    .entry(root)
+                    .entry(root_ar.clone())
                     .or_default()
                     .push(loc_tuple);
+
+                // Build form_to_roots: normalized form → roots
+                let normalized_form = arabic::normalize_arabic(&form_ar);
+                if !normalized_form.is_empty() {
+                    let normalized_root = arabic::normalize_arabic(&root_ar);
+                    let form_roots = form_to_roots
+                        .entry(normalized_form.clone())
+                        .or_default();
+                    if !form_roots.contains(&normalized_root) {
+                        form_roots.push(normalized_root.clone());
+                    }
+
+                    // Build root_to_forms: root → normalized forms
+                    let root_forms = root_to_forms
+                        .entry(normalized_root)
+                        .or_default();
+                    if !root_forms.contains(&normalized_form) {
+                        root_forms.push(normalized_form);
+                    }
+                }
             }
         }
 
@@ -112,7 +146,12 @@ impl QacMorphology {
             locs.dedup();
         }
 
-        Ok(QacMorphology { entries, roots })
+        Ok(QacMorphology {
+            entries,
+            roots,
+            form_to_roots,
+            root_to_forms,
+        })
     }
 
     /// Get morphology entries for a specific word location.
@@ -124,6 +163,29 @@ impl QacMorphology {
     /// Find all verse locations containing a given root.
     pub fn find_by_root(&self, root: &str) -> Option<&Vec<(u16, u16, u16)>> {
         self.roots.get(root)
+    }
+
+    /// Find the root of a normalized Arabic word form.
+    ///
+    /// Looks up the normalized form in the `form_to_roots` index
+    /// and returns the first root found.
+    pub fn find_root_by_form(&self, form: &str) -> Option<String> {
+        let normalized = arabic::normalize_arabic(form);
+        self.form_to_roots
+            .get(&normalized)
+            .and_then(|roots| roots.first().cloned())
+    }
+
+    /// Get all unique normalized surface forms that share a given root.
+    ///
+    /// The root should be in Arabic script. It will be normalized
+    /// before lookup.
+    pub fn get_surface_forms_for_root(&self, root: &str) -> Vec<String> {
+        let normalized = arabic::normalize_arabic(root);
+        self.root_to_forms
+            .get(&normalized)
+            .cloned()
+            .unwrap_or_default()
     }
 }
 

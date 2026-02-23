@@ -22,21 +22,28 @@ pub fn parse_query(query: &str, lang: &str) -> Vec<String> {
 /// Expand query words with QAC root derivations.
 ///
 /// For Arabic queries, find the root of each word using QAC morphology
-/// and add other words sharing the same root.
-pub fn expand_by_roots(
-    words: &[String],
-    _qac: &QacMorphology,
-    quran_words: &std::collections::HashMap<String, Vec<String>>,
-) -> Vec<String> {
+/// and add other surface forms sharing the same root.
+///
+/// The function first tries each word as a root directly to find
+/// surface forms. If no forms are found, it looks up the root of
+/// the word form and then retrieves all surface forms for that root.
+pub fn expand_by_roots(words: &[String], qac: &QacMorphology) -> Vec<String> {
     let mut expanded: Vec<String> = words.to_vec();
 
     for word in words {
-        // Look up root in QAC via the word-to-root map
-        if let Some(root_words) = quran_words.get(word) {
-            for rw in root_words {
-                if !expanded.contains(rw) {
-                    expanded.push(rw.clone());
-                }
+        // Try the word directly as a root first
+        let mut root_forms = qac.get_surface_forms_for_root(word);
+
+        // If no forms found, look up the root of this word form
+        if root_forms.is_empty() {
+            if let Some(root) = qac.find_root_by_form(word) {
+                root_forms = qac.get_surface_forms_for_root(&root);
+            }
+        }
+
+        for form in root_forms {
+            if !expanded.contains(&form) {
+                expanded.push(form);
             }
         }
     }

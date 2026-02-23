@@ -113,7 +113,8 @@ LOCATION\tFORM\tTAG\tFEATURES
 ";
     let qac = QacMorphology::from_str(content).unwrap();
     let entries = qac.get(1, 1, 1).unwrap();
-    assert_eq!(entries[0].root, "smw");
+    // Root is now converted from Buckwalter to Arabic: smw → سمو
+    assert_eq!(entries[0].root, "سمو");
     assert_eq!(entries[0].lemma, "{som");
 }
 
@@ -125,7 +126,8 @@ LOCATION\tFORM\tTAG\tFEATURES
 (67:3:5:2)\tsamowa`ti\tN\tSTEM|POS:N|LEM:samA'|ROOT:smw|FP|GEN
 ";
     let qac = QacMorphology::from_str(content).unwrap();
-    let locs = qac.find_by_root("smw").unwrap();
+    // Root is now in Arabic: smw → سمو
+    let locs = qac.find_by_root("سمو").unwrap();
     assert_eq!(locs.len(), 2);
 }
 

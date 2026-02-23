@@ -1,8 +1,9 @@
 use quran_analysis::core::arabic;
+use quran_analysis::data::qac::QacMorphology;
 use quran_analysis::data::quran::QuranText;
 use quran_analysis::nlp::stopwords::StopWords;
 use quran_analysis::search::index::InvertedIndex;
-use quran_analysis::search::scoring;
+use quran_analysis::search::{query, scoring};
 
 // ===== InvertedIndex Tests =====
 
@@ -181,4 +182,46 @@ fn test_search_english_translation() {
 
     let results = scoring::score_search(&idx, &["mercy".to_string()], &quran);
     assert!(!results.is_empty());
+}
+
+// ===== Root Expansion Tests =====
+
+#[test]
+fn test_root_expansion_arab() {
+    let qac_path = std::path::Path::new("data/quranic-corpus-morphology-0.4.txt");
+    if !qac_path.exists() {
+        return;
+    }
+    let qac = QacMorphology::from_file(qac_path).unwrap();
+
+    let words = vec!["عرب".to_string()];
+    let expanded = query::expand_by_roots(&words, &qac);
+    assert!(
+        expanded.len() > 1,
+        "Should expand 'عرب' to multiple forms, got: {:?}",
+        expanded
+    );
+}
+
+#[test]
+fn test_search_arab_with_expansion() {
+    let quran_path = std::path::Path::new("data/quran-simple-clean.txt");
+    let qac_path = std::path::Path::new("data/quranic-corpus-morphology-0.4.txt");
+    if !quran_path.exists() || !qac_path.exists() {
+        return;
+    }
+
+    let quran = QuranText::from_file(quran_path).unwrap();
+    let sw = StopWords::from_str("");
+    let index = InvertedIndex::build(&quran, &sw);
+    let qac = QacMorphology::from_file(qac_path).unwrap();
+
+    let query_words = query::parse_query("عرب", "ar");
+    let expanded = query::expand_by_roots(&query_words, &qac);
+    let scored = scoring::score_search(&index, &expanded, &quran);
+
+    assert!(
+        !scored.is_empty(),
+        "Search for 'عرب' should return results after root expansion"
+    );
 }
