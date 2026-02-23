@@ -1,3 +1,5 @@
+use std::collections::HashSet;
+
 use crate::core::arabic;
 use crate::data::qac::QacMorphology;
 use crate::nlp::stopwords::StopWords;
@@ -28,6 +30,7 @@ pub fn parse_query(query: &str, lang: &str) -> Vec<String> {
 /// surface forms. If no forms are found, it looks up the root of
 /// the word form and then retrieves all surface forms for that root.
 pub fn expand_by_roots(words: &[String], qac: &QacMorphology) -> Vec<String> {
+    let mut seen: HashSet<String> = words.iter().cloned().collect();
     let mut expanded: Vec<String> = words.to_vec();
 
     for word in words {
@@ -42,7 +45,7 @@ pub fn expand_by_roots(words: &[String], qac: &QacMorphology) -> Vec<String> {
         }
 
         for form in root_forms {
-            if !expanded.contains(&form) {
+            if seen.insert(form.clone()) {
                 expanded.push(form);
             }
         }
@@ -57,6 +60,7 @@ pub fn expand_by_synonyms(
     wordnet: &WordNet,
     stopwords: &StopWords,
 ) -> Vec<String> {
+    let mut seen: HashSet<String> = words.iter().cloned().collect();
     let mut expanded: Vec<String> = words.to_vec();
 
     for word in words {
@@ -65,7 +69,7 @@ pub fn expand_by_synonyms(
         }
         let synonyms = wordnet.get_synonyms(word);
         for syn in synonyms.iter().take(3) {
-            if !expanded.contains(syn) && !stopwords.contains(syn) {
+            if !stopwords.contains(syn) && seen.insert(syn.clone()) {
                 expanded.push(syn.clone());
             }
         }
