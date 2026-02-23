@@ -39,10 +39,31 @@ pub fn score_search(
     score_search_weighted(index, &weighted, quran)
 }
 
+/// Compute proximity bonus for a set of word positions in a verse.
+///
+/// For each pair of adjacent sorted positions, adds 1.0 / distance.
+/// Adjacent words (distance=1) contribute 1.0 each, distant words less.
+pub fn compute_proximity_bonus(positions: &[u16]) -> f64 {
+    if positions.len() < 2 {
+        return 0.0;
+    }
+    let mut sorted = positions.to_vec();
+    sorted.sort();
+    let mut bonus = 0.0;
+    for i in 1..sorted.len() {
+        let distance = (sorted[i] - sorted[i - 1]) as f64;
+        if distance > 0.0 {
+            bonus += 1.0 / distance;
+        }
+    }
+    bonus
+}
+
 /// Score search results using weighted query terms.
 ///
 /// Each term's contribution is multiplied by its weight, allowing
 /// expansion terms to contribute less than original query words.
+/// Applies proximity bonus for multi-word queries.
 pub fn score_search_weighted(
     index: &InvertedIndex,
     terms: &[WeightedTerm],
@@ -56,6 +77,8 @@ pub fn score_search_weighted(
 
     // Accumulate scores per (sura, aya)
     let mut scores: HashMap<(u16, u16), ScoredDocument> = HashMap::new();
+    // Track word positions per verse for proximity scoring
+    let mut positions: HashMap<(u16, u16), Vec<u16>> = HashMap::new();
 
     for term in terms {
         let entries = index.lookup(&term.word);
@@ -94,17 +117,26 @@ pub fn score_search_weighted(
 
             doc.score += tf * idf * pos_bonus * stop_penalty * term.weight;
 
+            // Track positions for proximity scoring
+            positions.entry(key).or_default().push(entry.word_index);
+
             if !doc.matched_words.contains(&term.word) {
                 doc.matched_words.push(term.word.clone());
             }
         }
     }
 
-    // Boost verses that match more unique query terms
+    // Apply coverage boost and proximity bonus
     let num_terms = terms.len() as f64;
-    for doc in scores.values_mut() {
+    for (key, doc) in scores.iter_mut() {
         let coverage = doc.matched_words.len() as f64 / num_terms;
         doc.score *= 1.0 + coverage;
+
+        // Proximity bonus: reward verses where matched words are close
+        if let Some(pos) = positions.get(key) {
+            let proximity = compute_proximity_bonus(pos);
+            doc.score *= 1.0 + proximity * 0.3;
+        }
     }
 
     let mut results: Vec<ScoredDocument> = scores.into_values().collect();

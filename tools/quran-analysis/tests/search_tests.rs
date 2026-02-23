@@ -197,6 +197,60 @@ fn test_score_search_weighted_empty_terms() {
     assert!(results.is_empty());
 }
 
+// ===== Proximity Scoring Tests =====
+
+#[test]
+fn test_proximity_bonus_adjacent_words() {
+    // Adjacent positions should give a high bonus
+    let positions = vec![1, 2];
+    let bonus = scoring::compute_proximity_bonus(&positions);
+    assert!(bonus > 0.5, "Adjacent words should give high bonus, got {}", bonus);
+}
+
+#[test]
+fn test_proximity_bonus_distant_words() {
+    // Distant positions should give a low bonus
+    let positions = vec![1, 100];
+    let bonus = scoring::compute_proximity_bonus(&positions);
+    let adjacent_bonus = scoring::compute_proximity_bonus(&vec![1, 2]);
+    assert!(
+        bonus < adjacent_bonus,
+        "Distant words should give lower bonus than adjacent"
+    );
+}
+
+#[test]
+fn test_proximity_bonus_single_word() {
+    // Single word: no pairs → zero bonus
+    let positions = vec![5];
+    let bonus = scoring::compute_proximity_bonus(&positions);
+    assert_eq!(bonus, 0.0);
+}
+
+#[test]
+fn test_proximity_improves_phrase_ranking() {
+    // Two verses with identical words but different positions.
+    // Verse 1: words adjacent (positions 1,2). Verse 2: words far apart.
+    let content = "\
+1|1|الرحمن الرحيم
+1|2|الرحمن ملك يوم الدين غير المغضوب عليهم الرحيم
+";
+    let quran = QuranText::from_str(content).unwrap();
+    let sw = empty_stopwords();
+    let idx = InvertedIndex::build(&quran, &sw);
+
+    let n1 = arabic::normalize_arabic("الرحمن");
+    let n2 = arabic::normalize_arabic("الرحيم");
+    let terms = vec![
+        scoring::WeightedTerm { word: n1, weight: 1.0 },
+        scoring::WeightedTerm { word: n2, weight: 1.0 },
+    ];
+    let results = scoring::score_search_weighted(&idx, &terms, &quran);
+    assert!(results.len() >= 2);
+    // Verse 1:1 has الرحمن الرحيم adjacent → higher proximity bonus
+    assert_eq!(results[0].aya, 1, "Adjacent phrase should rank first");
+}
+
 // ===== Full file search tests =====
 
 #[test]
