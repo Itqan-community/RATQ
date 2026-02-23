@@ -12,7 +12,7 @@ pub struct Verse {
 /// Parsed Quran text, indexed by (sura, aya).
 #[derive(Debug)]
 pub struct QuranText {
-    pub verses: Vec<Verse>,
+    pub(crate) verses: Vec<Verse>,
     index: HashMap<(u16, u16), usize>,
 }
 
@@ -61,6 +61,11 @@ impl QuranText {
         }
 
         Ok(QuranText { verses, index })
+    }
+
+    /// Read-only access to all verses.
+    pub fn verses(&self) -> &[Verse] {
+        &self.verses
     }
 
     /// Get a verse by sura and aya number.
