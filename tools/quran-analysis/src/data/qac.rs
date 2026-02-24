@@ -124,11 +124,13 @@ impl QacMorphology {
 
             if !root_ar.is_empty() {
                 let loc_tuple = (sura, aya, word);
-                if let Some(locs) = roots.get_mut(&root_ar) {
-                    locs.push(loc_tuple);
+                let norm_root = arabic::normalize_arabic(&root_ar);
+                let root_key = if norm_root.is_empty() {
+                    root_ar.clone()
                 } else {
-                    roots.insert(root_ar.clone(), vec![loc_tuple]);
-                }
+                    norm_root
+                };
+                roots.entry(root_key).or_default().push(loc_tuple);
 
                 // Build form_to_roots: normalized form → roots
                 let normalized_form = arabic::normalize_arabic(&form_ar);
@@ -177,8 +179,13 @@ impl QacMorphology {
     }
 
     /// Find all verse locations containing a given root.
+    ///
+    /// The root is normalized before lookup so callers may pass
+    /// un-normalized Arabic text.
     pub fn find_by_root(&self, root: &str) -> Option<&Vec<(u16, u16, u16)>> {
-        self.roots.get(root)
+        let normalized = arabic::normalize_arabic(root);
+        let key = if normalized.is_empty() { root } else { &normalized };
+        self.roots.get(key)
     }
 
     /// Find the root of a normalized Arabic word form.
