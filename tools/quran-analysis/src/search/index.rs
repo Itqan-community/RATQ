@@ -75,8 +75,9 @@ impl InvertedIndex {
 
     /// Look up a word in the index.
     ///
-    /// The word is normalized before lookup so callers don't need to
-    /// pre-normalize.
+    /// For Arabic text, diacritics are removed and alef/taa marbuta
+    /// variants are unified. Non-Arabic words fall back to the
+    /// raw input if normalization yields an empty string.
     pub fn lookup(&self, word: &str) -> &[IndexEntry] {
         let normalized = arabic::normalize_arabic(word);
         let key = if normalized.is_empty() { word } else { &normalized };
