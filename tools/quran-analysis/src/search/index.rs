@@ -18,6 +18,7 @@ pub struct IndexEntry {
 pub struct InvertedIndex {
     index: HashMap<String, Vec<IndexEntry>>,
     df_cache: HashMap<String, usize>,
+    total_docs: usize,
 }
 
 impl InvertedIndex {
@@ -45,7 +46,8 @@ impl InvertedIndex {
         }
 
         let df_cache = Self::compute_df_cache(&index);
-        InvertedIndex { index, df_cache }
+        let total_docs = Self::count_documents(&index);
+        InvertedIndex { index, df_cache, total_docs }
     }
 
     /// Build an inverted index from English translation text.
@@ -73,7 +75,8 @@ impl InvertedIndex {
         }
 
         let df_cache = Self::compute_df_cache(&index);
-        InvertedIndex { index, df_cache }
+        let total_docs = Self::count_documents(&index);
+        InvertedIndex { index, df_cache, total_docs }
     }
 
     /// Look up a normalized word in the index.
@@ -97,20 +100,26 @@ impl InvertedIndex {
     }
 
     /// Total number of verses in the corpus (unique sura:aya pairs).
+    /// Pre-computed at build time for O(1) access.
     pub fn total_documents(&self) -> usize {
-        use std::collections::HashSet;
-        let mut docs: HashSet<(u16, u16)> = HashSet::new();
-        for entries in self.index.values() {
-            for e in entries {
-                docs.insert((e.sura, e.aya));
-            }
-        }
-        docs.len()
+        self.total_docs
     }
 
     /// Number of documents containing a given word (O(1) cache lookup).
     pub fn document_frequency(&self, word: &str) -> usize {
         self.df_cache.get(word).copied().unwrap_or(0)
+    }
+
+    /// Count unique documents (sura:aya pairs) in the index.
+    fn count_documents(index: &HashMap<String, Vec<IndexEntry>>) -> usize {
+        use std::collections::HashSet;
+        let mut docs: HashSet<(u16, u16)> = HashSet::new();
+        for entries in index.values() {
+            for e in entries {
+                docs.insert((e.sura, e.aya));
+            }
+        }
+        docs.len()
     }
 
     /// Pre-compute document frequency for every word in the index.

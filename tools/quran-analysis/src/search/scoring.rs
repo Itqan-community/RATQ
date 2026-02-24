@@ -164,6 +164,10 @@ pub fn score_search_weighted(
     }
 
     let mut results: Vec<ScoredDocument> = scores.into_values().collect();
+    // Sort matched_words for deterministic output
+    for doc in results.iter_mut() {
+        doc.matched_words.sort();
+    }
     results.sort_by(|a, b| {
         b.score
             .partial_cmp(&a.score)
