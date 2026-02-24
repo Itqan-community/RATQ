@@ -128,14 +128,13 @@ impl QacMorphology {
 
             if !root_ar.is_empty() && !normalized_form.is_empty() {
                 let loc_tuple = (sura, aya, word);
-                let normalized_root_key = arabic::normalize_arabic(&root_ar);
+                let normalized_root = arabic::normalize_arabic(&root_ar);
                 roots
-                    .entry(normalized_root_key)
+                    .entry(normalized_root.clone())
                     .or_default()
                     .push(loc_tuple);
 
                 // Build form_to_roots: normalized form → roots
-                let normalized_root = arabic::normalize_arabic(&root_ar);
                 let form_roots = form_to_roots
                     .entry(normalized_form.clone())
                     .or_default();
