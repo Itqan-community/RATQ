@@ -277,14 +277,14 @@ fn cmd_ontology(data_dir: &Path, concept: &str, show_relations: bool) {
     let owl_path = data_dir.join("qa.ontology.v1.owl");
     if !owl_path.exists() {
         eprintln!("Ontology file not found: {}", owl_path.display());
-        return;
+        std::process::exit(1);
     }
 
     let (concepts, relations) = match owl_parser::parse_owl(&owl_path) {
         Ok(r) => r,
         Err(e) => {
             eprintln!("Failed to parse ontology: {}", e);
-            return;
+            std::process::exit(1);
         }
     };
 
@@ -337,7 +337,10 @@ fn cmd_ontology(data_dir: &Path, concept: &str, show_relations: bool) {
                 }
             }
         }
-        None => eprintln!("Concept '{}' not found in ontology.", concept),
+        None => {
+            eprintln!("Concept '{}' not found in ontology.", concept);
+            std::process::exit(1);
+        }
     }
 }
 
