@@ -75,15 +75,22 @@ impl QacMorphology {
                 continue;
             }
 
-            let sura: u16 = loc_parts[0].parse().unwrap_or(0);
-            let aya: u16 = loc_parts[1].parse().unwrap_or(0);
-            let word: u16 = loc_parts[2].parse().unwrap_or(0);
-            let segment: u16 = loc_parts[3].parse().unwrap_or(0);
-
-            if sura == 0 || aya == 0 || word == 0 {
-                skipped += 1;
-                continue;
-            }
+            let sura: u16 = match loc_parts[0].parse() {
+                Ok(v) if v > 0 => v,
+                _ => { skipped += 1; continue; }
+            };
+            let aya: u16 = match loc_parts[1].parse() {
+                Ok(v) if v > 0 => v,
+                _ => { skipped += 1; continue; }
+            };
+            let word: u16 = match loc_parts[2].parse() {
+                Ok(v) if v > 0 => v,
+                _ => { skipped += 1; continue; }
+            };
+            let segment: u16 = match loc_parts[3].parse() {
+                Ok(v) if v > 0 => v,
+                _ => { skipped += 1; continue; }
+            };
 
             let form_ar = transliteration::buckwalter_to_arabic(&form_bw);
 
