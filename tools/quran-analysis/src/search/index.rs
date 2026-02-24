@@ -25,7 +25,7 @@ impl InvertedIndex {
     pub fn build(quran: &QuranText, stopwords: &StopWords) -> Self {
         let mut index: HashMap<String, Vec<IndexEntry>> = HashMap::new();
 
-        for verse in &quran.verses {
+        for verse in quran.verses() {
             let words: Vec<&str> = verse.text.split_whitespace().collect();
             for (i, word) in words.iter().enumerate() {
                 let normalized = arabic::normalize_arabic(word);
@@ -52,7 +52,7 @@ impl InvertedIndex {
     pub fn build_english(quran: &QuranText, stopwords: &StopWords) -> Self {
         let mut index: HashMap<String, Vec<IndexEntry>> = HashMap::new();
 
-        for verse in &quran.verses {
+        for verse in quran.verses() {
             let words: Vec<&str> = verse.text.split_whitespace().collect();
             for (i, word) in words.iter().enumerate() {
                 let clean = word

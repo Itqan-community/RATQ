@@ -17,7 +17,7 @@ pub fn corpus_stats(quran: &QuranText) -> CorpusStats {
     let mut max_sura: u16 = 0;
     let mut unique_words = std::collections::HashSet::new();
 
-    for verse in &quran.verses {
+    for verse in quran.verses() {
         let words: Vec<&str> = verse.text.split_whitespace().collect();
         total_words += words.len();
         total_chars += verse.text.chars().count();

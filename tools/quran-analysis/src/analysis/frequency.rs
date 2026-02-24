@@ -16,7 +16,7 @@ pub fn word_frequencies(quran: &QuranText) -> Vec<WordFrequency> {
     let mut counts: HashMap<String, (u32, std::collections::HashSet<(u16, u16)>)> =
         HashMap::new();
 
-    for verse in &quran.verses {
+    for verse in quran.verses() {
         for word in verse.text.split_whitespace() {
             let normalized = arabic::normalize_arabic(word);
             if normalized.is_empty() {
@@ -50,7 +50,7 @@ pub fn get_word_frequency(quran: &QuranText, word: &str) -> Option<WordFrequency
     let mut verses: std::collections::HashSet<(u16, u16)> =
         std::collections::HashSet::new();
 
-    for verse in &quran.verses {
+    for verse in quran.verses() {
         for w in verse.text.split_whitespace() {
             if arabic::normalize_arabic(w) == target {
                 count += 1;

@@ -12,7 +12,7 @@ pub struct Verse {
 /// Parsed Quran text, indexed by (sura, aya).
 #[derive(Debug)]
 pub struct QuranText {
-    pub(crate) verses: Vec<Verse>,
+    verses: Vec<Verse>,
     index: HashMap<(u16, u16), usize>,
 }
 
