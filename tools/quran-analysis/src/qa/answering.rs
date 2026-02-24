@@ -173,7 +173,6 @@ pub fn answer_question_with_qac(
 
     scored
         .into_iter()
-        .take(limit)
         .filter_map(|doc: ScoredDocument| {
             quran.get(doc.sura, doc.aya).map(|verse| Answer {
                 sura: doc.sura,
@@ -183,5 +182,6 @@ pub fn answer_question_with_qac(
                 question_type: question_type.clone(),
             })
         })
+        .take(limit)
         .collect()
 }
