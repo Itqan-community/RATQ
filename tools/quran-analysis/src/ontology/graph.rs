@@ -24,17 +24,20 @@ impl OntologyGraph {
         for concept in &concepts {
             concept_map.insert(concept.id.clone(), concept.clone());
             if !concept.label_en.is_empty() {
-                concepts_en.insert(
-                    concept.label_en.to_lowercase(),
-                    concept.id.clone(),
-                );
+                concepts_en
+                    .entry(concept.label_en.to_lowercase())
+                    .or_insert_with(|| concept.id.clone());
             }
             if !concept.label_ar.is_empty() {
-                synonyms.insert(concept.label_ar.clone(), concept.id.clone());
+                synonyms
+                    .entry(concept.label_ar.clone())
+                    .or_insert_with(|| concept.id.clone());
             }
             for syn in &concept.synonyms {
                 if !syn.is_empty() {
-                    synonyms.insert(syn.clone(), concept.id.clone());
+                    synonyms
+                        .entry(syn.clone())
+                        .or_insert_with(|| concept.id.clone());
                 }
             }
         }
