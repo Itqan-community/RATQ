@@ -48,7 +48,9 @@ pub fn is_arabic(text: &str) -> bool {
 /// digits, and spaces) and trim whitespace.
 ///
 /// Arabic letters and digits are already covered by `is_alphanumeric()`,
-/// so no separate range check is needed.
+/// so no separate range check is needed. Arabic punctuation such as
+/// the Arabic comma (،  U+060C) and semicolon (؛  U+061B) is also
+/// removed since these are not alphanumeric.
 pub fn clean_and_trim(text: &str) -> String {
     let cleaned: String = text
         .chars()
