@@ -1,3 +1,5 @@
+use std::collections::HashSet;
+
 use crate::core::arabic;
 use crate::core::similarity::levenshtein_distance;
 use crate::data::qac::QacMorphology;
@@ -88,60 +90,56 @@ pub fn expand_by_ontology(
     graph: &OntologyGraph,
 ) -> Vec<WeightedTerm> {
     let mut terms: Vec<WeightedTerm> = Vec::new();
-    let mut seen: Vec<String> = Vec::new();
+    let mut seen: HashSet<String> = HashSet::new();
 
     for word in words {
         terms.push(WeightedTerm {
             word: word.clone(),
             weight: 1.0,
         });
-        seen.push(word.clone());
+        seen.insert(word.clone());
 
         let concept = graph.find_by_arabic(word);
         if let Some(c) = concept {
             // Add synonyms at weight 0.5
             for syn in &c.synonyms {
-                if !seen.contains(syn) {
+                if seen.insert(syn.clone()) {
                     terms.push(WeightedTerm {
                         word: syn.clone(),
                         weight: 0.5,
                     });
-                    seen.push(syn.clone());
                 }
             }
             // Also add label_ar if different from the word
-            if !c.label_ar.is_empty() && !seen.contains(&c.label_ar) {
+            if !c.label_ar.is_empty() && seen.insert(c.label_ar.clone()) {
                 terms.push(WeightedTerm {
                     word: c.label_ar.clone(),
                     weight: 0.5,
                 });
-                seen.push(c.label_ar.clone());
             }
 
             // Add 1-hop related concept labels at weight 0.5
             for rel in graph.outgoing_relations(&c.id) {
                 if let Some(target) = graph.get_concept(&rel.object) {
                     if !target.label_ar.is_empty()
-                        && !seen.contains(&target.label_ar)
+                        && seen.insert(target.label_ar.clone())
                     {
                         terms.push(WeightedTerm {
                             word: target.label_ar.clone(),
                             weight: 0.5,
                         });
-                        seen.push(target.label_ar.clone());
                     }
                 }
             }
             for rel in graph.incoming_relations(&c.id) {
                 if let Some(source) = graph.get_concept(&rel.subject) {
                     if !source.label_ar.is_empty()
-                        && !seen.contains(&source.label_ar)
+                        && seen.insert(source.label_ar.clone())
                     {
                         terms.push(WeightedTerm {
                             word: source.label_ar.clone(),
                             weight: 0.5,
                         });
-                        seen.push(source.label_ar.clone());
                     }
                 }
             }
@@ -160,24 +158,23 @@ pub fn expand_by_lemma(
     qac: &QacMorphology,
 ) -> Vec<WeightedTerm> {
     let mut terms: Vec<WeightedTerm> = Vec::new();
-    let mut seen: Vec<String> = Vec::new();
+    let mut seen: HashSet<String> = HashSet::new();
 
     for word in words {
         terms.push(WeightedTerm {
             word: word.clone(),
             weight: 1.0,
         });
-        seen.push(word.clone());
+        seen.insert(word.clone());
 
         if let Some(lemma) = qac.find_lemma_by_form(word) {
             let forms = qac.get_surface_forms_for_lemma(&lemma);
             for form in forms {
-                if !seen.contains(&form) {
+                if seen.insert(form.clone()) {
                     terms.push(WeightedTerm {
-                        word: form.clone(),
+                        word: form,
                         weight: 0.8,
                     });
-                    seen.push(form);
                 }
             }
         }
@@ -198,14 +195,14 @@ pub fn expand_fuzzy(
     index: &InvertedIndex,
 ) -> Vec<WeightedTerm> {
     let mut terms: Vec<WeightedTerm> = Vec::new();
-    let mut seen: Vec<String> = Vec::new();
+    let mut seen: HashSet<String> = HashSet::new();
 
     for word in words {
         terms.push(WeightedTerm {
             word: word.clone(),
             weight: 1.0,
         });
-        seen.push(word.clone());
+        seen.insert(word.clone());
 
         // Only expand if word has no exact matches
         if !index.lookup(word).is_empty() {
@@ -216,16 +213,17 @@ pub fn expand_fuzzy(
         let max_dist = if word_len >= 4 { 2 } else { 1 };
 
         for vocab_word in index.vocabulary() {
-            if seen.contains(&vocab_word.to_string()) {
+            if seen.contains(vocab_word) {
                 continue;
             }
             let dist = levenshtein_distance(word, vocab_word);
             if dist > 0 && dist <= max_dist {
+                let owned = vocab_word.to_string();
                 terms.push(WeightedTerm {
-                    word: vocab_word.to_string(),
+                    word: owned.clone(),
                     weight: 0.4,
                 });
-                seen.push(vocab_word.to_string());
+                seen.insert(owned);
             }
         }
     }

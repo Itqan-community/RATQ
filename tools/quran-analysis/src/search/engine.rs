@@ -69,8 +69,10 @@ impl SearchEngine {
 
     /// Full Arabic expansion pipeline.
     fn expand_arabic(&self, words: &[String]) -> Vec<WeightedTerm> {
+        use std::collections::HashSet;
+
         let mut terms: Vec<WeightedTerm> = Vec::new();
-        let mut seen: Vec<String> = Vec::new();
+        let mut seen: HashSet<String> = HashSet::new();
 
         // Original words at weight 1.0
         for word in words {
@@ -78,31 +80,29 @@ impl SearchEngine {
                 word: word.clone(),
                 weight: 1.0,
             });
-            seen.push(word.clone());
+            seen.insert(word.clone());
         }
 
         if let Some(ref qac) = self.qac {
             // Lemma expansion (weight 0.8)
             let lemma_terms = query::expand_by_lemma(words, qac);
             for t in lemma_terms {
-                if !seen.contains(&t.word) {
+                if seen.insert(t.word.clone()) {
                     terms.push(WeightedTerm {
-                        word: t.word.clone(),
+                        word: t.word,
                         weight: 0.8,
                     });
-                    seen.push(t.word);
                 }
             }
 
             // Root expansion (weight 0.7)
             let root_forms = query::expand_by_roots(words, qac);
             for form in root_forms {
-                if !seen.contains(&form) {
+                if seen.insert(form.clone()) {
                     terms.push(WeightedTerm {
-                        word: form.clone(),
+                        word: form,
                         weight: 0.7,
                     });
-                    seen.push(form);
                 }
             }
         }
@@ -111,12 +111,11 @@ impl SearchEngine {
         if let Some(ref graph) = self.ontology {
             let onto_terms = query::expand_by_ontology(words, graph);
             for t in onto_terms {
-                if !seen.contains(&t.word) {
+                if seen.insert(t.word.clone()) {
                     terms.push(WeightedTerm {
-                        word: t.word.clone(),
+                        word: t.word,
                         weight: 0.5,
                     });
-                    seen.push(t.word);
                 }
             }
         }
@@ -124,12 +123,11 @@ impl SearchEngine {
         // Fuzzy matching (weight 0.4)
         let fuzzy_terms = query::expand_fuzzy(words, &self.index);
         for t in fuzzy_terms {
-            if !seen.contains(&t.word) {
+            if seen.insert(t.word.clone()) {
                 terms.push(WeightedTerm {
-                    word: t.word.clone(),
+                    word: t.word,
                     weight: 0.4,
                 });
-                seen.push(t.word);
             }
         }
 
