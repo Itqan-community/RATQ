@@ -74,7 +74,11 @@ fn test_extract_content_words_arabic() {
     let words = answering::extract_content_words("من خلق الإنسان؟", "ar");
     assert!(!words.is_empty());
     assert!(!words.contains(&"من".to_string()));
-    assert!(words.iter().any(|w| w.contains("خلق") || w.contains("الانسان")));
+    assert!(words.iter().any(|w| w.contains("خلق")), "should contain خلق");
+    assert!(
+        words.iter().any(|w| w.contains("الانسان")),
+        "should contain normalized الانسان (الإنسان without hamza)"
+    );
 }
 
 #[test]
