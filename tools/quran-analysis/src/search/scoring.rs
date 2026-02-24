@@ -91,7 +91,9 @@ pub fn score_search(
         if let Some(matched) = matched_sets.remove(key) {
             let coverage = matched.len() as f64 / num_query_words;
             doc.score *= 1.0 + coverage;
-            doc.matched_words = matched.into_iter().collect();
+            let mut words: Vec<String> = matched.into_iter().collect();
+            words.sort();
+            doc.matched_words = words;
         }
     }
 
