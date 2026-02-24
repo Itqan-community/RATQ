@@ -3,7 +3,7 @@ use crate::data::qac::QacMorphology;
 use crate::data::quran::QuranText;
 use crate::search::index::InvertedIndex;
 use crate::search::{query, scoring};
-use crate::search::scoring::ScoredDocument;
+use crate::search::scoring::{ScoredDocument, WeightedTerm};
 
 /// Detected question type.
 #[derive(Debug, Clone, PartialEq)]
@@ -159,17 +159,31 @@ pub fn answer_question_with_qac(
         return Vec::new();
     }
 
-    let search_words = if lang == "ar" {
+    let weighted_terms: Vec<WeightedTerm> = if lang == "ar" {
         if let Some(qac_data) = qac {
-            query::expand_by_roots(&content_words, qac_data)
+            let expanded = query::expand_by_roots(&content_words, qac_data);
+            expanded
+                .into_iter()
+                .enumerate()
+                .map(|(i, w)| WeightedTerm {
+                    weight: if i < content_words.len() { 1.0 } else { 0.7 },
+                    word: w,
+                })
+                .collect()
         } else {
             content_words
+                .into_iter()
+                .map(|w| WeightedTerm { word: w, weight: 1.0 })
+                .collect()
         }
     } else {
         content_words
+            .into_iter()
+            .map(|w| WeightedTerm { word: w, weight: 1.0 })
+            .collect()
     };
 
-    let scored = scoring::score_search(index, &search_words, quran);
+    let scored = scoring::score_search_weighted(index, &weighted_terms, quran);
 
     scored
         .into_iter()
