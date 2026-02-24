@@ -33,6 +33,7 @@ Lives in `tools/quran-analysis/` within the RATQ repo.
 - [x] Phase 5: Ontology (5 tests, 80 total)
 - [x] Phase 6: Question Answering + Analysis (18 tests, 98 total)
 - [x] Phase 7: CLI + Polish + PR
+- [x] Phase 8: CodeRabbit review feedback (all rounds)
 
 ## PR
 https://github.com/Itqan-community/RATQ/pull/24
