@@ -74,8 +74,9 @@ pub fn detect_question_type(query: &str) -> Option<QuestionType> {
     }
 
     // Check English patterns
+    let query_lower_trimmed = query_lower.trim_start();
     for (pattern, qtype) in EN_QUESTION_PATTERNS {
-        if query_lower.starts_with(pattern) {
+        if query_lower_trimmed.starts_with(pattern) {
             return Some(qtype.clone());
         }
     }
