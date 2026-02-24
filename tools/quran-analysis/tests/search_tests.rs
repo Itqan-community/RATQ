@@ -143,6 +143,7 @@ fn test_scored_document_fields() {
 
     let normalized = vec![arabic::normalize_arabic("الله")];
     let results = scoring::score_search(&idx, &normalized, &quran);
+    assert!(!results.is_empty(), "search for الله should return results");
     let top = &results[0];
     assert!(top.score > 0.0);
     assert!(top.freq > 0);
