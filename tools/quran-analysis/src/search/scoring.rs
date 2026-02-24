@@ -94,38 +94,45 @@ pub fn score_search_weighted(
             0.0
         };
 
-        // Count per-document term frequency for this term
-        let mut term_freq: HashMap<(u16, u16), u32> = HashMap::new();
-        for entry in entries {
-            *term_freq.entry((entry.sura, entry.aya)).or_insert(0) += 1;
-        }
-
+        // Collect per-document stats: term frequency, best position,
+        // stop-word flag, and all positions for proximity scoring.
+        let mut doc_stats: HashMap<(u16, u16), (u16, u16, u32, bool, Vec<u16>)> =
+            HashMap::new();
         for entry in entries {
             let key = (entry.sura, entry.aya);
-            let doc = scores.entry(key).or_insert_with(|| ScoredDocument {
-                sura: entry.sura,
-                aya: entry.aya,
+            let stat = doc_stats.entry(key).or_insert_with(|| {
+                (entry.sura, entry.aya, 0, entry.is_stop_word, Vec::new())
+            });
+            stat.2 += 1; // term frequency
+            stat.4.push(entry.word_index); // positions
+        }
+
+        // Score once per document per term
+        for (key, (sura, aya, tf_count, is_stop, pos_list)) in &doc_stats {
+            let doc = scores.entry(*key).or_insert_with(|| ScoredDocument {
+                sura: *sura,
+                aya: *aya,
                 score: 0.0,
                 freq: 0,
                 matched_words: Vec::new(),
             });
 
-            doc.freq += 1;
+            doc.freq += *tf_count;
 
             // TF component: log-normalized per-term document frequency
-            let tf_count = term_freq.get(&key).copied().unwrap_or(1);
-            let tf = 1.0 + (tf_count as f64).ln();
+            let tf = 1.0 + (*tf_count as f64).ln();
 
-            // Position bonus: words near start get slight boost
-            let pos_bonus = 1.0 + (1.0 / entry.word_index as f64) * 0.5;
+            // Position bonus: use earliest (best) position in the verse
+            let best_pos = pos_list.iter().copied().min().unwrap_or(1);
+            let pos_bonus = 1.0 + (1.0 / best_pos as f64) * 0.5;
 
             // Stop word penalty
-            let stop_penalty = if entry.is_stop_word { 0.3 } else { 1.0 };
+            let stop_penalty = if *is_stop { 0.3 } else { 1.0 };
 
             doc.score += tf * idf * pos_bonus * stop_penalty * term.weight;
 
             // Track positions for proximity scoring
-            positions.entry(key).or_default().push(entry.word_index);
+            positions.entry(*key).or_default().extend(pos_list);
 
             if !doc.matched_words.contains(&term.word) {
                 doc.matched_words.push(term.word.clone());
