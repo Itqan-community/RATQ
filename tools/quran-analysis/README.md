@@ -97,7 +97,7 @@ src/
 cargo test
 ```
 
-125 tests covering core utilities, data parsing, search, NLP, ontology, and QA.
+131 tests covering core utilities, data parsing, search, NLP, ontology, and QA.
 
 ## License
 
