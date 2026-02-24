@@ -47,13 +47,14 @@ pub fn is_arabic(text: &str) -> bool {
 /// Remove non-alphanumeric characters (keeping Arabic/English letters,
 /// digits, and spaces) and trim whitespace.
 ///
-/// Also removes Arabic comma (\u{060C}) and semicolon (\u{061B}).
+/// Also removes Arabic comma (\u{060C}), semicolon (\u{061B}),
+/// and question mark (\u{061F}).
 pub fn clean_and_trim(text: &str) -> String {
     let cleaned: String = text
         .chars()
         .filter(|c| {
-            if *c == '\u{060C}' || *c == '\u{061B}' {
-                return false; // Arabic comma ، and semicolon ؛
+            if *c == '\u{060C}' || *c == '\u{061B}' || *c == '\u{061F}' {
+                return false; // Arabic comma ،, semicolon ؛, question mark ؟
             }
             c.is_alphanumeric()
                 || *c == ' '
