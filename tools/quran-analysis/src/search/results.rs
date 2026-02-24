@@ -19,7 +19,6 @@ pub fn format_results(
 ) -> Vec<SearchResult> {
     scored
         .iter()
-        .take(limit)
         .filter_map(|doc| {
             quran.get(doc.sura, doc.aya).map(|verse| SearchResult {
                 sura: doc.sura,
@@ -29,5 +28,6 @@ pub fn format_results(
                 highlights: doc.matched_words.clone(),
             })
         })
+        .take(limit)
         .collect()
 }
