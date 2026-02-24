@@ -107,9 +107,13 @@ impl InvertedIndex {
     }
 
     /// Number of documents containing a given word (document frequency).
+    ///
+    /// The word is normalized before lookup, consistent with `lookup`.
     pub fn document_frequency(&self, word: &str) -> usize {
         use std::collections::HashSet;
-        match self.index.get(word) {
+        let normalized = arabic::normalize_arabic(word);
+        let key = if normalized.is_empty() { word } else { &normalized };
+        match self.index.get(key) {
             Some(entries) => {
                 let docs: HashSet<(u16, u16)> =
                     entries.iter().map(|e| (e.sura, e.aya)).collect();
