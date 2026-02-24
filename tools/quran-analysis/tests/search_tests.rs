@@ -213,7 +213,7 @@ fn test_proximity_bonus_distant_words() {
     // Distant positions should give a low bonus
     let positions = vec![1, 100];
     let bonus = scoring::compute_proximity_bonus(&positions);
-    let adjacent_bonus = scoring::compute_proximity_bonus(&vec![1, 2]);
+    let adjacent_bonus = scoring::compute_proximity_bonus(&[1, 2]);
     assert!(
         bonus < adjacent_bonus,
         "Distant words should give lower bonus than adjacent"
@@ -345,7 +345,7 @@ fn test_vocabulary_returns_all_indexed_words() {
     }
 }
 
-// ===== Root Expansion Tests =====
+// ===== Full Root Expansion Search Tests =====
 
 #[test]
 fn test_search_arab_with_expansion() {
@@ -554,7 +554,7 @@ fn test_search_engine_from_quran_text() {
     let sw = empty_stopwords();
     let engine = SearchEngine::from_data(quran, sw, None, None, "ar");
     // Engine should have a non-empty index
-    assert!(engine.search("الله", 10).len() > 0);
+    assert!(!engine.search("الله", 10).is_empty());
 }
 
 #[test]
@@ -580,31 +580,10 @@ fn test_search_engine_search_empty_query() {
 
 #[test]
 fn test_search_engine_full_pipeline_arabic() {
-    let quran_path = std::path::Path::new("data/quran-simple-clean.txt");
-    let qac_path = std::path::Path::new("data/quranic-corpus-morphology-0.4.txt");
-    if !quran_path.exists() || !qac_path.exists() {
-        return;
-    }
-
-    let quran = QuranText::from_file(quran_path).unwrap();
-    let sw = StopWords::from_str("");
-    let qac = QacMorphology::from_file(qac_path).unwrap();
-
-    // Load ontology if available
-    let owl_path = std::path::Path::new("data/qa.ontology.v1.owl");
-    let ontology = if owl_path.exists() {
-        if let Ok((concepts, relations)) =
-            quran_analysis::ontology::parser::parse_owl(owl_path)
-        {
-            Some(OntologyGraph::build(concepts, relations))
-        } else {
-            None
-        }
-    } else {
-        None
+    let engine = match build_full_engine() {
+        Some(e) => e,
+        None => return,
     };
-
-    let engine = SearchEngine::from_data(quran, sw, Some(qac), ontology, "ar");
 
     // Search for "عرب" — should return results via expansion pipeline
     let results = engine.search("عرب", 10);
