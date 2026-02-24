@@ -108,11 +108,21 @@ fn test_parse_query_english() {
 
 #[test]
 fn test_parse_query_auto_detect() {
-    // Auto-detect: Arabic content should normalize even with "auto" lang
+    // Pure Arabic with "auto" lang should normalize
     let words = query::parse_query("محمد", "auto");
     assert_eq!(words.len(), 1);
-    // parse_query normalizes Arabic when lang is "ar" or content is Arabic
     assert_eq!(words[0], quran_analysis::core::arabic::normalize_arabic("محمد"));
+
+    // English word with "auto" lang should lowercase
+    let eng = query::parse_query("Mercy", "auto");
+    assert_eq!(eng.len(), 1);
+    assert_eq!(eng[0], "mercy");
+
+    // Mixed content: Arabic normalized, English lowercased
+    let mixed = query::parse_query("الله Mercy", "auto");
+    assert_eq!(mixed.len(), 2);
+    assert_eq!(mixed[0], quran_analysis::core::arabic::normalize_arabic("الله"));
+    assert_eq!(mixed[1], "mercy");
 }
 
 #[test]
@@ -126,29 +136,47 @@ fn test_expand_by_synonyms_with_empty_wordnet() {
 
 #[test]
 fn test_expand_by_synonyms_skips_stopwords() {
-    // Load real WordNet if available, otherwise skip test
+    // Load real WordNet if available, otherwise use fallback
     let wn_path = std::path::Path::new("data/wordnet");
     if !wn_path.exists() {
-        // Fallback: with empty WordNet, verify stopwords are kept
-        // but not expanded (trivially true)
+        // Without WordNet data, verify the function preserves all
+        // input words (stopword or not) and adds no expansions.
         let wn = WordNet::default();
         let sw = StopWords::from_str("the\na\n");
         let words = vec!["the".to_string(), "book".to_string()];
         let expanded = query::expand_by_synonyms(&words, &wn, &sw);
-        // Both words preserved, no expansion from empty WordNet
         assert!(expanded.contains(&"the".to_string()));
         assert!(expanded.contains(&"book".to_string()));
-        assert_eq!(expanded.len(), 2);
+        assert_eq!(expanded.len(), 2, "empty WordNet should add no synonyms");
         return;
     }
     let wn = WordNet::from_dir(wn_path).unwrap();
     let sw = StopWords::from_str("the\na\n");
+
+    // Expand only a non-stopword to establish a baseline count
+    let non_stop = vec!["book".to_string()];
+    let expanded_no_stop = query::expand_by_synonyms(&non_stop, &wn, &sw);
+    let book_synonyms: Vec<_> = expanded_no_stop
+        .iter()
+        .filter(|w| *w != "book")
+        .cloned()
+        .collect();
+
+    // Now include a stopword alongside the non-stopword
     let words = vec!["the".to_string(), "book".to_string()];
     let expanded = query::expand_by_synonyms(&words, &wn, &sw);
-    // "the" is a stop word — should remain but not gain synonyms
+    // "the" is preserved but gains no synonyms
     assert!(expanded.contains(&"the".to_string()));
     assert!(expanded.contains(&"book".to_string()));
-    // "book" should have synonyms added (if WordNet has any)
-    // so total should be > 2
-    assert!(expanded.len() > 2, "book should get synonyms from WordNet");
+    // The stopword "the" should not add any extra terms beyond
+    // what "book" alone contributed
+    let extra: Vec<_> = expanded
+        .iter()
+        .filter(|w| *w != "the" && *w != "book" && !book_synonyms.contains(w))
+        .collect();
+    assert!(
+        extra.is_empty(),
+        "stopword \'the\' should not contribute synonyms, but found: {:?}",
+        extra,
+    );
 }
