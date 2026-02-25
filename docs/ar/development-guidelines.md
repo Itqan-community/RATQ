@@ -141,6 +141,22 @@ title: دليل التطوير القرآني
 
 1. موقع MP3Quran: [من الرابط التالي](https://www.mp3quran.net/eng/api)
 
+
+### التلاوات الصوتية على مستوى الكلمة (Word-Level Audio)
+
+في بعض التطبيقات المتقدمة (مثل تطبيقات تعليم اللغة والنطق، أو إبراز الكلمات أثناء التلاوة) تحتاج إلى موارد صوتية *مجزأة على مستوى الكلمة*. فيما يلي أهم المصادر المتاحة:
+
+1. Buraaq Word Audio Dataset
+     مجموعة بيانات تحتوي على ملفات صوتية مستقلة لكل كلمة قرآنية، ومناسبة لمهام تعلم المفردات وتمارين الاستماع.
+     [https://huggingface.co/datasets/Buraaq/quran-md-words](https://huggingface.co/datasets/Buraaq/quran-md-words)
+2. QuranWBW (Word-by-Word Recitation)
+     منصة تتيح تلاوة القرآن كلمة بكلمة.
+     [https://quranwbw.com/](https://quranwbw.com/)
+     [https://github.com/marwan/quranwbw](https://github.com/marwan/quranwbw)
+3. Quran Foundation Audio API
+     واجهة برمجية توفر تلاوة الآيات مع بيانات طوابع زمنية دقيقة لكل كلمة.
+     [https://api-docs.quran.foundation/docs/sdk/audio/](https://api-docs.quran.foundation/docs/sdk/audio/)
+
 ## 8. التقنيات
 
 تتفاوت التقنيات بناءً على لغة البرمجة أو منصة التطوير المستخدمة. نحتاج هنا إلى إدراج قائمة بأكثر أطر العمل (Frameworks) شيوعاً، مع معالجة أي صعوبات معروفة قد تواجه المطورين فيها، مثل: (Kotlin، Swift، Flutter، React).

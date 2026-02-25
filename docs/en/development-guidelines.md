@@ -141,6 +141,24 @@ People Also like to listen to their favorite reciters, you can also
 
 --TODO: Hassaan: add postman collection for Quran Foundation API
 
+### Word-Level Audio Recitations
+
+In some advanced applications (such as language learning apps, pronunciation training tools, or word-by-word highlighting during recitation), you may need audio resources that are *segmented at the individual word level*. Below are the most important available sources:
+
+1. Buraaq Word Audio Dataset
+   A dataset containing standalone audio files for each Quranic word. Suitable for vocabulary learning tasks and listening exercises.
+   [https://huggingface.co/datasets/Buraaq/quran-md-words](https://huggingface.co/datasets/Buraaq/quran-md-words)
+
+2. QuranWBW (Word-by-Word Recitation)
+   A platform that provides Quran recitation word by word.
+   [https://quranwbw.com/](https://quranwbw.com/)
+   [https://github.com/marwan/quranwbw](https://github.com/marwan/quranwbw)
+
+3. Quran Foundation Audio API
+   An API that provides ayah recitations along with precise word-level timestamp data.
+   [https://api-docs.quran.foundation/docs/sdk/audio/](https://api-docs.quran.foundation/docs/sdk/audio/)
+
+
 ## 8. Technologies
 
 These can vary by Technology, we need to have a list most popular frameworks, Address any known difficulties in them. Kotlin, Swift, Flutter, React.
