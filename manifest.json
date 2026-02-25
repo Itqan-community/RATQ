@@ -109,6 +109,12 @@
       "hasAR": false
     },
     {
+      "path": "content/resources/ar/quranic-word-level-audio-resources.md",
+      "title": "quranic-word-level-audio-resources",
+      "group": "root",
+      "hasAR": false
+    },
+    {
       "path": "content/resources/ar/tanzil.md",
       "title": "tanzil",
       "group": "root",
@@ -129,6 +135,12 @@
     {
       "path": "content/resources/quranic-questions-resources.md",
       "title": "quranic-questions-resources",
+      "group": "root",
+      "hasAR": false
+    },
+    {
+      "path": "content/resources/quranic-word-level-audio-resources.md",
+      "title": "quranic-word-level-audio-resources",
       "group": "root",
       "hasAR": false
     },
