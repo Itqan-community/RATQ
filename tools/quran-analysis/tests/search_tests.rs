@@ -653,6 +653,13 @@ fn test_search_aql_returns_results() {
         !results.is_empty(),
         "'عقل' (mind/reason) should return results via root/lemma expansion"
     );
+    // Root expansion should find conjugate forms: يعقلون (22 verses), تعقلون (24), etc.
+    // We expect at least 10 results covering the conjugate forms.
+    assert!(
+        results.len() >= 10,
+        "'عقل' should expand to conjugate forms (يعقلون, تعقلون, نعقل…), got {}",
+        results.len()
+    );
 }
 
 #[test]
@@ -717,10 +724,18 @@ fn test_search_rabwa_returns_results() {
         !results.is_empty(),
         "'ربوة' (hill) should return at least one result"
     );
-    // This is a rare word — at minimum sura 23:50
-    let suras: Vec<u16> = results.iter().map(|r| r.sura).collect();
+    // Both Quran verses that contain ربوة should be in the top 20 results:
+    //   23:50  — ربوة (bare form)
+    //   2:265  — بربوة (with prefix ب)
+    let suras_ayas: Vec<(u16, u16)> = results.iter().map(|r| (r.sura, r.aya)).collect();
     assert!(
-        suras.contains(&23),
-        "'ربوة' should match verse 23:50"
+        suras_ayas.contains(&(23, 50)),
+        "'ربوة' should match verse 23:50, got: {:?}",
+        suras_ayas
+    );
+    assert!(
+        suras_ayas.contains(&(2, 265)),
+        "'ربوة' should match verse 2:265 (contains بربوة), got: {:?}",
+        suras_ayas
     );
 }

@@ -83,7 +83,7 @@ impl QacMorphology {
             let word: u16 = loc_parts[2].parse().unwrap_or(0);
             let segment: u16 = loc_parts[3].parse().unwrap_or(0);
 
-            if sura == 0 || aya == 0 || word == 0 {
+            if sura == 0 || aya == 0 || word == 0 || segment == 0 {
                 continue;
             }
 
