@@ -34,5 +34,6 @@ Lives in `tools/quran-analysis/` within the RATQ repo.
 - [x] Phase 6: Question Answering + Analysis (18 tests, 98 total)
 - [x] Phase 7: CLI + Polish + PR
 
-## PR
-https://github.com/Itqan-community/RATQ/pull/24
+## PRs
+- Base (Rust port): https://github.com/Itqan-community/RATQ/pull/24
+- Search quality & performance: https://github.com/Itqan-community/RATQ/pull/26
