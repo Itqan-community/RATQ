@@ -317,6 +317,30 @@
       "title": "quran-foundation",
       "group": "root",
       "hasAR": false
+    },
+    {
+      "path": "notes/features/quran-analysis-rust.md",
+      "title": "quran-analysis-rust",
+      "group": "root",
+      "hasAR": false
+    },
+    {
+      "path": "tools/quran-analysis/ARCHITECTURE.md",
+      "title": "ARCHITECTURE",
+      "group": "root",
+      "hasAR": false
+    },
+    {
+      "path": "tools/quran-analysis/README.md",
+      "title": "README",
+      "group": "root",
+      "hasAR": false
+    },
+    {
+      "path": "tools/quran-analysis/notes/features/search-quality-performance.md",
+      "title": "search-quality-performance",
+      "group": "root",
+      "hasAR": false
     }
   ]
 }
