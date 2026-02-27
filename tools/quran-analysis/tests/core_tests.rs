@@ -226,3 +226,28 @@ fn test_buckwalter_preserves_spaces() {
     let result = transliteration::buckwalter_to_arabic("bsm Allh");
     assert!(result.contains(' '));
 }
+
+#[test]
+fn test_buckwalter_superscript_alef_sequence_produces_alef() {
+    // In the QAC corpus, the long vowel ā in active participles is encoded
+    // as fatha (`a`) followed by superscript alef (`` ` ``).  Both are
+    // diacritics and would be stripped by normalize_arabic, causing a
+    // mismatch with the Quran text which uses a full alef letter (ا).
+    // The sequence `a`` must therefore be converted to ا (U+0627) directly.
+    //
+    // Example: the QAC form "ja`vimiyna" (= جاثمين) for root jvm (جثم).
+    let result = transliteration::buckwalter_to_arabic("ja`vimiyna");
+    let normalized = arabic::normalize_arabic(&result);
+    assert_eq!(
+        normalized, "جاثمين",
+        "ja`vimiyna should normalize to جاثمين, got: {}",
+        normalized
+    );
+}
+
+#[test]
+fn test_buckwalter_fatha_alone_unchanged() {
+    // `a` not followed by `` ` `` should still produce a plain fatha diacritic.
+    let result = transliteration::buckwalter_to_arabic("a");
+    assert_eq!(result, "\u{064E}", "standalone `a` should still be fatha");
+}

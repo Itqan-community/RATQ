@@ -61,10 +61,30 @@ static AR_TO_BW: LazyLock<HashMap<char, char>> = LazyLock::new(|| {
 });
 
 /// Convert Buckwalter transliteration to Arabic script.
+///
+/// Handles the two-character sequence `a`` (fatha + superscript alef) which
+/// the QAC corpus uses to encode the long vowel ā in certain word forms (e.g.
+/// active participles such as `ja`vimiyna` = جاثمين).  Both characters are
+/// diacritics that would otherwise be stripped by `normalize_arabic`, causing
+/// a mismatch with the Quran text (which writes the same long alef as the
+/// letter ا).  Converting `a`` directly to ا preserves the vowel length and
+/// keeps the resulting form consistent with the inverted index.
 pub fn buckwalter_to_arabic(text: &str) -> String {
-    text.chars()
-        .map(|c| BW_TO_AR.get(&c).copied().unwrap_or(c))
-        .collect()
+    let chars: Vec<char> = text.chars().collect();
+    let mut result = String::new();
+    let mut i = 0;
+    while i < chars.len() {
+        let c = chars[i];
+        if c == 'a' && i + 1 < chars.len() && chars[i + 1] == '`' {
+            // fatha + superscript alef → long alef ا
+            result.push('\u{0627}');
+            i += 2;
+        } else {
+            result.push(BW_TO_AR.get(&c).copied().unwrap_or(c));
+            i += 1;
+        }
+    }
+    result
 }
 
 /// Convert Arabic script to Buckwalter transliteration.

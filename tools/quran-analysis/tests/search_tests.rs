@@ -739,3 +739,32 @@ fn test_search_rabwa_returns_results() {
         suras_ayas
     );
 }
+
+#[test]
+fn test_search_jathama_returns_results() {
+    let engine = match build_full_engine() {
+        Some(e) => e,
+        None => return,
+    };
+    let results = engine.search("جثم", 20);
+    // The root ج-ث-م appears in the active participle جاثمين in 5 verses:
+    //   7:78, 7:91, 11:67, 11:94, 29:37
+    // All 5 should be found via root/lemma expansion.
+    let suras_ayas: Vec<(u16, u16)> = results.iter().map(|r| (r.sura, r.aya)).collect();
+    assert_eq!(
+        results.len(),
+        5,
+        "'جثم' should find exactly 5 verses (the جاثمين occurrences), got {}: {:?}",
+        results.len(),
+        suras_ayas
+    );
+    for (s, a) in [(7, 78), (7, 91), (11, 67), (11, 94), (29, 37)] {
+        assert!(
+            suras_ayas.contains(&(s, a)),
+            "'جثم' should match verse {}:{}, got: {:?}",
+            s,
+            a,
+            suras_ayas
+        );
+    }
+}
