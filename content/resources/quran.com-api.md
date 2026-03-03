@@ -69,3 +69,7 @@ Search Results
 ## Conclusion
 
 quran.com provide the users with web, android, and IOS applications both online and offline and provides developers with an API that requires only a request for the API-Key at the first time (and it is free). But it does not provided in source data by any means. Only contributors can have a mini dumb by joining their slack channel and requesting it from the project's collaborator.
+
+## See Also
+
+- [API Comparison Matrix](./api-comparison-matrix.md) — Side-by-side comparison of all Quran APIs and data resources

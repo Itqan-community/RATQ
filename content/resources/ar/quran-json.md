@@ -68,3 +68,7 @@ npm run build
 
 [CC-BY-SA 4.0](https://github.com/risan/quran-json/blob/master/LICENSE.txt) · [Risan Bagja Pradana](https://risanb.com).
 
+## انظر أيضاً
+
+- [مصفوفة مقارنة الواجهات البرمجية](./api-comparison-matrix.md) — مقارنة جنباً إلى جنب لجميع واجهات القرآن البرمجية وموارد البيانات
+
