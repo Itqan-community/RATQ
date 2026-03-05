@@ -74,18 +74,16 @@ pub fn expand_prefixes(word: &str) -> Vec<String> {
     for prefix in PREFIXES {
         if word.starts_with(prefix) && word.chars().count() > prefix.chars().count() {
             let remainder: String = word.chars().skip(prefix.chars().count()).collect();
-            if !remainder.is_empty() {
+            if !remainder.is_empty() && !candidates.contains(&remainder) {
                 candidates.push(remainder.clone());
-                // Also try stripping ال from the remainder
                 let without_al = strip_definite_article(&remainder);
-                if without_al != remainder {
+                if without_al != remainder && !candidates.contains(&without_al) {
                     candidates.push(without_al);
                 }
             }
         }
     }
 
-    // Also try stripping ال directly
     let without_al = strip_definite_article(word);
     if without_al != word && !candidates.contains(&without_al) {
         candidates.push(without_al);

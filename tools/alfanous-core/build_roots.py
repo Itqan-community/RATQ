@@ -10,6 +10,7 @@ The root keys use Buckwalter transliteration as in the corpus.
 
 import json
 import re
+import sys
 from collections import defaultdict
 from pathlib import Path
 
@@ -27,6 +28,10 @@ def extract_field(features: str, field: str) -> str | None:
 def main():
     roots: dict[str, set[str]] = defaultdict(set)
     lemmas: dict[str, str] = {}
+
+    if not MORPHOLOGY_FILE.exists():
+        print(f"Error: Morphology file not found: {MORPHOLOGY_FILE}", file=sys.stderr)
+        sys.exit(1)
 
     with open(MORPHOLOGY_FILE, encoding="utf-8") as f:
         for line in f:

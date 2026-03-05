@@ -49,8 +49,11 @@ fn main() {
 
     match cli.command {
         Commands::Search { query, limit, data } => {
-            let data_str = data.to_string_lossy();
-            let conn = match db::create_in_memory(&data_str) {
+            let data_str = data.to_str().unwrap_or_else(|| {
+                eprintln!("Error: data path contains invalid UTF-8");
+                std::process::exit(1);
+            });
+            let conn = match db::create_in_memory(data_str) {
                 Ok(c) => c,
                 Err(e) => {
                     eprintln!("Error loading Quran data: {}", e);
@@ -81,9 +84,15 @@ fn main() {
         }
 
         Commands::Build { data, output } => {
-            let data_str = data.to_string_lossy();
-            let out_str = output.to_string_lossy();
-            match db::create_from_file(&data_str, &out_str) {
+            let data_str = data.to_str().unwrap_or_else(|| {
+                eprintln!("Error: data path contains invalid UTF-8");
+                std::process::exit(1);
+            });
+            let out_str = output.to_str().unwrap_or_else(|| {
+                eprintln!("Error: output path contains invalid UTF-8");
+                std::process::exit(1);
+            });
+            match db::create_from_file(data_str, out_str) {
                 Ok(_) => println!("Database built successfully: {}", out_str),
                 Err(e) => {
                     eprintln!("Error building database: {}", e);

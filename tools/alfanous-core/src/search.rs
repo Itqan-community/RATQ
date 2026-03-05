@@ -25,7 +25,10 @@ pub fn execute(conn: &Connection, query: &str, limit: usize) -> Vec<SearchResult
 
     let mut stmt = match conn.prepare(&sql) {
         Ok(s) => s,
-        Err(_) => return vec![],
+        Err(e) => {
+            eprintln!("SQL preparation error: {}", e);
+            return vec![];
+        }
     };
 
     let param_refs: Vec<&dyn rusqlite::types::ToSql> =
@@ -66,7 +69,7 @@ fn build_sql(ast: &QueryNode, limit: usize) -> (String, Vec<String>) {
                      ORDER BY a.gid LIMIT {}",
                     limit
                 );
-                params.push(format!("%{}%", sura_name));
+                params.push(format!("{}%", sura_name));
                 return (sql, params);
             }
             (empty_sql(), params)

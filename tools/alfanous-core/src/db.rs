@@ -29,27 +29,22 @@ pub fn sura_name(sura_id: u32) -> &'static str {
     SURA_NAMES.get(sura_id as usize).unwrap_or(&"")
 }
 
-/// Create an in-memory SQLite database with FTS5, populated from a Quran text file.
-///
-/// File format: `sura_id|aya_id|text` (one verse per line).
-pub fn create_in_memory(quran_path: &str) -> Result<Connection, Box<dyn std::error::Error>> {
-    let conn = Connection::open_in_memory()?;
+const CREATE_SCHEMA: &str = "\
+    CREATE TABLE aya (
+        gid INTEGER PRIMARY KEY,
+        sura_id INTEGER NOT NULL,
+        aya_id INTEGER NOT NULL,
+        text TEXT NOT NULL,
+        sura_name TEXT NOT NULL
+    );
+    CREATE VIRTUAL TABLE aya_fts USING fts5(
+        normalized,
+        content='aya',
+        content_rowid='gid'
+    );";
 
-    conn.execute_batch(
-        "CREATE TABLE aya (
-            gid INTEGER PRIMARY KEY,
-            sura_id INTEGER NOT NULL,
-            aya_id INTEGER NOT NULL,
-            text TEXT NOT NULL,
-            sura_name TEXT NOT NULL
-        );
-        CREATE VIRTUAL TABLE aya_fts USING fts5(
-            normalized,
-            content='aya',
-            content_rowid='gid'
-        );",
-    )?;
-
+/// Populate an existing connection with Quran data and FTS index.
+fn populate(conn: &Connection, quran_path: &str) -> Result<(), Box<dyn std::error::Error>> {
     let content = fs::read_to_string(quran_path)?;
     let mut gid: i64 = 0;
 
@@ -84,7 +79,16 @@ pub fn create_in_memory(quran_path: &str) -> Result<Connection, Box<dyn std::err
         }
     }
     tx.commit()?;
+    Ok(())
+}
 
+/// Create an in-memory SQLite database with FTS5, populated from a Quran text file.
+///
+/// File format: `sura_id|aya_id|text` (one verse per line).
+pub fn create_in_memory(quran_path: &str) -> Result<Connection, Box<dyn std::error::Error>> {
+    let conn = Connection::open_in_memory()?;
+    conn.execute_batch(CREATE_SCHEMA)?;
+    populate(&conn, quran_path)?;
     Ok(conn)
 }
 
@@ -94,58 +98,8 @@ pub fn create_from_file(
     db_path: &str,
 ) -> Result<Connection, Box<dyn std::error::Error>> {
     let conn = Connection::open(db_path)?;
-
-    conn.execute_batch(
-        "DROP TABLE IF EXISTS aya_fts;
-         DROP TABLE IF EXISTS aya;
-         CREATE TABLE aya (
-            gid INTEGER PRIMARY KEY,
-            sura_id INTEGER NOT NULL,
-            aya_id INTEGER NOT NULL,
-            text TEXT NOT NULL,
-            sura_name TEXT NOT NULL
-        );
-        CREATE VIRTUAL TABLE aya_fts USING fts5(
-            normalized,
-            content='aya',
-            content_rowid='gid'
-        );",
-    )?;
-
-    let content = fs::read_to_string(quran_path)?;
-    let mut gid: i64 = 0;
-
-    let tx = conn.unchecked_transaction()?;
-    {
-        let mut insert_aya = tx.prepare(
-            "INSERT INTO aya (gid, sura_id, aya_id, text, sura_name) VALUES (?1, ?2, ?3, ?4, ?5)",
-        )?;
-        let mut insert_fts = tx.prepare(
-            "INSERT INTO aya_fts (rowid, normalized) VALUES (?1, ?2)",
-        )?;
-
-        for line in content.lines() {
-            let parts: Vec<&str> = line.splitn(3, '|').collect();
-            if parts.len() < 3 {
-                continue;
-            }
-            let sura_id: u32 = parts[0].parse().unwrap_or(0);
-            let aya_id: u32 = parts[1].parse().unwrap_or(0);
-            let text = parts[2];
-
-            if sura_id == 0 || aya_id == 0 {
-                continue;
-            }
-
-            gid += 1;
-            let name = sura_name(sura_id);
-            let normalized = normalize::normalize_for_search(text);
-
-            insert_aya.execute(params![gid, sura_id, aya_id, text, name])?;
-            insert_fts.execute(params![gid, normalized])?;
-        }
-    }
-    tx.commit()?;
-
+    conn.execute_batch("DROP TABLE IF EXISTS aya_fts; DROP TABLE IF EXISTS aya;")?;
+    conn.execute_batch(CREATE_SCHEMA)?;
+    populate(&conn, quran_path)?;
     Ok(conn)
 }
