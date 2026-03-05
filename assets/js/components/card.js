@@ -37,7 +37,7 @@ const Card = {
       contentEl.className = 'card-content';
       
       if (typeof content === 'string') {
-        contentEl.innerHTML = content;
+        contentEl.textContent = content;
       } else if (content instanceof HTMLElement) {
         contentEl.appendChild(content);
       }

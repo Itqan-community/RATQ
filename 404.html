@@ -14,20 +14,13 @@
       href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Noto+Sans+Arabic:wght@400;500;600;700&display=swap"
       rel="stylesheet"
     />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'none'; script-src 'self' https://cdn.jsdelivr.net 'unsafe-eval'; style-src 'self' https://cdn.jsdelivr.net https://fonts.googleapis.com 'unsafe-inline'; font-src https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self'; base-uri 'self'; form-action 'none'; frame-ancestors 'none';"
+    />
     <link rel="stylesheet" href="assets/css/shadcn.css" />
     <link rel="stylesheet" href="assets/css/main.css" />
-    <script>
-      // Preserve the original path before redirecting
-      const originalPath =
-        window.location.pathname +
-        window.location.search +
-        window.location.hash;
-      sessionStorage.setItem("redirectPath", originalPath);
-      // Redirect to index.html
-      window.location.replace(
-        "/index.html" + window.location.search + window.location.hash,
-      );
-    </script>
+    <script src="assets/js/redirect.js"></script>
   </head>
   <body>
     <div class="app-container">
@@ -85,7 +78,9 @@
       </div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/marked@11.1.1/marked.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/marked@11.1.1/marked.min.js"
+            integrity="sha384-zbcZAIxlvJtNE3Dp5nxLXdXtXyxwOdnILY1TDPVmKFhl4r4nSUG1r8bcFXGVa4Te"
+            crossorigin="anonymous"></script>
     <script src="assets/js/theme.js"></script>
     <script src="assets/js/language.js"></script>
     <script src="assets/js/navigation.js"></script>

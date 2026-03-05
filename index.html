@@ -7,6 +7,10 @@
       name="description"
       content="RATQ: Roadmap and Technologies for Quran - A comprehensive guide to developing Quranic applications"
     />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'none'; script-src 'self' https://cdn.jsdelivr.net 'unsafe-eval'; style-src 'self' https://cdn.jsdelivr.net https://fonts.googleapis.com 'unsafe-inline'; font-src https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self'; base-uri 'self'; form-action 'none'; frame-ancestors 'none';"
+    />
     <title>RATQ - Roadmap and Technologies for Quran</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -18,7 +22,9 @@
     <link rel="stylesheet" href="assets/css/main.css" />
     <link
       rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/simple-datatables@9/dist/style.css"
+      href="https://cdn.jsdelivr.net/npm/simple-datatables@9.2.2/dist/style.css"
+      integrity="sha384-CinX6s1UC1GpaQwL9eKshF7JhtC8H2xchDD0dWqlCgZ8t+GCCcjluxCgmsbVpdEh"
+      crossorigin="anonymous"
     />
   </head>
   <body>
@@ -77,7 +83,9 @@
       </div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/marked@11.1.1/marked.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/marked@11.1.1/marked.min.js"
+            integrity="sha384-zbcZAIxlvJtNE3Dp5nxLXdXtXyxwOdnILY1TDPVmKFhl4r4nSUG1r8bcFXGVa4Te"
+            crossorigin="anonymous"></script>
     <script src="assets/js/theme.js"></script>
     <script src="assets/js/language.js"></script>
     <script src="assets/js/navigation.js"></script>
@@ -89,7 +97,9 @@
     <script src="assets/js/flexsearch.bundle.min.js"></script>
     <script src="assets/js/search.js"></script>
     <script src="assets/js/components/search.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/simple-datatables@9"></script>
+    <script src="https://cdn.jsdelivr.net/npm/simple-datatables@9.2.2/dist/umd/simple-datatables.js"
+            integrity="sha384-fur44GLCxKOo6V7red+3pW/ZVGEMGmBrG61oj/ho9ltgXUz7ceixRinUpQfX9GPy"
+            crossorigin="anonymous"></script>
     <script src="assets/js/main.js"></script>
   </body>
 </html>

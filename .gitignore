@@ -1,4 +1,37 @@
+# IDE
 .idea/
+.vscode/
+
+# Obsidian
 .obsidian/workspace.json
 .obsidian/app.json
 .obsidian/graph.json
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Secrets and credentials
+.env
+.env.*
+.env.local
+*.pem
+*.key
+*.p12
+*.pfx
+credentials.json
+secrets.json
+
+# Python
+__pycache__/
+*.pyc
+
+# Node
+node_modules/
+
+# Build artifacts
+dist/
+build/
+
+# Logs
+*.log

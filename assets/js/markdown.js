@@ -100,12 +100,16 @@ const MarkdownRenderer = {
    * @returns {string} Header ID
    */
   generateHeaderId(text, level) {
-    // If text contains HTML, extract text content
+    // If text contains HTML, extract plain text without executing any embedded scripts.
+    // Use regex stripping instead of innerHTML to avoid triggering event handlers.
     if (text.includes('<') || text.includes('&')) {
-      // Create temporary element to extract text
-      const temp = document.createElement('div');
-      temp.innerHTML = text;
-      text = temp.textContent || temp.innerText || text;
+      text = text.replace(/<[^>]*>/g, '');
+      text = text.replace(/&amp;/g, '&')
+                 .replace(/&lt;/g, '<')
+                 .replace(/&gt;/g, '>')
+                 .replace(/&quot;/g, '"')
+                 .replace(/&#39;/g, "'")
+                 .replace(/&[^;]+;/g, '');
     }
 
     // Remove markdown formatting (bold, italic, etc.)
@@ -193,6 +197,16 @@ const MarkdownRenderer = {
   },
 
   /**
+   * Strip raw HTML tags from markdown source to prevent stored XSS.
+   * Preserves markdown syntax while removing inline HTML like <script>, <img onerror>, etc.
+   * @param {string} markdown - Raw markdown content
+   * @returns {string} Sanitized markdown
+   */
+  sanitizeMarkdownSource(markdown) {
+    return markdown.replace(/<\/?[a-zA-Z][^>]*>/g, '');
+  },
+
+  /**
    * Render markdown to HTML
    * @param {string} markdown - Markdown content
    * @returns {string} HTML content
@@ -204,7 +218,8 @@ const MarkdownRenderer = {
     }
 
     try {
-      return marked.parse(markdown);
+      const sanitized = this.sanitizeMarkdownSource(markdown);
+      return marked.parse(sanitized);
     } catch (error) {
       console.error('Error rendering markdown:', error);
       return '<p>Error rendering markdown content</p>';
@@ -394,16 +409,21 @@ const MarkdownRenderer = {
     const anchorId = hash.startsWith('#') ? hash.substring(1) : hash;
     if (!anchorId) return false;
 
-    // Try to find element by ID first
+    // Validate anchorId to prevent CSS selector injection.
+    // Only allow alphanumeric, hyphens, underscores, dots, and unicode word chars.
+    if (/["'\\\[\](){}#;]/.test(anchorId)) {
+      return false;
+    }
+
+    // Try to find element by ID first (getElementById is safe — no selector parsing)
     let targetElement = document.getElementById(anchorId);
 
     // If not found, try to find anchor tag with matching href
     if (!targetElement) {
-      const anchor = document.querySelector(`a[href="#${anchorId}"]`);
+      const escapedId = CSS.escape(anchorId);
+      const anchor = document.querySelector(`a[href="#${escapedId}"]`);
       if (anchor) {
-        // Find the parent heading element
         targetElement = anchor.closest('h1, h2, h3, h4, h5, h6');
-        // If no heading parent, use the anchor itself
         if (!targetElement) {
           targetElement = anchor;
         }
@@ -412,7 +432,8 @@ const MarkdownRenderer = {
 
     // If still not found, try to find any element with name attribute matching
     if (!targetElement) {
-      targetElement = document.querySelector(`[name="${anchorId}"]`);
+      const escapedId = CSS.escape(anchorId);
+      targetElement = document.querySelector(`[name="${escapedId}"]`);
     }
 
     if (targetElement) {
