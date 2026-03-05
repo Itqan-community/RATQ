@@ -29,6 +29,11 @@ pub fn sura_name(sura_id: u32) -> &'static str {
     SURA_NAMES.get(sura_id as usize).unwrap_or(&"")
 }
 
+/// Return the full list of sura names (index 0 is empty, 1-based).
+pub fn sura_names() -> &'static [&'static str] {
+    SURA_NAMES
+}
+
 const CREATE_SCHEMA: &str = "\
     CREATE TABLE aya (
         gid INTEGER PRIMARY KEY,

@@ -80,7 +80,7 @@ fn arabic_to_buckwalter(arabic: &str) -> String {
 fn buckwalter_to_arabic(bw: &str) -> String {
     let map: HashMap<char, char> = BW_TO_AR.iter().copied().collect();
     bw.chars()
-        .map(|c| map.get(&c).copied().unwrap_or(c))
+        .filter_map(|c| map.get(&c).copied())
         .collect()
 }
 

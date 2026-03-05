@@ -48,8 +48,14 @@ def main():
             lemma = extract_field(features, "LEM")
 
             if root and lemma:
-                roots[root].add(lemma)
-                lemmas[lemma] = root
+                # Strip characters not in Buckwalter transliteration scheme
+                # (e.g. ',', '.', '2', '@') to avoid malformed Arabic conversion
+                bw_valid = set("'|>&<}AbptvjHxd*rzs$SDTZE gfqklmnhwYy~`{oauiFNK^#")
+                root = "".join(c for c in root if c in bw_valid)
+                lemma = "".join(c for c in lemma if c in bw_valid)
+                if root and lemma:
+                    roots[root].add(lemma)
+                    lemmas[lemma] = root
 
     # Convert sets to sorted lists for JSON serialization
     roots_json = {k: sorted(v) for k, v in sorted(roots.items())}

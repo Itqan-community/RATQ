@@ -1,5 +1,6 @@
 use rusqlite::Connection;
 
+use crate::db;
 use crate::normalize;
 use crate::parser::{QueryNode, parse_query};
 use crate::roots;
@@ -59,17 +60,20 @@ fn build_sql(ast: &QueryNode, limit: usize) -> (String, Vec<String>) {
         // Field query for sura name
         QueryNode::Field { field, value } if is_sura_field(field) => {
             if let QueryNode::Term(sura_name) = value.as_ref() {
-                // Look up sura ID by name
+                // Normalize search term and find matching sura ID by comparing
+                // normalized forms, so e.g. "ال عمران" matches "آل عمران"
+                let sura_id = find_sura_id_by_name(sura_name);
+                if sura_id == 0 {
+                    return (empty_sql(), params);
+                }
                 let sql = format!(
                     "SELECT a.sura_id, a.aya_id, a.sura_name, a.text \
                      FROM aya a \
-                     WHERE a.sura_id = ( \
-                         SELECT sura_id FROM aya WHERE sura_name LIKE ?1 LIMIT 1 \
-                     ) \
+                     WHERE a.sura_id = ?1 \
                      ORDER BY a.gid LIMIT {}",
                     limit
                 );
-                params.push(format!("{}%", sura_name));
+                params.push(sura_id.to_string());
                 return (sql, params);
             }
             (empty_sql(), params)
@@ -77,6 +81,12 @@ fn build_sql(ast: &QueryNode, limit: usize) -> (String, Vec<String>) {
 
         // For other queries, build FTS5 MATCH expression
         _ => {
+            // Standalone NOT produces invalid FTS5 syntax (e.g. `NOT "word"`).
+            // FTS5 requires NOT to follow another term. Return empty result instead.
+            if matches!(ast, QueryNode::Not(_)) {
+                return (empty_sql(), params);
+            }
+
             let fts_expr = ast_to_fts5(ast, &mut params);
             if fts_expr.is_empty() {
                 return (empty_sql(), params);
@@ -100,6 +110,21 @@ fn build_sql(ast: &QueryNode, limit: usize) -> (String, Vec<String>) {
 
 fn empty_sql() -> String {
     "SELECT 0, 0, '', '' WHERE 0".to_string()
+}
+
+/// Find sura ID by name, normalizing both stored names and input for comparison.
+/// This handles cases where user types normalized alef but stored name uses alef-madda.
+fn find_sura_id_by_name(name: &str) -> u32 {
+    let normalized_input = normalize::normalize_for_search(name);
+    let names = db::sura_names();
+    for (i, stored_name) in names.iter().enumerate() {
+        if i == 0 { continue; }
+        let normalized_stored = normalize::normalize_for_search(stored_name);
+        if normalized_stored.starts_with(&normalized_input) {
+            return i as u32;
+        }
+    }
+    0
 }
 
 fn is_sura_field(field: &str) -> bool {
@@ -214,12 +239,6 @@ fn ast_to_fts5(node: &QueryNode, _params: &mut Vec<String>) -> String {
 fn generate_spell_variants(word: &str) -> Vec<String> {
     let normalized = normalize::normalize_for_search(word);
     let mut variants = vec![normalized.clone()];
-
-    // After normalization, ة has become ه.
-    // Generate a variant with ة for matching un-normalized contexts.
-    if normalized.contains('ه') {
-        variants.push(normalized.replace('ه', "\u{0629}"));
-    }
 
     // With and without ال
     let stripped = normalize::strip_definite_article(&normalized);
