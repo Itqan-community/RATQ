@@ -1,8 +1,8 @@
 use rusqlite::Connection;
 
-use crate::db;
 use crate::normalize;
 use crate::parser::{QueryNode, parse_query};
+use crate::roots;
 
 /// A single search result (verse).
 #[derive(Debug, Clone)]
@@ -56,8 +56,7 @@ fn build_sql(ast: &QueryNode, limit: usize) -> (String, Vec<String>) {
         // Field query for sura name
         QueryNode::Field { field, value } if is_sura_field(field) => {
             if let QueryNode::Term(sura_name) = value.as_ref() {
-                let normalized_name = normalize::normalize_for_search(sura_name);
-                // Look up sura ID by normalized name
+                // Look up sura ID by name
                 let sql = format!(
                     "SELECT a.sura_id, a.aya_id, a.sura_name, a.text \
                      FROM aya a \
@@ -165,11 +164,39 @@ fn ast_to_fts5(node: &QueryNode, _params: &mut Vec<String>) -> String {
             let terms: Vec<String> = variants.iter().map(|v| format!("\"{}\"", v)).collect();
             format!("({})", terms.join(" OR "))
         }
-        QueryNode::Synonym(t) | QueryNode::Antonym(t) | QueryNode::Root(t) | QueryNode::Lemma(t) => {
-            // Stub: just search for the term itself
-            // TODO: wire up linguistic data files
-            let normalized = normalize::normalize_for_search(t);
-            format!("\"{}\"", normalized)
+        QueryNode::Root(t) => {
+            // Find all lemmas derived from this root
+            let lemmas = roots::find_lemmas_for_root(t);
+            if lemmas.is_empty() {
+                let normalized = normalize::normalize_for_search(t);
+                format!("\"{}\"", normalized)
+            } else {
+                let terms: Vec<String> = lemmas.iter().map(|l| format!("\"{}\"", l)).collect();
+                format!("({})", terms.join(" OR "))
+            }
+        }
+        QueryNode::Lemma(t) => {
+            // Find sibling lemmas sharing the same root
+            let siblings = roots::find_siblings_for_lemma(t);
+            if siblings.is_empty() {
+                let normalized = normalize::normalize_for_search(t);
+                format!("\"{}\"", normalized)
+            } else {
+                let terms: Vec<String> = siblings.iter().map(|l| format!("\"{}\"", l)).collect();
+                format!("({})", terms.join(" OR "))
+            }
+        }
+        QueryNode::Synonym(t) | QueryNode::Antonym(t) => {
+            // Synonym/antonym: fall back to root-based expansion
+            // (full synonym data would require an Arabic WordNet)
+            let lemmas = roots::find_siblings_for_lemma(t);
+            if lemmas.is_empty() {
+                let normalized = normalize::normalize_for_search(t);
+                format!("\"{}\"", normalized)
+            } else {
+                let terms: Vec<String> = lemmas.iter().map(|l| format!("\"{}\"", l)).collect();
+                format!("({})", terms.join(" OR "))
+            }
         }
         QueryNode::Field { .. } => String::new(),
     }

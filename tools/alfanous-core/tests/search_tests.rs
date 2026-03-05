@@ -1,5 +1,5 @@
 use alfanous_core::db;
-use alfanous_core::search::{self, SearchResult};
+use alfanous_core::search;
 
 fn setup_db() -> rusqlite::Connection {
     let quran_path = concat!(
@@ -105,4 +105,42 @@ fn search_field_sura_name() {
     for r in &results {
         assert_eq!(r.sura_id, 2, "All results should be from Al-Baqara");
     }
+}
+
+#[test]
+fn search_root_operator() {
+    let conn = setup_db();
+    // >> root operator: search by Arabic trilateral root
+    // Root رحم (rHm) should find رحمن, رحيم, رحمة, etc.
+    let results = search::execute(&conn, ">>رحم", 20);
+    assert!(!results.is_empty(), "Root search >>رحم should return results");
+}
+
+#[test]
+fn search_root_returns_more_than_single_word() {
+    let conn = setup_db();
+    let root_results = search::execute(&conn, ">>رحم", 100);
+    let single_results = search::execute(&conn, "رحم", 100);
+    // Root search should find more verses (رحمن, رحيم, رحمة, etc.)
+    assert!(
+        root_results.len() >= single_results.len(),
+        "Root >>رحم ({}) should find at least as many as رحم ({})",
+        root_results.len(),
+        single_results.len()
+    );
+}
+
+#[test]
+fn search_wildcard_query() {
+    let conn = setup_db();
+    let results = search::execute(&conn, "كتب*", 10);
+    assert!(!results.is_empty(), "Wildcard كتب* should return results");
+}
+
+#[test]
+fn search_spell_tolerant() {
+    let conn = setup_db();
+    // % operator should expand spelling variants
+    let results = search::execute(&conn, "%رحمه", 10);
+    assert!(!results.is_empty(), "Spell-tolerant %رحمه should return results");
 }
