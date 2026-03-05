@@ -133,6 +133,14 @@ const Router = {
       // If decoding fails, use route as-is
     }
 
+    // Reject path traversal sequences to prevent accessing files outside the content tree
+    const segments = route.split('/').filter(s => s);
+    if (segments.some(s => s === '..' || s === '.')) {
+      console.warn('Blocked path traversal attempt:', route);
+      return 'docs/en/index.md';
+    }
+    route = segments.join('/');
+
     // Add .md extension if not present
     if (!route.endsWith('.md')) {
       route = `${route}.md`;

@@ -223,14 +223,35 @@ const SearchComponent = {
    */
   renderNoResults() {
     if (!this.resultsContainer || !this.searchInput) return;
-    
-    this.resultsContainer.innerHTML = `
-      <div class="search-result-empty">
-        No results found for "${this.searchInput.value}"
-      </div>
-    `;
+
+    this.resultsContainer.innerHTML = '';
+    const empty = document.createElement('div');
+    empty.className = 'search-result-empty';
+
+    const currentLang = window.LanguageManager
+      ? window.LanguageManager.getCurrentLanguage()
+      : 'en';
+    const prefix = currentLang === 'ar' ? 'لا توجد نتائج لـ' : 'No results found for';
+    empty.textContent = `${prefix} "${this.searchInput.value}"`;
+
+    this.resultsContainer.appendChild(empty);
   },
   
+  /**
+   * Escape HTML special characters to prevent XSS
+   * @param {string} str - String to escape
+   * @returns {string} Escaped string safe for innerHTML
+   */
+  escapeHTML(str) {
+    if (!str) return '';
+    return str
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
+  },
+
   /**
    * Highlight search terms in text
    * @param {string} text - Text to highlight
@@ -238,10 +259,11 @@ const SearchComponent = {
    * @returns {string} HTML with highlighted text
    */
   highlightText(text, query) {
-    if (!query) return text;
-    
+    if (!query) return this.escapeHTML(text);
+
+    const escaped = this.escapeHTML(text);
     const regex = new RegExp(`(${this.escapeRegex(query)})`, 'gi');
-    return text.replace(regex, '<mark>$1</mark>');
+    return escaped.replace(regex, '<mark>$1</mark>');
   },
   
   /**
