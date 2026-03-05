@@ -1,0 +1,1 @@
+../quran-analysis/data/quran-simple-clean.txt
