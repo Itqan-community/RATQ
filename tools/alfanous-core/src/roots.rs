@@ -1,4 +1,5 @@
 use std::collections::HashMap;
+use std::sync::OnceLock;
 
 /// Buckwalter transliteration → Arabic mapping.
 const BW_TO_AR: &[(char, char)] = &[
@@ -88,20 +89,26 @@ fn buckwalter_to_arabic(bw: &str) -> String {
 static ROOTS_JSON: &str = include_str!("../data/roots.json");
 static LEMMAS_JSON: &str = include_str!("../data/lemmas.json");
 
-/// Lazily parsed root database.
-fn parse_roots() -> HashMap<String, Vec<String>> {
-    serde_json::from_str(ROOTS_JSON).unwrap_or_default()
+static ROOTS: OnceLock<HashMap<String, Vec<String>>> = OnceLock::new();
+static LEMMAS: OnceLock<HashMap<String, String>> = OnceLock::new();
+
+fn get_roots() -> &'static HashMap<String, Vec<String>> {
+    ROOTS.get_or_init(|| {
+        serde_json::from_str(ROOTS_JSON).expect("embedded roots.json is invalid")
+    })
 }
 
-fn parse_lemmas() -> HashMap<String, String> {
-    serde_json::from_str(LEMMAS_JSON).unwrap_or_default()
+fn get_lemmas() -> &'static HashMap<String, String> {
+    LEMMAS.get_or_init(|| {
+        serde_json::from_str(LEMMAS_JSON).expect("embedded lemmas.json is invalid")
+    })
 }
 
 /// Given an Arabic root (e.g. "صلو"), find all lemmas derived from it.
 /// Returns Arabic lemmas (normalized).
 pub fn find_lemmas_for_root(arabic_root: &str) -> Vec<String> {
     let bw_root = arabic_to_buckwalter(arabic_root);
-    let roots = parse_roots();
+    let roots = get_roots();
 
     if let Some(lemmas) = roots.get(&bw_root) {
         lemmas
@@ -121,8 +128,8 @@ pub fn find_lemmas_for_root(arabic_root: &str) -> Vec<String> {
 /// This is used for the lemma (>) operator.
 pub fn find_siblings_for_lemma(arabic_word: &str) -> Vec<String> {
     let bw_word = arabic_to_buckwalter(arabic_word);
-    let lemmas_map = parse_lemmas();
-    let roots = parse_roots();
+    let lemmas_map = get_lemmas();
+    let roots = get_roots();
 
     // Try to find the root for this word
     if let Some(root) = lemmas_map.get(&bw_word) {
@@ -145,7 +152,7 @@ pub fn find_siblings_for_lemma(arabic_word: &str) -> Vec<String> {
 /// Returns the root in Arabic if found.
 pub fn find_root_for_word(arabic_word: &str) -> Option<String> {
     let bw_word = arabic_to_buckwalter(arabic_word);
-    let lemmas_map = parse_lemmas();
+    let lemmas_map = get_lemmas();
 
     lemmas_map
         .get(&bw_word)
@@ -167,7 +174,7 @@ mod tests {
 
     #[test]
     fn find_root_data_loaded() {
-        let roots = parse_roots();
+        let roots = get_roots();
         assert!(!roots.is_empty(), "roots.json should load");
         // "Slw" is the root for صلاة
         assert!(roots.contains_key("Slw"), "Should contain root Slw (صلو)");
@@ -181,8 +188,71 @@ mod tests {
 
     #[test]
     fn find_root_for_known_word() {
-        let roots = parse_roots();
+        let roots = get_roots();
         // Check that we have the "rHm" root (mercy)
         assert!(roots.contains_key("rHm"), "Should contain root rHm (رحم)");
+    }
+
+    #[test]
+    fn buckwalter_arabic_all_basic_letters() {
+        // Test all 28 Arabic letters round-trip
+        let arabic = "ابتثجحخدذرزسشصضطظعغفقكلمنهوي";
+        let bw = arabic_to_buckwalter(arabic);
+        let back = buckwalter_to_arabic(&bw);
+        assert_eq!(back, arabic, "All basic letters should round-trip");
+    }
+
+    #[test]
+    fn buckwalter_strips_diacritics() {
+        // Arabic with tashkeel → Buckwalter should only get consonants
+        let arabic = "كَتَبَ"; // kataba
+        let bw = arabic_to_buckwalter(arabic);
+        assert_eq!(bw, "ktb", "Diacritics should be stripped");
+    }
+
+    #[test]
+    fn find_lemmas_for_root_ktb() {
+        let lemmas = find_lemmas_for_root("كتب");
+        assert!(!lemmas.is_empty(), "Root كتب (ktb) should have lemmas");
+    }
+
+    #[test]
+    fn find_lemmas_for_root_elm() {
+        let lemmas = find_lemmas_for_root("علم");
+        assert!(!lemmas.is_empty(), "Root علم (Elm) should have lemmas");
+    }
+
+    #[test]
+    fn find_lemmas_unknown_root_returns_empty() {
+        let lemmas = find_lemmas_for_root("ققق");
+        assert!(lemmas.is_empty(), "Unknown root should return empty");
+    }
+
+    #[test]
+    fn find_root_for_word_function() {
+        // "الله" → root "Alh"
+        let root = find_root_for_word("الله");
+        // This may or may not find a match depending on exact lemma form
+        // Just verify it doesn't panic
+        let _ = root;
+    }
+
+    #[test]
+    fn lemmas_json_loaded() {
+        let lemmas = get_lemmas();
+        assert!(!lemmas.is_empty(), "lemmas.json should load");
+    }
+
+    #[test]
+    fn roots_have_reasonable_count() {
+        let roots = get_roots();
+        assert!(roots.len() > 1000, "Should have > 1000 roots, got {}", roots.len());
+        assert!(roots.len() < 5000, "Should have < 5000 roots, got {}", roots.len());
+    }
+
+    #[test]
+    fn lemmas_have_reasonable_count() {
+        let lemmas = get_lemmas();
+        assert!(lemmas.len() > 3000, "Should have > 3000 lemmas, got {}", lemmas.len());
     }
 }

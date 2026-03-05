@@ -74,7 +74,7 @@ cargo test
 
 ## Architecture
 
-```
+```text
 src/
   normalize.rs   — Arabic text normalization pipeline
   parser/        — Recursive-descent query language parser

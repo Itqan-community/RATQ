@@ -144,3 +144,221 @@ fn search_spell_tolerant() {
     let results = search::execute(&conn, "%رحمه", 10);
     assert!(!results.is_empty(), "Spell-tolerant %رحمه should return results");
 }
+
+// --- Additional search integration tests ---
+
+#[test]
+fn search_whitespace_only_returns_empty() {
+    let conn = setup_db();
+    let results = search::execute(&conn, "   ", 10);
+    assert!(results.is_empty());
+}
+
+#[test]
+fn search_vocalized_input_matches() {
+    let conn = setup_db();
+    // User types with tashkeel — should still find results after normalization
+    let results = search::execute(&conn, "الصَّلاةِ", 10);
+    assert!(!results.is_empty(), "Vocalized input الصَّلاةِ should match after normalization");
+}
+
+#[test]
+fn search_hamza_variant_input() {
+    let conn = setup_db();
+    // أمنوا vs آمنوا — both should match the same verses
+    let results_hamza = search::execute(&conn, "أمنوا", 20);
+    let results_madda = search::execute(&conn, "آمنوا", 20);
+    // Both normalize to "امنوا"
+    assert!(!results_hamza.is_empty(), "أمنوا should return results");
+    assert!(!results_madda.is_empty(), "آمنوا should return results");
+}
+
+#[test]
+fn search_taa_marbuta_matches() {
+    let conn = setup_db();
+    // ة and ه should match interchangeably after normalization
+    let results = search::execute(&conn, "رحمة", 10);
+    assert!(!results.is_empty(), "رحمة should find results (normalized to رحمه)");
+}
+
+#[test]
+fn search_field_sura_fatiha() {
+    let conn = setup_db();
+    let results = search::execute(&conn, "سورة:الفاتحة", 10);
+    assert!(!results.is_empty());
+    for r in &results {
+        assert_eq!(r.sura_id, 1, "All results should be from Al-Fatiha");
+    }
+    assert_eq!(results.len(), 7, "Al-Fatiha has 7 verses");
+}
+
+#[test]
+fn search_field_sura_all_baqara_verses() {
+    let conn = setup_db();
+    let results = search::execute(&conn, "سورة:البقرة", 300);
+    assert_eq!(results.len(), 286, "Al-Baqara should have 286 verses");
+}
+
+#[test]
+fn search_phrase_not_found() {
+    let conn = setup_db();
+    // A phrase that doesn't exist in the Quran
+    let results = search::execute(&conn, "\"كلمات ليست في القرآن أبدا\"", 10);
+    assert!(results.is_empty(), "Non-existent phrase should return no results");
+}
+
+#[test]
+fn search_and_both_terms_present() {
+    let conn = setup_db();
+    let results = search::execute(&conn, "الصلاة + الزكاة", 50);
+    assert!(!results.is_empty(), "الصلاة + الزكاة should find results");
+    // Each result should contain both terms (in normalized form)
+    for r in &results {
+        let normalized = alfanous_core::normalize::normalize_for_search(&r.text);
+        let has_salah = normalized.contains("صلاه") || normalized.contains("الصلاه") || normalized.contains("صلوه");
+        let has_zakat = normalized.contains("زكاه") || normalized.contains("الزكاه");
+        assert!(
+            has_salah && has_zakat,
+            "AND result should contain both terms. Text: {}",
+            r.text
+        );
+    }
+}
+
+#[test]
+fn search_or_returns_union() {
+    let conn = setup_db();
+    let results_a = search::execute(&conn, "نوح", 200);
+    let results_b = search::execute(&conn, "إبراهيم", 200);
+    let results_or = search::execute(&conn, "نوح | إبراهيم", 200);
+    assert!(
+        results_or.len() >= results_a.len(),
+        "OR should return at least as many as first term"
+    );
+    assert!(
+        results_or.len() >= results_b.len(),
+        "OR should return at least as many as second term"
+    );
+}
+
+#[test]
+fn search_not_excludes_term() {
+    let conn = setup_db();
+    let results = search::execute(&conn, "الله + -الرحمن", 50);
+    for r in &results {
+        let normalized = alfanous_core::normalize::normalize_for_search(&r.text);
+        assert!(
+            !normalized.contains("الرحمن"),
+            "NOT results should exclude الرحمن. Text: {}",
+            r.text
+        );
+    }
+}
+
+#[test]
+fn search_sura_name_populated() {
+    let conn = setup_db();
+    let results = search::execute(&conn, "الحمد", 1);
+    assert!(!results.is_empty());
+    // First result (الحمد لله رب العالمين) should be from الفاتحة
+    let r = &results[0];
+    assert!(!r.sura_name.is_empty(), "sura_name should not be empty");
+}
+
+#[test]
+fn search_limit_one() {
+    let conn = setup_db();
+    let results = search::execute(&conn, "الله", 1);
+    assert_eq!(results.len(), 1);
+}
+
+#[test]
+fn search_limit_zero() {
+    let conn = setup_db();
+    let results = search::execute(&conn, "الله", 0);
+    assert!(results.is_empty());
+}
+
+#[test]
+fn search_complex_query_and_or_not() {
+    let conn = setup_db();
+    // (الجنة | الفردوس) + -النار
+    let results = search::execute(&conn, "(الجنة | الفردوس) + -النار", 20);
+    // Results should mention الجنة or الفردوس but NOT النار
+    for r in &results {
+        let normalized = alfanous_core::normalize::normalize_for_search(&r.text);
+        assert!(
+            !normalized.contains("النار"),
+            "Should not contain النار: {}",
+            r.text
+        );
+    }
+}
+
+#[test]
+fn search_with_arabic_and_operator() {
+    let conn = setup_db();
+    // Using و (Arabic AND)
+    let results = search::execute(&conn, "الجنة و النار", 10);
+    assert!(!results.is_empty(), "Arabic AND operator و should work");
+}
+
+#[test]
+fn search_with_arabic_or_operator() {
+    let conn = setup_db();
+    let results = search::execute(&conn, "الجنة أو النار", 10);
+    assert!(!results.is_empty(), "Arabic OR operator أو should work");
+}
+
+#[test]
+fn search_root_ktb() {
+    let conn = setup_db();
+    // Root كتب should find كتاب, كتب, مكتوب, etc.
+    let results = search::execute(&conn, ">>كتب", 20);
+    assert!(!results.is_empty(), "Root search >>كتب should return results");
+}
+
+#[test]
+fn search_root_elm() {
+    let conn = setup_db();
+    // Root علم should find علم, عالم, عليم, etc.
+    let results = search::execute(&conn, ">>علم", 20);
+    assert!(!results.is_empty(), "Root search >>علم should return results");
+}
+
+#[test]
+fn search_fatiha_verse_count() {
+    let conn = setup_db();
+    let results = search::execute(&conn, "سورة:الفاتحة", 10);
+    assert_eq!(results.len(), 7, "Al-Fatiha should have exactly 7 verses");
+    assert_eq!(results[0].aya_id, 1);
+    assert_eq!(results[6].aya_id, 7);
+}
+
+#[test]
+fn search_ikhlas_verse_count() {
+    let conn = setup_db();
+    let results = search::execute(&conn, "سورة:الإخلاص", 10);
+    assert_eq!(results.len(), 4, "Al-Ikhlas should have exactly 4 verses");
+}
+
+#[test]
+fn search_results_have_valid_sura_ids() {
+    let conn = setup_db();
+    let results = search::execute(&conn, "الله", 50);
+    for r in &results {
+        assert!(r.sura_id >= 1 && r.sura_id <= 114, "sura_id should be 1-114, got {}", r.sura_id);
+        assert!(r.aya_id >= 1, "aya_id should be >= 1, got {}", r.aya_id);
+    }
+}
+
+#[test]
+fn search_basmala_in_naml() {
+    let conn = setup_db();
+    // Al-Naml (27:30) contains بسم الله الرحمن الرحيم inside a verse
+    let results = search::execute(&conn, "\"بسم الله الرحمن الرحيم\"", 200);
+    assert!(
+        results.iter().any(|r| r.sura_id == 27),
+        "Basmala phrase should appear in Sura Al-Naml (27)"
+    );
+}

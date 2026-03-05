@@ -67,3 +67,110 @@ fn expand_common_prefixes() {
     let expansions = normalize::expand_prefixes("والصلاة");
     assert!(expansions.contains(&"صلاة".to_string()) || expansions.contains(&"الصلاة".to_string()));
 }
+
+// --- Additional normalization tests ---
+
+#[test]
+fn normalize_multiple_hamza_variants_in_same_word() {
+    // آمنوا contains آ → ا
+    assert_eq!(normalize::normalize_arabic("آمنوا"), "امنوا");
+    // إِيَّاكَ → اياك
+    assert_eq!(normalize::normalize_arabic("إياك"), "اياك");
+}
+
+#[test]
+fn normalize_waw_hamza() {
+    // ؤ is not normalized (it's not an alef variant)
+    assert_eq!(normalize::normalize_arabic("مؤمنون"), "مؤمنون");
+}
+
+#[test]
+fn strip_tashkeel_all_diacritic_types() {
+    // fatha, kasra, damma, sukun, shadda, tanwin
+    let with_diacritics = "كَتَبَ";
+    let stripped = normalize::strip_tashkeel(with_diacritics);
+    assert_eq!(stripped, "كتب");
+}
+
+#[test]
+fn normalize_arabic_only_text() {
+    // Non-Arabic text should pass through unchanged
+    assert_eq!(normalize::normalize_for_search("hello world"), "hello world");
+}
+
+#[test]
+fn normalize_mixed_arabic_latin() {
+    let result = normalize::normalize_for_search("الله Allah");
+    assert_eq!(result, "الله Allah");
+}
+
+#[test]
+fn strip_definite_article_short_word() {
+    // "ال" alone should NOT be stripped (nothing left)
+    assert_eq!(normalize::strip_definite_article("ال"), "ال");
+}
+
+#[test]
+fn strip_definite_article_with_whitespace() {
+    assert_eq!(normalize::strip_definite_article("  الكتاب  "), "كتاب");
+}
+
+#[test]
+fn normalize_consecutive_spaces() {
+    let result = normalize::normalize_for_search("بسم   الله    الرحمن");
+    assert_eq!(result, "بسم الله الرحمن");
+}
+
+#[test]
+fn expand_prefixes_with_baa() {
+    // بالله → should expand to [بالله, الله, لله]
+    let expansions = normalize::expand_prefixes("بالله");
+    assert!(expansions.contains(&"بالله".to_string()));
+    assert!(expansions.contains(&"الله".to_string()));
+}
+
+#[test]
+fn expand_prefixes_with_faa() {
+    let expansions = normalize::expand_prefixes("فالحمد");
+    assert!(expansions.contains(&"فالحمد".to_string()));
+    assert!(expansions.contains(&"الحمد".to_string()) || expansions.contains(&"حمد".to_string()));
+}
+
+#[test]
+fn expand_prefixes_with_kaaf() {
+    let expansions = normalize::expand_prefixes("كالنور");
+    assert!(expansions.contains(&"كالنور".to_string()));
+    assert!(expansions.contains(&"النور".to_string()) || expansions.contains(&"نور".to_string()));
+}
+
+#[test]
+fn expand_prefixes_with_lam_lam() {
+    // لل prefix (lam + lam, as in لله)
+    let expansions = normalize::expand_prefixes("لله");
+    assert!(expansions.contains(&"لله".to_string()));
+    assert!(expansions.contains(&"له".to_string()));
+}
+
+#[test]
+fn expand_prefixes_no_prefix() {
+    // Word without any recognized prefix should return only itself
+    let expansions = normalize::expand_prefixes("حمد");
+    assert_eq!(expansions.len(), 1);
+    assert_eq!(expansions[0], "حمد");
+}
+
+#[test]
+fn normalize_preserves_arabic_question_mark() {
+    // Arabic question mark ؟ is not tashkeel, should be preserved
+    let result = normalize::normalize_for_search("ماذا؟");
+    assert!(result.contains("ماذا"));
+}
+
+#[test]
+fn normalize_for_search_idempotent() {
+    // Normalizing twice should give the same result
+    let input = "الصَّلاةِ";
+    let once = normalize::normalize_for_search(input);
+    let twice = normalize::normalize_for_search(&once);
+    assert_eq!(once, twice, "normalize_for_search should be idempotent");
+}

@@ -10,7 +10,6 @@ The root keys use Buckwalter transliteration as in the corpus.
 
 import json
 import re
-import sys
 from collections import defaultdict
 from pathlib import Path
 
@@ -44,7 +43,6 @@ def main():
             lemma = extract_field(features, "LEM")
 
             if root and lemma:
-                # Clean lemma (remove special chars like {, }, ~, `, etc.)
                 roots[root].add(lemma)
                 lemmas[lemma] = root
 

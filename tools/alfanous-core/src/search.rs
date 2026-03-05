@@ -151,7 +151,12 @@ fn ast_to_fts5(node: &QueryNode, _params: &mut Vec<String>) -> String {
             format!("({} OR {})", l, r)
         }
         QueryNode::Not(inner) => {
+            // FTS5 requires NOT to follow another term (e.g. "a AND NOT b").
+            // Standalone NOT is handled by the AND combiner in the parser.
             let i = ast_to_fts5(inner, _params);
+            if i.is_empty() {
+                return String::new();
+            }
             format!("NOT {}", i)
         }
         QueryNode::Boost(inner, _weight) => {
@@ -207,12 +212,10 @@ fn generate_spell_variants(word: &str) -> Vec<String> {
     let normalized = normalize::normalize_for_search(word);
     let mut variants = vec![normalized.clone()];
 
-    // ة ↔ ه
+    // After normalization, ة has become ه.
+    // Generate a variant with ة for matching un-normalized contexts.
     if normalized.contains('ه') {
         variants.push(normalized.replace('ه', "\u{0629}"));
-    }
-    if normalized.contains('\u{0629}') {
-        variants.push(normalized.replace('\u{0629}', "ه"));
     }
 
     // With and without ال
