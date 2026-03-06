@@ -142,9 +142,24 @@ fn empty_sql() -> String {
 
 /// Find sura ID by name, normalizing both stored names and input for comparison.
 /// This handles cases where user types normalized alef but stored name uses alef-madda.
+/// Prefers exact match; falls back to prefix match only for inputs >= 3 chars.
 fn find_sura_id_by_name(name: &str) -> u32 {
     let normalized_input = normalize::normalize_for_search(name);
     let names = db::sura_names();
+
+    // First try exact match
+    for (i, stored_name) in names.iter().enumerate() {
+        if i == 0 { continue; }
+        let normalized_stored = normalize::normalize_for_search(stored_name);
+        if normalized_stored == normalized_input {
+            return i as u32;
+        }
+    }
+
+    // Fall back to prefix match only for longer inputs to avoid ambiguity
+    if normalized_input.chars().count() < 3 {
+        return 0;
+    }
     for (i, stored_name) in names.iter().enumerate() {
         if i == 0 { continue; }
         let normalized_stored = normalize::normalize_for_search(stored_name);

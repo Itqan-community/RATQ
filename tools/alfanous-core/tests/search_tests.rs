@@ -39,6 +39,11 @@ fn search_and_query() {
             "Result should contain الجنة variant: {}",
             r.text
         );
+        assert!(
+            normalized.contains("النار") || normalized.contains("نار"),
+            "Result should contain النار variant: {}",
+            r.text
+        );
     }
 }
 

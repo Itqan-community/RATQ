@@ -70,7 +70,7 @@ The Quran text file uses pipe-delimited format: `sura_id|aya_id|text` (one verse
 cargo test
 ```
 
-46 tests covering normalization, query parsing, root lookup, and full search integration.
+Comprehensive test suite (117 tests) covering normalization, query parsing, database, root lookup, and full search integration.
 
 ## Architecture
 
