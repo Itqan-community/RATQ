@@ -89,26 +89,39 @@ fn buckwalter_to_arabic(bw: &str) -> String {
 static ROOTS_JSON: &str = include_str!("../data/roots.json");
 static LEMMAS_JSON: &str = include_str!("../data/lemmas.json");
 
-static ROOTS: OnceLock<HashMap<String, Vec<String>>> = OnceLock::new();
-static LEMMAS: OnceLock<HashMap<String, String>> = OnceLock::new();
+static ROOTS: OnceLock<Result<HashMap<String, Vec<String>>, String>> = OnceLock::new();
+static LEMMAS: OnceLock<Result<HashMap<String, String>, String>> = OnceLock::new();
 
-fn get_roots() -> &'static HashMap<String, Vec<String>> {
-    ROOTS.get_or_init(|| {
-        serde_json::from_str(ROOTS_JSON).expect("embedded roots.json is invalid")
-    })
+fn get_roots() -> Option<&'static HashMap<String, Vec<String>>> {
+    ROOTS
+        .get_or_init(|| {
+            serde_json::from_str(ROOTS_JSON)
+                .map_err(|e| format!("failed to parse roots.json: {}", e))
+        })
+        .as_ref()
+        .map_err(|e| eprintln!("roots.json error: {}", e))
+        .ok()
 }
 
-fn get_lemmas() -> &'static HashMap<String, String> {
-    LEMMAS.get_or_init(|| {
-        serde_json::from_str(LEMMAS_JSON).expect("embedded lemmas.json is invalid")
-    })
+fn get_lemmas() -> Option<&'static HashMap<String, String>> {
+    LEMMAS
+        .get_or_init(|| {
+            serde_json::from_str(LEMMAS_JSON)
+                .map_err(|e| format!("failed to parse lemmas.json: {}", e))
+        })
+        .as_ref()
+        .map_err(|e| eprintln!("lemmas.json error: {}", e))
+        .ok()
 }
 
 /// Given an Arabic root (e.g. "صلو"), find all lemmas derived from it.
 /// Returns Arabic lemmas (normalized).
 pub fn find_lemmas_for_root(arabic_root: &str) -> Vec<String> {
     let bw_root = arabic_to_buckwalter(arabic_root);
-    let roots = get_roots();
+    let roots = match get_roots() {
+        Some(r) => r,
+        None => return vec![],
+    };
 
     if let Some(lemmas) = roots.get(&bw_root) {
         lemmas
@@ -128,8 +141,14 @@ pub fn find_lemmas_for_root(arabic_root: &str) -> Vec<String> {
 /// This is used for the lemma (>) operator.
 pub fn find_siblings_for_lemma(arabic_word: &str) -> Vec<String> {
     let bw_word = arabic_to_buckwalter(arabic_word);
-    let lemmas_map = get_lemmas();
-    let roots = get_roots();
+    let lemmas_map = match get_lemmas() {
+        Some(l) => l,
+        None => return vec![],
+    };
+    let roots = match get_roots() {
+        Some(r) => r,
+        None => return vec![],
+    };
 
     // Try to find the root for this word
     if let Some(root) = lemmas_map.get(&bw_word) {
@@ -152,7 +171,7 @@ pub fn find_siblings_for_lemma(arabic_word: &str) -> Vec<String> {
 /// Returns the root in Arabic if found.
 pub fn find_root_for_word(arabic_word: &str) -> Option<String> {
     let bw_word = arabic_to_buckwalter(arabic_word);
-    let lemmas_map = get_lemmas();
+    let lemmas_map = get_lemmas()?;
 
     lemmas_map
         .get(&bw_word)
@@ -174,8 +193,8 @@ mod tests {
 
     #[test]
     fn find_root_data_loaded() {
-        let roots = get_roots();
-        assert!(!roots.is_empty(), "roots.json should load");
+        let roots = get_roots().expect("roots.json should load");
+        assert!(!roots.is_empty(), "roots.json should not be empty");
         // "Slw" is the root for صلاة
         assert!(roots.contains_key("Slw"), "Should contain root Slw (صلو)");
     }
@@ -188,7 +207,7 @@ mod tests {
 
     #[test]
     fn find_root_for_known_word() {
-        let roots = get_roots();
+        let roots = get_roots().expect("roots.json should load");
         // Check that we have the "rHm" root (mercy)
         assert!(roots.contains_key("rHm"), "Should contain root rHm (رحم)");
     }
@@ -239,20 +258,20 @@ mod tests {
 
     #[test]
     fn lemmas_json_loaded() {
-        let lemmas = get_lemmas();
-        assert!(!lemmas.is_empty(), "lemmas.json should load");
+        let lemmas = get_lemmas().expect("lemmas.json should load");
+        assert!(!lemmas.is_empty(), "lemmas.json should not be empty");
     }
 
     #[test]
     fn roots_have_reasonable_count() {
-        let roots = get_roots();
+        let roots = get_roots().expect("roots.json should load");
         assert!(roots.len() > 1000, "Should have > 1000 roots, got {}", roots.len());
         assert!(roots.len() < 5000, "Should have < 5000 roots, got {}", roots.len());
     }
 
     #[test]
     fn lemmas_have_reasonable_count() {
-        let lemmas = get_lemmas();
+        let lemmas = get_lemmas().expect("lemmas.json should load");
         assert!(lemmas.len() > 3000, "Should have > 3000 lemmas, got {}", lemmas.len());
     }
 }

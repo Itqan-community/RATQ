@@ -1,9 +1,40 @@
+use std::fmt;
+
 use rusqlite::Connection;
 
 use crate::db;
 use crate::normalize;
 use crate::parser::{QueryNode, parse_query};
 use crate::roots;
+
+/// Error type for search operations.
+#[derive(Debug)]
+pub enum SearchError {
+    /// A database error occurred during query execution.
+    Database(rusqlite::Error),
+}
+
+impl fmt::Display for SearchError {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        match self {
+            SearchError::Database(e) => write!(f, "database error: {}", e),
+        }
+    }
+}
+
+impl std::error::Error for SearchError {
+    fn source(&self) -> Option<&(dyn std::error::Error + 'static)> {
+        match self {
+            SearchError::Database(e) => Some(e),
+        }
+    }
+}
+
+impl From<rusqlite::Error> for SearchError {
+    fn from(e: rusqlite::Error) -> Self {
+        SearchError::Database(e)
+    }
+}
 
 /// A single search result (verse).
 #[derive(Debug, Clone)]
@@ -15,41 +46,37 @@ pub struct SearchResult {
 }
 
 /// Execute a search query and return matching verses.
-pub fn execute(conn: &Connection, query: &str, limit: usize) -> Vec<SearchResult> {
+///
+/// Returns an error if the database query fails, rather than silently
+/// returning empty results.
+pub fn execute(conn: &Connection, query: &str, limit: usize) -> Result<Vec<SearchResult>, SearchError> {
     let trimmed = query.trim();
     if trimmed.is_empty() {
-        return vec![];
+        return Ok(vec![]);
     }
 
     let ast = parse_query(trimmed);
     let (sql, params) = build_sql(&ast, limit);
 
-    let mut stmt = match conn.prepare(&sql) {
-        Ok(s) => s,
-        Err(e) => {
-            eprintln!("SQL preparation error: {}", e);
-            return vec![];
-        }
-    };
+    let mut stmt = conn.prepare(&sql)?;
 
     let param_refs: Vec<&dyn rusqlite::types::ToSql> =
         params.iter().map(|p| p as &dyn rusqlite::types::ToSql).collect();
 
-    let rows = stmt
-        .query_map(param_refs.as_slice(), |row| {
-            Ok(SearchResult {
-                sura_id: row.get(0)?,
-                aya_id: row.get(1)?,
-                sura_name: row.get(2)?,
-                text: row.get(3)?,
-            })
+    let rows = stmt.query_map(param_refs.as_slice(), |row| {
+        Ok(SearchResult {
+            sura_id: row.get(0)?,
+            aya_id: row.get(1)?,
+            sura_name: row.get(2)?,
+            text: row.get(3)?,
         })
-        .ok();
+    })?;
 
-    match rows {
-        Some(iter) => iter.filter_map(|r| r.ok()).collect(),
-        None => vec![],
+    let mut results = Vec::new();
+    for row in rows {
+        results.push(row?);
     }
+    Ok(results)
 }
 
 /// Build SQL from the AST.
@@ -57,26 +84,27 @@ fn build_sql(ast: &QueryNode, limit: usize) -> (String, Vec<String>) {
     let mut params = Vec::new();
 
     match ast {
-        // Field query for sura name
+        // Field query for sura name (supports both bare terms and quoted phrases)
         QueryNode::Field { field, value } if is_sura_field(field) => {
-            if let QueryNode::Term(sura_name) = value.as_ref() {
-                // Normalize search term and find matching sura ID by comparing
-                // normalized forms, so e.g. "ال عمران" matches "آل عمران"
-                let sura_id = find_sura_id_by_name(sura_name);
-                if sura_id == 0 {
-                    return (empty_sql(), params);
-                }
-                let sql = format!(
-                    "SELECT a.sura_id, a.aya_id, a.sura_name, a.text \
-                     FROM aya a \
-                     WHERE a.sura_id = ?1 \
-                     ORDER BY a.gid LIMIT {}",
-                    limit
-                );
-                params.push(sura_id.to_string());
-                return (sql, params);
+            let sura_name = match value.as_ref() {
+                QueryNode::Term(s) | QueryNode::Phrase(s) => s,
+                _ => return (empty_sql(), params),
+            };
+            // Normalize search term and find matching sura ID by comparing
+            // normalized forms, so e.g. "ال عمران" matches "آل عمران"
+            let sura_id = find_sura_id_by_name(sura_name);
+            if sura_id == 0 {
+                return (empty_sql(), params);
             }
-            (empty_sql(), params)
+            let sql = format!(
+                "SELECT a.sura_id, a.aya_id, a.sura_name, a.text \
+                 FROM aya a \
+                 WHERE a.sura_id = ?1 \
+                 ORDER BY a.gid LIMIT {}",
+                limit
+            );
+            params.push(sura_id.to_string());
+            (sql, params)
         }
 
         // For other queries, build FTS5 MATCH expression
@@ -169,7 +197,13 @@ fn ast_to_fts5(node: &QueryNode, _params: &mut Vec<String>) -> String {
             let r = ast_to_fts5(right, _params);
             if l.is_empty() { return r; }
             if r.is_empty() { return l; }
-            format!("({} AND {})", l, r)
+            // FTS5 uses NOT as a binary operator (a NOT b), not AND NOT.
+            // Detect when the right operand is a NOT node and emit correctly.
+            if matches!(right.as_ref(), QueryNode::Not(_)) {
+                format!("({} {})", l, r)
+            } else {
+                format!("({} AND {})", l, r)
+            }
         }
         QueryNode::Or(left, right) => {
             let l = ast_to_fts5(left, _params);

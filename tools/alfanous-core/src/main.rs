@@ -61,7 +61,13 @@ fn main() {
                 }
             };
 
-            let results = search::execute(&conn, &query, limit);
+            let results = match search::execute(&conn, &query, limit) {
+                Ok(r) => r,
+                Err(e) => {
+                    eprintln!("Search error: {}", e);
+                    std::process::exit(1);
+                }
+            };
 
             if results.is_empty() {
                 println!("\n No results found.\n");
