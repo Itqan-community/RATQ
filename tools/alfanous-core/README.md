@@ -89,8 +89,10 @@ data/
   lemmas.json    — Lemma → root mappings
 ```
 
-## Credits
+## Credits & Licensing
 
 - Morphology data from [Quranic Arabic Corpus](http://corpus.quran.com/) v0.4 (Kais Dukes, GPL)
 - Quran text from [Tanzil](http://tanzil.info/) (CC BY-ND 3.0)
 - Original Alfanous project by [Alfanous Team](https://github.com/Alfanous-team/alfanous)
+
+**Redistribution note:** This crate bundles data derived from the above sources. If you redistribute this tool or its built artifacts, you must comply with their respective licenses: GPL for the morphology data and CC BY-ND 3.0 for the Quran text (no modifications to the text, attribution required).
