@@ -1,0 +1,20 @@
+[package]
+name = "alfanous-core"
+version = "0.1.0"
+edition = "2024"
+rust-version = "1.85"
+description = "Alfanous Quran semantic search engine — Rust port with full query language support"
+license = "MIT"
+
+[dependencies]
+clap = { version = "4", features = ["derive"] }
+rusqlite = { version = "0.32", features = ["bundled"] }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+regex = "1"
+unicode-normalization = "0.1"
+
+[dev-dependencies]
+assert_cmd = "2"
+predicates = "3"
+tempfile = "3"
