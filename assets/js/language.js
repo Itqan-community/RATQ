@@ -38,10 +38,10 @@ const LanguageManager = {
     this.languageMap.clear();
     
     files.forEach(file => {
-      // Check if file has -AR suffix
-      if (file.includes(' - AR.md') || file.includes(' -AR.md')) {
-        // Extract base filename
-        const baseFile = file.replace(/ - AR\.md$/, '.md').replace(/ -AR\.md$/, '.md');
+      // Check if file is in ar/ directory
+      if (file.startsWith('ar/')) {
+        // Extract base filename (remove ar/ prefix)
+        const baseFile = file.substring(3);
         // Map base file to AR version
         this.languageMap.set(baseFile, file);
         // Also map AR version to itself
@@ -50,7 +50,7 @@ const LanguageManager = {
         // Map base file to itself
         this.languageMap.set(file, file);
         // Check if AR version exists
-        const arVersion = file.replace(/\.md$/, ' - AR.md');
+        const arVersion = 'ar/' + file;
         if (files.includes(arVersion)) {
           this.languageMap.set(arVersion, arVersion);
         }
@@ -65,20 +65,20 @@ const LanguageManager = {
    */
   getLocalizedFile(filePath) {
     if (this.currentLanguage === 'ar') {
-      // Get base file path (remove AR suffix if already present)
+      // Get base file path (remove ar/ prefix if already present)
       const baseFile = this.getBaseFile(filePath);
       
       // Check if language map has an AR version for this base file
       if (this.languageMap.has(baseFile)) {
         const mappedFile = this.languageMap.get(baseFile);
-        // If mapped file is an AR version, return it
-        if (mappedFile.includes(' - AR.md') || mappedFile.includes(' -AR.md')) {
+        // If mapped file is an AR version (in ar/ directory), return it
+        if (mappedFile.startsWith('ar/')) {
           return mappedFile;
         }
       }
       
       // Try constructing AR version and check if it exists in map
-      const arVersion = baseFile.replace(/\.md$/, ' - AR.md');
+      const arVersion = 'ar/' + baseFile;
       if (this.languageMap.has(arVersion)) {
         return arVersion;
       }
@@ -86,8 +86,8 @@ const LanguageManager = {
       // Fallback to base file if AR doesn't exist
       return baseFile;
     } else {
-      // For English, remove -AR suffix if present
-      return filePath.replace(/ - AR\.md$/, '.md').replace(/ -AR\.md$/, '.md');
+      // For English, remove ar/ prefix if present
+      return this.getBaseFile(filePath);
     }
   },
   
@@ -97,7 +97,10 @@ const LanguageManager = {
    * @returns {string} Base file path
    */
   getBaseFile(filePath) {
-    return filePath.replace(/ - AR\.md$/, '.md').replace(/ -AR\.md$/, '.md');
+    if (filePath.startsWith('ar/')) {
+      return filePath.substring(3);
+    }
+    return filePath;
   },
   
   /**
@@ -106,7 +109,8 @@ const LanguageManager = {
    * @returns {boolean} True if AR version exists
    */
   hasArabicVersion(filePath) {
-    const arVersion = filePath.replace(/\.md$/, ' - AR.md');
+    const baseFile = this.getBaseFile(filePath);
+    const arVersion = 'ar/' + baseFile;
     return this.languageMap.has(arVersion);
   },
   

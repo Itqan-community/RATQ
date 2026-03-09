@@ -34,6 +34,9 @@ def extract_title_from_content(content):
 
 def get_file_group(path):
     """Determine group based on directory"""
+    # Strip ar/ prefix for group determination
+    if path.startswith('ar/'):
+        path = path[3:]
     if path.startswith('Apps/'):
         return 'apps'
     elif path.startswith('Technologies/'):
@@ -69,10 +72,10 @@ def generate_index():
                 if not title:
                     title = extract_title_from_content(content)
                 if not title:
-                    title = os.path.splitext(filename)[0].replace(' - AR', '').replace(' -AR', '')
+                    title = os.path.splitext(filename)[0]
                 
-                # Determine language
-                is_ar = ' - AR.md' in filename or ' -AR.md' in filename
+                # Determine language (files under ar/ directory are Arabic)
+                is_ar = rel_path.startswith('ar' + os.sep) or rel_path.startswith('ar/')
                 language = 'ar' if is_ar else 'en'
                 
                 # Clean content for search index (remove markdown syntax mostly done by flexsearch, 

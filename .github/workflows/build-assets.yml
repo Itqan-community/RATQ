@@ -38,14 +38,25 @@ jobs:
             # Remove leading ./
             clean_path="${file#./}"
             
-            # Extract title from filename (remove .md, remove - AR suffix)
+            # Extract title from filename (remove .md extension)
             filename=$(basename "$clean_path" .md)
-            title=$(echo "$filename" | sed 's/ - AR$//' | sed 's/ -AR$//')
+            title="$filename"
             
-            # Determine group based on directory
-            if [[ "$clean_path" == "Apps/"* ]]; then
+            # Determine if this is an Arabic file (lives under ar/ directory)
+            is_ar=false
+            if [[ "$clean_path" == "ar/"* ]]; then
+              is_ar=true
+            fi
+            
+            # Determine group based on directory (strip ar/ prefix first)
+            group_path="$clean_path"
+            if [ "$is_ar" = true ]; then
+              group_path="${clean_path#ar/}"
+            fi
+            
+            if [[ "$group_path" == "Apps/"* ]]; then
               group="apps"
-            elif [[ "$clean_path" == "Technologies/"* ]]; then
+            elif [[ "$group_path" == "Technologies/"* ]]; then
               group="technologies"
             else
               group="root"
@@ -53,8 +64,8 @@ jobs:
             
             # Check if AR version exists (only for non-AR files)
             has_ar="false"
-            if [[ "$clean_path" != *" - AR.md" ]] && [[ "$clean_path" != *"-AR.md" ]]; then
-              ar_path="${clean_path%.md} - AR.md"
+            if [ "$is_ar" = false ]; then
+              ar_path="ar/$clean_path"
               if [ -f "$ar_path" ]; then
                 has_ar="true"
               fi

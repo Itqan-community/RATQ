@@ -66,8 +66,8 @@ const MarkdownRenderer = {
   getTitleFromFilename(filePath) {
     // Get filename without path
     const filename = filePath.split('/').pop();
-    // Remove .md extension and -AR suffix
-    let title = filename.replace(/\.md$/, '').replace(/\s*-\s*AR$/, '');
+    // Remove .md extension
+    let title = filename.replace(/\.md$/, '');
     return title;
   },
   

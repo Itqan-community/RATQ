@@ -104,19 +104,19 @@ const NavigationManager = {
       technologies: []
     };
 
-    // Track which base files have AR versions (from explicit AR files in manifest or hasAR flag)
+    // Track which base files have AR versions (from ar/ directory files in manifest or hasAR flag)
     const baseFilesWithAR = new Set();
 
     // First pass: identify base files that have AR versions
     this.fileManifest.forEach(file => {
-      const isARFile = file.path.includes(' - AR.md') || file.path.includes(' -AR.md');
+      const isARFile = file.path.startsWith('ar/');
       if (isARFile) {
-        // Explicit AR file in manifest
-        const baseFile = file.path.replace(/ - AR\.md$/, '.md').replace(/ -AR\.md$/, '.md');
+        // File in ar/ directory - the base file is the path without the ar/ prefix
+        const baseFile = file.path.substring(3);
         baseFilesWithAR.add(baseFile);
       } else if (file.hasAR === true) {
         // Base file with hasAR flag - check if AR file exists in manifest
-        const arPath = file.path.replace(/\.md$/, ' - AR.md');
+        const arPath = 'ar/' + file.path;
         const arFileExists = this.fileManifest.some(f => f.path === arPath);
         if (arFileExists) {
           baseFilesWithAR.add(file.path);
@@ -129,9 +129,9 @@ const NavigationManager = {
 
     // Second pass: add files based on language
     this.fileManifest.forEach(file => {
-      const isARFile = file.path.includes(' - AR.md') || file.path.includes(' -AR.md');
+      const isARFile = file.path.startsWith('ar/');
       const baseFile = isARFile
-        ? file.path.replace(/ - AR\.md$/, '.md').replace(/ -AR\.md$/, '.md')
+        ? file.path.substring(3)
         : file.path;
 
       if (currentLang === 'en') {
@@ -218,7 +218,7 @@ const NavigationManager = {
       return file.title;
     }
     // Fallback: extract title from filename
-    const baseName = path.split('/').pop().replace(/\.md$/, '').replace(/ - AR$/, '');
+    const baseName = path.split('/').pop().replace(/\.md$/, '');
     return baseName;
   },
 
@@ -233,8 +233,8 @@ const NavigationManager = {
       return null;
     }
 
-    // Check if file has -AR suffix
-    if (!filePath.includes(' - AR.md') && !filePath.includes(' -AR.md')) {
+    // Check if file is in ar/ directory
+    if (!filePath.startsWith('ar/')) {
       return null;
     }
 
@@ -303,7 +303,7 @@ const NavigationManager = {
     const promises = this.fileManifest
       .filter(file => file.hasAR)
       .map(file => {
-        const arPath = file.path.replace(/\.md$/, ' - AR.md');
+        const arPath = 'ar/' + file.path;
         return this.fetchTitleFromFile(arPath);
       });
 
@@ -322,8 +322,8 @@ const NavigationManager = {
     }
 
     // For AR files: check if base file has hasAR flag (AR file might not be explicitly listed)
-    if (path.includes(' - AR.md') || path.includes(' -AR.md')) {
-      const baseFile = path.replace(/ - AR\.md$/, '.md').replace(/ -AR\.md$/, '.md');
+    if (path.startsWith('ar/')) {
+      const baseFile = path.substring(3);
       const baseFileEntry = this.fileManifest.find(f => f.path === baseFile);
       if (baseFileEntry && baseFileEntry.hasAR === true) {
         return true;
