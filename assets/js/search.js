@@ -256,7 +256,9 @@ const SearchManager = {
 
         if (parsed) {
           // Determine language from file path
-          const isAR = filePath.startsWith('ar/');
+          const isAR = window.LanguageManager
+            ? window.LanguageManager.isArPath(filePath)
+            : (filePath.includes('/ar/'));
           const language = isAR ? 'ar' : 'en';
 
           // Get group from NavigationManager
@@ -439,7 +441,7 @@ const SearchManager = {
 
     // Search using FlexSearch (encoder normalizes query automatically)
     const results = this.index.search(trimmedQuery, {
-      limit: options.limit || 50,
+      limit: options.limit || 500,
       suggest: options.suggest || false
     });
 

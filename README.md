@@ -10,12 +10,12 @@
 ### We have not found this collection anywhere else, if you know of any similar efforts please let us know.
 
 # These are main components of the projects
-### [Development Roadmap](./Development%20Guidelines.md) Your guide to develop Quran apps
-### [Available Apps](./Available%20Apps.md) List of available Quran apps, might help you find inspiration
-### [Technologies](./Technologies/Technologies.md) List of technologies that can be used in Quran apps
+### [Development Roadmap](./docs/en/development-guidelines.md) Your guide to develop Quran apps
+### [Available Apps](./docs/en/available-apps.md) List of available Quran apps, might help you find inspiration
+### [Technologies](./content/technologies/Technologies.md) List of technologies that can be used in Quran apps
 
 ### This is a living document, please contribute if you know of any resources that are not listed here. Or if you find any errors.
 
 You can use [Obsidian](https://obsidian.md/) to navigate easily through this project
 Or through 
-[https://itqan-community.github.io/RATQ/](https://itqan-community.github.io/RATQ/)
+[RATQ.itqan.dev](https://ratq.itqan.dev/)
