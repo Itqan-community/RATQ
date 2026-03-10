@@ -1,3 +1,10 @@
+---
+title: "Quran Foundation"
+arTitle: "مؤسسة القرآن"
+group: "docs"
+language: "en"
+---
+
 # Quran Foundation
 
 [Quran.Foundation](https://quran.foundation/) is a deeply committed, purpose-driven non-profit organization dedicated to building platforms and supporting projects that aim to transform every human through Quranic guidance by making the Quran accessible and helping people engage deeply with its teachings through digital platforms.

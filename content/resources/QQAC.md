@@ -1,3 +1,10 @@
+---
+title: "QQAC"
+arTitle: "سياق الأسئلة والأجوبة القرآنية (QQAC)"
+group: "resources"
+language: "en"
+---
+
 # Quran Question Answer Context
 
 ## Overview

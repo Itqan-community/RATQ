@@ -1,3 +1,10 @@
+---
+title: "eQuran"
+arTitle: "القرآن الإلكتروني"
+group: "apps"
+language: "en"
+---
+
 
 # eQuran
 

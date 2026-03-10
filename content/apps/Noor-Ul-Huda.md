@@ -1,3 +1,10 @@
+---
+title: "Noor-Ul-Huda"
+arTitle: "نور الهدى"
+group: "apps"
+language: "en"
+---
+
 # Noor Ul Huda
 
 Noor-Ul-Huda is an offline Quran app with Prayer Time and Duas (supplications).

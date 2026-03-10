@@ -3,7 +3,7 @@
  * Handles language switching between English and Arabic versions of files.
  *
  * New convention (directory-based):
- *   docs/en/file.md  <->  docs/ar/file.md
+ *   docs/file.md  <->  docs/ar/file.md
  *   content/cat/file.md  <->  content/cat/ar/file.md
  */
 
@@ -49,14 +49,14 @@ const LanguageManager = {
 
   /**
    * Derive the Arabic path from an English base path.
-   * docs/en/X.md  →  docs/ar/X.md
+   * docs/X.md  →  docs/ar/X.md
    * content/cat/X.md  →  content/cat/ar/X.md
    * @param {string} enPath
    * @returns {string|null}
    */
   toArPath(enPath) {
-    if (enPath.startsWith('docs/en/')) {
-      return enPath.replace('docs/en/', 'docs/ar/');
+    if (enPath.startsWith('docs/')) {
+      return enPath.replace('docs/', 'docs/ar/');
     }
     // content/<category>/file.md  →  content/<category>/ar/file.md
     const lastSlash = enPath.lastIndexOf('/');
@@ -68,14 +68,14 @@ const LanguageManager = {
 
   /**
    * Derive the English base path from an Arabic path.
-   * docs/ar/X.md  →  docs/en/X.md
+   * docs/ar/X.md  →  docs/X.md
    * content/cat/ar/X.md  →  content/cat/X.md
    * @param {string} arPath
    * @returns {string}
    */
   toEnPath(arPath) {
     if (arPath.startsWith('docs/ar/')) {
-      return arPath.replace('docs/ar/', 'docs/en/');
+      return arPath.replace('docs/ar/', 'docs/');
     }
     // content/cat/ar/file.md  →  content/cat/file.md
     return arPath.replace('/ar/', '/');

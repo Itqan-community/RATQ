@@ -13,10 +13,10 @@ const NavigationManager = {
    */
   fileManifest: [
     // Docs
-    { path: 'docs/en/index.md', title: 'RATQ', arTitle: 'خارطة الطريق والتقنيات للقرآن', group: 'docs', hasAR: true },
-    { path: 'docs/en/available-apps.md', title: 'Available Apps', arTitle: 'التطبيقات المتاحة', group: 'docs', hasAR: true },
-    { path: 'docs/en/development-guidelines.md', title: 'Development Guidelines', arTitle: 'دليل التطوير القرآني', group: 'docs', hasAR: true },
-    { path: 'docs/en/quran-foundation.md', title: 'Quran Foundation', arTitle: 'مؤسسة القرآن', group: 'docs', hasAR: true },
+    { path: 'docs/index.md', title: 'RATQ', arTitle: 'خارطة الطريق والتقنيات للقرآن', group: 'docs', hasAR: true },
+    { path: 'docs/available-apps.md', title: 'Available Apps', arTitle: 'التطبيقات المتاحة', group: 'docs', hasAR: true },
+    { path: 'docs/development-guidelines.md', title: 'Development Guidelines', arTitle: 'دليل التطوير القرآني', group: 'docs', hasAR: true },
+    { path: 'docs/quran-foundation.md', title: 'Quran Foundation', arTitle: 'مؤسسة القرآن', group: 'docs', hasAR: true },
 
     // Apps
     { path: 'content/apps/eQuran.md', title: 'eQuran', arTitle: 'القرآن الإلكتروني', group: 'apps', hasAR: true },
@@ -38,7 +38,7 @@ const NavigationManager = {
     { path: 'content/technologies/alfanous.md', title: 'Alfanous', arTitle: 'ألفانوس', group: 'technologies', hasAR: true },
     { path: 'content/technologies/Alfanous_Build_Process.md', title: 'Alfanous Build Process', arTitle: 'عملية بناء ألفانوس', group: 'technologies', hasAR: true },
     { path: 'content/technologies/Kalimat.md', title: 'Kalimat', arTitle: 'كلمات (Kalimat)', group: 'technologies', hasAR: true },
-    { path: 'content/technologies/MushafImad.md', title: 'MushafImad', arTitle: 'مصحف عماد', group: 'technologies', hasAR: true},
+    { path: 'content/technologies/MushafImad.md', title: 'MushafImad', arTitle: 'مصحف عماد', group: 'technologies', hasAR: true },
     { path: 'content/technologies/othman.md', title: 'Othman', arTitle: 'متصفح القرآن عثمان', group: 'technologies', hasAR: true },
     { path: 'content/technologies/search_engines_benchmarking.md', title: 'Search Engines Benchmarking', arTitle: 'مقارنة محركات البحث', group: 'technologies', hasAR: true },
     { path: 'content/technologies/QuranAnalysis.md', title: 'QuranAnalysis', arTitle: 'تحليل القرآن', group: 'technologies', hasAR: true },

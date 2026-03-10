@@ -1,3 +1,10 @@
+---
+title: "Development Guidelines"
+arTitle: "دليل التطوير القرآني"
+group: "docs"
+language: "en"
+---
+
 When you start developing a Quranic App (mobile or web), You will need to take some decisions and make some choices:
 
 # Content

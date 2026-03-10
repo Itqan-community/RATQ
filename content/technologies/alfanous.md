@@ -1,3 +1,10 @@
+---
+title: "Alfanous"
+arTitle: "ألفانوس"
+group: "technologies"
+language: "en"
+---
+
 # Alfanous: Arabic Quran Search Engine API
 
 ## [Overview](#table-of-contents)

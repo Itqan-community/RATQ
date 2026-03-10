@@ -1,3 +1,10 @@
+---
+title: "QuranEnc"
+arTitle: "الموسوعة القرآنية"
+group: "resources"
+language: "en"
+---
+
 # QuranEnc
 
 ## Overview

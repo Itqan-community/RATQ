@@ -1,3 +1,10 @@
+---
+title: "QuranAnalysis"
+arTitle: "تحليل القرآن"
+group: "technologies"
+language: "en"
+---
+
 # Quran Analysis - Complete Documentation
 
 ## Table of Contents

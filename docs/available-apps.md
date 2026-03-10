@@ -1,3 +1,10 @@
+---
+title: "Available Apps"
+arTitle: "التطبيقات المتاحة"
+group: "docs"
+language: "en"
+---
+
 # Comparison Criteria
 
 #### Technology

@@ -1,3 +1,9 @@
+---
+title: "quran-json"
+group: "resources"
+language: "en"
+---
+
 # quran-json
 
 ## Introduction

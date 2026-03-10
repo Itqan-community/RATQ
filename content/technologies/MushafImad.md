@@ -1,3 +1,10 @@
+---
+title: "MushafImad"
+arTitle: "مصحف عماد"
+group: "technologies"
+language: "en"
+---
+
 # Mushaf Imad
 
 [MushafImad](https://github.com/ibo2001/MushafImad) is a Swift Package that delivers a fully featured Mushaf (Quran) reading experience for iOS 17+ and macOS 14+.
