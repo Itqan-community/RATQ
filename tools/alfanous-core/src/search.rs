@@ -287,7 +287,16 @@ fn ast_to_fts5(node: &QueryNode, _params: &mut Vec<String>) -> String {
 /// Generate common Arabic spelling variants for spell-tolerant search.
 fn generate_spell_variants(word: &str) -> Vec<String> {
     let normalized = normalize::normalize_for_search(word);
+    if normalized.is_empty() {
+        return vec![];
+    }
     let mut variants = vec![normalized.clone()];
+
+    // After normalization, ة has become ه.
+    // Generate a ة variant for matching un-normalized contexts.
+    if normalized.contains('ه') {
+        variants.push(normalized.replace('ه', "\u{0629}"));
+    }
 
     // With and without ال
     let stripped = normalize::strip_definite_article(&normalized);
@@ -297,6 +306,10 @@ fn generate_spell_variants(word: &str) -> Vec<String> {
     if !normalized.starts_with("ال") {
         variants.push(format!("ال{}", normalized));
     }
+
+    // Deduplicate while preserving order
+    let mut seen = std::collections::HashSet::new();
+    variants.retain(|v| seen.insert(v.clone()));
 
     variants
 }

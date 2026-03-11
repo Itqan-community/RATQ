@@ -1,10 +1,9 @@
+mod common;
+
 use alfanous_core::db;
 
 fn quran_path() -> &'static str {
-    concat!(
-        env!("CARGO_MANIFEST_DIR"),
-        "/../quran-analysis/data/quran-simple-clean.txt"
-    )
+    common::quran_path()
 }
 
 #[test]

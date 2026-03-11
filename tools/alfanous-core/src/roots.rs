@@ -222,6 +222,23 @@ mod tests {
     }
 
     #[test]
+    fn buckwalter_to_arabic_drops_unmapped_chars() {
+        // Corpus-specific chars like 2, @, . should be dropped
+        let result = buckwalter_to_arabic("Sl2p");
+        assert!(
+            !result.contains('2'),
+            "Unmapped char '2' should be dropped, got: {}",
+            result
+        );
+        let result2 = buckwalter_to_arabic("k@tb");
+        assert!(
+            !result2.contains('@'),
+            "Unmapped char '@' should be dropped, got: {}",
+            result2
+        );
+    }
+
+    #[test]
     fn buckwalter_strips_diacritics() {
         // Arabic with tashkeel → Buckwalter should only get consonants
         let arabic = "كَتَبَ"; // kataba

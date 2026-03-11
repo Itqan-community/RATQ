@@ -1,12 +1,10 @@
+mod common;
+
 use alfanous_core::db;
 use alfanous_core::search;
 
 fn setup_db() -> rusqlite::Connection {
-    let quran_path = concat!(
-        env!("CARGO_MANIFEST_DIR"),
-        "/../quran-analysis/data/quran-simple-clean.txt"
-    );
-    db::create_in_memory(quran_path).expect("Failed to create test DB")
+    db::create_in_memory(common::quran_path()).expect("Failed to create test DB")
 }
 
 #[test]
