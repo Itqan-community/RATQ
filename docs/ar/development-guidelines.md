@@ -32,25 +32,24 @@ title: دليل التطوير القرآني
 
 مصحف المدينة: مجمع الملك فهد للقرآن الكريم. [تصفّحه من هنا](https://qurancomplex.gov.sa/quran-dev/)
 
-7. رواية الدوري:
-
-
-مصحف المدينة: مجمع الملك فهد للقرآن الكريم. [تصفّحه من هنا](https://qurancomplex.gov.sa/quran-dev/)
-
-8. رواية السوسي:
+5. رواية الدوري:
 
 مصحف المدينة: مجمع الملك فهد للقرآن الكريم. [تصفّحه من هنا](https://qurancomplex.gov.sa/quran-dev/)
 
-9. رواية هشام:
+6. رواية السوسي:
+
+مصحف المدينة: مجمع الملك فهد للقرآن الكريم. [تصفّحه من هنا](https://qurancomplex.gov.sa/quran-dev/)
+
+7. رواية هشام:
 
   مصحف المدينة: مجمع الملك فهد للقرآن الكريم. [تصفّحه من هنا](https://qurancomplex.gov.sa/quran-dev/)
 
 ## 2. العلامات في بداية ونهاية كلّ آية
 
-> [!NOTE] تنويه
+> تنويه
 > بعض المصادر لا تضمّن علامات في بداية ونهاية كلّ آية. قد يكون عليك فصل الآيات بنفسك.
 
-> [!NOTE] تنويه
+> تنويه
 > التلاوات قد تختلف في عدد الآيات لكل رواية.
 > على سبيل المثال: في رواية حفص هناك 6236 آية بينما في رواية ورش هناك 6214 آية. القرآن نفسه، لكنّ الآيات مقسومة بطريقة مختلفة.
 > عليك أخذ هذا بعين الاعتبار عند تطوير تطبيقك
@@ -66,25 +65,44 @@ title: دليل التطوير القرآني
 يمكنك الحصول على النصّ القرآنيّ بصيغة JSON أو CSV أو SQL من هذه المصادر:
 
 1. رواية حفص:
-1. قرآن فاونديشن: [من الرابط التالي](https://api-docs.quran.foundation/docs/content_apis_versioned/quran-verses-indopak) [API]
-1. مجمع الملك فهد للقرآن الكريم: [من الرابط التالي](https://qurancomplex.gov.sa/quran-dev/) [csv, html, json, sql, txt, xlsx, xml] - [Downloadable]
-1. كلّ آية - Every Ayah: [من الرابط التالي](https://everyayah.com/data/XML/Arabic/) [XML]
-1. تنزيل: [من الرابط التالي](https://tanzil.net/download/) [Bar Seperated Values, XML, SQL (MySql dump)]
-1. مصحف موري: [من الرابط التالي](https://github.com/Zizwar/mushaf-mauri/tree/main/assets/pages/hafsTajweed)
-1. رواية ورش:
-1. مصحف المدينة: مجمع الملك فهد للقرآن الكريم: [من الرابط التالي](https://qurancomplex.gov.sa/quran-dev/) [csv, html, json, sql, txt, xlsx, xml] - [Downloadable]
-1. مصحف موري: [من الرابط التالي](https://github.com/Zizwar/mushaf-mauri/tree/main/assets/pages/muhammadi)
-1. رواية شعبة:
-1. مصحف المدينة: مجمع الملك فهد للقرآن الكريم: [من الرابط التالي](https://qurancomplex.gov.sa/quran-dev/) [csv, html, json, sql, txt, xlsx, xml] - [Downloadable]
-1. رواية قالون:
-1. مصحف المدينة: مجمع الملك فهد للقرآن الكريم: [من الرابط التالي](https://qurancomplex.gov.sa/quran-dev/) [csv, html, json, sql, txt, xlsx, xml] - [Downloadable]
-1. رواية الدوري:
-1. مصحف المدينة: مجمع الملك فهد للقرآن الكريم: [من الرابط التالي](https://qurancomplex.gov.sa/quran-dev/) [csv, html, json, sql, txt, xlsx, xml] - [Downloadable]
-1. رواية السوسي:
-1. مصحف المدينة: مجمع الملك فهد للقرآن الكريم: [من الرابط التالي](https://qurancomplex.gov.sa/quran-dev/) [csv, html, json, sql, txt, xlsx, xml] - [Downloadable]
-1. رواية هشام:
-1. مصحف المدينة: مجمع الملك فهد للقرآن الكريم: [من الرابط التالي](https://qurancomplex.gov.sa/quran-dev/) [csv, html, json, sql, txt, xlsx, xml] - [Downloadable]
-1. مجموعة: من موقع قُل: [من الرابط التالي](https://qul.tarteel.ai/resources/quran-script)
+
+    أ. قرآن فاونديشن: [من الرابط التالي](https://api-docs.quran.foundation/docs/content_apis_versioned/quran-verses-indopak) [API]
+
+    ب. مجمع الملك فهد للقرآن الكريم: [من الرابط التالي](https://qurancomplex.gov.sa/quran-dev/) [csv, html, json, sql, txt, xlsx, xml] - [Downloadable]
+
+    جـ. كلّ آية - Every Ayah: [من الرابط التالي](https://everyayah.com/data/XML/Arabic/) [XML]
+
+    د. تنزيل: [من الرابط التالي](https://tanzil.net/download/) [Bar Seperated Values, XML, SQL (MySql dump)]
+
+    هـ. مصحف موري: [من الرابط التالي](https://github.com/Zizwar/mushaf-mauri/tree/main/assets/pages/hafsTajweed)
+
+2. رواية ورش:
+
+    أ. مصحف المدينة: مجمع الملك فهد للقرآن الكريم: [من الرابط التالي](https://qurancomplex.gov.sa/quran-dev/) [csv, html, json, sql, txt, xlsx, xml] - [Downloadable]
+
+    ب. مصحف موري: [من الرابط التالي](https://github.com/Zizwar/mushaf-mauri/tree/main/assets/pages/muhammadi)
+
+3. رواية شعبة :
+
+    أ. مصحف المدينة: مجمع الملك فهد للقرآن الكريم: [من الرابط التالي](https://qurancomplex.gov.sa/quran-dev/) [csv, html, json, sql, txt, xlsx, xml] - [Downloadable]
+
+4. رواية قالون:
+
+    أ. مصحف المدينة: مجمع الملك فهد للقرآن الكريم: [من الرابط التالي](https://qurancomplex.gov.sa/quran-dev/) [csv, html, json, sql, txt, xlsx, xml] - [Downloadable]
+
+5. رواية الدوري:
+
+    أ. مصحف المدينة: مجمع الملك فهد للقرآن الكريم: [من الرابط التالي](https://qurancomplex.gov.sa/quran-dev/) [csv, html, json, sql, txt, xlsx, xml] - [Downloadable]
+
+6. رواية السوسي:
+
+    أ. مصحف المدينة: مجمع الملك فهد للقرآن الكريم: [من الرابط التالي](https://qurancomplex.gov.sa/quran-dev/) [csv, html, json, sql, txt, xlsx, xml] - [Downloadable]
+
+7. رواية هشام:
+
+    أ. مصحف المدينة: مجمع الملك فهد للقرآن الكريم: [من الرابط التالي](https://qurancomplex.gov.sa/quran-dev/) [csv, html, json, sql, txt, xlsx, xml] - [Downloadable]
+
+    ب. مجموعة: من موقع قُل: [من الرابط التالي](https://qul.tarteel.ai/resources/quran-script)
 
 ## 4. البحث
 
@@ -110,7 +128,7 @@ title: دليل التطوير القرآني
 
 ## 5. الترجمات
 
-> [!NOTE] أخطاء!
+> أخطاء!
 > الترجمات مكتوبة بأيدي البشر، لذا وجود خطأ في هذه الترجمات متوقع. وبالتالي: توقّع تحديثات متواترة لهذه الترجمات، تأكد من فضلك أن تستخدم النسخة الأحدث من الترجمة، وأن تتابع تحديث تطبيقك بأحدث النسخ المصححة من الترجمات، وأن تستخدم التصحيحات من أفضل المصادر المعروفة.
 > نشجّع كلّ المطورين على استخدام الـAPI أو أي نظام إدارة محتوى CMS للمحافظة على أحدث النسخ. لتجنّب نشر المعلومات الخاطئة.
 
@@ -126,10 +144,10 @@ title: دليل التطوير القرآني
 
 قد ترغب أيضاً بتضمن تفسير للقرآن الكريم في تطبيقك. هناك العديد من كتب التفسير المتاحة. بعضهم أشهر من الآخر، وقد تزداد هذه القائمة من التفاسير مع نشر المزيد من كتب التفسير.
 
-> [!NOTE] حقوق النشر!
+> حقوق النشر!
 > التفاسير كتب محمية بقوانين حقوق النشر، تأكد من تحققك من حقوق النشر لكل كتاب تفسير ترغب باستخدامه وتضمينه في تطبيقك. إن لم تكن الرخصة تسمح باستخدام الكتاب، حاول التواصل مع الناشرين واحصل على موافقتهم.
 
-> [!NOTE] أخطاء!
+> أخطاء!
 > في التفاسير مشاكل مشابهة لمشاكل الترجمات، حيث قد يطرأ على نصّ التفاسير أخطاء ويصدر لها تصحيحات مع الوقت. تأكد من استخدامك لأحدث نسخة من بيانات الكتاب الذي ستسخدمه. حتى الكتب القديمة جداً تتلقى بعض التحديثات للأخطاء الطباعية والإملائية والتصويرية.
 
 ### مصادر

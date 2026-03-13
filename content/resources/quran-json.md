@@ -1,5 +1,6 @@
 ---
 title: "quran-json"
+arTitle: "القرآن JSON"
 group: "resources"
 language: "en"
 ---
