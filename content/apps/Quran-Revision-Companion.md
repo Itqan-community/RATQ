@@ -1,3 +1,10 @@
+---
+title: "Quran Revision Companion"
+arTitle: "رفيق مراجعة القرآن"
+group: "apps"
+language: "en"
+---
+
 # Quran Revision Companion
 
 This is an app for people that are memorizing or have already memorized the holy quran aka huffaz.

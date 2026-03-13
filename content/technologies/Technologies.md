@@ -1,3 +1,10 @@
+---
+title: "Technologies"
+arTitle: "التقنيات"
+group: "technologies"
+language: "en"
+---
+
 # Technologies
 
 | TechNology                                  | URL                                                                          | Category                                                                 | Open Source | Programming language | Require Signup | API/UI/MCP/SDK | production-ready/NOT | Documentation | Platform            | Star count | Creation date | Last update date | Contributors count |

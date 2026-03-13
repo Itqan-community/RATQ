@@ -1,6 +1,13 @@
+---
+title: "Quran.com API"
+arTitle: "واجهة quran.com البرمجية"
+group: "resources"
+language: "en"
+---
+
 # quran.com-API
 
-[quran.com-API](https://api-docs.quran.foundation/docs/category/content-apis/) is a RESTful API provided by [Quran.Foundation](../../docs/en/quran-foundation.md) that is designed to empower Muslim App developers to build on top of the same backend that powers Quran Foundation apps. These APIs provide the functionality and content on Quran.com and QuranReflect, facilitating easy access to comprehensive ayah and surah level content. User authentication enhances the App's functionality, enabling the sync of bookmarks, notes, reflections, reading history, streaks, and more. By integrating with this APIs users can enjoy a rich connected experience across Quranic apps, and you can focus on innovating unique solutions that the world needs.
+[quran.com-API](https://api-docs.quran.foundation/docs/category/content-apis/) is a RESTful API provided by [Quran.Foundation](../../docs/quran-foundation.md) that is designed to empower Muslim App developers to build on top of the same backend that powers Quran Foundation apps. These APIs provide the functionality and content on Quran.com and QuranReflect, facilitating easy access to comprehensive ayah and surah level content. User authentication enhances the App's functionality, enabling the sync of bookmarks, notes, reflections, reading history, streaks, and more. By integrating with this APIs users can enjoy a rich connected experience across Quranic apps, and you can focus on innovating unique solutions that the world needs.
 
 Quran.Foundation Content APIs offer programmatic access to the Quran's core content like chapters, verses, recitations, translations, and more, distinct from user-specific data like notes and bookmarks provided by User-related APIs.
 

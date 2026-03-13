@@ -5,7 +5,7 @@
 > **ملاحظة**: لم أقم بمراجعة إجابات الأسئلة المقدمة، لذا فإن التحقق من صحتها يعود إليك. تأكد من التحقق منها جيدًا قبل استخدامها.
 
 1. [https://khuddam.org.uk/](https://khuddam.org.uk/)
-    
+
     منظمة مقرها المملكة المتحدة تهدف إلى تقديم رسالة الإسلام السلمية وإزالة المفاهيم الخاطئة وسوء الفهم الشائع حول العقيدة.
 
     أحد مواردها هو ملف PDF يحتوي على أكثر من 380 سؤالًا قرآنيًا. يمكنك العثور على ملف الـ PDF هنا: [https://khuddam.org.uk/wp-content/uploads/2025/06/Quran-Quiz-Questions-1.pdf](https://khuddam.org.uk/wp-content/uploads/2025/06/Quran-Quiz-Questions-1.pdf)
@@ -21,7 +21,7 @@
     ج. [القرآن (QURAN)](https://www.scribd.com/document/909038554/QURAN)
     د. [100 حقيقة عن القرآن (100 Facts of The Quran)](https://www.scribd.com/document/909028758/100-Facts-of-the-Quran)
     هـ. [100 سؤال وجواب حول القرآن الكريم (100 Questions Answers On Holy Quran)](https://www.scribd.com/document/19537447/100-questions-answers-on-holy-quran)
-    
+
     وغيرها الكثير.
 
 3. [المعلومات العامة عن القرآن والإسلام للأطفال (General knowledge of the Quran and Islam for kids)](https://www.slideshare.net/slideshow/general-knowledge-of-the-quran-and-islam-for-kids/37717605)

@@ -1,3 +1,10 @@
+---
+title: "Tanzil"
+arTitle: "تنزيل"
+group: "resources"
+language: "en"
+---
+
 # Tanzil
 
 ## Overview

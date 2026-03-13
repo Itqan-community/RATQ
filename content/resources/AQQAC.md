@@ -1,3 +1,10 @@
+---
+title: "AQQAC"
+arTitle: "مدونة الأسئلة والأجوبة القرآنية الموسومة (AQQAC)"
+group: "resources"
+language: "en"
+---
+
 # Annotated Corpus of Arabic Al-Quran Question and Answer
 
 ## Overview

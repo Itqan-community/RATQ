@@ -1,3 +1,10 @@
+---
+title: "quran-json"
+arTitle: "القرآن JSON"
+group: "resources"
+language: "en"
+---
+
 # quran-json
 
 ## Introduction

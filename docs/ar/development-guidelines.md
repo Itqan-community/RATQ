@@ -1,9 +1,10 @@
 ---
 title: دليل التطوير القرآني
 ---
-عند بدأ العمل على تطوير **تطبيق قرآنيّ** سواء كان هذا على الهاتف أو الويب، ستحتاج إلى اتّخاذ الكثير من القرارات:
 
 # المحتوى
+
+عند بدأ العمل على تطوير **تطبيق قرآنيّ** سواء كان هذا على الهاتف أو الويب، ستحتاج إلى اتّخاذ الكثير من القرارات:
 
 ## 1. الروايات التي تريد تضمينها في التطبيق
 
@@ -11,38 +12,44 @@ title: دليل التطوير القرآني
 
 1. رواية حفص:
 
- 1. مصحف المدينة: من مجمع الملك فهد، متاح بصيغ متعددة. [تصفّحه من هنا](https://qurancomplex.gov.sa/quran-dev/)
- 2. مصحف الشمرلي: متاح على شكل صور PNG لكل صفحة. [تصفّحه من هنا](https://github.com/Mr-DDDAlKilanny/shamraly-images)
- 3. مصحف المدينة: إصدارات مجمع الملك فهد بدقة عالية. [تصفّحه من هنا](https://quraankarem.wordpress.com/qurancomplex/)
- 4. مصحف الشمرلي: نسخة غاية في الوضوح على ملف PDF. [تصفّحه من هنا](https://quraankarem.wordpress.com/shamarly/)
- 5. مصحف المدينة: من موقع EveryAyah.com صور PNG لكل آية. [تصفّحه من هنا](https://everyayah.com/data/quranpngs/)
- 6. مصحف المدينة: من موقع EveryAyah.com صورة JPG لكل آية. [تصفّحه من هنا](https://everyayah.com/data/QuranText_jpg/)
- 7. مصاحف متعددة: من [موقع قٌل](https://qul.tarteel.ai/resources/mushaf-layout) وسكريبت برمجيّ لتحميل صفحات المصحف من قٌل. [استخدمه من هنا](https://github.com/blueheron786/get-quran-mushaf-images)
+- مصحف المدينة: من مجمع الملك فهد، متاح بصيغ متعددة. [تصفّحه من هنا](https://qurancomplex.gov.sa/quran-dev/)
+- مصحف الشمرلي: متاح على شكل صور PNG لكل صفحة. [تصفّحه من هنا](https://github.com/Mr-DDDAlKilanny/shamraly-images)
+- مصحف المدينة: إصدارات مجمع الملك فهد بدقة عالية. [تصفّحه من هنا](https://quraankarem.wordpress.com/qurancomplex/)
+- مصحف الشمرلي: نسخة غاية في الوضوح على ملف PDF. [تصفّحه من هنا](https://quraankarem.wordpress.com/shamarly/)
+- مصحف المدينة: من موقع EveryAyah.com صور PNG لكل آية. [تصفّحه من هنا](https://everyayah.com/data/quranpngs/)
+- مصحف المدينة: من موقع EveryAyah.com صورة JPG لكل آية. [تصفّحه من هنا](https://everyayah.com/data/QuranText_jpg/)
+- مصاحف متعددة: من [موقع قٌل](https://qul.tarteel.ai/resources/mushaf-layout) وسكريبت برمجيّ لتحميل صفحات المصحف من قٌل. [استخدمه من هنا](https://github.com/blueheron786/get-quran-mushaf-images)
 
 2. رواية ورش:
- 1. مصحف المدينة: مجمع الملك فهد للقرآن الكريم. [تصفّحه من هنا](https://qurancomplex.gov.sa/quran-dev/)
+
+مصحف المدينة: مجمع الملك فهد للقرآن الكريم. [تصفّحه من هنا](https://qurancomplex.gov.sa/quran-dev/)
 
 3. رواية شعبة:
- 1. مصحف المدينة: مجمع الملك فهد للقرآن الكريم. [تصفّحه من هنا](https://qurancomplex.gov.sa/quran-dev/)
+
+مصحف المدينة: مجمع الملك فهد للقرآن الكريم. [تصفّحه من هنا](https://qurancomplex.gov.sa/quran-dev/)
 
 4. رواية قالون:
- 1. مصحف المدينة: مجمع الملك فهد للقرآن الكريم. [تصفّحه من هنا](https://qurancomplex.gov.sa/quran-dev/)
+
+مصحف المدينة: مجمع الملك فهد للقرآن الكريم. [تصفّحه من هنا](https://qurancomplex.gov.sa/quran-dev/)
 
 5. رواية الدوري:
- 1. مصحف المدينة: مجمع الملك فهد للقرآن الكريم. [تصفّحه من هنا](https://qurancomplex.gov.sa/quran-dev/)
+
+مصحف المدينة: مجمع الملك فهد للقرآن الكريم. [تصفّحه من هنا](https://qurancomplex.gov.sa/quran-dev/)
 
 6. رواية السوسي:
- 1. مصحف المدينة: مجمع الملك فهد للقرآن الكريم. [تصفّحه من هنا](https://qurancomplex.gov.sa/quran-dev/)
+
+مصحف المدينة: مجمع الملك فهد للقرآن الكريم. [تصفّحه من هنا](https://qurancomplex.gov.sa/quran-dev/)
 
 7. رواية هشام:
- 1. مصحف المدينة: مجمع الملك فهد للقرآن الكريم. [تصفّحه من هنا](https://qurancomplex.gov.sa/quran-dev/)
+
+  مصحف المدينة: مجمع الملك فهد للقرآن الكريم. [تصفّحه من هنا](https://qurancomplex.gov.sa/quran-dev/)
 
 ## 2. العلامات في بداية ونهاية كلّ آية
 
-> [!NOTE] تنويه
+> تنويه
 > بعض المصادر لا تضمّن علامات في بداية ونهاية كلّ آية. قد يكون عليك فصل الآيات بنفسك.
 
-> [!NOTE] تنويه
+> تنويه
 > التلاوات قد تختلف في عدد الآيات لكل رواية.
 > على سبيل المثال: في رواية حفص هناك 6236 آية بينما في رواية ورش هناك 6214 آية. القرآن نفسه، لكنّ الآيات مقسومة بطريقة مختلفة.
 > عليك أخذ هذا بعين الاعتبار عند تطوير تطبيقك
@@ -58,25 +65,44 @@ title: دليل التطوير القرآني
 يمكنك الحصول على النصّ القرآنيّ بصيغة JSON أو CSV أو SQL من هذه المصادر:
 
 1. رواية حفص:
- 1. قرآن فاونديشن: [من الرابط التالي](https://api-docs.quran.foundation/docs/content_apis_versioned/quran-verses-indopak) [API]
- 2. مجمع الملك فهد للقرآن الكريم: [من الرابط التالي](https://qurancomplex.gov.sa/quran-dev/) [csv, html, json, sql, txt, xlsx, xml] - [Downloadable]
- 3. كلّ آية - Every Ayah: [من الرابط التالي](https://everyayah.com/data/XML/Arabic/) [XML]
- 4. تنزيل: [من الرابط التالي](https://tanzil.net/download/) [Bar Seperated Values, XML, SQL (MySql dump)]
- 5. مصحف موري: [من الرابط التالي](https://github.com/Zizwar/mushaf-mauri/tree/main/assets/pages/hafsTajweed)
+
+    أ. قرآن فاونديشن: [من الرابط التالي](https://api-docs.quran.foundation/docs/content_apis_versioned/quran-verses-indopak) [API]
+
+    ب. مجمع الملك فهد للقرآن الكريم: [من الرابط التالي](https://qurancomplex.gov.sa/quran-dev/) [csv, html, json, sql, txt, xlsx, xml] - [Downloadable]
+
+    جـ. كلّ آية - Every Ayah: [من الرابط التالي](https://everyayah.com/data/XML/Arabic/) [XML]
+
+    د. تنزيل: [من الرابط التالي](https://tanzil.net/download/) [Bar Seperated Values, XML, SQL (MySql dump)]
+
+    هـ. مصحف موري: [من الرابط التالي](https://github.com/Zizwar/mushaf-mauri/tree/main/assets/pages/hafsTajweed)
+
 2. رواية ورش:
- 1. مصحف المدينة: مجمع الملك فهد للقرآن الكريم: [من الرابط التالي](https://qurancomplex.gov.sa/quran-dev/) [csv, html, json, sql, txt, xlsx, xml] - [Downloadable]
- 2. مصحف موري: [من الرابط التالي](https://github.com/Zizwar/mushaf-mauri/tree/main/assets/pages/muhammadi)
-3. رواية شعبة:
- 1. مصحف المدينة: مجمع الملك فهد للقرآن الكريم: [من الرابط التالي](https://qurancomplex.gov.sa/quran-dev/) [csv, html, json, sql, txt, xlsx, xml] - [Downloadable]
+
+    أ. مصحف المدينة: مجمع الملك فهد للقرآن الكريم: [من الرابط التالي](https://qurancomplex.gov.sa/quran-dev/) [csv, html, json, sql, txt, xlsx, xml] - [Downloadable]
+
+    ب. مصحف موري: [من الرابط التالي](https://github.com/Zizwar/mushaf-mauri/tree/main/assets/pages/muhammadi)
+
+3. رواية شعبة :
+
+    أ. مصحف المدينة: مجمع الملك فهد للقرآن الكريم: [من الرابط التالي](https://qurancomplex.gov.sa/quran-dev/) [csv, html, json, sql, txt, xlsx, xml] - [Downloadable]
+
 4. رواية قالون:
- 1. مصحف المدينة: مجمع الملك فهد للقرآن الكريم: [من الرابط التالي](https://qurancomplex.gov.sa/quran-dev/) [csv, html, json, sql, txt, xlsx, xml] - [Downloadable]
+
+    أ. مصحف المدينة: مجمع الملك فهد للقرآن الكريم: [من الرابط التالي](https://qurancomplex.gov.sa/quran-dev/) [csv, html, json, sql, txt, xlsx, xml] - [Downloadable]
+
 5. رواية الدوري:
- 1. مصحف المدينة: مجمع الملك فهد للقرآن الكريم: [من الرابط التالي](https://qurancomplex.gov.sa/quran-dev/) [csv, html, json, sql, txt, xlsx, xml] - [Downloadable]
+
+    أ. مصحف المدينة: مجمع الملك فهد للقرآن الكريم: [من الرابط التالي](https://qurancomplex.gov.sa/quran-dev/) [csv, html, json, sql, txt, xlsx, xml] - [Downloadable]
+
 6. رواية السوسي:
- 1. مصحف المدينة: مجمع الملك فهد للقرآن الكريم: [من الرابط التالي](https://qurancomplex.gov.sa/quran-dev/) [csv, html, json, sql, txt, xlsx, xml] - [Downloadable]
+
+    أ. مصحف المدينة: مجمع الملك فهد للقرآن الكريم: [من الرابط التالي](https://qurancomplex.gov.sa/quran-dev/) [csv, html, json, sql, txt, xlsx, xml] - [Downloadable]
+
 7. رواية هشام:
- 1. مصحف المدينة: مجمع الملك فهد للقرآن الكريم: [من الرابط التالي](https://qurancomplex.gov.sa/quran-dev/) [csv, html, json, sql, txt, xlsx, xml] - [Downloadable]
-8. مجموعة: من موقع قُل: [من الرابط التالي](https://qul.tarteel.ai/resources/quran-script)
+
+    أ. مصحف المدينة: مجمع الملك فهد للقرآن الكريم: [من الرابط التالي](https://qurancomplex.gov.sa/quran-dev/) [csv, html, json, sql, txt, xlsx, xml] - [Downloadable]
+
+    ب. مجموعة: من موقع قُل: [من الرابط التالي](https://qul.tarteel.ai/resources/quran-script)
 
 ## 4. البحث
 
@@ -88,11 +114,11 @@ title: دليل التطوير القرآني
 
 1. العربية:
 
- 1. كلمات - Kalimat.dev: قد لا يكون دقيقاً في بعض الحالات، على سبيل المثال: البحث عن "عرب" قد يعيد نتائج لا علاقة لها بعبارة البحث. [من الرابط التالي](https://www.kalimat.dev/)
- 2. قرآن فاونديشن: [من الرابط التالي](https://api-docs.quran.foundation/docs/content_apis_versioned/search)
-2. الإنجليزية:
+1. كلمات - Kalimat.dev: قد لا يكون دقيقاً في بعض الحالات، على سبيل المثال: البحث عن "عرب" قد يعيد نتائج لا علاقة لها بعبارة البحث. [من الرابط التالي](https://www.kalimat.dev/)
+1. قرآن فاونديشن: [من الرابط التالي](https://api-docs.quran.foundation/docs/content_apis_versioned/search)
+1. الإنجليزية:
 
- 1. كلمات - Kalimat.dev: نظرياً، يمكن استخدام محرك بحث كلمات للبحث في كلّ اللغات، لكنّ الـAPI تردّ بجواب 500 لأي طلب بحث (آخر تحقق 01-10-2025)
+1. كلمات - Kalimat.dev: نظرياً، يمكن استخدام محرك بحث كلمات للبحث في كلّ اللغات، لكنّ الـAPI تردّ بجواب 500 لأي طلب بحث (آخر تحقق 01-10-2025)
 
 ### البحث الدلالي
 
@@ -102,7 +128,7 @@ title: دليل التطوير القرآني
 
 ## 5. الترجمات
 
-> [!NOTE] أخطاء!
+> أخطاء!
 > الترجمات مكتوبة بأيدي البشر، لذا وجود خطأ في هذه الترجمات متوقع. وبالتالي: توقّع تحديثات متواترة لهذه الترجمات، تأكد من فضلك أن تستخدم النسخة الأحدث من الترجمة، وأن تتابع تحديث تطبيقك بأحدث النسخ المصححة من الترجمات، وأن تستخدم التصحيحات من أفضل المصادر المعروفة.
 > نشجّع كلّ المطورين على استخدام الـAPI أو أي نظام إدارة محتوى CMS للمحافظة على أحدث النسخ. لتجنّب نشر المعلومات الخاطئة.
 
@@ -118,10 +144,10 @@ title: دليل التطوير القرآني
 
 قد ترغب أيضاً بتضمن تفسير للقرآن الكريم في تطبيقك. هناك العديد من كتب التفسير المتاحة. بعضهم أشهر من الآخر، وقد تزداد هذه القائمة من التفاسير مع نشر المزيد من كتب التفسير.
 
-> [!NOTE] حقوق النشر!
+> حقوق النشر!
 > التفاسير كتب محمية بقوانين حقوق النشر، تأكد من تحققك من حقوق النشر لكل كتاب تفسير ترغب باستخدامه وتضمينه في تطبيقك. إن لم تكن الرخصة تسمح باستخدام الكتاب، حاول التواصل مع الناشرين واحصل على موافقتهم.
 
-> [!NOTE] أخطاء!
+> أخطاء!
 > في التفاسير مشاكل مشابهة لمشاكل الترجمات، حيث قد يطرأ على نصّ التفاسير أخطاء ويصدر لها تصحيحات مع الوقت. تأكد من استخدامك لأحدث نسخة من بيانات الكتاب الذي ستسخدمه. حتى الكتب القديمة جداً تتلقى بعض التحديثات للأخطاء الطباعية والإملائية والتصويرية.
 
 ### مصادر

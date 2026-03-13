@@ -1,3 +1,10 @@
+---
+title: "Othman"
+arTitle: "متصفح القرآن عثمان"
+group: "technologies"
+language: "en"
+---
+
 # Othman Quran Browser
 
 ## Overview

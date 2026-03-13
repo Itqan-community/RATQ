@@ -1,3 +1,10 @@
+---
+title: "Quranic Search v2"
+arTitle: "البحث القرآني v2"
+group: "technologies"
+language: "en"
+---
+
 # Project Review: Quranic Search v2
 
 **Review Date:** 11/11/2025

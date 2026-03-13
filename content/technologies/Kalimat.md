@@ -1,3 +1,10 @@
+---
+title: "Kalimat"
+arTitle: "كلمات (Kalimat)"
+group: "technologies"
+language: "en"
+---
+
 # Kalimat
 
 [Kalimat](https://www.kalimat.dev/) is an advanced neural semantic search engine designed primarily for Islamic content, specifically for the Holy Quran and the six authentic books of Sunnah. It offers a range of services mainly through an API that enables voice or text-based search in over 130 languages. The platform is built to be scalable and user-friendly, making it easy to integrate into various applications.

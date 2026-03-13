@@ -1,3 +1,10 @@
+---
+title: "Search Engines Benchmarking"
+arTitle: "مقارنة محركات البحث"
+group: "technologies"
+language: "en"
+---
+
 # Search Engines Benchmarking
 
 ## Introduction

@@ -123,7 +123,7 @@ const Router = {
    */
   routeToFilePath(route) {
     if (!route) {
-      return 'docs/en/index.md';
+      return 'docs/index.md';
     }
 
     // Decode URL-encoded characters if present

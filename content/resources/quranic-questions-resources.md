@@ -1,3 +1,10 @@
+---
+title: "Quranic Questions Resources"
+arTitle: "موارد الأسئلة القرآنية"
+group: "resources"
+language: "en"
+---
+
 # Quranic Questions Resources
 
 This file contains a list of providers to Quranic question banks, you can use in your app. Some of the resources are free and some need subscription, so getting the access to these resource is up to you.

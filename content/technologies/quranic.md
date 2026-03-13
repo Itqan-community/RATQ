@@ -1,3 +1,10 @@
+---
+title: "Quranic"
+arTitle: "محرك البحث الدلالي القرآني"
+group: "technologies"
+language: "en"
+---
+
 # Quranic Semantic Search Engine - Review Document
 
 **Review Date:** 2025-11-11  
