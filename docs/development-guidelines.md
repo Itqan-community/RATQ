@@ -189,7 +189,10 @@ People Also like to listen to their favorite reciters, you can also
 
 1. MP3Quran <https://www.mp3quran.net/eng/api>
 
---TODO: Hassaan: add postman collection for Quran Foundation API
+2. Every Aya <https://www.everyayah.com/>
+
+3. Quran Foundation <https://api-docs.quran.foundation/docs/content_apis_versioned/chapter-reciter-audio-file>
+
 
 ### Word-Level Audio Recitations
 
@@ -208,19 +211,17 @@ In some advanced applications (such as language learning apps, pronunciation tra
    An API that provides ayah recitations along with precise word-level timestamp data.
    [https://api-docs.quran.foundation/docs/sdk/audio/](https://api-docs.quran.foundation/docs/sdk/audio/)
 
-
 ## 8. Technologies
 
 These can vary by Technology, we need to have a list most popular frameworks, Address any known difficulties in them. Kotlin, Swift, Flutter, React.
+
+1. [Munajjam](https://github.com/Itqan-community/Munajjam): Munajjam uses AI-powered speech recognition to automatically generate precise timestamps for each ayah in a Quran audio recording.
+2. [MushafImad](../../content/technologies/MushafImad.md): it is a swift package that ships your IOS application with mushaf displayer, audio player, and all the features that any quranic application must have.
+3. [mushaf-imad-android](../../content/technologies/MushafImad.md): is the kotlin version of MushafImad providing the same features but for android.
+4. [mushaf-imad-flutter](https://github.com/Itqan-community/mushaf-imad-flutter): A fully functional, modular Quran reader library with display, bookmarks, search, offline data storage, and more.
 
 ### Best Practices for Displaying Mushaf
 
 ### Audio Players
 
 ### Video Players
-
-### Resource
-
-  1. [MushafImad](../../content/technologies/MushafImad.md): it is a swift package that ships your IOS application with mushaf displayer, audio player, and all the features that any quranic application must have.
-
-  2. [mushaf-imad-android](../../content/technologies/MushafImad.md): is the kotlin version of MushafImad providing the same features but for android.

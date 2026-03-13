@@ -11,6 +11,8 @@ language: "en"
 
 [mushaf-imad-android](https://github.com/YahiaRagae/mushaf-imad-android) is a Kotlin Package that delivers a fully featured Mushaf (Quran) reading experience for Android.
 
+[mushaf-imad-flutter](https://github.com/Itqan-community/mushaf-imad-flutter) is a Flutter Package that delivers a fully featured Mushaf (Quran) reading experience for Flutter.
+
 So, as a quran app developer, you only need to focus on implementing your idea without worrying about the UI and the Quran data.
 You use the package as a dependency in your app, and customize it to fit your application.
 
