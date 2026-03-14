@@ -13,6 +13,8 @@ language: "en"
 
 [mushaf-imad-flutter](https://github.com/Itqan-community/mushaf-imad-flutter) is a Flutter Package that delivers a fully featured Mushaf (Quran) reading experience for Flutter.
 
+[mushaf-imad-expo](https://github.com/adelpro/mushaf-imad-expo) is a React Native Quran reading application built with Expo, featuring page-by-page Quran rendering with interactive verse support.
+
 So, as a quran app developer, you only need to focus on implementing your idea without worrying about the UI and the Quran data.
 You use the package as a dependency in your app, and customize it to fit your application.
 
