@@ -26,3 +26,7 @@
 | [QQAC](../../resources/ar/QQAC.md)                           | [رابط](https://huggingface.co/datasets/nazimali/quran-question-answer-context)| مجموعة بيانات أسئلة وأجوبة القرآن باللغتين العربية والإنجليزية           | نعم         | Python               | لا             | SDK            | نعم                  | جيد           | مجموعة بيانات Python| N/A        | N/A           | N/A              | N/A                |
 | [MushafImad](./MushafImad.md) | [رابط](https://github.com/ibo2001/MushafImad) | حزمة عارض القرآن | نعم | Swift | لا | SDK | نعم | شامل | iOS | 6 | 13 نوفمبر 2025 | 5 فبراير 2026 | 3 |
 | [مصحف عماد أندرويد](./MushafImad.md) | [رابط](https://github.com/YahiaRagae/mushaf-imad-android) | حزمة عارض القرآن | نعم | Kotlin | لا | SDK | نعم | شامل | Android | 6 | 3 يناير 2026 | 3 فبراير 2026 | 1 |
+
+## مصفوفة مقارنة الواجهات البرمجية
+
+للحصول على مقارنة تفصيلية لواجهات القرآن البرمجية تشمل المصادقة، حدود الاستخدام، صيغ البيانات، والميزات، راجع [مصفوفة مقارنة الواجهات البرمجية](../../resources/ar/api-comparison-matrix.md).

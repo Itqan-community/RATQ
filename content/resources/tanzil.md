@@ -166,3 +166,7 @@ Tanzil clarified that it gets many of its data from different resousrces, and pa
 Tanzil is a great resource for Quranic websites and applications. It provides a lot of resources to help the developers of Quranic websites and applications.
 
 For any more information, you can visit their [all pages](https://tanzil.net/docs/all_pages) page that lists all the available pages on the tanzil.net website.
+
+## See Also
+
+- [API Comparison Matrix](./api-comparison-matrix.md) — Side-by-side comparison of all Quran APIs and data resources

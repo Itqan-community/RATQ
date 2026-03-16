@@ -19,3 +19,7 @@
 - تطبيق أندرويد: [رابط](https://play.google.com/store/apps/details?id=com.quranenc.app)
 - تطبيق iOS: [رابط](https://apps.apple.com/us/app/translations-of-quran-meanings/id1561769281)
 - وثائق واجهة برمجة التطبيقات (API): [رابط](https://quranenc.com/en/home/api)
+
+## انظر أيضاً
+
+- [مصفوفة مقارنة الواجهات البرمجية](./api-comparison-matrix.md) — مقارنة جنباً إلى جنب لجميع واجهات القرآن البرمجية وموارد البيانات
