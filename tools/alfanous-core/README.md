@@ -32,6 +32,20 @@ cargo build --release
 
 ## Usage
 
+1. After building, you can use the tool by running:
+
+```bash
+cargo run -- [command] [options] [arguments]
+```
+
+Or, head to `target/release` and run it from there:
+
+```bash
+alfanous-core [command] [options] [arguments]
+```
+
+The full path of the binary excution is `{workdirectory}/tools/alfanous-core/target/release/alfanous-core`
+
 ### Search
 
 ```bash
