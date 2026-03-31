@@ -1,346 +1,183 @@
 {
   "files": [
     {
-      "path": "README.md",
-      "title": "README",
-      "group": "root",
-      "hasAR": false
-    },
-    {
       "path": "content/apps/Noor-Ul-Huda.md",
       "title": "Noor-Ul-Huda",
-      "group": "root",
-      "hasAR": false
+      "group": "apps",
+      "hasAR": true,
+      "arTitle": "نور الهدى"
     },
     {
       "path": "content/apps/Quran-Revision-Companion.md",
-      "title": "Quran-Revision-Companion",
-      "group": "root",
-      "hasAR": false
-    },
-    {
-      "path": "content/apps/ar/Noor-Ul-Huda.md",
-      "title": "Noor-Ul-Huda",
-      "group": "root",
-      "hasAR": false
-    },
-    {
-      "path": "content/apps/ar/Quran-Revision-Companion.md",
-      "title": "Quran-Revision-Companion",
-      "group": "root",
-      "hasAR": false
-    },
-    {
-      "path": "content/apps/ar/eQuran.md",
-      "title": "eQuran",
-      "group": "root",
-      "hasAR": false
-    },
-    {
-      "path": "content/apps/ar/quran.com.md",
-      "title": "quran.com",
-      "group": "root",
-      "hasAR": false
+      "title": "Quran Revision Companion",
+      "group": "apps",
+      "hasAR": true,
+      "arTitle": "رفيق مراجعة القرآن"
     },
     {
       "path": "content/apps/eQuran.md",
       "title": "eQuran",
-      "group": "root",
-      "hasAR": false
+      "group": "apps",
+      "hasAR": true,
+      "arTitle": "القرآن الإلكتروني"
     },
     {
       "path": "content/apps/quran.com.md",
       "title": "quran.com",
-      "group": "root",
-      "hasAR": false
+      "group": "apps",
+      "hasAR": true,
+      "arTitle": "قرآن.كوم"
     },
     {
       "path": "content/resources/AQQAC.md",
       "title": "AQQAC",
-      "group": "root",
-      "hasAR": false
+      "group": "resources",
+      "hasAR": true
     },
     {
       "path": "content/resources/QQAC.md",
       "title": "QQAC",
-      "group": "root",
-      "hasAR": false
+      "group": "resources",
+      "hasAR": true
     },
     {
       "path": "content/resources/QuranEnc.md",
       "title": "QuranEnc",
-      "group": "root",
-      "hasAR": false
-    },
-    {
-      "path": "content/resources/ar/AQQAC.md",
-      "title": "AQQAC",
-      "group": "root",
-      "hasAR": false
-    },
-    {
-      "path": "content/resources/ar/QQAC.md",
-      "title": "QQAC",
-      "group": "root",
-      "hasAR": false
-    },
-    {
-      "path": "content/resources/ar/QuranEnc.md",
-      "title": "QuranEnc",
-      "group": "root",
-      "hasAR": false
-    },
-    {
-      "path": "content/resources/ar/quran-json.md",
-      "title": "quran-json",
-      "group": "root",
-      "hasAR": false
-    },
-    {
-      "path": "content/resources/ar/quran.com-api.md",
-      "title": "quran.com-api",
-      "group": "root",
-      "hasAR": false
-    },
-    {
-      "path": "content/resources/ar/quranic-questions-resources.md",
-      "title": "quranic-questions-resources",
-      "group": "root",
-      "hasAR": false
-    },
-    {
-      "path": "content/resources/ar/quranic-word-level-audio-resources.md",
-      "title": "quranic-word-level-audio-resources",
-      "group": "root",
-      "hasAR": false
-    },
-    {
-      "path": "content/resources/ar/tanzil.md",
-      "title": "tanzil",
-      "group": "root",
-      "hasAR": false
+      "group": "resources",
+      "hasAR": true,
+      "arTitle": "الموسوعة القرآنية"
     },
     {
       "path": "content/resources/quran-json.md",
       "title": "quran-json",
-      "group": "root",
-      "hasAR": false
+      "group": "resources",
+      "hasAR": true
     },
     {
       "path": "content/resources/quran.com-api.md",
-      "title": "quran.com-api",
-      "group": "root",
-      "hasAR": false
+      "title": "Quran.com API",
+      "group": "resources",
+      "hasAR": true,
+      "arTitle": "واجهة quran.com البرمجية"
     },
     {
       "path": "content/resources/quranic-questions-resources.md",
-      "title": "quranic-questions-resources",
-      "group": "root",
-      "hasAR": false
-    },
-    {
-      "path": "content/resources/quranic-word-level-audio-resources.md",
-      "title": "quranic-word-level-audio-resources",
-      "group": "root",
-      "hasAR": false
+      "title": "Quranic Questions Resources",
+      "group": "resources",
+      "hasAR": true,
+      "arTitle": "موارد الأسئلة القرآنية"
     },
     {
       "path": "content/resources/tanzil.md",
-      "title": "tanzil",
-      "group": "root",
-      "hasAR": false
+      "title": "Tanzil",
+      "group": "resources",
+      "hasAR": true,
+      "arTitle": "تنزيل"
+    },
+    {
+      "path": "content/resources/fonts-and-typography.md",
+      "title": "Fonts & Typography",
+      "group": "resources",
+      "hasAR": true,
+      "arTitle": "الخطوط والطباعة"
     },
     {
       "path": "content/technologies/Alfanous_Build_Process.md",
-      "title": "Alfanous_Build_Process",
-      "group": "root",
-      "hasAR": false
+      "title": "Alfanous Build Process",
+      "group": "technologies",
+      "hasAR": true,
+      "arTitle": "عملية بناء ألفانوس"
     },
     {
       "path": "content/technologies/Kalimat.md",
       "title": "Kalimat",
-      "group": "root",
-      "hasAR": false
+      "group": "technologies",
+      "hasAR": true,
+      "arTitle": "كلمات (Kalimat)"
     },
     {
       "path": "content/technologies/MushafImad.md",
       "title": "MushafImad",
-      "group": "root",
-      "hasAR": false
+      "group": "technologies",
+      "hasAR": true,
+      "arTitle": "مصحف عماد"
     },
     {
       "path": "content/technologies/QuranAnalysis.md",
       "title": "QuranAnalysis",
-      "group": "root",
-      "hasAR": false
+      "group": "technologies",
+      "hasAR": true,
+      "arTitle": "تحليل القرآن"
     },
     {
       "path": "content/technologies/Technologies.md",
       "title": "Technologies",
-      "group": "root",
-      "hasAR": false
+      "group": "technologies",
+      "hasAR": true,
+      "arTitle": "التقنيات"
     },
     {
       "path": "content/technologies/alfanous.md",
-      "title": "alfanous",
-      "group": "root",
-      "hasAR": false
-    },
-    {
-      "path": "content/technologies/ar/Alfanous_Build_Process.md",
-      "title": "Alfanous_Build_Process",
-      "group": "root",
-      "hasAR": false
-    },
-    {
-      "path": "content/technologies/ar/Kalimat.md",
-      "title": "Kalimat",
-      "group": "root",
-      "hasAR": false
-    },
-    {
-      "path": "content/technologies/ar/MushafImad.md",
-      "title": "MushafImad",
-      "group": "root",
-      "hasAR": false
-    },
-    {
-      "path": "content/technologies/ar/QuranAnalysis.md",
-      "title": "QuranAnalysis",
-      "group": "root",
-      "hasAR": false
-    },
-    {
-      "path": "content/technologies/ar/Technologies.md",
-      "title": "Technologies",
-      "group": "root",
-      "hasAR": false
-    },
-    {
-      "path": "content/technologies/ar/alfanous.md",
-      "title": "alfanous",
-      "group": "root",
-      "hasAR": false
-    },
-    {
-      "path": "content/technologies/ar/othman.md",
-      "title": "othman",
-      "group": "root",
-      "hasAR": false
-    },
-    {
-      "path": "content/technologies/ar/quranic-search-v2.md",
-      "title": "quranic-search-v2",
-      "group": "root",
-      "hasAR": false
-    },
-    {
-      "path": "content/technologies/ar/quranic.md",
-      "title": "quranic",
-      "group": "root",
-      "hasAR": false
-    },
-    {
-      "path": "content/technologies/ar/search_engines_benchmarking.md",
-      "title": "search_engines_benchmarking",
-      "group": "root",
-      "hasAR": false
+      "title": "Alfanous",
+      "group": "technologies",
+      "hasAR": true,
+      "arTitle": "ألفانوس"
     },
     {
       "path": "content/technologies/othman.md",
-      "title": "othman",
-      "group": "root",
-      "hasAR": false
+      "title": "Othman",
+      "group": "technologies",
+      "hasAR": true,
+      "arTitle": "متصفح القرآن عثمان"
     },
     {
       "path": "content/technologies/quranic-search-v2.md",
-      "title": "quranic-search-v2",
-      "group": "root",
-      "hasAR": false
+      "title": "Quranic Search v2",
+      "group": "technologies",
+      "hasAR": true,
+      "arTitle": "البحث القرآني v2"
     },
     {
       "path": "content/technologies/quranic.md",
-      "title": "quranic",
-      "group": "root",
-      "hasAR": false
+      "title": "Quranic",
+      "group": "technologies",
+      "hasAR": true,
+      "arTitle": "محرك البحث الدلالي القرآني"
     },
     {
       "path": "content/technologies/search_engines_benchmarking.md",
-      "title": "search_engines_benchmarking",
-      "group": "root",
-      "hasAR": false
+      "title": "Search Engines Benchmarking",
+      "group": "technologies",
+      "hasAR": true,
+      "arTitle": "مقارنة محركات البحث"
     },
     {
-      "path": "docs/ar/available-apps.md",
-      "title": "available-apps",
-      "group": "root",
-      "hasAR": false
+      "path": "docs/available-apps.md",
+      "title": "Available Apps",
+      "group": "docs",
+      "hasAR": true,
+      "arTitle": "التطبيقات المتاحة"
     },
     {
-      "path": "docs/ar/development-guidelines.md",
-      "title": "development-guidelines",
-      "group": "root",
-      "hasAR": false
+      "path": "docs/development-guidelines.md",
+      "title": "Development Guidelines",
+      "group": "docs",
+      "hasAR": true,
+      "arTitle": "دليل التطوير القرآني"
     },
     {
-      "path": "docs/ar/index.md",
-      "title": "index",
-      "group": "root",
-      "hasAR": false
+      "path": "docs/index.md",
+      "title": "RATQ",
+      "group": "docs",
+      "hasAR": true,
+      "arTitle": "خارطة الطريق والتقنيات للقرآن"
     },
     {
-      "path": "docs/ar/quran-foundation.md",
-      "title": "quran-foundation",
-      "group": "root",
-      "hasAR": false
-    },
-    {
-      "path": "docs/en/available-apps.md",
-      "title": "available-apps",
-      "group": "root",
-      "hasAR": false
-    },
-    {
-      "path": "docs/en/development-guidelines.md",
-      "title": "development-guidelines",
-      "group": "root",
-      "hasAR": false
-    },
-    {
-      "path": "docs/en/index.md",
-      "title": "index",
-      "group": "root",
-      "hasAR": false
-    },
-    {
-      "path": "docs/en/quran-foundation.md",
-      "title": "quran-foundation",
-      "group": "root",
-      "hasAR": false
-    },
-    {
-      "path": "notes/features/quran-analysis-rust.md",
-      "title": "quran-analysis-rust",
-      "group": "root",
-      "hasAR": false
-    },
-    {
-      "path": "tools/quran-analysis/ARCHITECTURE.md",
-      "title": "ARCHITECTURE",
-      "group": "root",
-      "hasAR": false
-    },
-    {
-      "path": "tools/quran-analysis/README.md",
-      "title": "README",
-      "group": "root",
-      "hasAR": false
-    },
-    {
-      "path": "tools/quran-analysis/notes/features/search-quality-performance.md",
-      "title": "search-quality-performance",
-      "group": "root",
-      "hasAR": false
+      "path": "docs/quran-foundation.md",
+      "title": "Quran Foundation",
+      "group": "docs",
+      "hasAR": true,
+      "arTitle": "مؤسسة القرآن"
     }
   ]
 }
