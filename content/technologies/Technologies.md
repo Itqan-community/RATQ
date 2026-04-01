@@ -33,3 +33,7 @@ language: "en"
 | [QQAC](../resources/QQAC.md)                           | [url](https://huggingface.co/datasets/nazimali/quran-question-answer-context)| Quran QA dataset in both arabic and english                              | Yes         | Python               | No             | SDK            | Yes                  | Good          | python dataset      | N/A        | N/A           | N/A              | N/A                |
 | [MushafImad](./MushafImad.md) | [url](https://github.com/ibo2001/MushafImad) | Quran viewer package | Yes | Swift | No | SDK | Yes | Comprehensive | IOS | 6 | Nov 13, 2025 | Feb 5, 2026 | 3 |
 | [mushaf-imad-android](./MushafImad.md) | [url](https://github.com/YahiaRagae/mushaf-imad-android) | Quran viewer package | Yes | Kotlin | No | SDK | Yes | Comprehensive | Android | 6 | Jan 3, 2026 | Feb 3, 2026 | 1 |
+
+## API Comparison Matrix
+
+For a detailed comparison of Quran APIs covering authentication, rate limits, data formats, and features, see the [API Comparison Matrix](../resources/api-comparison-matrix.md).

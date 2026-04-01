@@ -26,3 +26,7 @@ These renditions have been prepared by reliable translators under the careful su
 - Android app: [url](https://play.google.com/store/apps/details?id=com.quranenc.app)
 - iOS app: [url](https://apps.apple.com/us/app/translations-of-quran-meanings/id1561769281)
 - API docs: [url](https://quranenc.com/en/home/api)
+
+## See Also
+
+- [API Comparison Matrix](./api-comparison-matrix.md) — Side-by-side comparison of all Quran APIs and data resources
