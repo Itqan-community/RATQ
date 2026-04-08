@@ -74,3 +74,7 @@ This process builds the Quran JSON data locally, useful for customization or off
 ## License
 
 [CC-BY-SA 4.0](https://github.com/risan/quran-json/blob/master/LICENSE.txt) · [Risan Bagja Pradana](https://risanb.com).
+
+## See Also
+
+- [API Comparison Matrix](./api-comparison-matrix.md) — Side-by-side comparison of all Quran APIs and data resources
