@@ -23,3 +23,8 @@
 You can use [Obsidian](https://obsidian.md/) to navigate easily through this project
 Or through 
 [RATQ.itqan.dev](https://ratq.itqan.dev/)
+
+## Contributing
+
+We welcome contributions from the community! Please read our [Contributing Guide](./CONTRIBUTING.md)
+to get started, and see our [Code of Conduct](./CODE_OF_CONDUCT.md) before participating.
