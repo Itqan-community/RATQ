@@ -3,8 +3,8 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/hooks/useAuth';
-import { useLanguage } from '@/i18n';
-import { Sidebar } from '@/components/layout/Sidebar';
+import { useLanguage } from '@/shared/ui/i18n';
+import { Sidebar } from '@/shared/ui/layout/Sidebar';
 
 export default function DashboardSettingsPage() {
   const { user } = useAuth();

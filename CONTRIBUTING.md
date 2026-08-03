@@ -15,16 +15,25 @@ This project follows Itqan's [Community-first process](https://app.notion.com/p/
 
 ## Project structure
 
-- `src/app/`: Next.js App Router pages.
-- `src/components/`: UI components, grouped by area (`layout/`, `resources/`, `dashboard/`, `developer/`, `ui/`).
-- `src/lib/sources/`: the resource data-source layer. Each source (RATQ's own mock data, the CMS integration) normalizes into a shared `Resource` type. Adding a new data source means adding one file here, see the existing `ratq-native.ts` and `cms.ts` for the pattern.
-- `src/i18n/`: Arabic/English translation strings (`messages/ar.json`, `messages/en.json`). UI text should go through the `t.*` translation object, not hardcoded strings.
-- `src/types/resource.ts`: the shared data model.
+The codebase is organized by domain, DDD-style:
+
+- `src/app/`: Next.js App Router pages. Kept thin, routes import from `modules/` rather than holding logic themselves.
+- `src/modules/{resources,developer,auth}/`: one folder per domain, each with:
+  - `domain/`: framework-free logic (value objects, policy/ranking services) - only added where a real rule exists, not for every module.
+  - `application/use-cases/`: one function per operation, called by hooks. Thin wrappers around infrastructure are fine for plain CRUD; anything with a real rule to apply calls into `domain/`.
+  - `infrastructure/`: the actual data-source layer. `modules/resources/infrastructure/repositories/` is the resource data-source layer specifically - each source (RATQ's own mock data, the CMS integration, Payload) normalizes into the shared `Resource` type. Adding a new data source means adding one file here, see `ratq-native.ts` and `cms.ts` for the pattern.
+  - `components/`: feature-specific UI for that domain.
+- `src/shared/`: cross-cutting code used by more than one module - `infrastructure/` (token storage, Payload config, error parsing, edge cache), `ui/` (design-system atoms, global layout chrome, i18n), `utils/`.
+- `src/shared/ui/i18n/`: Arabic/English translation strings (`messages/ar.json`, `messages/en.json`). UI text should go through the `t.*`/`useTranslations()` object, not hardcoded strings.
+- `src/hooks/`: client-side hooks that call into a module's use-cases (e.g. `useResources.ts` calls `modules/resources/application/use-cases/*`). Stay top-level rather than living inside a module, since some are consumed across domains.
+- `src/types/`: shared, generic TypeScript definitions (e.g. `resource.ts`).
+
+Note: `src/app/dashboard/*` and `src/app/developer/*` currently overlap (both have their own resource/API-key/request pages) - this predates the module restructure and is tracked separately, not a pattern to copy.
 
 ## Coding standards
 
-- Match the existing structure and conventions of surrounding files.
-- New UI text goes through `src/i18n/messages/{ar,en}.json`, not inline hardcoded strings.
+- Match the existing structure and conventions of surrounding files - a new domain rule goes in that module's `domain/`, not inline in a component.
+- New UI text goes through `src/shared/ui/i18n/messages/{ar,en}.json`, not inline hardcoded strings.
 - Keep changes scoped to what the issue asks for.
 
 ## Testing

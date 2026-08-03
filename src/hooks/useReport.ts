@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useCallback } from 'react';
-import { api } from '@/lib/api-client';
+import { submitReport as submitReportUseCase } from '@/modules/resources/application/use-cases/submit-report';
 import type { ReportReason } from '@/types/resource';
 
 export interface UseReportReturn {
@@ -18,7 +18,7 @@ export function useReport(resourceId: number): UseReportReturn {
     setIsSubmitting(true);
     setError(null);
     try {
-      await api.reports.submit(resourceId, reason, details);
+      await submitReportUseCase(resourceId, reason, details);
     } catch (err: unknown) {
       const message = err instanceof Error ? err.message : 'Failed to submit report';
       setError(message);

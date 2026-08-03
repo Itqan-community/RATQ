@@ -5,8 +5,8 @@ import { useAuth } from '@/hooks/useAuth';
 import { useDeveloperResources } from '@/hooks/useDeveloperResources';
 import { useDeveloperAPIKeys } from '@/hooks/useDeveloperAPIKeys';
 import { useDeveloperNotifications } from '@/hooks/useDeveloperNotifications';
-import { CardSkeleton } from '@/components/ui/Skeleton';
-import { ResourceBadge } from '@/components/ui/Badge';
+import { CardSkeleton } from '@/shared/ui/Skeleton';
+import { ResourceBadge } from '@/shared/ui/Badge';
 import type { Resource } from '@/types/resource';
 
 export default function DeveloperOverviewPage() {

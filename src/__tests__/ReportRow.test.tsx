@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, act } from '@testing-library/react';
-import { ReportRow } from '@/components/developer/ReportRow';
-import { LanguageProvider } from '@/i18n/LanguageContext';
+import { ReportRow } from '@/modules/developer/components/ReportRow';
+import { LanguageProvider } from '@/shared/ui/i18n/LanguageContext';
 import type { Report } from '@/types/resource';
 
 function createReport(overrides: Partial<Report> = {}): Report {

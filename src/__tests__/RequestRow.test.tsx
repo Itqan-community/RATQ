@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, act } from '@testing-library/react';
-import { RequestRow } from '@/components/developer/RequestRow';
-import { LanguageProvider } from '@/i18n/LanguageContext';
+import { RequestRow } from '@/modules/developer/components/RequestRow';
+import { LanguageProvider } from '@/shared/ui/i18n/LanguageContext';
 import type { AccessRequest } from '@/types/resource';
 
 function createRequest(overrides: Partial<AccessRequest> = {}): AccessRequest {

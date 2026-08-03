@@ -2,12 +2,12 @@
 
 import Link from 'next/link';
 import type { ReactNode } from 'react';
-import { formatDate } from '@/lib/utils';
-import { GithubStatsCard } from '@/components/resources/GithubStatsCard';
-import { TrustedBySection } from '@/components/resources/TrustedBySection';
-import { useLanguage } from '@/i18n';
+import { formatDate } from '@/shared/utils/utils';
+import { GithubStatsCard } from '@/modules/resources/components/GithubStatsCard';
+import { TrustedBySection } from '@/modules/resources/components/TrustedBySection';
+import { useLanguage } from '@/shared/ui/i18n';
 import type { Resource, ResourceType } from '@/types/resource';
-import arabicDescriptions from '@/i18n/resource-descriptions.ar.json';
+import arabicDescriptions from '@/shared/ui/i18n/resource-descriptions.ar.json';
 
 interface ResourceDetailClientProps {
   resource: Resource;

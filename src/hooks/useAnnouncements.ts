@@ -2,7 +2,7 @@
 
 import useSWR from 'swr';
 import type { Announcement } from '@/types/announcement';
-import { api } from '@/lib/api-client';
+import { listAnnouncements } from '@/modules/resources/application/use-cases/list-announcements';
 
 export interface UseAnnouncementsReturn {
   announcements: Announcement[];
@@ -13,7 +13,7 @@ export interface UseAnnouncementsReturn {
 export function useAnnouncements(): UseAnnouncementsReturn {
   const { data, error, isLoading } = useSWR<Announcement[], Error>(
     ['announcements'],
-    () => api.announcements.list()
+    () => listAnnouncements()
   );
 
   return {

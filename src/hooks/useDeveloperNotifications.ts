@@ -2,7 +2,9 @@
 
 import { useState, useCallback } from 'react';
 import useSWR, { mutate } from 'swr';
-import { api } from '@/lib/api-client';
+import { listNotifications } from '@/modules/developer/application/use-cases/list-notifications';
+import { markNotificationRead } from '@/modules/developer/application/use-cases/mark-notification-read';
+import { markAllNotificationsRead } from '@/modules/developer/application/use-cases/mark-all-notifications-read';
 import type { NotificationItem } from '@/types/resource';
 
 // ─── Fetch notifications ───────────────────────────────────────────────────
@@ -10,7 +12,7 @@ import type { NotificationItem } from '@/types/resource';
 export function useDeveloperNotifications() {
   return useSWR<NotificationItem[], Error>(
     ['developer', 'notifications'],
-    () => api.developer.notifications.list()
+    () => listNotifications()
   );
 }
 
@@ -30,7 +32,7 @@ export function useMarkNotificationRead(): UseMarkNotificationReadReturn {
     setIsSubmitting(true);
     setError(null);
     try {
-      await api.developer.notifications.markRead(id);
+      await markNotificationRead(id);
       mutate(['developer', 'notifications']);
     } catch (err: unknown) {
       const message = err instanceof Error ? err.message : 'Failed to mark notification as read';
@@ -60,7 +62,7 @@ export function useMarkAllNotificationsRead(): UseMarkAllNotificationsReadReturn
     setIsSubmitting(true);
     setError(null);
     try {
-      await api.developer.notifications.markAllRead();
+      await markAllNotificationsRead();
       mutate(['developer', 'notifications']);
     } catch (err: unknown) {
       const message = err instanceof Error ? err.message : 'Failed to mark all notifications as read';

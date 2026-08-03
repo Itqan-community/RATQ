@@ -3,7 +3,7 @@
 import { useState, useMemo } from 'react';
 import useSWR from 'swr';
 import type { TrendingResource, TrendingPeriod } from '@/types/announcement';
-import { api } from '@/lib/api-client';
+import { listTrendingResources } from '@/modules/resources/application/use-cases/list-trending-resources';
 
 export interface UseTrendingResourcesReturn {
   resources: TrendingResource[];
@@ -21,7 +21,7 @@ export function useTrendingResources(): UseTrendingResourcesReturn {
 
   const { data, error, isLoading } = useSWR<TrendingResource[], Error>(
     ['trending', period],
-    () => api.trending.list(period)
+    () => listTrendingResources(period)
   );
 
   return {

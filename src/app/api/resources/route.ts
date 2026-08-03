@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { resourceAggregator } from '@/lib/sources/aggregate';
-import { withEdgeCache } from '@/lib/edge-cache';
+import { resourceAggregator } from '@/modules/resources/infrastructure/repositories/aggregate';
+import { withEdgeCache } from '@/shared/infrastructure/edge-cache';
 import type { ResourceListParams, SortOption } from '@/types/resource';
 
 export const runtime = 'edge';

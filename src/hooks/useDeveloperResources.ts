@@ -1,7 +1,7 @@
 'use client';
 
 import useSWR from 'swr';
-import { api } from '@/lib/api-client';
+import { listDeveloperResources } from '@/modules/developer/application/use-cases/list-developer-resources';
 import { useAuth } from '@/hooks/useAuth';
 import type { Resource } from '@/types/resource';
 
@@ -10,7 +10,7 @@ export function useDeveloperResources() {
 
   return useSWR<Resource[], Error>(
     user ? ['developer', 'resources', user.id] : null,
-    () => api.developer.resources.list(user!.id)
+    () => listDeveloperResources(user!.id)
   );
 }
 

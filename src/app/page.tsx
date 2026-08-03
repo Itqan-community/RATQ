@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
-import { useLanguage } from "@/i18n";
+import { useLanguage } from "@/shared/ui/i18n";
 
 gsap.registerPlugin(useGSAP);
 

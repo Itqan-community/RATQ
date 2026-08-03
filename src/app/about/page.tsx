@@ -2,7 +2,7 @@
 
 import Image from 'next/image';
 import { Fragment } from 'react';
-import { useLanguage } from '@/i18n';
+import { useLanguage } from '@/shared/ui/i18n';
 
 const decorativeStars = [
   { top: '3%', left: '3%', size: 'clamp(44px, 7vw, 105px)', opacity: 0.07, rotate: -12 },

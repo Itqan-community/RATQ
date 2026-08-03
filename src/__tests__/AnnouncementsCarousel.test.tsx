@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach, afterAll } from 'vitest';
 import { render, screen, fireEvent, act } from '@testing-library/react';
-import AnnouncementsCarousel from '@/components/resources/AnnouncementsCarousel';
-import { LanguageProvider } from '@/i18n/LanguageContext';
+import AnnouncementsCarousel from '@/modules/resources/components/AnnouncementsCarousel';
+import { LanguageProvider } from '@/shared/ui/i18n/LanguageContext';
 
 const mockUseAnnouncements = vi.fn();
 

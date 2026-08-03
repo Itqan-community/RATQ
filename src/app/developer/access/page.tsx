@@ -3,9 +3,16 @@
 import { useMemo, useState } from 'react';
 import { useDeveloperAPIKeys } from '@/hooks/useDeveloperAPIKeys';
 import { useDeveloperResources } from '@/hooks/useDeveloperResources';
-import { ApiKeyCard } from '@/components/developer/ApiKeyCard';
-import { api } from '@/lib/api-client';
+import { ApiKeyCard } from '@/modules/developer/components/ApiKeyCard';
+import { createApiKey } from '@/modules/developer/application/use-cases/create-api-key';
+import { revokeApiKey } from '@/modules/developer/application/use-cases/revoke-api-key';
+import { ApiKeyScope } from '@/modules/developer/domain/value-objects/api-key-scope';
 import type { APIKey } from '@/types/resource';
+
+const SCOPE_LABELS: Record<string, string> = {
+  'read': 'قراءة فقط',
+  'read,write': 'قراءة وكتابة',
+};
 
 export default function DeveloperAccessPage() {
   const { data: apiKeys, isLoading, mutate } = useDeveloperAPIKeys();
@@ -37,7 +44,7 @@ export default function DeveloperAccessPage() {
 
   const handleRevoke = async (keyId: number) => {
     if (!confirm('هل أنت متأكد من إلغاء هذا المفتاح؟')) return;
-    await api.developer.apiKeys.revoke(keyId);
+    await revokeApiKey(keyId);
     mutate();
   };
 
@@ -46,7 +53,7 @@ export default function DeveloperAccessPage() {
     setCreating(true);
     setCreateError(null);
     try {
-      const created = await api.developer.apiKeys.create(newKeyResourceId, newKeyScope, newKeyName);
+      const created = await createApiKey(newKeyResourceId, newKeyScope, newKeyName);
       await mutate([created, ...(apiKeys ?? [])], { revalidate: false });
       setNewKeyName('');
     } catch {
@@ -120,8 +127,9 @@ export default function DeveloperAccessPage() {
             onChange={(e) => setNewKeyScope(e.target.value)}
             className="input-field text-sm py-2 px-3"
           >
-            <option value="read">قراءة فقط</option>
-            <option value="read,write">قراءة وكتابة</option>
+            {ApiKeyScope.values().map((scope) => (
+              <option key={scope.value} value={scope.value}>{SCOPE_LABELS[scope.value]}</option>
+            ))}
           </select>
           <button
             onClick={handleCreate}

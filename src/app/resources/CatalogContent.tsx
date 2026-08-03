@@ -1,9 +1,9 @@
 'use client';
 
 import Link from 'next/link';
-import { useLanguage } from '@/i18n';
-import { ResourceCard } from '@/components/resources/ResourceCard';
-import { mockResources } from '@/lib/mock-data';
+import { useLanguage } from '@/shared/ui/i18n';
+import { ResourceCard } from '@/modules/resources/components/ResourceCard';
+import { mockResources } from '@/modules/resources/infrastructure/mock-data';
 
 const resources = mockResources.map((r) => ({ ...r, source: 'ratq' as const, source_url: null }));
 

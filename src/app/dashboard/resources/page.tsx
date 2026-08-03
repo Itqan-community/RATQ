@@ -4,11 +4,14 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useAuth } from '@/hooks/useAuth';
-import { api } from '@/lib/api-client';
-import { Sidebar } from '@/components/layout/Sidebar';
-import { ResourceForm } from '@/components/dashboard/ResourceForm';
-import { ResourceBadge } from '@/components/ui/Badge';
-import { useLanguage } from '@/i18n';
+import { listDeveloperResources } from '@/modules/developer/application/use-cases/list-developer-resources';
+import { createResource } from '@/modules/developer/application/use-cases/create-developer-resource';
+import { updateResource } from '@/modules/developer/application/use-cases/update-developer-resource';
+import { deleteResource } from '@/modules/developer/application/use-cases/delete-developer-resource';
+import { Sidebar } from '@/shared/ui/layout/Sidebar';
+import { ResourceForm } from '@/modules/developer/components/ResourceForm';
+import { ResourceBadge } from '@/shared/ui/Badge';
+import { useLanguage } from '@/shared/ui/i18n';
 import type { Resource, ResourceType } from '@/types/resource';
 
 export default function DashboardResourcesPage() {
@@ -24,12 +27,12 @@ export default function DashboardResourcesPage() {
   const [loadError, setLoadError] = useState(false);
   const [creating, setCreating] = useState(false);
   useEffect(() => { setIsClient(true); if (!user) router.push('/login'); }, [user, router]);
-  useEffect(() => { if (user) api.developer.resources.list(user.id).then(setResources).catch(() => setLoadError(true)); }, [user]);
+  useEffect(() => { if (user) listDeveloperResources(user.id).then(setResources).catch(() => setLoadError(true)); }, [user]);
   const handleCreate = async (data: { name: string; type: ResourceType; short_description: string; description: string; license: string; github_url: string; documentation_url: string; }) => {
     setCreating(true);
     setCreateError(null);
     try {
-      const created = await api.developer.resources.create({ ...data, status: 'published' });
+      const created = await createResource({ ...data, status: 'published' });
       setResources((prev) => [created, ...prev]);
       setShowForm(false);
     } catch (err) {
@@ -43,7 +46,7 @@ export default function DashboardResourcesPage() {
     setCreating(true);
     setCreateError(null);
     try {
-      const updated = await api.developer.resources.update(editingResource.id, data);
+      const updated = await updateResource(editingResource.id, data);
       setResources((prev) => prev.map((resource) => resource.id === editingResource.id ? updated : resource));
       setEditingResource(null);
     } catch (err) {
@@ -56,7 +59,7 @@ export default function DashboardResourcesPage() {
     const previous = resources;
     setResources((prev) => prev.filter((resource) => resource.id !== id));
     try {
-      await api.developer.resources.delete(id);
+      await deleteResource(id);
     } catch {
       setResources(previous);
     }

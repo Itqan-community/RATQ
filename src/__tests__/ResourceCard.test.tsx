@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, act } from '@testing-library/react';
-import { ResourceCard } from '@/components/resources/ResourceCard';
-import { LanguageProvider } from '@/i18n/LanguageContext';
+import { ResourceCard } from '@/modules/resources/components/ResourceCard';
+import { LanguageProvider } from '@/shared/ui/i18n/LanguageContext';
 import type { Resource } from '@/types/resource';
 
 function createResource(overrides: Partial<Resource> = {}): Resource {
@@ -93,13 +93,23 @@ describe('ResourceCard', () => {
     expect(screen.queryByText('Details')).not.toBeInTheDocument();
   });
 
-  it('renders github button when github_url is present', () => {
+  it('renders a real GitHub link when github_url is present', () => {
     renderWithProvider(
       <ResourceCard resource={createResource({ github_url: 'https://github.com/test/repo' })} />
     );
-    const githubButton = screen.getByLabelText('GitHub');
-    expect(githubButton).toHaveAttribute('aria-label', 'GitHub');
-    expect(githubButton.tagName).toBe('BUTTON');
+    const githubLink = screen.getByLabelText('GitHub');
+    expect(githubLink).toHaveAttribute('aria-label', 'GitHub');
+    expect(githubLink.tagName).toBe('A');
+    expect(githubLink).toHaveAttribute('href', 'https://github.com/test/repo');
+    expect(githubLink).toHaveAttribute('target', '_blank');
+    expect(githubLink).toHaveAttribute('rel', 'noopener noreferrer');
+  });
+
+  it('does not render a source label for a source not in the label map', () => {
+    renderWithProvider(
+      <ResourceCard resource={{ ...createResource(), source: 'unknown' as never }} />
+    );
+    expect(screen.queryByText('Demo')).not.toBeInTheDocument();
   });
 
   it('clamps short description to 2 lines', () => {

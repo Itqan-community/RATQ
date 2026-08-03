@@ -1,5 +1,5 @@
 import { notFound } from 'next/navigation';
-import { mockResources } from '@/lib/mock-data';
+import { mockResources } from '@/modules/resources/infrastructure/mock-data';
 import { ResourceDetailClient } from './ResourceDetailClient';
 
 // Required by @cloudflare/next-on-pages: non-static routes must opt into the

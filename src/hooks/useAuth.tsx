@@ -7,15 +7,29 @@ import {
   useCallback,
   type ReactNode,
 } from 'react';
-import { api } from '@/lib/api-client';
+import { login as loginUseCase } from '@/modules/auth/application/use-cases/login';
+import { register as registerUseCase } from '@/modules/auth/application/use-cases/register';
+import { completeOAuth } from '@/modules/auth/application/use-cases/complete-oauth';
+import { logout as logoutUseCase } from '@/modules/auth/application/use-cases/logout';
+import { AuthToken } from '@/modules/auth/domain/auth-token';
+import {
+  getAccessToken,
+  setAuthTokens,
+  getStoredUser,
+  setStoredUser,
+} from '@/shared/infrastructure/token-storage';
 import type { User } from '@/types/resource';
 
+// Discards a stale session up front instead of letting an expired token fail
+// silently on the first authenticated API call (issue #165).
 function getUserFromStorage(): User | null {
-  if (typeof window === 'undefined') return null;
-  const token = api.authHelpers.getAccessToken();
+  const token = getAccessToken();
   if (!token) return null;
-  const stored = localStorage.getItem('ratq_user');
-  return stored ? JSON.parse(stored) : null;
+  if (AuthToken.from(token).isExpired()) {
+    logoutUseCase();
+    return null;
+  }
+  return getStoredUser();
 }
 
 type AuthContextType = {
@@ -44,9 +58,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setLoading(true);
     setError(null);
     try {
-      const data = await api.auth.login(email, password);
-      api.authHelpers.setAuthTokens(data.access, data.refresh);
-      localStorage.setItem('ratq_user', JSON.stringify(data.user));
+      const data = await loginUseCase(email, password);
+      setAuthTokens(data.access, data.refresh);
+      setStoredUser(data.user);
       setUser(data.user);
       return { success: true };
     } catch (err: unknown) {
@@ -62,9 +76,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setLoading(true);
     setError(null);
     try {
-      const data = await api.auth.loginWithToken(token);
-      api.authHelpers.setAuthTokens(data.access, data.refresh);
-      localStorage.setItem('ratq_user', JSON.stringify(data.user));
+      const data = await completeOAuth(token);
+      setAuthTokens(data.access, data.refresh);
+      setStoredUser(data.user);
       setUser(data.user);
       return { success: true };
     } catch (err: unknown) {
@@ -81,9 +95,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setLoading(true);
       setError(null);
       try {
-        const data = await api.auth.register(email, password, display_name, role);
-        api.authHelpers.setAuthTokens(data.access, data.refresh);
-        localStorage.setItem('ratq_user', JSON.stringify(data.user));
+        const data = await registerUseCase(email, password, display_name, role);
+        setAuthTokens(data.access, data.refresh);
+        setStoredUser(data.user);
         setUser(data.user);
         return { success: true };
       } catch (err: unknown) {
@@ -98,8 +112,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   );
 
   const logout = useCallback(() => {
-    api.authHelpers.clearAuth();
-    localStorage.removeItem('ratq_user');
+    logoutUseCase();
     setUser(null);
   }, []);
 

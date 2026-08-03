@@ -3,8 +3,8 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/hooks/useAuth';
-import { useLanguage } from '@/i18n';
-import { Sidebar } from '@/components/layout/Sidebar';
+import { useLanguage } from '@/shared/ui/i18n';
+import { Sidebar } from '@/shared/ui/layout/Sidebar';
 
 const keys = [
   { name: 'Production API', prefix: 'ratq_live_**** 2A9C', created: '2026-04-12' },

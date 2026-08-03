@@ -2,8 +2,8 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
-import { LoginForm } from '@/components/auth/LoginForm';
-import { useLanguage } from '@/i18n';
+import { LoginForm } from '@/modules/auth/components/LoginForm';
+import { useLanguage } from '@/shared/ui/i18n';
 
 function CheckIcon() { return <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="m5 12 4 4L19 6" /></svg>; }
 

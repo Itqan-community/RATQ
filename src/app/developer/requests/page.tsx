@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { useDeveloperRequests } from '@/hooks/useDeveloperRequests';
-import { RequestRow } from '@/components/developer/RequestRow';
+import { RequestRow } from '@/modules/developer/components/RequestRow';
 import type { AccessRequest } from '@/types/resource';
 
 export default function DeveloperRequestsPage() {

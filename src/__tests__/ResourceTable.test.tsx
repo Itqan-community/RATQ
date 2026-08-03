@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, act } from '@testing-library/react';
-import { ResourceTable } from '@/components/developer/ResourceTable';
-import { LanguageProvider } from '@/i18n/LanguageContext';
+import { ResourceTable } from '@/modules/developer/components/ResourceTable';
+import { LanguageProvider } from '@/shared/ui/i18n/LanguageContext';
 import type { Resource } from '@/types/resource';
 
 // Mock next/link — render children as a <span>

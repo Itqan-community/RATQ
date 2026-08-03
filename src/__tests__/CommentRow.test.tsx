@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, act } from '@testing-library/react';
-import { CommentRow } from '@/components/developer/CommentRow';
-import { LanguageProvider } from '@/i18n/LanguageContext';
+import { CommentRow } from '@/modules/developer/components/CommentRow';
+import { LanguageProvider } from '@/shared/ui/i18n/LanguageContext';
 import type { Comment } from '@/types/resource';
 
 function createComment(overrides: Partial<Comment> = {}): Comment {

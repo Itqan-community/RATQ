@@ -1,7 +1,7 @@
 import { render, screen, fireEvent } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
-import { TrustedBySection } from '@/components/resources/TrustedBySection';
-import { LanguageProvider } from '@/i18n/LanguageContext';
+import { TrustedBySection } from '@/modules/resources/components/TrustedBySection';
+import { LanguageProvider } from '@/shared/ui/i18n/LanguageContext';
 import type { Consumer } from '@/types/resource';
 
 const makeConsumers = (count: number): Consumer[] =>

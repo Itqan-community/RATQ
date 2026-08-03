@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, fireEvent, act } from '@testing-library/react';
-import TrendingResources from '@/components/resources/TrendingResources';
-import { LanguageProvider } from '@/i18n/LanguageContext';
+import TrendingResources from '@/modules/resources/components/TrendingResources';
+import { LanguageProvider } from '@/shared/ui/i18n/LanguageContext';
 
 const mockUseTrendingResources = vi.fn();
 

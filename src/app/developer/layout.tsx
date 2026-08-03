@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/hooks/useAuth';
-import { DeveloperSidebar } from '@/components/layout/DeveloperSidebar';
+import { DeveloperSidebar } from '@/modules/developer/components/DeveloperSidebar';
 
 export default function DeveloperLayout({
   children,

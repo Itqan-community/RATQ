@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { CommentRow } from '@/components/developer/CommentRow';
+import { CommentRow } from '@/modules/developer/components/CommentRow';
 import type { Comment } from '@/types/resource';
 
 const mockCommentsWithResources = [

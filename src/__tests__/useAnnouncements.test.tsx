@@ -5,13 +5,8 @@ import { useAnnouncements } from '@/hooks/useAnnouncements';
 
 const mockAnnouncementsList = vi.fn();
 
-vi.mock('@/lib/api-client', () => ({
-  api: {
-    announcements: {
-      list: (...args: unknown[]) => mockAnnouncementsList(...args),
-    },
-  },
-  DATA_MODE: 'mock',
+vi.mock('@/modules/resources/application/use-cases/list-announcements', () => ({
+  listAnnouncements: (...args: unknown[]) => mockAnnouncementsList(...args),
 }));
 
 function SWRWrapper({ children }: { children: React.ReactNode }) {

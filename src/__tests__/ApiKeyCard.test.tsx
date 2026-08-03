@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, fireEvent, act, waitFor } from '@testing-library/react';
-import { ApiKeyCard } from '@/components/developer/ApiKeyCard';
-import { LanguageProvider } from '@/i18n/LanguageContext';
+import { ApiKeyCard } from '@/modules/developer/components/ApiKeyCard';
+import { LanguageProvider } from '@/shared/ui/i18n/LanguageContext';
 import type { APIKey } from '@/types/resource';
 
 // Mock navigator.clipboard

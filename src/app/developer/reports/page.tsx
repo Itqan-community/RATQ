@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { useMyReports } from '@/hooks/useMyReports';
-import { ReportRow } from '@/components/developer/ReportRow';
+import { ReportRow } from '@/modules/developer/components/ReportRow';
 import type { Report, ReportReason } from '@/types/resource';
 
 const reasonFilters: { value: string; label: string }[] = [

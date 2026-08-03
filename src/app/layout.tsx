@@ -1,8 +1,8 @@
 import type { Metadata } from 'next';
 import { IBM_Plex_Sans_Arabic } from 'next/font/google';
-import { Header } from '@/components/layout/Header';
-import { Footer } from '@/components/layout/Footer';
-import { LanguageProvider } from '@/i18n';
+import { Header } from '@/shared/ui/layout/Header';
+import { Footer } from '@/shared/ui/layout/Footer';
+import { LanguageProvider } from '@/shared/ui/i18n';
 import { AuthProvider } from '@/hooks/useAuth';
 import '@/styles/globals.css';
 

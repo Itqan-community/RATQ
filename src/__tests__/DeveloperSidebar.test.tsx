@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, fireEvent, act } from '@testing-library/react';
-import { DeveloperSidebar } from '@/components/layout/DeveloperSidebar';
+import { DeveloperSidebar } from '@/modules/developer/components/DeveloperSidebar';
 
 // Mutable pathname for mock — reset in beforeEach
 let mockPathname = '/developer';

@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { useDeveloperResources } from '@/hooks/useDeveloperResources';
-import { ResourceTable } from '@/components/developer/ResourceTable';
+import { ResourceTable } from '@/modules/developer/components/ResourceTable';
 import type { Resource } from '@/types/resource';
 
 const typeFilters: { value: string; label: string }[] = [

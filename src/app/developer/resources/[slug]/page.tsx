@@ -6,7 +6,7 @@ export const runtime = 'edge';
 import { useParams } from 'next/navigation';
 import Link from 'next/link';
 import { useDeveloperResources } from '@/hooks/useDeveloperResources';
-import { ResourceBadge } from '@/components/ui/Badge';
+import { ResourceBadge } from '@/shared/ui/Badge';
 import type { Resource } from '@/types/resource';
 
 const tabs = [

@@ -1,24 +1,28 @@
 import useSWR from 'swr';
-import { api } from '@/lib/api-client';
+import { listResources } from '@/modules/resources/application/use-cases/list-resources';
+import { getResource } from '@/modules/resources/application/use-cases/get-resource';
+import { listComments } from '@/modules/resources/application/use-cases/list-comments';
+import { useAuth } from '@/hooks/useAuth';
 import type { Resource, Comment, PaginatedResponse, ResourceListParams } from '@/types/resource';
 
 export function useResources(params: ResourceListParams = {}) {
   return useSWR<PaginatedResponse<Resource>, Error>(
     ['resources', params],
-    () => api.resources.list(params)
+    () => listResources(params)
   );
 }
 
 export function useResource(slug: string) {
+  const { user } = useAuth();
   return useSWR<Resource, Error>(
-    slug ? ['resource', slug] : null,
-    () => api.resources.detail(slug)
+    slug ? ['resource', slug, user?.id] : null,
+    () => getResource(slug, user)
   );
 }
 
 export function useComments(resourceId: number) {
   return useSWR<Comment[], Error>(
     resourceId ? ['comments', resourceId] : null,
-    () => api.comments.list(resourceId)
+    () => listComments(resourceId)
   );
 }

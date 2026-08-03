@@ -4,9 +4,9 @@ import { useEffect, useState, type ReactNode } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useAuth } from '@/hooks/useAuth';
-import { useLanguage } from '@/i18n';
-import { Sidebar } from '@/components/layout/Sidebar';
-import { RequestCard } from '@/components/dashboard/RequestCard';
+import { useLanguage } from '@/shared/ui/i18n';
+import { Sidebar } from '@/shared/ui/layout/Sidebar';
+import { RequestCard } from '@/modules/developer/components/RequestCard';
 import type { AccessRequest } from '@/types/resource';
 
 const mockRecentRequests: AccessRequest[] = [
