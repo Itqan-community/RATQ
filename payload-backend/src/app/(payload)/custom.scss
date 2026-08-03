@@ -1,0 +1,33 @@
+/* RATQ Payload admin theme overrides go here */
+
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap');
+
+/* Payload's own tokens live in @layer payload-default (unlayered rules always
+   beat layered ones regardless of specificity) - join that layer so our
+   overrides actually take effect, and so untouched tokens (elevation-100+,
+   used for hover/disabled states) keep falling back to Payload's own
+   light/dark values instead of being masked by an unscoped :root rule. */
+@layer payload-default {
+  :root {
+    --theme-elevation-0: #fdfbf7;
+    --theme-elevation-50: #f9f4ea;
+    --theme-elevation-100: #f2ead9;
+    --font-body:
+      'IBM Plex Sans Arabic', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  }
+
+  html[data-theme='dark'] {
+    --theme-elevation-0: #171717;
+    --theme-elevation-50: #1f1f1f;
+  }
+
+  .ratq-brand-mark {
+    filter: none;
+  }
+
+  html[data-theme='dark'] .ratq-brand-mark {
+    /* logo asset is solid black on transparent; invert to read white on dark */
+    filter: invert(1) brightness(1.8);
+  }
+}
+

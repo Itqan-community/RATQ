@@ -1,0 +1,452 @@
+{
+  "header": {
+    "nav": {
+      "resources": "الموارد",
+      "about": "حول",
+      "dashboard": "لوحة التحكم"
+    },
+    "auth": {
+      "login": "تسجيل الدخول",
+      "register": "إنشاء حساب",
+      "logout": "تسجيل الخروج"
+    },
+    "langSwitch": {
+      "ar": "العربية",
+      "en": "English"
+    },
+    "mobileMenu": "القائمة"
+  },
+  "home": {
+    "hero": {
+      "title": "اكتشف في رَتَق موارد تطوير البرمجيات القرآنية..",
+      "subtitle": "المصدر الشامل للمكتبات وأدوات التطوير والمجموعات البيانات وواجهات البرمجة والمراجع العلمية المخصصة لتطوير البرمجيات القرآنية.",
+      "categories": [
+        "مكتبات",
+        "أدوات تطوير",
+        "بيانات",
+        "واجهات برمجة",
+        "تفسير"
+      ],
+      "badge": "جميع المصادر مجانية",
+      "searchPlaceholder": "ابحث باسم المورد",
+      "searchLabel": "بحث",
+      "floatOne": "20+ مورد متاح",
+      "floatTwo": "مكتبات وأدوات تطوير متنوعة",
+      "starLine1": "مورد متاح",
+      "starLine2": "للاستخدام المجاني"
+    },
+    "cta": {
+      "title": "انشر موردك القرآني",
+      "subtitle": "شارك مواردك مع المجتمع.",
+      "getStarted": "ابدأ الآن",
+      "explore": "استكشف الموارد"
+    },
+    "featured": {
+      "title": "موارد مميزة",
+      "browseAll": "تصفح الكل",
+      "empty": "لا توجد موارد مميزة بعد."
+    },
+    "stats": {
+      "resources": "موارد",
+      "publishers": "ناشرون",
+      "developers": "مطوّرون",
+      "downloads": "تحميلات"
+    },
+    "announcements": {
+      "title": "الإعلانات",
+      "text": "جديد: مجموعة أدوات معالجة النصوص القرآنية (QTT SDK) متاحة الآن.",
+      "action": "تصفح المورد"
+    },
+    "sections": {
+      "trending": "الموارد الرائجة",
+      "featured": "موارد مميزة",
+      "stats": "الإحصاءات"
+    },
+    "resourceCard": {
+      "title": "مجموعة أدوات النصوص القرآنية (QTT)",
+      "description": "أكثر من 50,000 كلمة قرآنية مع تحليل صرفي غني وبيانات دلالية.",
+      "view": "تصفح المورد",
+      "downloads": "10 آلاف"
+    },
+    "publish": {
+      "title": "انشر موردك القرآني",
+      "subtitle": "شارك مكتبتك أو أداة التطوير أو مجموعة البيانات مع المجتمع. صل إلى المطورين الذين يبنون الجيل القادم.",
+      "action": "انشره الآن"
+    }
+  },
+  "announcements": {
+    "title": "الإعلانات",
+    "types": {
+      "release": "إصدار جديد",
+      "new_resource": "مورد جديد",
+      "maintenance": "صيانة",
+      "breaking_change": "تغيير جوهري"
+    },
+    "ago": "منذ {{count}}",
+    "viewResource": "عرض المورد",
+    "learnMore": "اعرف المزيد",
+    "viewChangelog": "عرض سجل التغييرات",
+    "noAnnouncements": ""
+  },
+  "trending": {
+    "title": "الموارد الرائجة",
+    "browseAll": "تصفح الكل",
+    "period7d": "7 أيام",
+    "period30d": "30 يوما",
+    "periodAllTime": "كل الوقت",
+    "downloads": "{{count}} تحميل",
+    "viewResource": "عرض المورد",
+    "rankFirst": "المركز الأول",
+    "rankSecond": "المركز الثاني",
+    "rankThird": "المركز الثالث"
+  },
+  "catalog": {
+    "title": "الموارد",
+    "subtitle": "اكتشف موارد التطوير القرآنية.",
+    "showing": "عرض {{count}} من {{total}} مورد",
+    "showingSearch": "عرض {{count}} من {{total}} مورد لـ \"{{query}}\"",
+    "empty": {
+      "title": "لم يتم العثور على موارد.",
+      "subtitle": "حاول تعديل البحث أو الفلاتر."
+    },
+    "sort": {
+      "by": "ترتيب حسب",
+      "options": {
+        "relevance": "الأكثر صلة",
+        "downloads": "الأكثر تحميلا",
+        "newest": "الأحدث أولا",
+        "oldest": "الأقدم أولا",
+        "name_asc": "الاسم تصاعديا",
+        "name_desc": "الاسم تنازليا"
+      }
+    },
+    "filters": {
+      "title": "الفلاتر",
+      "type": "النوع",
+      "allTypes": "كل الأنواع",
+      "license": "الرخصة",
+      "allLicenses": "الكل",
+      "itqanBadge": "موثق بإتقان",
+      "verifiedOnly": "الموثق فقط",
+      "notVerified": "غير موثق"
+    },
+    "types": {
+      "library": "مكتبة",
+      "sdk": "أداة تطوير",
+      "dataset": "مجموعة بيانات",
+      "api": "واجهة برمجة",
+      "tafsir": "تفسير",
+      "audio": "صوت",
+      "pdf": "PDF",
+      "json": "JSON",
+      "recitation": "تلاوة",
+      "mushaf": "مصحف",
+      "program": "برنامج",
+      "linguistic": "لغوي",
+      "translation": "ترجمة",
+      "font": "خط",
+      "search": "بحث",
+      "tajweed": "تجويد"
+    }
+  },
+  "resource": {
+    "itqanBadge": "إتقان",
+    "details": "التفاصيل",
+    "github": "GitHub",
+    "version": "الإصدار",
+    "githubStats": {
+      "title": "إحصائيات GitHub",
+      "stars": "النجوم",
+      "forks": "التفرعات",
+      "openIssues": "المشكلات المفتوحة",
+      "lastCommit": "آخر تحديث",
+      "viewOnGithub": "عرض على GitHub",
+      "statsUnavailable": "الإحصائيات غير متاحة"
+    },
+    "detail": {
+      "home": "الرئيسية",
+      "resources": "الموارد",
+      "description": "الوصف",
+      "information": "المعلومات",
+      "license": "الرخصة",
+      "type": "النوع",
+      "created": "تاريخ الإنشاء",
+      "updated": "آخر تحديث",
+      "version": "الإصدار",
+      "documentation": "التوثيق",
+      "accessRequest": "طلب الوصول",
+      "accessRequestDescription": "أرسل طلبا وسيتم مراجعته.",
+      "quickSummary": "ملخص سريع",
+      "status": "الحالة",
+      "published": "منشور",
+      "itqanCertified": "موثق بإتقان",
+      "yes": "نعم",
+      "no": "لا",
+      "relatedResources": "موارد ذات صلة",
+      "trustedBy": "موثوق من قبل",
+      "trustedByCount": "موثوق من قبل {{count}} تطبيق",
+      "showMore": "عرض الكل {{count}}",
+      "showLess": "عرض أقل",
+      "comments": "التعليقات",
+      "leaveAComment": "أضف تعليقا...",
+      "authorName": "اسمك",
+      "post": "نشر",
+      "commingSoon": "التعليقات ستتوفر قريبا",
+      "noComments": "لا توجد تعليقات بعد",
+      "requestFailed": "فشل إرسال الطلب.",
+      "loginToRequest": "سجل الدخول لطلب الوصول",
+      "loginToReport": "سجل الدخول للإبلاغ",
+      "loginToComment": "سجل الدخول للتعليق",
+      "requestSent": "تم إرسال طلب الوصول",
+      "requestReviewed": "سيتم مراجعة طلبك قريبا",
+      "accessRequestFor": "طلب الوصول إلى",
+      "accessReason": "اشرح سبب حاجتك...",
+      "submit": "إرسال",
+      "cancel": "إلغاء",
+      "report": "إبلاغ",
+      "reportTooltip": "إبلاغ عن هذا المورد",
+      "reportModalTitle": "إبلاغ عن هذا المورد",
+      "reportReason": "السبب",
+      "reportReasonInaccurate": "غير دقيق",
+      "reportReasonInappropriate": "غير لائق",
+      "reportReasonInfringing": "ينتهك الحقوق",
+      "reportReasonSpam": "مزعج",
+      "reportReasonOutdated": "قديم",
+      "reportReasonBrokenLink": "رابط معطل",
+      "reportDetails": "تفاصيل اختيارية",
+      "reportSubmit": "إرسال البلاغ",
+      "reportCancel": "إلغاء",
+      "reportSuccess": "تم إرسال البلاغ",
+      "reportError": "فشل إرسال البلاغ.",
+      "reportDuplicate": "لقد أبلغت عن هذا المورد من قبل.",
+      "preview": "معاينة",
+      "previewUnavailable": "المعاينة غير متاحة",
+      "previewCollapse": "طي المعاينة",
+      "previewExpand": "توسيع المعاينة",
+      "previewApiEndpoint": "نقطة النهاية",
+      "previewApiTryIt": "جربه",
+      "previewSdkInstall": "تثبيت",
+      "previewSdkCopied": "تم النسخ",
+      "previewDatasetRows": "صفوف",
+      "previewDatasetColumns": "أعمدة",
+      "previewDatasetSize": "الحجم",
+      "previewJsonFormat": "JSON منسق"
+    }
+  },
+  "footer": {
+    "description": "منصة مجتمعية لاكتشاف موارد التطوير القرآنية.",
+    "platform": {
+      "title": "المنصة",
+      "browse": "تصفح الموارد",
+      "standards": "معايير إتقان",
+      "docs": "التوثيق"
+    },
+    "community": {
+      "title": "المجتمع",
+      "about": "حولنا",
+      "contact": "تواصل معنا",
+      "privacy": "الخصوصية"
+    },
+    "copyright": "© {{year}} منصة RATQ. جميع الحقوق محفوظة."
+  },
+  "pagination": {
+    "of": "من"
+  },
+  "about": {
+    "pageTitle": "حول",
+    "why": {
+      "paragraph1": "أُنشئت RATQ لجمع موارد البرمجيات القرآنية في مكان واحد واضح وسهل الوصول.",
+      "paragraph2": "نساعد المطورين والباحثين والناشرين على اكتشاف الأعمال المفيدة، وفهم طرق استخدامها، والمساهمة بموارد تخدم المجتمع بصورة أوسع."
+    },
+    "whatIs": {
+      "title": "ما هي RATQ؟",
+      "paragraph1": "RATQ دليل مجتمعي للمكتبات القرآنية وأدوات التطوير ومجموعات البيانات وواجهات البرمجة وأدوات البحث وغيرها من الموارد التقنية. وتوفر لكل مورد مكانا منظما لعرض الوصف والتوثيق والرخصة والإصدار ومعلومات الوصول.",
+      "paragraph2Before": "كما تشجع المنصة النشر والمراجعة بعناية من خلال ",
+      "paragraph2After": "، لمساعدة المستخدمين على تقييم الدقة والنسبة الصحيحة والجودة التقنية قبل استخدام المورد.",
+      "standards": "معايير إتقان"
+    },
+    "offer": {
+      "title": "ماذا توفر RATQ؟",
+      "intro": "تدعم المنصة الرحلة كاملة، من اكتشاف المورد إلى نشره والمحافظة على معلوماته.",
+      "items": {
+        "catalog": {
+          "title": "دليل منظم للموارد",
+          "description": "اعثر على المكتبات ومجموعات البيانات وواجهات البرمجة وأدوات التطوير والبحث من خلال دليل موحد وقابل للبحث."
+        },
+        "verification": {
+          "title": "معلومات واضحة عن الجودة",
+          "description": "راجع التوثيق والرخص والإصدارات والنسبة ومعلومات توثيق إتقان قبل اختيار المورد المناسب."
+        },
+        "access": {
+          "title": "إدارة الوصول للناشرين",
+          "description": "يمكن للناشرين إدارة الموارد المقيدة ومراجعة طلبات الوصول والمحافظة على تحديث معلومات مواردهم."
+        },
+        "community": {
+          "title": "ملاحظات المجتمع",
+          "description": "تساعد التعليقات والبلاغات والمراجعات على إبراز الموارد المفيدة واكتشاف المعلومات القديمة والجوانب التي تحتاج إلى تحسين."
+        },
+        "tools": {
+          "title": "أدوات للمطورين",
+          "description": "تسهل صفحات المطورين ومفاتيح API وروابط التوثيق وتفاصيل التكامل استخدام الموارد في المشاريع الحقيقية."
+        }
+      }
+    },
+    "mission": {
+      "title": "مهمتنا",
+      "description": "تسهيل اكتشاف الموارد التقنية القرآنية الموثوقة وفهمها ونشرها والمحافظة عليها، ودعم التعاون المسؤول بين المطورين والباحثين والناشرين."
+    },
+    "vision": {
+      "title": "رؤيتنا",
+      "description": "مجتمع مترابط للتقنية القرآنية تكون فيه الأعمال القيمة ظاهرة وموثقة ومنسوبة إلى أصحابها، ويسهل البناء عليها وتطويرها."
+    }
+  },
+  "dashboard": {
+    "side": {
+      "title": "لوحة التحكم",
+      "overview": "الملخص",
+      "resources": "مواردي",
+      "resourcesDetail": "النشر والإدارة",
+      "requests": "طلبات الوصول",
+      "requestsDetail": "المراجعة والردود",
+      "apiKeys": "مفاتيح API",
+      "apiKeysDetail": "التكاملات",
+      "settings": "الإعدادات",
+      "settingsDetail": "الحساب والتفضيلات",
+      "shortcut": "اختصار",
+      "browseCatalog": "تصفح الدليل",
+      "openMenu": "فتح القائمة",
+      "closeMenu": "إغلاق القائمة"
+    },
+    "common": {
+      "loading": "جاري التحميل",
+      "welcome": "مرحبا",
+      "logout": "تسجيل الخروج",
+      "ratq": "RATQ",
+      "edit": "تعديل",
+      "delete": "حذف",
+      "published": "منشور",
+      "draft": "مسودة",
+      "saveChanges": "حفظ التعديلات",
+      "cancel": "إلغاء"
+    },
+    "overview": {
+      "title": "لوحة التحكم",
+      "activitySummary": "ملخص النشاط",
+      "welcomeBack": "مرحبا بعودتك، {{name}}",
+      "summary": "إليك نظرة سريعة على مواردك وطلبات الوصول وحالة حسابك في منصة RATQ.",
+      "nextAction": "الإجراء التالي",
+      "nextActionTitle": "انشر أو راجع مواردك من مكان واحد.",
+      "addResource": "إضافة مورد",
+      "publishedResources": "الموارد المنشورة",
+      "publishedResourcesDetail": "الموارد التي يديرها حسابك حاليا.",
+      "pendingRequests": "طلبات معلقة",
+      "pendingRequestsDetail": "طلبات تنتظر المراجعة أو القرار.",
+      "apiKeys": "مفاتيح API",
+      "apiKeysDetail": "مفاتيح التكامل المرتبطة بحسابك.",
+      "role": "الدور",
+      "roleDetail": "صلاحيات الحساب الحالية داخل المنصة.",
+      "recentRequests": "طلبات الوصول الأخيرة",
+      "recentRequestsDetail": "تابع أحدث الطلبات الواردة على الموارد التي تديرها.",
+      "manageResources": "إدارة الموارد",
+      "shortcuts": "اختصارات",
+      "myResources": "مواردي",
+      "aboutRatq": "حول RATQ"
+    },
+    "resources": {
+      "badge": "مواردي",
+      "title": "إدارة الموارد المنشورة",
+      "subtitle": "أضف موارد جديدة، وراجع حالة النشر، وعدل البيانات الأساسية من مساحة واحدة.",
+      "quickAction": "إجراء سريع",
+      "addResource": "إضافة مورد",
+      "closeForm": "إغلاق النموذج",
+      "editResource": "تعديل: {{name}}",
+      "saveResource": "حفظ المورد",
+      "publishedResources": "الموارد المنشورة ({{count}})",
+      "description": "قائمة الموارد التي أنشأتها أو تديرها داخل RATQ.",
+      "viewCatalog": "عرض الدليل العام",
+      "empty": "لم تقم بنشر أي موارد بعد.",
+      "addFirst": "إضافة أول مورد"
+    },
+    "requests": {
+      "badge": "طلبات الوصول",
+      "title": "راجع الطلبات الواردة على مواردك",
+      "subtitle": "تابع الطلبات الجديدة واتخذ قرار الموافقة أو الرفض من صفحة واضحة وسريعة المسح.",
+      "approve": "موافقة",
+      "deny": "رفض",
+      "requestedBy": "طلب بواسطة {{name}} - {{date}}",
+      "pending": "معلق",
+      "approved": "مقبول",
+      "denied": "مرفوض"
+    },
+    "apiKeys": {
+      "badge": "مفاتيح API",
+      "title": "إدارة مفاتيح التكامل",
+      "subtitle": "راجع مفاتيح الوصول الخاصة بالخدمات والتكاملات المرتبطة بحسابك.",
+      "securityNote": "ملاحظة أمان",
+      "securityText": "لا تشارك مفاتيحك في المستودعات العامة أو ملفات الواجهة الأمامية.",
+      "currentKeys": "المفاتيح الحالية",
+      "createKey": "إنشاء مفتاح",
+      "active": "نشط"
+    },
+    "settings": {
+      "badge": "الإعدادات",
+      "title": "إعدادات الحساب",
+      "subtitle": "راجع معلومات الحساب والتفضيلات الأساسية الخاصة بلوحة التحكم.",
+      "accountInfo": "معلومات الحساب",
+      "name": "الاسم",
+      "role": "الدور",
+      "preferences": "التفضيلات",
+      "accessNotifications": "إشعارات طلبات الوصول",
+      "weeklySummary": "ملخص أسبوعي للموارد"
+    },
+    "form": {
+      "name": "الاسم",
+      "type": "النوع",
+      "shortDescription": "وصف مختصر",
+      "fullDescription": "الوصف الكامل",
+      "license": "الرخصة",
+      "githubUrl": "رابط GitHub",
+      "documentationUrl": "رابط التوثيق",
+      "itqanBadge": "شارة إتقان",
+      "resourceNamePlaceholder": "اسم المورد",
+      "shortDescriptionPlaceholder": "ملخص قصير يظهر في القوائم",
+      "fullDescriptionPlaceholder": "وصف تفصيلي يظهر في صفحة المورد",
+      "licensePlaceholder": "مثال: MIT أو GPL-3.0",
+      "githubPlaceholder": "https://github.com/...",
+      "docsPlaceholder": "https://docs.example.com/..."
+    }
+  },
+  "auth": {
+    "loginTitle": "تسجيل الدخول",
+    "loginSubtitle": "مرحبا بعودتك. سجل دخولك للمتابعة إلى حسابك وإدارة مواردك.",
+    "developerSpace": "مساحة المطورين",
+    "loginPanelTitle": "ادخل إلى أدواتك ومتابعة مساهماتك بوضوح.",
+    "loginBenefit1": "وصول سريع إلى لوحة التحكم والموارد المحفوظة",
+    "loginBenefit2": "متابعة طلبات الوصول والتقارير من مكان واحد",
+    "loginBenefit3": "إدارة المساهمات الموجهة لخدمة البرمجيات القرآنية",
+    "loginNote": "منصة هادئة ومنظمة للموارد التقنية القرآنية، مصممة للبحث والمراجعة والعمل المتكرر.",
+    "noAccount": "ليس لديك حساب؟",
+    "registerNow": "سجل الآن",
+    "registerTitle": "إنشاء حساب",
+    "registerSubtitle": "انضم إلى مجتمع RATQ وابدأ في مشاركة واستخدام الموارد.",
+    "haveAccount": "لديك حساب بالفعل؟",
+    "loginNow": "سجل دخولك",
+    "registerBadge": "انضم إلى RATQ",
+    "registerPanelTitle": "انشر موارد قرآنية موثوقة وساهم في بناء المجتمع.",
+    "registerBenefit1": "انشر المكتبات ومجموعات البيانات وواجهات البرمجة وأدوات التطوير",
+    "registerBenefit2": "أدر مواردك وطلبات الوصول من لوحة تحكم واحدة",
+    "registerBenefit3": "ساهم في دليل متخصص للتقنيات القرآنية",
+    "registerNote": "اختر نوع الحساب الأقرب لطريقة مساهمتك. ويمكنك تصفح جميع الموارد العامة.",
+    "displayName": "الاسم",
+    "displayNamePlaceholder": "اسمك",
+    "email": "البريد الإلكتروني",
+    "password": "كلمة المرور",
+    "accountRole": "أنضم بصفتي",
+    "developer": "مطور",
+    "developerDescription": "أبني باستخدام الموارد القرآنية",
+    "publisher": "ناشر",
+    "publisherDescription": "أشارك الموارد وأديرها",
+    "createAccount": "إنشاء الحساب",
+    "creatingAccount": "جاري إنشاء الحساب..."
+  }
+}

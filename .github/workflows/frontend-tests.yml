@@ -1,0 +1,23 @@
+name: Frontend tests
+
+on:
+  push:
+    branches: [beta]
+    paths-ignore:
+      - 'payload-backend/**'
+  pull_request:
+    branches: [beta]
+    paths-ignore:
+      - 'payload-backend/**'
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run test:run

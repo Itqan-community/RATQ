@@ -1,0 +1,88 @@
+'use client';
+
+import { useState } from 'react';
+import { useTranslations } from '@/i18n';
+import type { ResourceType } from '@/types/resource';
+
+interface ResourceFormProps {
+  onSubmit: (data: {
+    name: string;
+    type: ResourceType;
+    short_description: string;
+    description: string;
+    license: string;
+    github_url: string;
+    documentation_url: string;
+  }) => void;
+  initial?: {
+    name?: string;
+    type?: ResourceType;
+    short_description?: string;
+    description?: string;
+    license?: string;
+    github_url?: string;
+    documentation_url?: string;
+  };
+  submitLabel?: string;
+}
+
+export function ResourceForm({ onSubmit, initial, submitLabel }: ResourceFormProps) {
+  const t = useTranslations();
+  const copy = t.dashboard.form;
+  const [name, setName] = useState(initial?.name || '');
+  const [type, setType] = useState<ResourceType>(initial?.type || 'library');
+  const [shortDescription, setShortDescription] = useState(initial?.short_description || '');
+  const [description, setDescription] = useState(initial?.description || '');
+  const [license, setLicense] = useState(initial?.license || '');
+  const [github_url, setGithubUrl] = useState(initial?.github_url || '');
+  const [documentation_url, setDocumentationUrl] = useState(initial?.documentation_url || '');
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    onSubmit({ name, type, short_description: shortDescription, description, license, github_url, documentation_url });
+  };
+
+  const resourceTypes: { value: ResourceType; label: string }[] = [
+    { value: 'library', label: t.catalog.types.library },
+    { value: 'sdk', label: t.catalog.types.sdk },
+    { value: 'dataset', label: t.catalog.types.dataset },
+    { value: 'api', label: t.catalog.types.api },
+    { value: 'tafsir', label: t.catalog.types.tafsir },
+  ];
+
+  return (
+    <form onSubmit={handleSubmit} className="space-y-4 text-start">
+      <div>
+        <label className="mb-1 block text-sm font-heading text-[var(--text-secondary)]">{copy.name} *</label>
+        <input type="text" value={name} onChange={(e) => setName(e.target.value)} className="input-field" required placeholder={copy.resourceNamePlaceholder} />
+      </div>
+      <div>
+        <label className="mb-1 block text-sm font-heading text-[var(--text-secondary)]">{copy.type} *</label>
+        <select value={type} onChange={(e) => setType(e.target.value as ResourceType)} className="input-field">
+          {resourceTypes.map((item) => <option key={item.value} value={item.value}>{item.label}</option>)}
+        </select>
+      </div>
+      <div>
+        <label className="mb-1 block text-sm font-heading text-[var(--text-secondary)]">{copy.shortDescription} *</label>
+        <input type="text" value={shortDescription} onChange={(e) => setShortDescription(e.target.value)} className="input-field" required placeholder={copy.shortDescriptionPlaceholder} maxLength={160} />
+      </div>
+      <div>
+        <label className="mb-1 block text-sm font-heading text-[var(--text-secondary)]">{copy.fullDescription} *</label>
+        <textarea value={description} onChange={(e) => setDescription(e.target.value)} className="input-field min-h-[100px] resize-y" required placeholder={copy.fullDescriptionPlaceholder} />
+      </div>
+      <div>
+        <label className="mb-1 block text-sm font-heading text-[var(--text-secondary)]">{copy.license}</label>
+        <input type="text" value={license} onChange={(e) => setLicense(e.target.value)} className="input-field" required placeholder={copy.licensePlaceholder} />
+      </div>
+      <div>
+        <label className="mb-1 block text-sm font-heading text-[var(--text-secondary)]">{copy.githubUrl}</label>
+        <input type="url" value={github_url} onChange={(e) => setGithubUrl(e.target.value)} className="input-field" placeholder={copy.githubPlaceholder} dir="ltr" />
+      </div>
+      <div>
+        <label className="mb-1 block text-sm font-heading text-[var(--text-secondary)]">{copy.documentationUrl}</label>
+        <input type="url" value={documentation_url} onChange={(e) => setDocumentationUrl(e.target.value)} className="input-field" placeholder={copy.docsPlaceholder} dir="ltr" />
+      </div>
+      <button type="submit" className="btn-primary w-full">{submitLabel || t.dashboard.resources.saveResource}</button>
+    </form>
+  );
+}

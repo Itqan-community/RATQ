@@ -1,0 +1,11 @@
+{$SITE_DOMAIN} {
+    encode gzip
+
+    reverse_proxy app:3000
+
+    header {
+        X-Content-Type-Options nosniff
+        X-Frame-Options DENY
+        X-XSS-Protection "1; mode=block"
+    }
+}

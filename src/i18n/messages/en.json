@@ -1,0 +1,452 @@
+{
+  "header": {
+    "nav": {
+      "resources": "Resources",
+      "about": "About",
+      "dashboard": "Dashboard"
+    },
+    "auth": {
+      "login": "Log in",
+      "register": "Register",
+      "logout": "Log out"
+    },
+    "langSwitch": {
+      "ar": "العربية",
+      "en": "English"
+    },
+    "mobileMenu": "Menu"
+  },
+  "home": {
+    "hero": {
+      "title": "Discover Quranic Development Assets",
+      "subtitle": "A focused source for libraries, SDKs, datasets, APIs, and scholarly resources.",
+      "categories": [
+        "Libraries",
+        "SDKs",
+        "Datasets",
+        "APIs",
+        "Tafsir"
+      ],
+      "badge": "All resources are free",
+      "searchPlaceholder": "Search by resource name",
+      "searchLabel": "Search",
+      "floatOne": "20+ available resources",
+      "floatTwo": "Libraries and developer tools",
+      "starLine1": "resources available",
+      "starLine2": "for free use"
+    },
+    "cta": {
+      "title": "Publish Your Quranic Resource",
+      "subtitle": "Share your resource with the community.",
+      "getStarted": "Get Started",
+      "explore": "Explore Resources"
+    },
+    "featured": {
+      "title": "Featured Resources",
+      "browseAll": "Browse all",
+      "empty": "No featured resources yet."
+    },
+    "stats": {
+      "resources": "Resources",
+      "publishers": "Publishers",
+      "developers": "Developers",
+      "downloads": "Downloads"
+    },
+    "announcements": {
+      "title": "Announcements",
+      "text": "New: Quranic Text Toolkit (QTT SDK) is now available.",
+      "action": "View resource"
+    },
+    "sections": {
+      "trending": "Trending resources",
+      "featured": "Featured resources",
+      "stats": "Statistics"
+    },
+    "resourceCard": {
+      "title": "Quranic Text Toolkit (QTT)",
+      "description": "More than 50,000 Quranic words with rich morphology and semantic data.",
+      "view": "View resource",
+      "downloads": "10k"
+    },
+    "publish": {
+      "title": "Publish your Quranic resource",
+      "subtitle": "Share your library, development tool, or dataset with the community. Reach the developers building the next generation.",
+      "action": "Publish now"
+    }
+  },
+  "announcements": {
+    "title": "Announcements",
+    "types": {
+      "release": "New Release",
+      "new_resource": "New Resource",
+      "maintenance": "Maintenance",
+      "breaking_change": "Breaking Change"
+    },
+    "ago": "{{count}} ago",
+    "viewResource": "View resource",
+    "learnMore": "Learn more",
+    "viewChangelog": "View changelog",
+    "noAnnouncements": ""
+  },
+  "trending": {
+    "title": "Trending Resources",
+    "browseAll": "Browse all",
+    "period7d": "7 days",
+    "period30d": "30 days",
+    "periodAllTime": "All-time",
+    "downloads": "{{count}} downloads",
+    "viewResource": "View resource",
+    "rankFirst": "1st place",
+    "rankSecond": "2nd place",
+    "rankThird": "3rd place"
+  },
+  "catalog": {
+    "title": "Resources",
+    "subtitle": "Discover Quranic development resources.",
+    "showing": "Showing {{count}} of {{total}} resources",
+    "showingSearch": "Showing {{count}} of {{total}} resources for \"{{query}}\"",
+    "empty": {
+      "title": "No resources found.",
+      "subtitle": "Try adjusting your filters or search query."
+    },
+    "sort": {
+      "by": "Sort by",
+      "options": {
+        "relevance": "Relevance",
+        "downloads": "Most Downloaded",
+        "newest": "Newest First",
+        "oldest": "Oldest First",
+        "name_asc": "Name (A-Z)",
+        "name_desc": "Name (Z-A)"
+      }
+    },
+    "filters": {
+      "title": "Filters",
+      "type": "Type",
+      "allTypes": "All Types",
+      "license": "License",
+      "allLicenses": "All",
+      "itqanBadge": "Itqan Verified",
+      "verifiedOnly": "Verified only",
+      "notVerified": "Not verified"
+    },
+    "types": {
+      "library": "Library",
+      "sdk": "SDK",
+      "dataset": "Dataset",
+      "api": "API",
+      "tafsir": "Tafsir",
+      "audio": "Audio",
+      "pdf": "PDF",
+      "json": "JSON",
+      "recitation": "Recitation",
+      "mushaf": "Mushaf",
+      "program": "Program",
+      "linguistic": "Linguistic",
+      "translation": "Translation",
+      "font": "Font",
+      "search": "Search",
+      "tajweed": "Tajweed"
+    }
+  },
+  "resource": {
+    "itqanBadge": "Itqan",
+    "details": "Details",
+    "github": "GitHub",
+    "version": "Version",
+    "githubStats": {
+      "title": "GitHub Statistics",
+      "stars": "Stars",
+      "forks": "Forks",
+      "openIssues": "Open Issues",
+      "lastCommit": "Last Commit",
+      "viewOnGithub": "View on GitHub",
+      "statsUnavailable": "Stats unavailable"
+    },
+    "detail": {
+      "home": "Home",
+      "resources": "Resources",
+      "description": "Description",
+      "information": "Information",
+      "license": "License",
+      "type": "Type",
+      "created": "Created",
+      "updated": "Last Updated",
+      "version": "Version",
+      "documentation": "Documentation",
+      "accessRequest": "Request Access",
+      "accessRequestDescription": "Submit a request and it will be reviewed.",
+      "quickSummary": "Quick Summary",
+      "status": "Status",
+      "published": "Published",
+      "itqanCertified": "Itqan Certified",
+      "yes": "Yes",
+      "no": "No",
+      "relatedResources": "Related Resources",
+      "trustedBy": "Trusted By",
+      "trustedByCount": "Trusted by {{count}} applications",
+      "showMore": "Show all {{count}}",
+      "showLess": "Show less",
+      "comments": "Comments",
+      "leaveAComment": "Leave a comment...",
+      "authorName": "Your name",
+      "post": "Post",
+      "commingSoon": "Comments will be available soon",
+      "noComments": "No comments yet",
+      "requestFailed": "Failed to submit request.",
+      "loginToRequest": "Log in to request access",
+      "loginToReport": "Log in to report",
+      "loginToComment": "Log in to comment",
+      "requestSent": "Access request submitted successfully",
+      "requestReviewed": "Your request will be reviewed soon",
+      "accessRequestFor": "Request access for",
+      "accessReason": "Explain why you need access...",
+      "submit": "Submit",
+      "cancel": "Cancel",
+      "report": "Report",
+      "reportTooltip": "Report this resource",
+      "reportModalTitle": "Report this resource",
+      "reportReason": "Reason",
+      "reportReasonInaccurate": "Inaccurate",
+      "reportReasonInappropriate": "Inappropriate",
+      "reportReasonInfringing": "Infringing",
+      "reportReasonSpam": "Spam",
+      "reportReasonOutdated": "Outdated",
+      "reportReasonBrokenLink": "Broken link",
+      "reportDetails": "Details (optional)",
+      "reportSubmit": "Submit Report",
+      "reportCancel": "Cancel",
+      "reportSuccess": "Report submitted successfully",
+      "reportError": "Failed to submit report.",
+      "reportDuplicate": "You've already reported this resource.",
+      "preview": "Preview",
+      "previewUnavailable": "Preview not available for this resource",
+      "previewCollapse": "Collapse preview",
+      "previewExpand": "Expand preview",
+      "previewApiEndpoint": "Endpoint",
+      "previewApiTryIt": "Try it",
+      "previewSdkInstall": "Install",
+      "previewSdkCopied": "Copied!",
+      "previewDatasetRows": "Rows",
+      "previewDatasetColumns": "Columns",
+      "previewDatasetSize": "Size",
+      "previewJsonFormat": "Formatted JSON"
+    }
+  },
+  "footer": {
+    "description": "A community-driven hub for Quranic development assets.",
+    "platform": {
+      "title": "Platform",
+      "browse": "Browse Resources",
+      "standards": "Itqan Standards",
+      "docs": "Documentation"
+    },
+    "community": {
+      "title": "Community",
+      "about": "About Us",
+      "contact": "Contact",
+      "privacy": "Privacy Policy"
+    },
+    "copyright": "© {{year}} RATQ Community Platform. All rights reserved."
+  },
+  "pagination": {
+    "of": "of"
+  },
+  "about": {
+    "pageTitle": "About",
+    "why": {
+      "paragraph1": "RATQ was created to bring Quranic software resources together in one clear and accessible place.",
+      "paragraph2": "We help developers, researchers, and publishers discover useful work, understand how it can be used, and contribute resources that benefit the wider community."
+    },
+    "whatIs": {
+      "title": "What is RATQ?",
+      "paragraph1": "RATQ is a community directory for Quranic libraries, SDKs, datasets, APIs, research tools, and other technical resources. It gives each resource a consistent place for its description, documentation, license, version, and access information.",
+      "paragraph2Before": "The platform also encourages careful publishing and review through the ",
+      "paragraph2After": ", helping users evaluate accuracy, attribution, and technical quality before using a resource.",
+      "standards": "Itqan Standards"
+    },
+    "offer": {
+      "title": "What RATQ provides",
+      "intro": "The platform supports the full path from discovering a resource to publishing and maintaining one.",
+      "items": {
+        "catalog": {
+          "title": "An organized resource catalog",
+          "description": "Find Quranic libraries, datasets, APIs, SDKs, and research tools through a consistent and searchable directory."
+        },
+        "verification": {
+          "title": "Clear quality information",
+          "description": "Review documentation, licenses, versions, attribution, and Itqan verification information before choosing a resource."
+        },
+        "access": {
+          "title": "Access management for publishers",
+          "description": "Publishers can manage restricted resources, review access requests, and keep resource information up to date."
+        },
+        "community": {
+          "title": "Community feedback",
+          "description": "Comments, reports, and reviews help identify useful resources, outdated information, and areas that need improvement."
+        },
+        "tools": {
+          "title": "Tools for developers",
+          "description": "Developer-focused pages, API keys, documentation links, and integration details make resources easier to use in real projects."
+        }
+      }
+    },
+    "mission": {
+      "title": "Our mission",
+      "description": "To make trusted Quranic technical resources easier to discover, understand, publish, and maintain, while supporting responsible collaboration between developers, researchers, and publishers."
+    },
+    "vision": {
+      "title": "Our vision",
+      "description": "A connected Quranic technology community where valuable work is visible, well documented, properly attributed, and easier to build upon."
+    }
+  },
+  "dashboard": {
+    "side": {
+      "title": "Dashboard",
+      "overview": "Overview",
+      "resources": "My resources",
+      "resourcesDetail": "Publish and manage",
+      "requests": "Access requests",
+      "requestsDetail": "Review and respond",
+      "apiKeys": "API keys",
+      "apiKeysDetail": "Integrations",
+      "settings": "Settings",
+      "settingsDetail": "Account preferences",
+      "shortcut": "Shortcut",
+      "browseCatalog": "Browse catalog",
+      "openMenu": "Open menu",
+      "closeMenu": "Close menu"
+    },
+    "common": {
+      "loading": "Loading",
+      "welcome": "Welcome",
+      "logout": "Log out",
+      "ratq": "RATQ",
+      "edit": "Edit",
+      "delete": "Delete",
+      "published": "Published",
+      "draft": "Draft",
+      "saveChanges": "Save changes",
+      "cancel": "Cancel"
+    },
+    "overview": {
+      "title": "Dashboard",
+      "activitySummary": "Activity summary",
+      "welcomeBack": "Welcome back, {{name}}",
+      "summary": "Here is a quick view of your resources, access requests, and account status on RATQ.",
+      "nextAction": "Next action",
+      "nextActionTitle": "Publish or review your resources from one place.",
+      "addResource": "Add resource",
+      "publishedResources": "Published resources",
+      "publishedResourcesDetail": "Resources currently managed by your account.",
+      "pendingRequests": "Pending requests",
+      "pendingRequestsDetail": "Requests waiting for review or a decision.",
+      "apiKeys": "API keys",
+      "apiKeysDetail": "Integration keys connected to your account.",
+      "role": "Role",
+      "roleDetail": "Current account permissions inside the platform.",
+      "recentRequests": "Recent access requests",
+      "recentRequestsDetail": "Track the latest requests for resources you manage.",
+      "manageResources": "Manage resources",
+      "shortcuts": "Shortcuts",
+      "myResources": "My resources",
+      "aboutRatq": "About RATQ"
+    },
+    "resources": {
+      "badge": "My resources",
+      "title": "Manage published resources",
+      "subtitle": "Add new resources, review publishing status, and edit core metadata from one workspace.",
+      "quickAction": "Quick action",
+      "addResource": "Add resource",
+      "closeForm": "Close form",
+      "editResource": "Edit: {{name}}",
+      "saveResource": "Save resource",
+      "publishedResources": "Published resources ({{count}})",
+      "description": "Resources created or managed by your RATQ account.",
+      "viewCatalog": "View public catalog",
+      "empty": "You have not published any resources yet.",
+      "addFirst": "Add first resource"
+    },
+    "requests": {
+      "badge": "Access requests",
+      "title": "Review requests for your resources",
+      "subtitle": "Track new requests and make approval decisions from a clear, scannable page.",
+      "approve": "Approve",
+      "deny": "Deny",
+      "requestedBy": "Requested by {{name}} - {{date}}",
+      "pending": "Pending",
+      "approved": "Approved",
+      "denied": "Denied"
+    },
+    "apiKeys": {
+      "badge": "API keys",
+      "title": "Manage integration keys",
+      "subtitle": "Review access keys for services and integrations connected to your account.",
+      "securityNote": "Security note",
+      "securityText": "Do not share keys in public repositories or frontend code.",
+      "currentKeys": "Current keys",
+      "createKey": "Create key",
+      "active": "Active"
+    },
+    "settings": {
+      "badge": "Settings",
+      "title": "Account settings",
+      "subtitle": "Review account information and core dashboard preferences.",
+      "accountInfo": "Account information",
+      "name": "Name",
+      "role": "Role",
+      "preferences": "Preferences",
+      "accessNotifications": "Access request notifications",
+      "weeklySummary": "Weekly resource summary"
+    },
+    "form": {
+      "name": "Name",
+      "type": "Type",
+      "shortDescription": "Short Description",
+      "fullDescription": "Full Description",
+      "license": "License",
+      "githubUrl": "GitHub URL",
+      "documentationUrl": "Documentation URL",
+      "itqanBadge": "Itqan Verified Badge",
+      "resourceNamePlaceholder": "Resource name",
+      "shortDescriptionPlaceholder": "Brief one-line summary shown in listings",
+      "fullDescriptionPlaceholder": "Detailed description shown on the resource detail page",
+      "licensePlaceholder": "e.g. MIT, GPL-3.0, custom",
+      "githubPlaceholder": "https://github.com/...",
+      "docsPlaceholder": "https://docs.example.com/..."
+    }
+  },
+  "auth": {
+    "loginTitle": "Log in",
+    "loginSubtitle": "Welcome back. Continue to your account and manage your resources.",
+    "developerSpace": "Developer space",
+    "loginPanelTitle": "Access your tools and track your contributions clearly.",
+    "loginBenefit1": "Quick access to your dashboard and saved resources",
+    "loginBenefit2": "Track access requests and reports from one place",
+    "loginBenefit3": "Manage contributions for Quranic software development",
+    "loginNote": "A calm, organized platform for Quranic technical resources, designed for search, review, and repeated work.",
+    "noAccount": "No account yet?",
+    "registerNow": "Register now",
+    "registerTitle": "Create account",
+    "registerSubtitle": "Join the RATQ community and start sharing and using resources.",
+    "haveAccount": "Already have an account?",
+    "loginNow": "Log in",
+    "registerBadge": "Join RATQ",
+    "registerPanelTitle": "Publish trusted Quranic resources and build with the community.",
+    "registerBenefit1": "Publish libraries, datasets, APIs, and developer tools",
+    "registerBenefit2": "Manage your resources and access requests from one dashboard",
+    "registerBenefit3": "Contribute to a focused catalog for Quranic technology",
+    "registerNote": "Choose the account role that best matches how you plan to contribute. You can still explore every public resource.",
+    "displayName": "Display name",
+    "displayNamePlaceholder": "Your name",
+    "email": "Email",
+    "password": "Password",
+    "accountRole": "I am joining as",
+    "developer": "Developer",
+    "developerDescription": "Build with Quranic resources",
+    "publisher": "Publisher",
+    "publisherDescription": "Share and manage resources",
+    "createAccount": "Create account",
+    "creatingAccount": "Creating account..."
+  }
+}
