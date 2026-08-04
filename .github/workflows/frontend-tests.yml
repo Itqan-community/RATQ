@@ -2,11 +2,11 @@ name: Frontend tests
 
 on:
   push:
-    branches: [beta]
+    branches: [main, beta]
     paths-ignore:
       - 'payload-backend/**'
   pull_request:
-    branches: [beta]
+    branches: [main, beta]
     paths-ignore:
       - 'payload-backend/**'
 

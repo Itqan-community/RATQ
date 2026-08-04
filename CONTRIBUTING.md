@@ -2,13 +2,13 @@
 
 RATQ is the developer marketplace at the center of the Itqan ecosystem: a place where developers discover, verify, and integrate Quranic-data resources, including libraries, SDKs, datasets, APIs, and tafsir sources.
 
-This repo's `beta` branch is a Next.js/TypeScript rebuild in active development, previewable at [beta.ratq.itqan.dev](https://beta.ratq.itqan.dev). It is not yet the production site. All contributions currently target `beta`, not `main`.
+This repo's `main` branch is a Next.js/TypeScript rebuild in active development, previewable at [beta.ratq.itqan.dev](https://beta.ratq.itqan.dev) and [ratq.itqan.dev](https://ratq.itqan.dev). The product itself is still pre-launch (per the roadmap) even though `main` is now the source of truth for the codebase. All contributions target `main`. (The old static-wiki version of this repo is preserved on the `old_main` branch for reference.)
 
 This project follows Itqan's [Community-first process](https://app.notion.com/p/3a97056925c880cf98d5db323853e93a): no work happens without a GitHub Issue, and community contributors work from the same queue as the internal team.
 
 ## Setup
 
-1. Fork and clone the repo, then check out `beta`: `git checkout beta`.
+1. Fork and clone the repo (`main` is checked out by default).
 2. `npm install`
 3. Copy `.env.example` to `.env.local` and adjust if needed (defaults work for local development against mock data).
 4. `npm run dev` and open `http://localhost:3000`.
@@ -60,7 +60,7 @@ You're welcome to use AI coding tools, but the PR is still your responsibility: 
 1. Open a GitHub Issue first (or pick up an existing one, look for the `good first issue` label if you're new).
 2. Comment on the issue to claim it before starting work, so two people don't duplicate effort.
 3. Ask to be assigned to the issue before starting work, to avoid effort duplication.
-4. Branch from `beta`, not `main`.
+4. Branch from `main`.
 5. Reference the issue number in your PR description.
 6. Keep PRs scoped to one issue. Split unrelated changes into separate PRs.
 7. A maintainer reviews within a few business days. Draft PRs are welcome for early feedback, even on incomplete work.
