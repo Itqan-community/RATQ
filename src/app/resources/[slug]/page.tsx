@@ -1,5 +1,5 @@
 import { notFound } from 'next/navigation';
-import { mockResources } from '@/modules/resources/infrastructure/mock-data';
+import { resourceAggregator } from '@/modules/resources/infrastructure/repositories/aggregate';
 import { ResourceDetailClient } from './ResourceDetailClient';
 
 // Required by @cloudflare/next-on-pages: non-static routes must opt into the
@@ -12,7 +12,7 @@ export async function generateMetadata({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const resource = mockResources.find((r) => r.slug === slug);
+  const resource = await resourceAggregator.get(slug);
   if (!resource) return { title: 'Resource Not Found' };
 
   return {
@@ -27,11 +27,11 @@ export default async function ResourceDetailPage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const mock = mockResources.find((r) => r.slug === slug);
+  const resource = await resourceAggregator.get(slug);
 
-  if (!mock) {
+  if (!resource) {
     notFound();
   }
 
-  return <ResourceDetailClient resource={{ ...mock, source: 'ratq', source_url: null }} />;
+  return <ResourceDetailClient resource={resource} />;
 }

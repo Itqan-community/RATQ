@@ -1,9 +1,9 @@
 import type { Resource, PaginatedResponse, ResourceListParams } from '@/types/resource';
 
 // Resource listing/detail is always backed by the multi-source aggregator
-// (repositories/) - it includes RATQ's own mock resources as one source
-// alongside live sources like CMS, independent of DATA_MODE (which still
-// governs auth/requests/api-keys/reports).
+// (repositories/) - live sources (CMS, Payload) by default, independent of
+// DATA_MODE (which still governs auth/requests/api-keys/reports). RATQ's own
+// mock resources are an opt-in source, see registry.ts.
 //
 // This client code calls RATQ's own /api/resources route rather than the
 // aggregator directly, so source fetches (e.g. CMS) run server-side where

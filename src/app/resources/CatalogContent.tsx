@@ -3,12 +3,12 @@
 import Link from 'next/link';
 import { useLanguage } from '@/shared/ui/i18n';
 import { ResourceCard } from '@/modules/resources/components/ResourceCard';
-import { mockResources } from '@/modules/resources/infrastructure/mock-data';
-
-const resources = mockResources.map((r) => ({ ...r, source: 'ratq' as const, source_url: null }));
+import { useResources } from '@/hooks/useResources';
 
 export function CatalogContent() {
-  const { locale, direction } = useLanguage();
+  const { locale, direction, t } = useLanguage();
+  const { data, error, isLoading } = useResources();
+  const resources = data?.results ?? [];
 
   return (
     <div className="bg-white pb-10 pt-32 text-black sm:pt-36" dir={direction}>
@@ -24,11 +24,29 @@ export function CatalogContent() {
           </p>
         </section>
 
-        <section className="mt-7 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
-          {resources.map((resource) => (
-            <ResourceCard key={resource.id} resource={resource} />
-          ))}
-        </section>
+        {isLoading ? (
+          <section className="mt-7 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3" aria-busy="true">
+            {Array.from({ length: 6 }).map((_, index) => (
+              <div key={index} className="skeleton min-h-[305px] rounded-[13px]" />
+            ))}
+          </section>
+        ) : error ? (
+          <section className="mt-7 rounded-[18px] border border-[#e7e7e7] bg-[#fafafa] px-6 py-16 text-center">
+            <p className="text-lg font-black">{t.catalog.error.title}</p>
+            <p className="mt-2 text-sm text-[#8b8b8b]">{t.catalog.error.subtitle}</p>
+          </section>
+        ) : resources.length === 0 ? (
+          <section className="mt-7 rounded-[18px] border border-[#e7e7e7] bg-[#fafafa] px-6 py-16 text-center">
+            <p className="text-lg font-black">{t.catalog.noResources.title}</p>
+            <p className="mt-2 text-sm text-[#8b8b8b]">{t.catalog.noResources.subtitle}</p>
+          </section>
+        ) : (
+          <section className="mt-7 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+            {resources.map((resource) => (
+              <ResourceCard key={resource.id} resource={resource} />
+            ))}
+          </section>
+        )}
 
         <section className="mt-24 overflow-hidden rounded-[24px] bg-[linear-gradient(112deg,#edf1f1_15%,#dbeaf6_100%)] px-7 sm:px-12">
           <div className="grid items-stretch md:min-h-[340px] gap-8 md:grid-cols-[330px_1fr]" dir="ltr">

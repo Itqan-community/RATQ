@@ -147,6 +147,14 @@
       "font": "Font",
       "search": "Search",
       "tajweed": "Tajweed"
+    },
+    "error": {
+      "title": "Failed to load resources.",
+      "subtitle": "Please try again later."
+    },
+    "noResources": {
+      "title": "No resources yet.",
+      "subtitle": "Real resources are being added. Check back soon."
     }
   },
   "resource": {
