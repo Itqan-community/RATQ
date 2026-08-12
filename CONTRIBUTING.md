@@ -60,7 +60,7 @@ You're welcome to use AI coding tools, but the PR is still your responsibility: 
 1. Open a GitHub Issue first (or pick up an existing one, look for the `good first issue` label if you're new).
 2. Comment on the issue to claim it before starting work, so two people don't duplicate effort.
 3. Ask to be assigned to the issue before starting work, to avoid effort duplication.
-4. Branch from `main`.
+4. Branch from `main`, named `feat/{short-title}` (e.g. `feat/pagination-a11y`). This repo's CI runs a Branch Naming Check that **fails the whole PR** on any other prefix (`fix/`, `chore/`, plain branch names, etc.) - even for a small fix or a typo correction. If you forked and started on your fork's default branch, push a new `feat/{short-title}` branch instead of opening the PR from `main`.
 5. Reference the issue number in your PR description.
 6. Keep PRs scoped to one issue. Split unrelated changes into separate PRs.
 7. A maintainer reviews within a few business days. Draft PRs are welcome for early feedback, even on incomplete work.
