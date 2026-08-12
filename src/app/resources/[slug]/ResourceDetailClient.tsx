@@ -38,29 +38,6 @@ function TypeIcon({ type }: { type: ResourceType }) {
   return <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round">{paths[type]}</svg>;
 }
 
-function RepositoryPreview({ resource, description }: { resource: Resource; description: string }) {
-  const rows = ['Add deploy pipeline', 'Add recitations resource api', 'Add benchmark', 'Start sidekiq', 'Add books model'];
-  return (
-    <a href={resource.github_url || resource.documentation_url || '#'} target="_blank" rel="noopener noreferrer" className="block overflow-hidden rounded-[18px] border border-[#26313b] bg-[#0d1117] text-[#b8c2cc] shadow-[0_14px_34px_rgba(15,23,42,0.12)]" dir="ltr">
-      <div className="flex items-center justify-between border-b border-[#30363d] bg-[#161b22] px-4 py-3 text-[10px]">
-        <span className="rounded-full bg-[#238636] px-3 py-1 font-bold text-white">Code</span>
-        <div className="flex gap-2"><span className="rounded bg-[#21262d] px-2 py-1">Watch 14</span><span className="rounded bg-[#21262d] px-2 py-1">Fork 104</span><span className="rounded bg-[#21262d] px-2 py-1">Star {resource.github_stats?.stars ?? 856}</span></div>
-      </div>
-      <div className="grid min-h-[285px] grid-cols-1 text-[10px] sm:grid-cols-[minmax(0,1fr)_180px] sm:text-xs">
-        <div className="border-r border-[#30363d] p-4">
-          <div className="mb-3 flex justify-between rounded-md border border-[#30363d] px-3 py-2"><span>Go to file</span><span>Public</span></div>
-          {rows.map((row, index) => <div key={row} className="flex justify-between border-b border-[#21262d] py-3"><span>{row}</span><span>{index + 2} days ago</span></div>)}
-        </div>
-        <aside className="hidden p-4 sm:block">
-          <h3 className="font-bold text-white">About</h3>
-          <p className="mt-3 leading-5">{description}</p>
-          <div className="mt-4 flex flex-wrap gap-1"><span className="rounded-full bg-[#132f4c] px-2 py-1 text-[#58a6ff]">quran</span><span className="rounded-full bg-[#132f4c] px-2 py-1 text-[#58a6ff]">arabic</span><span className="rounded-full bg-[#132f4c] px-2 py-1 text-[#58a6ff]">toolkit</span></div>
-        </aside>
-      </div>
-    </a>
-  );
-}
-
 function InfoItem({ icon, label, value }: { icon: ReactNode; label: string; value: string }) {
   return <div className="flex items-center gap-3 text-sm"><span className="text-[#777]">{icon}</span><span><strong>{label}:</strong> {value}</span></div>;
 }
@@ -71,7 +48,6 @@ export function ResourceDetailClient({ resource }: ResourceDetailClientProps) {
   const { t, locale, direction } = useLanguage();
   const arabicCopy = arabicDescriptions[resource.slug as keyof typeof arabicDescriptions];
   const localizedDescription = locale === 'ar' && arabicCopy ? arabicCopy.description : resource.description;
-  const localizedShortDescription = locale === 'ar' && arabicCopy ? arabicCopy.short_description : (resource.short_description || resource.description);
 
   return (
     <div className="bg-white pb-10 pt-32 text-black sm:pt-36" dir={direction}>
@@ -102,7 +78,6 @@ export function ResourceDetailClient({ resource }: ResourceDetailClientProps) {
           </aside>
 
           <div className="min-w-0" dir={direction}>
-            <RepositoryPreview resource={resource} description={localizedShortDescription}/>
 
             <section className="mt-6">
               <h2 className="text-xl font-black">{t.resource.detail.description}</h2>
