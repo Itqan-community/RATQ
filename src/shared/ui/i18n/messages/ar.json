@@ -3,7 +3,8 @@
     "nav": {
       "resources": "الموارد",
       "about": "حول",
-      "dashboard": "لوحة التحكم"
+      "dashboard": "لوحة التحكم",
+      "home": "الرئيسية"
     },
     "auth": {
       "login": "تسجيل الدخول",
