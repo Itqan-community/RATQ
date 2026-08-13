@@ -79,6 +79,11 @@ export interface Comment {
   created_at: string;
 }
 
+export interface CommentWithResource {
+  comment: Comment;
+  resource_name: string;
+}
+
 // ─── Access Request Types ─────────────────────────────────────────────────
 
 export type RequestStatus = 'pending' | 'approved' | 'denied';

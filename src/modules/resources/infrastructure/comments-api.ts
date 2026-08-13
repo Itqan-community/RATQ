@@ -1,5 +1,5 @@
-import type { Comment } from '@/types/resource';
-import { getAccessToken } from '@/shared/infrastructure/token-storage';
+import type { Comment, CommentWithResource } from '@/types/resource';
+import { getAccessToken, getCurrentUserId } from '@/shared/infrastructure/token-storage';
 import { payloadErrorMessage } from '@/shared/infrastructure/payload-error';
 import { PAYLOAD_API_BASE } from '@/shared/infrastructure/payload-config';
 
@@ -13,10 +13,16 @@ interface PayloadCommentDoc {
   content: string;
   createdAt: string;
   author_name: string;
+  resource?: number | { id: number; name: string };
 }
 
 function toComment(doc: PayloadCommentDoc): Comment {
   return { id: doc.id, author_name: doc.author_name, content: doc.content, created_at: doc.createdAt };
+}
+
+function toCommentWithResource(doc: PayloadCommentDoc): CommentWithResource {
+  const resourceName = typeof doc.resource === 'object' ? doc.resource.name : 'Unknown';
+  return { comment: toComment(doc), resource_name: resourceName };
 }
 
 export async function fetchComments(resourceId: number): Promise<Comment[]> {
@@ -42,4 +48,17 @@ export async function postComment(resourceId: number, content: string): Promise<
   if (!res.ok) throw new Error(await payloadErrorMessage(res, 'Failed to post comment'));
   const result: { doc: PayloadCommentDoc } = await res.json();
   return toComment(result.doc);
+}
+
+export async function fetchMyComments(): Promise<CommentWithResource[]> {
+  const userId = getCurrentUserId();
+  if (!userId) return [];
+
+  const res = await fetch(
+    `${PAYLOAD_API_BASE}/comments?where[author][equals]=${userId}&sort=-createdAt&depth=1&limit=100`,
+    { headers: { Authorization: `JWT ${getAccessToken()}` } }
+  );
+  if (!res.ok) throw new Error('Failed to fetch comments');
+  const data: { docs: PayloadCommentDoc[] } = await res.json();
+  return data.docs.map(toCommentWithResource);
 }
