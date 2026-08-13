@@ -3,7 +3,8 @@
     "nav": {
       "resources": "Resources",
       "about": "About",
-      "dashboard": "Dashboard"
+      "dashboard": "Dashboard",
+      "home": "Home"
     },
     "auth": {
       "login": "Log in",
