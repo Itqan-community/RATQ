@@ -1,41 +1,12 @@
 'use client';
 
 import { useState } from 'react';
+import { useDeveloperComments } from '@/hooks/useDeveloperComments';
 import { CommentRow } from '@/modules/developer/components/CommentRow';
-import type { Comment } from '@/types/resource';
-
-const mockCommentsWithResources = [
-  {
-    comment: {
-      id: 501,
-      author_name: 'محمد أحمد',
-      content: 'مكتبة ممتازة! التحليل الصرفي كان مفيداً جداً لمشروع البحث الخاص بي.',
-      created_at: '2026-02-10T14:30:00Z',
-    },
-    resource_name: 'Quranic Text Toolkit (QTT)',
-  },
-  {
-    comment: {
-      id: 502,
-      author_name: 'محمد أحمد',
-      content: 'هل يمكن إضافة دعم لخط الإنديك؟ هذا سيكون مفيداً جداً للمشاريع التي تستهدف جنوب آسيا.',
-      created_at: '2026-03-05T09:15:00Z',
-    },
-    resource_name: 'Quranic Text Toolkit (QTT)',
-  },
-  {
-    comment: {
-      id: 503,
-      author_name: 'محمد أحمد',
-      content: 'SDK جيد جداً. المزامنة مع التلاوات ميزة رائعة.',
-      created_at: '2026-01-20T16:45:00Z',
-    },
-    resource_name: 'Quranic Audio SDK',
-  },
-];
 
 export default function DeveloperCommentsPage() {
   const [activeTab, setActiveTab] = useState<'my-comments' | 'discussions'>('my-comments');
+  const { data: comments, isLoading } = useDeveloperComments();
 
   return (
     <div>
@@ -69,11 +40,26 @@ export default function DeveloperCommentsPage() {
 
       {/* Tab content */}
       {activeTab === 'my-comments' && (
-        <div className="space-y-3">
-          {mockCommentsWithResources.map(({ comment, resource_name }) => (
-            <CommentRow key={comment.id} comment={comment} resourceName={resource_name} />
-          ))}
-        </div>
+        isLoading ? (
+          <div className="space-y-3">
+            {Array.from({ length: 3 }).map((_, i) => (
+              <div key={i} className="card p-4 animate-pulse">
+                <div className="skeleton h-4 w-1/3 rounded mb-2" />
+                <div className="skeleton h-3 w-2/3 rounded" />
+              </div>
+            ))}
+          </div>
+        ) : (comments ?? []).length === 0 ? (
+          <div className="card p-8 text-center">
+            <p className="text-[var(--text-muted)]">لا توجد تعليقات بعد</p>
+          </div>
+        ) : (
+          <div className="space-y-3">
+            {(comments ?? []).map(({ comment, resource_name }) => (
+              <CommentRow key={comment.id} comment={comment} resourceName={resource_name} />
+            ))}
+          </div>
+        )
       )}
 
       {activeTab === 'discussions' && (
