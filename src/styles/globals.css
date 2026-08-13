@@ -2,18 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-@font-face {
-  font-family: "Ratq";
-  src:
-    local("رتق"),
-    local("Ratq"),
-    url("/fonts/Ratq.woff2") format("woff2"),
-    url("/fonts/Ratq.woff") format("woff"),
-    url("/fonts/Ratq.ttf") format("truetype"),
-    url("/fonts/Ratq.otf") format("opentype");
-  font-display: swap;
-}
-
 /* ─── Base Variables ─────────────────────────────────────────────────────── */
 @layer base {
   :root {
