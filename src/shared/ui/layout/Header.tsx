@@ -126,7 +126,7 @@ export function Header() {
               dir={direction}
             >
               <Link href="/" className={navLinkClass("/")} aria-current={isActive("/") ? "page" : undefined}>
-                {locale === "ar" ? "الرئيسية" : "Home"}
+                {t.header.nav.home}
               </Link>
               <Link href="/resources" className={navLinkClass("/resources")} aria-current={isActive("/resources") ? "page" : undefined}>
                 {t.header.nav.resources}
@@ -194,7 +194,7 @@ export function Header() {
             >
               <div className="grid gap-4 text-base text-black">
                 <Link href="/" className={mobileNavLinkClass("/")} aria-current={isActive("/") ? "page" : undefined} onClick={() => setMenuOpen(false)}>
-                  {locale === "ar" ? "الرئيسية" : "Home"}
+                  {t.header.nav.home}
                 </Link>
                 <Link href="/resources" className={mobileNavLinkClass("/resources")} aria-current={isActive("/resources") ? "page" : undefined} onClick={() => setMenuOpen(false)}>
                   {t.header.nav.resources}
