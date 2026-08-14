@@ -4,7 +4,8 @@
       "resources": "Resources",
       "about": "About",
       "dashboard": "Dashboard",
-      "home": "Home"
+      "home": "Home",
+      "contributors": "Contributors"
     },
     "auth": {
       "login": "Log in",
@@ -457,5 +458,11 @@
     "publisherDescription": "Share and manage resources",
     "createAccount": "Create account",
     "creatingAccount": "Creating account..."
+  },
+  "contributors": {
+    "pageTitle": "Contributors",
+    "subtitle": "RATQ is built with the community. These contributors have fixed bugs, closed issues, and shipped improvements to the platform.",
+    "viewIssue": "Issue",
+    "viewPr": "Pull request"
   }
 }

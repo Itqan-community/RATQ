@@ -134,6 +134,9 @@ export function Header() {
               <Link href="/about" className={navLinkClass("/about")} aria-current={isActive("/about") ? "page" : undefined}>
                 {t.header.nav.about}
               </Link>
+              <Link href="/contributors" className={navLinkClass("/contributors")} aria-current={isActive("/contributors") ? "page" : undefined}>
+                {t.header.nav.contributors}
+              </Link>
               <Link href="/dashboard" className={navLinkClass("/dashboard")} aria-current={isActive("/dashboard") ? "page" : undefined}>
                 {t.header.nav.dashboard}
               </Link>
@@ -201,6 +204,9 @@ export function Header() {
                 </Link>
                 <Link href="/about" className={mobileNavLinkClass("/about")} aria-current={isActive("/about") ? "page" : undefined} onClick={() => setMenuOpen(false)}>
                   {t.header.nav.about}
+                </Link>
+                <Link href="/contributors" className={mobileNavLinkClass("/contributors")} aria-current={isActive("/contributors") ? "page" : undefined} onClick={() => setMenuOpen(false)}>
+                  {t.header.nav.contributors}
                 </Link>
                 <Link href="/dashboard" className={mobileNavLinkClass("/dashboard")} aria-current={isActive("/dashboard") ? "page" : undefined} onClick={() => setMenuOpen(false)}>
                   {t.header.nav.dashboard}
