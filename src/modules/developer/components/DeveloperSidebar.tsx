@@ -25,7 +25,7 @@ export function DeveloperSidebar({
 
   return (
     <aside
-      className={`fixed top-0 right-0 h-full w-64 bg-[var(--bg-card)] border-l border-[var(--border-color)] z-40 overflow-y-auto transition-transform duration-300 lg:sticky lg:top-0 lg:h-screen lg:shrink-0
+      className={`fixed top-0 right-0 h-full w-64 bg-[var(--bg-card)] border-l border-[var(--border-color)] z-40 overflow-y-auto transition-transform duration-300 lg:sticky lg:top-32 lg:h-[calc(100vh-8rem)] lg:shrink-0
         ${mobileOpen ? 'translate-x-0' : 'translate-x-full lg:translate-x-0'}
       `}
     >
