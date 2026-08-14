@@ -84,26 +84,68 @@ describe('Comments beforeChange hook', () => {
   })
 })
 
+interface NotificationCreateCall {
+  collection: string
+  data: Record<string, unknown>
+}
+
+interface ExistingComment {
+  id: number
+  author: string
+}
+
+interface CommentsPayloadStub {
+  find: (args: unknown) => Promise<{ docs: ExistingComment[] }>
+  findByID: (args: { collection: string; id: unknown; depth?: number }) => Promise<{ id: number; name: string }>
+  create: (args: NotificationCreateCall) => Promise<Record<string, unknown>>
+}
+
+interface CommentAfterChangeArgs {
+  req: { payload: CommentsPayloadStub }
+  doc: Record<string, unknown>
+  operation: string
+}
+
+interface NotificationCreateCall {
+  collection: string
+  data: Record<string, unknown>
+}
+
+interface ExistingComment {
+  id: number
+  author: string
+}
+
+interface CommentsPayloadStub {
+  find: (args: unknown) => Promise<{ docs: ExistingComment[] }>
+  findByID: (args: { collection: string; id: unknown; depth?: number }) => Promise<{ id: number; name: string }>
+  create: (args: NotificationCreateCall) => Promise<Record<string, unknown>>
+}
+
+interface CommentAfterChangeArgs {
+  req: { payload: CommentsPayloadStub }
+  doc: Record<string, unknown>
+  operation: string
+}
+
 describe('Comments afterChange hook', () => {
-  const hook = Comments.hooks!.afterChange![0] as (args: {
-    req: { payload: any }
-    doc: Record<string, unknown>
-    operation: string
-  }) => Promise<Record<string, unknown>>
+  const hook = Comments.hooks!.afterChange![0] as (
+    args: CommentAfterChangeArgs,
+  ) => Promise<Record<string, unknown>>
 
   function makePayload({
     existingComments,
     resource,
     createCalls,
   }: {
-    existingComments: any[]
-    resource: any
-    createCalls: any[]
-  }) {
+    existingComments: ExistingComment[]
+    resource: { id: number; name: string }
+    createCalls: NotificationCreateCall[]
+  }): CommentsPayloadStub {
     return {
-      find: async (_args: any) => ({ docs: existingComments }),
-      findByID: async (_args: any) => resource,
-      create: async (args: any) => {
+      find: async () => ({ docs: existingComments }),
+      findByID: async () => resource,
+      create: async (args) => {
         createCalls.push(args)
         return { id: 900, ...args.data }
       },
@@ -111,7 +153,7 @@ describe('Comments afterChange hook', () => {
   }
 
   it('notifies a previous distinct commenter on the same resource', async () => {
-    const createCalls: any[] = []
+    const createCalls: NotificationCreateCall[] = []
     const payload = makePayload({
       existingComments: [{ id: 1, author: 'user-1' }],
       resource: { id: 200, name: 'Quranic Text Toolkit' },
@@ -129,7 +171,7 @@ describe('Comments afterChange hook', () => {
   })
 
   it('notifies each distinct previous commenter only once', async () => {
-    const createCalls: any[] = []
+    const createCalls: NotificationCreateCall[] = []
     const payload = makePayload({
       existingComments: [
         { id: 1, author: 'user-1' },
@@ -148,8 +190,26 @@ describe('Comments afterChange hook', () => {
     expect(recipients).toEqual(['user-1', 'user-3'])
   })
 
+  it('notifies every distinct commenter even when there are more than one page worth (100+) of prior comments', async () => {
+    const createCalls: NotificationCreateCall[] = []
+    const manyComments: ExistingComment[] = []
+    for (let i = 0; i < 150; i++) {
+      manyComments.push({ id: i, author: `user-${i}` })
+    }
+    const payload = makePayload({
+      existingComments: manyComments,
+      resource: { id: 200, name: 'Quranic Text Toolkit' },
+      createCalls,
+    })
+    const doc = { id: 999, resource: 200, author: 'user-original-poster' }
+
+    await hook({ req: { payload }, doc, operation: 'create' })
+
+    expect(createCalls).toHaveLength(150)
+  })
+
   it('does not notify the commenter themselves', async () => {
-    const createCalls: any[] = []
+    const createCalls: NotificationCreateCall[] = []
     const payload = makePayload({
       existingComments: [],
       resource: { id: 200, name: 'Quranic Text Toolkit' },
@@ -163,7 +223,7 @@ describe('Comments afterChange hook', () => {
   })
 
   it('does not run on update, only on create', async () => {
-    const createCalls: any[] = []
+    const createCalls: NotificationCreateCall[] = []
     const payload = makePayload({
       existingComments: [{ id: 1, author: 'user-1' }],
       resource: { id: 200, name: 'Quranic Text Toolkit' },

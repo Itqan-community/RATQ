@@ -230,13 +230,38 @@ describe('AccessRequests beforeValidate hook (duplicate-request guard)', () => {
   })
 })
 
-describe('AccessRequests afterChange hook', () => {
-  const hook = AccessRequests.hooks!.afterChange![0] as (args: any) => unknown
+interface NotificationCreateCall {
+  collection: string
+  data: Record<string, unknown>
+}
 
-  function makePayload({ findByIDResult, createCalls }: { findByIDResult: any; createCalls: any[] }) {
+interface AccessRequestsPayloadStub {
+  findByID: (args: { collection: string; id: unknown; depth?: number }) => Promise<{ id: number; name: string }>
+  create: (args: NotificationCreateCall) => Promise<Record<string, unknown>>
+}
+
+interface AccessRequestAfterChangeArgs {
+  req: { payload: AccessRequestsPayloadStub }
+  doc: Record<string, unknown>
+  previousDoc?: Record<string, unknown>
+  operation: string
+}
+
+describe('AccessRequests afterChange hook', () => {
+  const hook = AccessRequests.hooks!.afterChange![0] as (
+    args: AccessRequestAfterChangeArgs,
+  ) => Promise<Record<string, unknown>>
+
+  function makePayload({
+    findByIDResult,
+    createCalls,
+  }: {
+    findByIDResult: { id: number; name: string }
+    createCalls: NotificationCreateCall[]
+  }): AccessRequestsPayloadStub {
     return {
-      findByID: async (_args: any) => findByIDResult,
-      create: async (args: any) => {
+      findByID: async () => findByIDResult,
+      create: async (args) => {
         createCalls.push(args)
         return { id: 900, ...args.data }
       },
@@ -244,7 +269,7 @@ describe('AccessRequests afterChange hook', () => {
   }
 
   it('creates an access_approved notification for the applicant when status changes to approved', async () => {
-    const createCalls: any[] = []
+    const createCalls: NotificationCreateCall[] = []
     const payload = makePayload({
       findByIDResult: { id: 200, name: 'Quranic Text Toolkit' },
       createCalls,
@@ -263,7 +288,7 @@ describe('AccessRequests afterChange hook', () => {
   })
 
   it('creates an access_denied notification when status changes to denied', async () => {
-    const createCalls: any[] = []
+    const createCalls: NotificationCreateCall[] = []
     const payload = makePayload({
       findByIDResult: { id: 200, name: 'Quranic Text Toolkit' },
       createCalls,
@@ -277,8 +302,8 @@ describe('AccessRequests afterChange hook', () => {
   })
 
   it('does not create a notification on create (only status transitions on update)', async () => {
-    const createCalls: any[] = []
-    const payload = makePayload({ findByIDResult: {}, createCalls })
+    const createCalls: NotificationCreateCall[] = []
+    const payload = makePayload({ findByIDResult: { id: 0, name: '' }, createCalls })
     const doc = { id: 5, status: 'pending', applicant: 42, resource: 200 }
 
     await hook({ req: { payload }, doc, previousDoc: undefined, operation: 'create' })
@@ -287,8 +312,8 @@ describe('AccessRequests afterChange hook', () => {
   })
 
   it('does not create a notification when status is unchanged', async () => {
-    const createCalls: any[] = []
-    const payload = makePayload({ findByIDResult: {}, createCalls })
+    const createCalls: NotificationCreateCall[] = []
+    const payload = makePayload({ findByIDResult: { id: 0, name: '' }, createCalls })
     const doc = { id: 5, status: 'approved', applicant: 42, resource: 200 }
     const previousDoc = { id: 5, status: 'approved', applicant: 42, resource: 200 }
 
@@ -298,8 +323,8 @@ describe('AccessRequests afterChange hook', () => {
   })
 
   it('does not create a notification for a status change back to pending', async () => {
-    const createCalls: any[] = []
-    const payload = makePayload({ findByIDResult: {}, createCalls })
+    const createCalls: NotificationCreateCall[] = []
+    const payload = makePayload({ findByIDResult: { id: 0, name: '' }, createCalls })
     const doc = { id: 5, status: 'pending', applicant: 42, resource: 200 }
     const previousDoc = { id: 5, status: 'approved', applicant: 42, resource: 200 }
 

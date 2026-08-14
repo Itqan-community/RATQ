@@ -102,13 +102,38 @@ describe('Reports beforeChange hook', () => {
   })
 })
 
-describe('Reports afterChange hook', () => {
-  const hook = Reports.hooks!.afterChange![0] as (args: any) => unknown
+interface NotificationCreateCall {
+  collection: string
+  data: Record<string, unknown>
+}
 
-  function makePayload({ findByIDResult, createCalls }: { findByIDResult: any; createCalls: any[] }) {
+interface ReportsPayloadStub {
+  findByID: (args: { collection: string; id: unknown; depth?: number }) => Promise<{ id: number; name: string }>
+  create: (args: NotificationCreateCall) => Promise<Record<string, unknown>>
+}
+
+interface ReportAfterChangeArgs {
+  req: { payload: ReportsPayloadStub }
+  doc: Record<string, unknown>
+  previousDoc?: Record<string, unknown>
+  operation: string
+}
+
+describe('Reports afterChange hook', () => {
+  const hook = Reports.hooks!.afterChange![0] as (
+    args: ReportAfterChangeArgs,
+  ) => Promise<Record<string, unknown>>
+
+  function makePayload({
+    findByIDResult,
+    createCalls,
+  }: {
+    findByIDResult: { id: number; name: string }
+    createCalls: NotificationCreateCall[]
+  }): ReportsPayloadStub {
     return {
-      findByID: async (_args: any) => findByIDResult,
-      create: async (args: any) => {
+      findByID: async () => findByIDResult,
+      create: async (args) => {
         createCalls.push(args)
         return { id: 900, ...args.data }
       },
@@ -116,7 +141,7 @@ describe('Reports afterChange hook', () => {
   }
 
   it('creates a report_resolved notification for the reporter when status changes to resolved', async () => {
-    const createCalls: any[] = []
+    const createCalls: NotificationCreateCall[] = []
     const payload = makePayload({
       findByIDResult: { id: 200, name: 'Arabic Font Rendering Engine' },
       createCalls,
@@ -134,7 +159,7 @@ describe('Reports afterChange hook', () => {
   })
 
   it('creates a report_status_change notification for a status change that is not resolved', async () => {
-    const createCalls: any[] = []
+    const createCalls: NotificationCreateCall[] = []
     const payload = makePayload({
       findByIDResult: { id: 200, name: 'Arabic Font Rendering Engine' },
       createCalls,
@@ -148,8 +173,8 @@ describe('Reports afterChange hook', () => {
   })
 
   it('does not create a notification on create', async () => {
-    const createCalls: any[] = []
-    const payload = makePayload({ findByIDResult: {}, createCalls })
+    const createCalls: NotificationCreateCall[] = []
+    const payload = makePayload({ findByIDResult: { id: 0, name: '' }, createCalls })
     const doc = { id: 7, status: 'open', reporter: 42, resource: 200 }
 
     await hook({ req: { payload }, doc, previousDoc: undefined, operation: 'create' })
@@ -158,8 +183,8 @@ describe('Reports afterChange hook', () => {
   })
 
   it('does not create a notification when status is unchanged', async () => {
-    const createCalls: any[] = []
-    const payload = makePayload({ findByIDResult: {}, createCalls })
+    const createCalls: NotificationCreateCall[] = []
+    const payload = makePayload({ findByIDResult: { id: 0, name: '' }, createCalls })
     const doc = { id: 7, status: 'open', reporter: 42, resource: 200 }
     const previousDoc = { id: 7, status: 'open', reporter: 42, resource: 200 }
 

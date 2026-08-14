@@ -48,7 +48,7 @@ export const Comments: CollectionConfig = {
             ],
           },
           depth: 0,
-          limit: 100,
+          pagination: false,
         })
 
         const recipientIds = new Set<number>()

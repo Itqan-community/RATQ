@@ -2,14 +2,26 @@ import { describe, expect, it } from 'vitest'
 
 import { Notifications } from './Notifications'
 
-type ReqUser = { id: number; role?: string } | null
+interface ReqUser {
+  id: number
+  role?: string
+}
 
-function makeReq(user: ReqUser) {
-  return { req: { user } } as any
+interface AccessArgs {
+  req: { user: ReqUser | null }
+}
+
+interface NotificationField {
+  name: string
+  access?: { update?: (args: AccessArgs) => unknown }
+}
+
+function makeReq(user: ReqUser | null): AccessArgs {
+  return { req: { user } }
 }
 
 describe('Notifications read access', () => {
-  const readAccess = Notifications.access!.read as (args: any) => unknown
+  const readAccess = Notifications.access!.read as (args: AccessArgs) => unknown
 
   it('recipient sees their own notifications', () => {
     const result = readAccess(makeReq({ id: 1, role: 'developer' }))
@@ -28,7 +40,7 @@ describe('Notifications read access', () => {
 })
 
 describe('Notifications create access', () => {
-  const createAccess = Notifications.access!.create as (args: any) => unknown
+  const createAccess = Notifications.access!.create as (args: AccessArgs) => unknown
 
   it('no client - including an authenticated one - can create a notification directly', () => {
     expect(createAccess(makeReq({ id: 1, role: 'developer' }))).toBe(false)
@@ -38,7 +50,7 @@ describe('Notifications create access', () => {
 })
 
 describe('Notifications update access', () => {
-  const updateAccess = Notifications.access!.update as (args: any) => unknown
+  const updateAccess = Notifications.access!.update as (args: AccessArgs) => unknown
 
   it('recipient can update (mark read) their own notifications', () => {
     const result = updateAccess(makeReq({ id: 1, role: 'developer' }))
@@ -56,16 +68,26 @@ describe('Notifications update access', () => {
 })
 
 describe('Notifications field-level access', () => {
+  const lockedFieldNames = [
+    'recipient',
+    'type',
+    'message',
+    'resource',
+    'resource_name',
+    'related_access_request',
+    'related_report',
+    'related_comment',
+  ]
+
   it('message/type/resource/related fields cannot be updated by anyone, even a recipient', () => {
-    const lockedFields = ['recipient', 'type', 'message', 'resource', 'resource_name', 'related_access_request', 'related_report', 'related_comment']
-    for (const fieldName of lockedFields) {
-      const field = Notifications.fields.find((f: any) => f.name === fieldName) as any
-      expect(field.access.update(makeReq({ id: 1, role: 'developer' }))).toBe(false)
+    for (const fieldName of lockedFieldNames) {
+      const field = Notifications.fields.find((f) => (f as NotificationField).name === fieldName) as NotificationField
+      expect(field.access?.update?.(makeReq({ id: 1, role: 'developer' }))).toBe(false)
     }
   })
 
   it('read field has no update restriction (recipient can toggle it)', () => {
-    const field = Notifications.fields.find((f: any) => f.name === 'read') as any
+    const field = Notifications.fields.find((f) => (f as NotificationField).name === 'read') as NotificationField
     expect(field.access).toBeUndefined()
   })
 })
