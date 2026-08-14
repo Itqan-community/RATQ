@@ -42,4 +42,14 @@ export const contributors: Contributor[] = [
     issueUrl: 'https://github.com/Itqan-community/RATQ/issues/173',
     prUrl: 'https://github.com/Itqan-community/RATQ/pull/190',
   },
+  {
+    name: 'usefahmed07',
+    githubUsername: 'usefahmed07',
+    githubUrl: 'https://github.com/usefahmed07',
+    avatarUrl: 'https://github.com/usefahmed07.png',
+    contribution:
+      'Built this Contributors page, and fixed the developer view navbar overlapping the sidebar.',
+    issueUrl: 'https://github.com/Itqan-community/RATQ/issues/197',
+    prUrl: 'https://github.com/Itqan-community/RATQ/pull/201',
+  },
 ];
