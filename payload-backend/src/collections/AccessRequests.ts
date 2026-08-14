@@ -91,6 +91,38 @@ export const AccessRequests: CollectionConfig = {
         return data
       },
     ],
+    afterChange: [
+      async ({ req, doc, previousDoc, operation }) => {
+        if (operation !== 'update') return doc
+        if (!previousDoc || previousDoc.status === doc.status) return doc
+        if (doc.status !== 'approved' && doc.status !== 'denied') return doc
+
+        const resourceId = typeof doc.resource === 'object' ? doc.resource.id : doc.resource
+        const resource = await req.payload.findByID({
+          collection: 'resources',
+          id: resourceId,
+          depth: 0,
+        })
+        const recipientId = typeof doc.applicant === 'object' ? doc.applicant.id : doc.applicant
+
+        await req.payload.create({
+          collection: 'notifications',
+          data: {
+            recipient: recipientId,
+            type: doc.status === 'approved' ? 'access_approved' : 'access_denied',
+            message:
+              doc.status === 'approved'
+                ? `تمت الموافقة على طلب الوصول إلى "${resource.name}"`
+                : `تم رفض طلب الوصول إلى "${resource.name}"`,
+            resource: resource.id,
+            resource_name: resource.name,
+            related_access_request: doc.id,
+          },
+        })
+
+        return doc
+      },
+    ],
   },
   fields: [
     {

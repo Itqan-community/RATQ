@@ -229,3 +229,82 @@ describe('AccessRequests beforeValidate hook (duplicate-request guard)', () => {
     expect(result).toBe(data)
   })
 })
+
+describe('AccessRequests afterChange hook', () => {
+  const hook = AccessRequests.hooks!.afterChange![0] as (args: any) => unknown
+
+  function makePayload({ findByIDResult, createCalls }: { findByIDResult: any; createCalls: any[] }) {
+    return {
+      findByID: async (_args: any) => findByIDResult,
+      create: async (args: any) => {
+        createCalls.push(args)
+        return { id: 900, ...args.data }
+      },
+    }
+  }
+
+  it('creates an access_approved notification for the applicant when status changes to approved', async () => {
+    const createCalls: any[] = []
+    const payload = makePayload({
+      findByIDResult: { id: 200, name: 'Quranic Text Toolkit' },
+      createCalls,
+    })
+    const doc = { id: 5, status: 'approved', applicant: 42, resource: 200 }
+    const previousDoc = { id: 5, status: 'pending', applicant: 42, resource: 200 }
+
+    await hook({ req: { payload }, doc, previousDoc, operation: 'update' })
+
+    expect(createCalls).toHaveLength(1)
+    expect(createCalls[0].collection).toBe('notifications')
+    expect(createCalls[0].data.recipient).toBe(42)
+    expect(createCalls[0].data.type).toBe('access_approved')
+    expect(createCalls[0].data.related_access_request).toBe(5)
+    expect(createCalls[0].data.resource_name).toBe('Quranic Text Toolkit')
+  })
+
+  it('creates an access_denied notification when status changes to denied', async () => {
+    const createCalls: any[] = []
+    const payload = makePayload({
+      findByIDResult: { id: 200, name: 'Quranic Text Toolkit' },
+      createCalls,
+    })
+    const doc = { id: 5, status: 'denied', applicant: 42, resource: 200 }
+    const previousDoc = { id: 5, status: 'pending', applicant: 42, resource: 200 }
+
+    await hook({ req: { payload }, doc, previousDoc, operation: 'update' })
+
+    expect(createCalls[0].data.type).toBe('access_denied')
+  })
+
+  it('does not create a notification on create (only status transitions on update)', async () => {
+    const createCalls: any[] = []
+    const payload = makePayload({ findByIDResult: {}, createCalls })
+    const doc = { id: 5, status: 'pending', applicant: 42, resource: 200 }
+
+    await hook({ req: { payload }, doc, previousDoc: undefined, operation: 'create' })
+
+    expect(createCalls).toHaveLength(0)
+  })
+
+  it('does not create a notification when status is unchanged', async () => {
+    const createCalls: any[] = []
+    const payload = makePayload({ findByIDResult: {}, createCalls })
+    const doc = { id: 5, status: 'approved', applicant: 42, resource: 200 }
+    const previousDoc = { id: 5, status: 'approved', applicant: 42, resource: 200 }
+
+    await hook({ req: { payload }, doc, previousDoc, operation: 'update' })
+
+    expect(createCalls).toHaveLength(0)
+  })
+
+  it('does not create a notification for a status change back to pending', async () => {
+    const createCalls: any[] = []
+    const payload = makePayload({ findByIDResult: {}, createCalls })
+    const doc = { id: 5, status: 'pending', applicant: 42, resource: 200 }
+    const previousDoc = { id: 5, status: 'approved', applicant: 42, resource: 200 }
+
+    await hook({ req: { payload }, doc, previousDoc, operation: 'update' })
+
+    expect(createCalls).toHaveLength(0)
+  })
+})

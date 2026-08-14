@@ -74,6 +74,7 @@ export interface Config {
     reports: Report;
     'access-requests': AccessRequest;
     'api-keys': ApiKey;
+    notifications: Notification;
     'payload-kv': PayloadKv;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
@@ -88,6 +89,7 @@ export interface Config {
     reports: ReportsSelect<false> | ReportsSelect<true>;
     'access-requests': AccessRequestsSelect<false> | AccessRequestsSelect<true>;
     'api-keys': ApiKeysSelect<false> | ApiKeysSelect<true>;
+    notifications: NotificationsSelect<false> | NotificationsSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
@@ -269,6 +271,31 @@ export interface ApiKey {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "notifications".
+ */
+export interface Notification {
+  id: number;
+  recipient: number | User;
+  type:
+    | 'access_approved'
+    | 'access_denied'
+    | 'comment_reply'
+    | 'report_resolved'
+    | 'report_status_change'
+    | 'resource_activity'
+    | 'access_revoked';
+  message: string;
+  resource?: (number | null) | Resource;
+  resource_name?: string | null;
+  related_access_request?: (number | null) | AccessRequest;
+  related_report?: (number | null) | Report;
+  related_comment?: (number | null) | Comment;
+  read?: boolean | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-kv".
  */
 export interface PayloadKv {
@@ -318,6 +345,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'api-keys';
         value: number | ApiKey;
+      } | null)
+    | ({
+        relationTo: 'notifications';
+        value: number | Notification;
       } | null);
   globalSlug?: string | null;
   user: {
@@ -473,6 +504,23 @@ export interface ApiKeysSelect<T extends boolean = true> {
   key_hash?: T;
   scope?: T;
   last_used_at?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "notifications_select".
+ */
+export interface NotificationsSelect<T extends boolean = true> {
+  recipient?: T;
+  type?: T;
+  message?: T;
+  resource?: T;
+  resource_name?: T;
+  related_access_request?: T;
+  related_report?: T;
+  related_comment?: T;
+  read?: T;
   updatedAt?: T;
   createdAt?: T;
 }
