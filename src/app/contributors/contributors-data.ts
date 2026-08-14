@@ -18,7 +18,7 @@ export const contributors: Contributor[] = [
     githubUrl: 'https://github.com/Omarr-kh',
     avatarUrl: 'https://github.com/Omarr-kh.png',
     contribution:
-      'Removed a fake, hardcoded GitHub repo browser from the resource detail page.',
+      'Removed a fake, hardcoded GitHub repo browser from the resource detail page, and later removed a dead font-face declaration that was causing 4 failed requests per page load.',
     issueUrl: 'https://github.com/Itqan-community/RATQ/issues/180',
     prUrl: 'https://github.com/Itqan-community/RATQ/pull/188',
   },
@@ -28,7 +28,7 @@ export const contributors: Contributor[] = [
     githubUrl: 'https://github.com/sanataff',
     avatarUrl: 'https://github.com/sanataff.png',
     contribution:
-      'Deleted dead i18n source files (en.ts / ar.ts) that were never imported, and fixed the stale docs pointing to them.',
+      'Deleted dead i18n source files (en.ts / ar.ts) that were never imported, fixed the stale docs pointing to them, and later wired the developer comments page to real data instead of mock comments.',
     issueUrl: 'https://github.com/Itqan-community/RATQ/issues/172',
     prUrl: 'https://github.com/Itqan-community/RATQ/pull/191',
   },
