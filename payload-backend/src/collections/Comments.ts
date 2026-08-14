@@ -5,13 +5,19 @@ const isOwner: Access = ({ req }) => {
   return { author: { equals: req.user.id } }
 }
 
+const canModifyComment: Access = ({ req }) => {
+  if (!req.user) return false
+  if (req.user.role === 'admin') return true
+  return { author: { equals: req.user.id } }
+}
+
 export const Comments: CollectionConfig = {
   slug: 'comments',
   access: {
     read: () => true,
     create: ({ req }) => Boolean(req.user),
-    update: isOwner,
-    delete: isOwner,
+    update: canModifyComment,
+    delete: canModifyComment,
   },
   admin: {
     useAsTitle: 'content',
