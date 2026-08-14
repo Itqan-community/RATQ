@@ -50,7 +50,7 @@ export default function DeveloperLayout({
 
       <div className="flex-grow pt-32">
         {/* Top bar */}
-        <div className="bg-[var(--bg-card)] border-b border-[var(--border-color)] px-6 py-4 flex items-center justify-between sticky top-0 z-20">
+        <div className="bg-[var(--bg-card)] border-b border-[var(--border-color)] px-6 py-4 flex items-center justify-between sticky top-32 z-20">
           <div className="flex items-center gap-3">
             {/* Mobile hamburger toggle */}
             <button
