@@ -4,7 +4,8 @@
       "resources": "الموارد",
       "about": "حول",
       "dashboard": "لوحة التحكم",
-      "home": "الرئيسية"
+      "home": "الرئيسية",
+      "contributors": "المساهمون"
     },
     "auth": {
       "login": "تسجيل الدخول",
@@ -457,5 +458,11 @@
     "publisherDescription": "أشارك الموارد وأديرها",
     "createAccount": "إنشاء الحساب",
     "creatingAccount": "جاري إنشاء الحساب..."
+  },
+  "contributors": {
+    "pageTitle": "المساهمون",
+    "subtitle": "تُبنى RATQ بمساهمة المجتمع. هؤلاء المساهمون أصلحوا أخطاء وأغلقوا مشكلات وقدّموا تحسينات للمنصة.",
+    "viewIssue": "المشكلة",
+    "viewPr": "طلب الدمج"
   }
 }
