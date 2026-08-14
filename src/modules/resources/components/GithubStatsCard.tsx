@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import { formatDate } from '@/shared/utils/utils';
 import type { GithubStats } from '@/types/resource';
