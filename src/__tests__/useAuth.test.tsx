@@ -57,11 +57,13 @@ describe('AuthProvider hydration', () => {
     storeSession(Math.floor(Date.now() / 1000) + 3600);
 
     const consoleError = vi.spyOn(console, 'error').mockImplementation(() => {});
-    const root = hydrateRoot(
-      container,
-      <AuthProvider>
-        <AuthStateProbe />
-      </AuthProvider>
+    const root = await act(() =>
+      hydrateRoot(
+        container,
+        <AuthProvider>
+          <AuthStateProbe />
+        </AuthProvider>
+      )
     );
 
     await waitFor(() => {
