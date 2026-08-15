@@ -13,37 +13,79 @@ describe('Comments access.create', () => {
   })
 })
 
-describe('Comments access.update (isOwner)', () => {
-  const isOwner = Comments.access!.update as (args: { req: { user: unknown } }) => unknown
+describe('Comments access.update (canModifyComment)', () => {
+  const canModifyComment = Comments.access!.update as (
+    args: { req: { user: unknown } },
+  ) => unknown
 
-  it('allows the comment author to update', () => {
-    expect(isOwner({ req: { user: { id: 'user-1' } } })).toEqual({
+  it('allows an admin to update any comment', () => {
+    expect(
+      canModifyComment({
+        req: { user: { id: 'admin-1', role: 'admin' } },
+      }),
+    ).toBe(true)
+  })
+
+  it('allows the comment author to update their own comment', () => {
+    expect(
+      canModifyComment({
+        req: { user: { id: 'user-1', role: 'user' } },
+      }),
+    ).toEqual({
       author: { equals: 'user-1' },
     })
   })
 
-  it('scopes the query to the caller, not to an arbitrary owner', () => {
-    expect(isOwner({ req: { user: { id: 'user-2' } } })).toEqual({
+  it('scopes updates to the caller for non-admin users', () => {
+    expect(
+      canModifyComment({
+        req: { user: { id: 'user-2', role: 'user' } },
+      }),
+    ).toEqual({
       author: { equals: 'user-2' },
     })
   })
 
   it('denies when there is no logged-in user', () => {
-    expect(isOwner({ req: { user: null } })).toBe(false)
+    expect(canModifyComment({ req: { user: null } })).toBe(false)
   })
 })
 
-describe('Comments access.delete (isOwner)', () => {
-  const isOwner = Comments.access!.delete as (args: { req: { user: unknown } }) => unknown
+describe('Comments access.delete (canModifyComment)', () => {
+  const canModifyComment = Comments.access!.delete as (
+    args: { req: { user: unknown } }
+  ) => unknown
 
-  it('scopes deletes to the caller', () => {
-    expect(isOwner({ req: { user: { id: 'user-1' } } })).toEqual({
+  it('allows an admin to delete any comment', () => {
+    expect(
+      canModifyComment({
+        req: { user: { id: 'admin-1', role: 'admin' } },
+      }),
+    ).toBe(true)
+  })
+
+  it('allows the comment author to delete their own comment', () => {
+    expect(
+      canModifyComment({
+        req: { user: { id: 'user-1', role: 'user' } },
+      }),
+    ).toEqual({
       author: { equals: 'user-1' },
     })
   })
 
+  it('scopes deletes to the caller for non-admin users', () => {
+    expect(
+      canModifyComment({
+        req: { user: { id: 'user-2', role: 'user' } },
+      }),
+    ).toEqual({
+      author: { equals: 'user-2' },
+    })
+  })
+
   it('denies when there is no logged-in user', () => {
-    expect(isOwner({ req: { user: null } })).toBe(false)
+    expect(canModifyComment({ req: { user: null } })).toBe(false)
   })
 })
 
