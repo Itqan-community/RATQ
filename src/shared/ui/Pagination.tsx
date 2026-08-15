@@ -2,6 +2,7 @@
 
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useLanguage } from '@/shared/ui/i18n';
+import { parsePageParam } from '@/shared/utils/utils';
 
 interface PaginationProps {
   count: number;
@@ -13,7 +14,7 @@ export function Pagination({ count, pageSize = 12 }: PaginationProps) {
   const searchParams = useSearchParams();
   const { locale } = useLanguage();
   const totalPages = Math.ceil(count / pageSize);
-  const currentPage = parseInt(searchParams.get('page') || '1', 10);
+  const currentPage = parsePageParam(searchParams.get('page'));
 
   if (totalPages <= 1) return null;
 

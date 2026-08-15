@@ -6,13 +6,14 @@ import { useLanguage } from '@/shared/ui/i18n';
 import { ResourceCard } from '@/modules/resources/components/ResourceCard';
 import { Pagination } from '@/shared/ui/Pagination';
 import { useResources } from '@/hooks/useResources';
+import { parsePageParam } from '@/shared/utils/utils';
 
 const PAGE_SIZE = 12;
 
 export function CatalogContent() {
   const { locale, direction, t } = useLanguage();
   const searchParams = useSearchParams();
-  const page = Math.max(1, parseInt(searchParams.get('page') || '1', 10) || 1);
+  const page = parsePageParam(searchParams.get('page'));
   const { data, error, isLoading } = useResources({ page, page_size: PAGE_SIZE });
   const resources = data?.results ?? [];
 
