@@ -68,3 +68,11 @@ You're welcome to use AI coding tools, but the PR is still your responsibility: 
 ## Questions
 
 Open a GitHub Issue with the `question` label, or ask in the linked community channels once available. See the [RATQ Roadmap](https://app.notion.com/p/3a97056925c8808991f9c2073cc28f25) for what's currently planned.
+
+## Governance & Decision Making
+
+This project follows a lightweight, community-first governance model:
+
+- **Maintainer Roles:** Project maintainers (`@abubakr-itqan` and community leads) have direct merge rights, review pull requests, and manage issue assignments.
+- **Decision Making:** Technical and design choices are discussed transparently within GitHub Issues and Pull Requests. Consensus is driven through open discussion, with final review authority held by project maintainers.
+- **Code of Conduct:** All contributors and maintainers are expected to follow our [Code of Conduct](CODE_OF_CONDUCT.md).
