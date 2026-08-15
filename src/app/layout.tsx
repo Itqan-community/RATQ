@@ -33,12 +33,17 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="ar" dir="rtl" className={plexSansArabic.variable}>
-      <body className="min-h-screen flex flex-col bg-[var(--bg-primary)]">
+    <html
+      lang='ar'
+      dir='rtl'
+      className={plexSansArabic.variable}
+      data-scroll-behavior='smooth'
+    >
+      <body className='min-h-screen flex flex-col bg-[var(--bg-primary)]'>
         <LanguageProvider>
           <AuthProvider>
             <Header />
-            <main className="flex-grow">{children}</main>
+            <main className='flex-grow'>{children}</main>
             <Footer />
           </AuthProvider>
         </LanguageProvider>
