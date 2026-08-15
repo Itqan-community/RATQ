@@ -31,6 +31,57 @@ export const Comments: CollectionConfig = {
         return data
       },
     ],
+    afterChange: [
+      async ({ req, doc, operation }) => {
+        if (operation !== 'create') return doc
+
+        const resourceId = typeof doc.resource === 'object' ? doc.resource.id : doc.resource
+        const authorId = typeof doc.author === 'object' ? doc.author.id : doc.author
+
+        const { docs: existingComments } = await req.payload.find({
+          collection: 'comments',
+          where: {
+            and: [
+              { resource: { equals: resourceId } },
+              { author: { not_equals: authorId } },
+              { id: { not_equals: doc.id } },
+            ],
+          },
+          depth: 0,
+          pagination: false,
+        })
+
+        const recipientIds = new Set<number>()
+        for (const comment of existingComments) {
+          const recipientId = typeof comment.author === 'object' ? comment.author.id : comment.author
+          recipientIds.add(recipientId)
+        }
+
+        if (recipientIds.size === 0) return doc
+
+        const resource = await req.payload.findByID({
+          collection: 'resources',
+          id: resourceId,
+          depth: 0,
+        })
+
+        for (const recipientId of recipientIds) {
+          await req.payload.create({
+            collection: 'notifications',
+            data: {
+              recipient: recipientId,
+              type: 'comment_reply',
+              message: `رد على تعليقك في "${resource.name}"`,
+              resource: resource.id,
+              resource_name: resource.name,
+              related_comment: doc.id,
+            },
+          })
+        }
+
+        return doc
+      },
+    ],
   },
   fields: [
     {

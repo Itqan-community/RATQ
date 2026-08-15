@@ -229,3 +229,107 @@ describe('AccessRequests beforeValidate hook (duplicate-request guard)', () => {
     expect(result).toBe(data)
   })
 })
+
+interface NotificationCreateCall {
+  collection: string
+  data: Record<string, unknown>
+}
+
+interface AccessRequestsPayloadStub {
+  findByID: (args: { collection: string; id: unknown; depth?: number }) => Promise<{ id: number; name: string }>
+  create: (args: NotificationCreateCall) => Promise<Record<string, unknown>>
+}
+
+interface AccessRequestAfterChangeArgs {
+  req: { payload: AccessRequestsPayloadStub }
+  doc: Record<string, unknown>
+  previousDoc?: Record<string, unknown>
+  operation: string
+}
+
+describe('AccessRequests afterChange hook', () => {
+  const hook = AccessRequests.hooks!.afterChange![0] as (
+    args: AccessRequestAfterChangeArgs,
+  ) => Promise<Record<string, unknown>>
+
+  function makePayload({
+    findByIDResult,
+    createCalls,
+  }: {
+    findByIDResult: { id: number; name: string }
+    createCalls: NotificationCreateCall[]
+  }): AccessRequestsPayloadStub {
+    return {
+      findByID: async () => findByIDResult,
+      create: async (args) => {
+        createCalls.push(args)
+        return { id: 900, ...args.data }
+      },
+    }
+  }
+
+  it('creates an access_approved notification for the applicant when status changes to approved', async () => {
+    const createCalls: NotificationCreateCall[] = []
+    const payload = makePayload({
+      findByIDResult: { id: 200, name: 'Quranic Text Toolkit' },
+      createCalls,
+    })
+    const doc = { id: 5, status: 'approved', applicant: 42, resource: 200 }
+    const previousDoc = { id: 5, status: 'pending', applicant: 42, resource: 200 }
+
+    await hook({ req: { payload }, doc, previousDoc, operation: 'update' })
+
+    expect(createCalls).toHaveLength(1)
+    expect(createCalls[0].collection).toBe('notifications')
+    expect(createCalls[0].data.recipient).toBe(42)
+    expect(createCalls[0].data.type).toBe('access_approved')
+    expect(createCalls[0].data.related_access_request).toBe(5)
+    expect(createCalls[0].data.resource_name).toBe('Quranic Text Toolkit')
+  })
+
+  it('creates an access_denied notification when status changes to denied', async () => {
+    const createCalls: NotificationCreateCall[] = []
+    const payload = makePayload({
+      findByIDResult: { id: 200, name: 'Quranic Text Toolkit' },
+      createCalls,
+    })
+    const doc = { id: 5, status: 'denied', applicant: 42, resource: 200 }
+    const previousDoc = { id: 5, status: 'pending', applicant: 42, resource: 200 }
+
+    await hook({ req: { payload }, doc, previousDoc, operation: 'update' })
+
+    expect(createCalls[0].data.type).toBe('access_denied')
+  })
+
+  it('does not create a notification on create (only status transitions on update)', async () => {
+    const createCalls: NotificationCreateCall[] = []
+    const payload = makePayload({ findByIDResult: { id: 0, name: '' }, createCalls })
+    const doc = { id: 5, status: 'pending', applicant: 42, resource: 200 }
+
+    await hook({ req: { payload }, doc, previousDoc: undefined, operation: 'create' })
+
+    expect(createCalls).toHaveLength(0)
+  })
+
+  it('does not create a notification when status is unchanged', async () => {
+    const createCalls: NotificationCreateCall[] = []
+    const payload = makePayload({ findByIDResult: { id: 0, name: '' }, createCalls })
+    const doc = { id: 5, status: 'approved', applicant: 42, resource: 200 }
+    const previousDoc = { id: 5, status: 'approved', applicant: 42, resource: 200 }
+
+    await hook({ req: { payload }, doc, previousDoc, operation: 'update' })
+
+    expect(createCalls).toHaveLength(0)
+  })
+
+  it('does not create a notification for a status change back to pending', async () => {
+    const createCalls: NotificationCreateCall[] = []
+    const payload = makePayload({ findByIDResult: { id: 0, name: '' }, createCalls })
+    const doc = { id: 5, status: 'pending', applicant: 42, resource: 200 }
+    const previousDoc = { id: 5, status: 'approved', applicant: 42, resource: 200 }
+
+    await hook({ req: { payload }, doc, previousDoc, operation: 'update' })
+
+    expect(createCalls).toHaveLength(0)
+  })
+})

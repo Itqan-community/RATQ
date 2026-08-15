@@ -7,6 +7,7 @@ import { fileURLToPath } from 'url'
 
 import { AccessRequests } from './collections/AccessRequests'
 import { APIKeys } from './collections/APIKeys'
+import { Notifications } from './collections/Notifications'
 import { Comments } from './collections/Comments'
 import { Media } from './collections/Media'
 import { Reports } from './collections/Reports'
@@ -40,7 +41,7 @@ export default buildConfig({
       beforeLogin: ['/admin/BeforeLogin#BeforeLogin'],
     },
   },
-  collections: [Users, Media, Resources, Comments, Reports, AccessRequests, APIKeys],
+  collections: [Users, Media, Resources, Comments, Reports, AccessRequests, APIKeys, Notifications],
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET || '',
   typescript: {

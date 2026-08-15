@@ -1,46 +1,69 @@
 import type { NotificationItem } from '@/types/resource';
-import { DATA_MODE, API_BASE } from '@/shared/infrastructure/data-mode';
-import { getAccessToken } from '@/shared/infrastructure/token-storage';
-import { mockDeveloperNotifications } from './mock-data';
+import { getAccessToken, getCurrentUserId } from '@/shared/infrastructure/token-storage';
+import { payloadErrorMessage } from '@/shared/infrastructure/payload-error';
+import { PAYLOAD_API_BASE } from '@/shared/infrastructure/payload-config';
+
+interface PayloadNotificationDoc {
+  id: number;
+  type: NotificationItem['type'];
+  message: string;
+  resource_name: string;
+  read: boolean;
+  createdAt: string;
+}
+
+function toNotificationItem(doc: PayloadNotificationDoc): NotificationItem {
+  return {
+    id: doc.id,
+    type: doc.type,
+    message: doc.message,
+    resource_name: doc.resource_name,
+    created_at: doc.createdAt,
+    read: doc.read,
+  };
+}
 
 export async function fetchDeveloperNotifications(): Promise<NotificationItem[]> {
-  if (DATA_MODE === 'mock') {
-    return mockDeveloperNotifications;
-  }
+  const userId = getCurrentUserId();
+  if (!userId) return [];
 
-  const res = await fetch(`${API_BASE}/api/v1/developer/notifications/`, {
-    headers: { Authorization: `Bearer ${getAccessToken()}` },
-  });
+  const res = await fetch(
+    `${PAYLOAD_API_BASE}/notifications?where[recipient][equals]=${userId}&sort=-createdAt&depth=0&limit=100`,
+    { headers: { Authorization: `JWT ${getAccessToken()}` } }
+  );
   if (!res.ok) throw new Error('Failed to fetch notifications');
-  return res.json();
+  const data: { docs: PayloadNotificationDoc[] } = await res.json();
+  return data.docs.map(toNotificationItem);
 }
 
 export async function markNotificationAsRead(notificationId: number) {
-  if (DATA_MODE === 'mock') {
-    return { success: true };
-  }
-
-  const res = await fetch(`${API_BASE}/api/v1/developer/notifications/${notificationId}/read/`, {
-    method: 'POST',
+  const res = await fetch(`${PAYLOAD_API_BASE}/notifications/${notificationId}`, {
+    method: 'PATCH',
     headers: {
-      Authorization: `Bearer ${getAccessToken()}`,
+      'Content-Type': 'application/json',
+      Authorization: `JWT ${getAccessToken()}`,
     },
+    body: JSON.stringify({ read: true }),
   });
-  if (!res.ok) throw new Error('Failed to mark notification as read');
+  if (!res.ok) throw new Error(await payloadErrorMessage(res, 'Failed to mark notification as read'));
   return res.json();
 }
 
 export async function markAllNotificationsAsRead() {
-  if (DATA_MODE === 'mock') {
-    return { success: true };
-  }
+  const userId = getCurrentUserId();
+  if (!userId) return { success: true };
 
-  const res = await fetch(`${API_BASE}/api/v1/developer/notifications/read-all/`, {
-    method: 'POST',
-    headers: {
-      Authorization: `Bearer ${getAccessToken()}`,
-    },
-  });
-  if (!res.ok) throw new Error('Failed to mark all notifications as read');
+  const res = await fetch(
+    `${PAYLOAD_API_BASE}/notifications?where[recipient][equals]=${userId}&where[read][equals]=false`,
+    {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `JWT ${getAccessToken()}`,
+      },
+      body: JSON.stringify({ read: true }),
+    }
+  );
+  if (!res.ok) throw new Error(await payloadErrorMessage(res, 'Failed to mark all notifications as read'));
   return res.json();
 }

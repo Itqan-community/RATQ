@@ -46,6 +46,37 @@ export const Reports: CollectionConfig = {
         return data
       },
     ],
+    afterChange: [
+      async ({ req, doc, previousDoc, operation }) => {
+        if (operation !== 'update') return doc
+        if (!previousDoc || previousDoc.status === doc.status) return doc
+
+        const resourceId = typeof doc.resource === 'object' ? doc.resource.id : doc.resource
+        const resource = await req.payload.findByID({
+          collection: 'resources',
+          id: resourceId,
+          depth: 0,
+        })
+        const recipientId = typeof doc.reporter === 'object' ? doc.reporter.id : doc.reporter
+
+        await req.payload.create({
+          collection: 'notifications',
+          data: {
+            recipient: recipientId,
+            type: doc.status === 'resolved' ? 'report_resolved' : 'report_status_change',
+            message:
+              doc.status === 'resolved'
+                ? `تم حل التقرير على "${resource.name}"`
+                : `تغيرت حالة التقرير على "${resource.name}" إلى ${doc.status}`,
+            resource: resource.id,
+            resource_name: resource.name,
+            related_report: doc.id,
+          },
+        })
+
+        return doc
+      },
+    ],
   },
   fields: [
     {

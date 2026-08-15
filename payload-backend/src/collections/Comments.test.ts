@@ -83,3 +83,156 @@ describe('Comments beforeChange hook', () => {
     expect(result.author_name).not.toContain('@')
   })
 })
+
+interface NotificationCreateCall {
+  collection: string
+  data: Record<string, unknown>
+}
+
+interface ExistingComment {
+  id: number
+  author: string
+}
+
+interface CommentsPayloadStub {
+  find: (args: unknown) => Promise<{ docs: ExistingComment[] }>
+  findByID: (args: { collection: string; id: unknown; depth?: number }) => Promise<{ id: number; name: string }>
+  create: (args: NotificationCreateCall) => Promise<Record<string, unknown>>
+}
+
+interface CommentAfterChangeArgs {
+  req: { payload: CommentsPayloadStub }
+  doc: Record<string, unknown>
+  operation: string
+}
+
+interface NotificationCreateCall {
+  collection: string
+  data: Record<string, unknown>
+}
+
+interface ExistingComment {
+  id: number
+  author: string
+}
+
+interface CommentsPayloadStub {
+  find: (args: unknown) => Promise<{ docs: ExistingComment[] }>
+  findByID: (args: { collection: string; id: unknown; depth?: number }) => Promise<{ id: number; name: string }>
+  create: (args: NotificationCreateCall) => Promise<Record<string, unknown>>
+}
+
+interface CommentAfterChangeArgs {
+  req: { payload: CommentsPayloadStub }
+  doc: Record<string, unknown>
+  operation: string
+}
+
+describe('Comments afterChange hook', () => {
+  const hook = Comments.hooks!.afterChange![0] as (
+    args: CommentAfterChangeArgs,
+  ) => Promise<Record<string, unknown>>
+
+  function makePayload({
+    existingComments,
+    resource,
+    createCalls,
+  }: {
+    existingComments: ExistingComment[]
+    resource: { id: number; name: string }
+    createCalls: NotificationCreateCall[]
+  }): CommentsPayloadStub {
+    return {
+      find: async () => ({ docs: existingComments }),
+      findByID: async () => resource,
+      create: async (args) => {
+        createCalls.push(args)
+        return { id: 900, ...args.data }
+      },
+    }
+  }
+
+  it('notifies a previous distinct commenter on the same resource', async () => {
+    const createCalls: NotificationCreateCall[] = []
+    const payload = makePayload({
+      existingComments: [{ id: 1, author: 'user-1' }],
+      resource: { id: 200, name: 'Quranic Text Toolkit' },
+      createCalls,
+    })
+    const doc = { id: 2, resource: 200, author: 'user-2' }
+
+    await hook({ req: { payload }, doc, operation: 'create' })
+
+    expect(createCalls).toHaveLength(1)
+    expect(createCalls[0].collection).toBe('notifications')
+    expect(createCalls[0].data.recipient).toBe('user-1')
+    expect(createCalls[0].data.type).toBe('comment_reply')
+    expect(createCalls[0].data.related_comment).toBe(2)
+  })
+
+  it('notifies each distinct previous commenter only once', async () => {
+    const createCalls: NotificationCreateCall[] = []
+    const payload = makePayload({
+      existingComments: [
+        { id: 1, author: 'user-1' },
+        { id: 3, author: 'user-1' },
+        { id: 4, author: 'user-3' },
+      ],
+      resource: { id: 200, name: 'Quranic Text Toolkit' },
+      createCalls,
+    })
+    const doc = { id: 5, resource: 200, author: 'user-2' }
+
+    await hook({ req: { payload }, doc, operation: 'create' })
+
+    expect(createCalls).toHaveLength(2)
+    const recipients = createCalls.map((c) => c.data.recipient).sort()
+    expect(recipients).toEqual(['user-1', 'user-3'])
+  })
+
+  it('notifies every distinct commenter even when there are more than one page worth (100+) of prior comments', async () => {
+    const createCalls: NotificationCreateCall[] = []
+    const manyComments: ExistingComment[] = []
+    for (let i = 0; i < 150; i++) {
+      manyComments.push({ id: i, author: `user-${i}` })
+    }
+    const payload = makePayload({
+      existingComments: manyComments,
+      resource: { id: 200, name: 'Quranic Text Toolkit' },
+      createCalls,
+    })
+    const doc = { id: 999, resource: 200, author: 'user-original-poster' }
+
+    await hook({ req: { payload }, doc, operation: 'create' })
+
+    expect(createCalls).toHaveLength(150)
+  })
+
+  it('does not notify the commenter themselves', async () => {
+    const createCalls: NotificationCreateCall[] = []
+    const payload = makePayload({
+      existingComments: [],
+      resource: { id: 200, name: 'Quranic Text Toolkit' },
+      createCalls,
+    })
+    const doc = { id: 2, resource: 200, author: 'user-2' }
+
+    await hook({ req: { payload }, doc, operation: 'create' })
+
+    expect(createCalls).toHaveLength(0)
+  })
+
+  it('does not run on update, only on create', async () => {
+    const createCalls: NotificationCreateCall[] = []
+    const payload = makePayload({
+      existingComments: [{ id: 1, author: 'user-1' }],
+      resource: { id: 200, name: 'Quranic Text Toolkit' },
+      createCalls,
+    })
+    const doc = { id: 2, resource: 200, author: 'user-2' }
+
+    await hook({ req: { payload }, doc, operation: 'update' })
+
+    expect(createCalls).toHaveLength(0)
+  })
+})

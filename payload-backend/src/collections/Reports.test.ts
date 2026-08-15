@@ -101,3 +101,95 @@ describe('Reports beforeChange hook', () => {
     expect(result.reporter).toBeUndefined()
   })
 })
+
+interface NotificationCreateCall {
+  collection: string
+  data: Record<string, unknown>
+}
+
+interface ReportsPayloadStub {
+  findByID: (args: { collection: string; id: unknown; depth?: number }) => Promise<{ id: number; name: string }>
+  create: (args: NotificationCreateCall) => Promise<Record<string, unknown>>
+}
+
+interface ReportAfterChangeArgs {
+  req: { payload: ReportsPayloadStub }
+  doc: Record<string, unknown>
+  previousDoc?: Record<string, unknown>
+  operation: string
+}
+
+describe('Reports afterChange hook', () => {
+  const hook = Reports.hooks!.afterChange![0] as (
+    args: ReportAfterChangeArgs,
+  ) => Promise<Record<string, unknown>>
+
+  function makePayload({
+    findByIDResult,
+    createCalls,
+  }: {
+    findByIDResult: { id: number; name: string }
+    createCalls: NotificationCreateCall[]
+  }): ReportsPayloadStub {
+    return {
+      findByID: async () => findByIDResult,
+      create: async (args) => {
+        createCalls.push(args)
+        return { id: 900, ...args.data }
+      },
+    }
+  }
+
+  it('creates a report_resolved notification for the reporter when status changes to resolved', async () => {
+    const createCalls: NotificationCreateCall[] = []
+    const payload = makePayload({
+      findByIDResult: { id: 200, name: 'Arabic Font Rendering Engine' },
+      createCalls,
+    })
+    const doc = { id: 7, status: 'resolved', reporter: 42, resource: 200 }
+    const previousDoc = { id: 7, status: 'open', reporter: 42, resource: 200 }
+
+    await hook({ req: { payload }, doc, previousDoc, operation: 'update' })
+
+    expect(createCalls).toHaveLength(1)
+    expect(createCalls[0].collection).toBe('notifications')
+    expect(createCalls[0].data.recipient).toBe(42)
+    expect(createCalls[0].data.type).toBe('report_resolved')
+    expect(createCalls[0].data.related_report).toBe(7)
+  })
+
+  it('creates a report_status_change notification for a status change that is not resolved', async () => {
+    const createCalls: NotificationCreateCall[] = []
+    const payload = makePayload({
+      findByIDResult: { id: 200, name: 'Arabic Font Rendering Engine' },
+      createCalls,
+    })
+    const doc = { id: 7, status: 'closed', reporter: 42, resource: 200 }
+    const previousDoc = { id: 7, status: 'open', reporter: 42, resource: 200 }
+
+    await hook({ req: { payload }, doc, previousDoc, operation: 'update' })
+
+    expect(createCalls[0].data.type).toBe('report_status_change')
+  })
+
+  it('does not create a notification on create', async () => {
+    const createCalls: NotificationCreateCall[] = []
+    const payload = makePayload({ findByIDResult: { id: 0, name: '' }, createCalls })
+    const doc = { id: 7, status: 'open', reporter: 42, resource: 200 }
+
+    await hook({ req: { payload }, doc, previousDoc: undefined, operation: 'create' })
+
+    expect(createCalls).toHaveLength(0)
+  })
+
+  it('does not create a notification when status is unchanged', async () => {
+    const createCalls: NotificationCreateCall[] = []
+    const payload = makePayload({ findByIDResult: { id: 0, name: '' }, createCalls })
+    const doc = { id: 7, status: 'open', reporter: 42, resource: 200 }
+    const previousDoc = { id: 7, status: 'open', reporter: 42, resource: 200 }
+
+    await hook({ req: { payload }, doc, previousDoc, operation: 'update' })
+
+    expect(createCalls).toHaveLength(0)
+  })
+})
