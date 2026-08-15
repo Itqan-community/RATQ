@@ -33,7 +33,7 @@ describe('Pagination', () => {
     mockSearchParams = new URLSearchParams('page=not-a-number');
     renderWithProvider(<Pagination count={30} pageSize={12} />);
 
-    expect(screen.getByRole('button', { name: 'page 1' })).toHaveClass('bg-[var(--accent-primary)]');
+    expect(screen.getByRole('button', { name: 'Page 1' })).toHaveClass('bg-[var(--accent-primary)]');
     expect(screen.getByRole('button', { name: /prev/i })).toBeDisabled();
 
     fireEvent.click(screen.getByRole('button', { name: /next/i }));
