@@ -6,44 +6,71 @@ interface JsonPreviewProps {
   };
 }
 
+const TOKEN_PATTERN =
+  /("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)/g;
+
+function classifyToken(match: string): string {
+  if (/^"/.test(match)) {
+    return /:$/.test(match)
+      ? 'text-[var(--accent-primary)] font-semibold'
+      : 'text-[var(--success)]';
+  }
+  if (/true|false/.test(match)) return 'text-[var(--error)]';
+  if (/null/.test(match)) return 'text-[var(--text-muted)]';
+  return 'text-[var(--text-primary)]';
+}
+
+// Splits a formatted JSON line into plain-text and token segments and
+// renders each as its own text node/span - never as raw HTML, so JSON
+// string values (which may come from user/publisher input) can't be
+// interpreted as markup no matter what characters they contain.
+function highlightLine(line: string, key: number): React.ReactNode {
+  const parts: React.ReactNode[] = [];
+  let lastIndex = 0;
+  let partIndex = 0;
+
+  for (const match of line.matchAll(TOKEN_PATTERN)) {
+    const [token] = match;
+    const start = match.index ?? 0;
+    if (start > lastIndex) {
+      parts.push(line.slice(lastIndex, start));
+    }
+    parts.push(
+      <span key={partIndex++} className={classifyToken(token)}>
+        {token}
+      </span>
+    );
+    lastIndex = start + token.length;
+  }
+  if (lastIndex < line.length) {
+    parts.push(line.slice(lastIndex));
+  }
+
+  return <div key={key}>{parts}</div>;
+}
+
 function SyntaxHighlight({ json }: { json: string }): React.ReactNode {
+  let lines: string[] | null = null;
   try {
     const parsed = JSON.parse(json);
-    const formatted = JSON.stringify(parsed, null, 2);
-    const lines = formatted.split('\n');
-
-    return (
-      <pre className="text-xs font-mono overflow-x-auto">
-        {lines.map((line, i) => {
-          const highlighted = line.replace(
-            /("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)/g,
-            (match) => {
-              let cls = 'text-[var(--text-primary)]';
-              if (/^"/.test(match)) {
-                cls = /:$/.test(match)
-                  ? 'text-[var(--accent-primary)] font-semibold'
-                  : 'text-[var(--success)]';
-              } else if (/true|false/.test(match)) {
-                cls = 'text-[var(--error)]';
-              } else if (/null/.test(match)) {
-                cls = 'text-[var(--text-muted)]';
-              }
-              return `<span class="${cls}">${match}</span>`;
-            }
-          );
-          return (
-            <div key={i} dangerouslySetInnerHTML={{ __html: highlighted }} />
-          );
-        })}
-      </pre>
-    );
+    lines = JSON.stringify(parsed, null, 2).split('\n');
   } catch {
+    lines = null;
+  }
+
+  if (lines === null) {
     return (
       <pre className="text-xs font-mono text-[var(--text-muted)] overflow-x-auto">
         {json}
       </pre>
     );
   }
+
+  return (
+    <pre className="text-xs font-mono overflow-x-auto">
+      {lines.map((line, i) => highlightLine(line, i))}
+    </pre>
+  );
 }
 
 export function JsonPreview({ data }: JsonPreviewProps) {
