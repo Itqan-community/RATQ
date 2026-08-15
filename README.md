@@ -28,6 +28,7 @@ Open [http://localhost:3000](http://localhost:3000).
 ## Contributing
 
 See [CONTRIBUTING.md](./CONTRIBUTING.md) for setup details, coding standards, and the PR process. All contributions target the `main` branch.
+See [CONTRIBUTING.md](./CONTRIBUTING.md) for setup details, coding standards, and the PR process. Please also read our [CODE_OF_CONDUCT.md](./CODE_OF_CONDUCT.md) for community standards. All contributions target the `main` branch.
 
 ## License
 
