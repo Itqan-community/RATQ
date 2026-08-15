@@ -1,13 +1,19 @@
 'use client';
 
 import Link from 'next/link';
+import { useSearchParams } from 'next/navigation';
 import { useLanguage } from '@/shared/ui/i18n';
 import { ResourceCard } from '@/modules/resources/components/ResourceCard';
+import { Pagination } from '@/shared/ui/Pagination';
 import { useResources } from '@/hooks/useResources';
+
+const PAGE_SIZE = 12;
 
 export function CatalogContent() {
   const { locale, direction, t } = useLanguage();
-  const { data, error, isLoading } = useResources();
+  const searchParams = useSearchParams();
+  const page = Math.max(1, parseInt(searchParams.get('page') || '1', 10) || 1);
+  const { data, error, isLoading } = useResources({ page, page_size: PAGE_SIZE });
   const resources = data?.results ?? [];
 
   return (
@@ -41,11 +47,14 @@ export function CatalogContent() {
             <p className="mt-2 text-sm text-[#8b8b8b]">{t.catalog.noResources.subtitle}</p>
           </section>
         ) : (
-          <section className="mt-7 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
-            {resources.map((resource) => (
-              <ResourceCard key={resource.id} resource={resource} />
-            ))}
-          </section>
+          <>
+            <section className="mt-7 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+              {resources.map((resource) => (
+                <ResourceCard key={resource.id} resource={resource} />
+              ))}
+            </section>
+            <Pagination count={data?.count ?? 0} pageSize={PAGE_SIZE} />
+          </>
         )}
 
         <section className="mt-24 overflow-hidden rounded-[24px] bg-[linear-gradient(112deg,#edf1f1_15%,#dbeaf6_100%)] px-7 sm:px-12">
