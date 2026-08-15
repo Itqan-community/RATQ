@@ -1,0 +1,42 @@
+name: Enforce Assignment Approval
+
+on:
+  issues:
+    types: [assigned]
+
+permissions:
+  issues: write
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Unassign self-assigned issues from non-maintainers
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const assignee = context.payload.assignee?.login;
+            const actor = context.payload.sender?.login;
+            if (!assignee || !actor || actor !== assignee) return;
+            if (context.payload.sender?.type === 'Bot') return;
+
+            const { data: perm } = await github.rest.repos.getCollaboratorPermissionLevel({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              username: actor,
+            });
+            if (perm.permission === 'admin' || perm.permission === 'write' || perm.permission === 'maintain') return;
+
+            await github.rest.issues.removeAssignees({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              assignees: [assignee],
+            });
+
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              body: `@${assignee} jazak Allah khayran for the interest! Assignment needs a maintainer's approval first, so I've unassigned this for now - a maintainer will assign it to you once they've confirmed you're clear to start (checking the one-ticket-at-a-time rule). No need to re-comment, just wait for the assignment.`,
+            });

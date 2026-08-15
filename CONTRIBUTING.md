@@ -38,9 +38,13 @@ Note: `src/app/dashboard/*` and `src/app/developer/*` currently overlap (both ha
 
 ## Testing
 
-- Run `npm test` (watch mode) or `npm run test:run` (single run) before opening a PR.
-- New components/hooks should have a test where practical, see `src/__tests__/` for existing examples and conventions.
-- Bug fixes should include a regression test where practical.
+- Run `npm test` (watch mode) or `npm run test:run` (single run) before opening a PR. For `payload-backend/` changes, run its own test suite from that directory instead.
+- **Tests are required, not optional, when your change touches:**
+  - Access control / permissions (anything in a collection's `access` block, an `Access` function, or similar auth-path logic) - cover every distinct role/case your change affects (e.g. admin, owner, a different non-owner user, unauthenticated), not just the happy path. See `payload-backend/src/collections/Comments.test.ts` for the expected shape.
+  - A bug fix where the bug was a logic error (not a pure encoding/formatting/copy fix) - add a regression test that fails on the old code and passes on the new one.
+  - A new hook or utility function with any branching logic.
+- **Tests are optional** for pure styling/markup tweaks, dependency bumps, encoding fixes (e.g. stripping a BOM byte), copy/translation changes, or config-only edits with no logic change - explain briefly in the PR description why no test was added if it's not obvious.
+- When you introduce a new helper to replace an old one, remove the old one if it's no longer referenced anywhere - don't leave dead code behind (a lingering unused function will show up as a new lint warning in review).
 
 ## Linting
 
@@ -59,7 +63,7 @@ You're welcome to use AI coding tools, but the PR is still your responsibility: 
 
 1. Open a GitHub Issue first (or pick up an existing one, look for the `good first issue` label if you're new).
 2. Comment on the issue to claim it before starting work, so two people don't duplicate effort.
-3. Ask to be assigned to the issue before starting work, to avoid effort duplication.
+3. Ask to be assigned to the issue before starting work, to avoid effort duplication. Wait for a maintainer to assign you - self-assigning via GitHub's UI is automatically reverted (with a comment explaining why), it's not a way to skip the queue.
 4. Branch from `main`, named `feat/{short-title}` (e.g. `feat/pagination-a11y`). This repo's CI runs a Branch Naming Check that **fails the whole PR** on any other prefix (`fix/`, `chore/`, plain branch names, etc.) - even for a small fix or a typo correction. If you forked and started on your fork's default branch, push a new `feat/{short-title}` branch instead of opening the PR from `main`.
 5. Reference the issue number in your PR description.
 6. Keep PRs scoped to one issue. Split unrelated changes into separate PRs.
