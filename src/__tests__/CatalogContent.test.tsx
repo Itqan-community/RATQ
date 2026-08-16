@@ -13,6 +13,7 @@ vi.mock('@/hooks/useResources', () => ({
 
 vi.mock('next/navigation', () => ({
   useSearchParams: () => mockSearchParams,
+  usePathname: () => '/resources',
   useRouter: () => ({ push: mockPush }),
 }));
 
