@@ -34,6 +34,8 @@ const canWritePublisherNotes: FieldAccess = ({ req }) => {
   return req.user.role === 'admin' || req.user.role === 'publisher'
 }
 
+// Note: AccessRequests only applies to Payload-sourced resources.
+// CMS- and mock-sourced resources have no real owner relationship to notify or approve requests.
 export const AccessRequests: CollectionConfig = {
   slug: 'access-requests',
   access: {
