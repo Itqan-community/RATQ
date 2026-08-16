@@ -70,6 +70,8 @@ export function Pagination({ count, pageSize = 12 }: PaginationProps) {
           ) : (
             <button
               key={page}
+              aria-label={locale === "ar" ? `الصفحة ${page}` : `Page ${page}`}
+              aria-current={currentPage === page ? "page" : undefined}
               onClick={() => goToPage(page as number)}
               className={`w-9 h-9 rounded-lg text-sm font-heading transition-colors ${
                 page === currentPage
