@@ -33,6 +33,8 @@ See [CONTRIBUTING.md](./CONTRIBUTING.md) for setup details, coding standards, an
 
 Every merged contribution gets a shoutout on the [Contributors page](https://ratq.itqan.dev/contributors) and the community's [Hall of Fame](https://community.itqan.dev/d/658) - pick up a [good first issue](https://github.com/Itqan-community/RATQ/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22) and join them.
 
+<img src="./docs/images/contributors-page.png" alt="RATQ Contributors page" width="600" />
+
 ## License
 
 [MIT](./LICENSE)
