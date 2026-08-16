@@ -130,7 +130,8 @@
       "allLicenses": "الكل",
       "itqanBadge": "موثق بإتقان",
       "verifiedOnly": "الموثق فقط",
-      "notVerified": "غير موثق"
+      "notVerified": "غير موثق",
+      "clearAll": "مسح الكل"
     },
     "types": {
       "library": "مكتبة",

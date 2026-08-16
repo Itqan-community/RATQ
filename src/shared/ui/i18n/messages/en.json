@@ -130,7 +130,8 @@
       "allLicenses": "All",
       "itqanBadge": "Itqan Verified",
       "verifiedOnly": "Verified only",
-      "notVerified": "Not verified"
+      "notVerified": "Not verified",
+      "clearAll": "Clear all"
     },
     "types": {
       "library": "Library",
