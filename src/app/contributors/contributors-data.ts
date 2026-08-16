@@ -88,9 +88,9 @@ export const contributors: Contributor[] = [
     githubUrl: 'https://github.com/Abdalla2200',
     avatarUrl: 'https://github.com/Abdalla2200.png',
     contribution:
-      'Fixed pages loading scrolled-to-bottom and animating up on navigation, by adding smooth-scroll behavior to the html element - his own diagnosed fix from when he opened the issue.',
-    issueUrl: 'https://github.com/Itqan-community/RATQ/issues/187',
-    prUrl: 'https://github.com/Itqan-community/RATQ/pull/195',
+      'Fixed pages loading scrolled-to-bottom and animating up on navigation, by adding smooth-scroll behavior to the html element - his own diagnosed fix from when he opened the issue. Later added bilingual accessibility labels to the pagination buttons.',
+    issueUrl: 'https://github.com/Itqan-community/RATQ/issues/174',
+    prUrl: 'https://github.com/Itqan-community/RATQ/pull/211',
   },
   {
     name: 'phaghidow',
@@ -98,8 +98,8 @@ export const contributors: Contributor[] = [
     githubUrl: 'https://github.com/phaghidow',
     avatarUrl: 'https://github.com/phaghidow.png',
     contribution:
-      'Added a Contributor Covenant code of conduct and a short governance section explaining who has merge rights and how decisions get made.',
-    issueUrl: 'https://github.com/Itqan-community/RATQ/issues/167',
-    prUrl: 'https://github.com/Itqan-community/RATQ/pull/208',
+      "Added a Contributor Covenant code of conduct and a short governance section explaining who has merge rights and how decisions get made, then documented AccessRequests' publisher-scope limitation.",
+    issueUrl: 'https://github.com/Itqan-community/RATQ/issues/159',
+    prUrl: 'https://github.com/Itqan-community/RATQ/pull/212',
   },
 ];
