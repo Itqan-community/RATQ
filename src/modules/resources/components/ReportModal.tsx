@@ -65,7 +65,7 @@ export function ReportModal({ isOpen, onClose, onSubmit, resourceId, resourceNam
               onChange={(e) => { setReason(e.target.value); setReasonTouched(false); }}
               className={`w-full px-3 py-2 border rounded-md bg-[var(--bg-primary)] text-[var(--text-primary)] text-sm focus:outline-none focus:ring-2 ${reasonTouched && !reason ? 'border-[var(--danger)] focus:ring-[var(--danger)]' : 'border-[var(--border-color)] focus:ring-[var(--accent-primary)]'}`}
             >
-              <option value="">Select a reason</option>
+              <option value="">{t.resource.detail.reportReasonPlaceholder}</option>
               <option value="inaccurate">{t.resource.detail.reportReasonInaccurate}</option>
               <option value="inappropriate">{t.resource.detail.reportReasonInappropriate}</option>
               <option value="infringing">{t.resource.detail.reportReasonInfringing}</option>
@@ -85,7 +85,7 @@ export function ReportModal({ isOpen, onClose, onSubmit, resourceId, resourceNam
               maxLength={500}
               rows={3}
               className="w-full px-3 py-2 border border-[var(--border-color)] rounded-md bg-[var(--bg-primary)] text-[var(--text-primary)] text-sm focus:outline-none focus:ring-2 focus:ring-[var(--accent-primary)] resize-none"
-              placeholder="Provide additional context..."
+              placeholder={t.resource.detail.reportDetailsPlaceholder}
             />
             <p className="text-xs text-[var(--text-muted)] mt-1 text-right">{details.length}/500</p>
           </div>
