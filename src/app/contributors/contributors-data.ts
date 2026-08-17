@@ -88,9 +88,9 @@ export const contributors: Contributor[] = [
     githubUrl: 'https://github.com/Abdalla2200',
     avatarUrl: 'https://github.com/Abdalla2200.png',
     contribution:
-      'Fixed pages loading scrolled-to-bottom and animating up on navigation, by adding smooth-scroll behavior to the html element - his own diagnosed fix from when he opened the issue. Later added bilingual accessibility labels to the pagination buttons.',
-    issueUrl: 'https://github.com/Itqan-community/RATQ/issues/174',
-    prUrl: 'https://github.com/Itqan-community/RATQ/pull/211',
+      'Fixed pages loading scrolled-to-bottom and animating up on navigation, by adding smooth-scroll behavior to the html element - his own diagnosed fix from when he opened the issue. Later added bilingual accessibility labels to the pagination buttons, then added a sort dropdown to the resources catalog with URL-based state, matching the existing filter pattern.',
+    issueUrl: 'https://github.com/Itqan-community/RATQ/issues/148',
+    prUrl: 'https://github.com/Itqan-community/RATQ/pull/220',
   },
   {
     name: 'phaghidow',
