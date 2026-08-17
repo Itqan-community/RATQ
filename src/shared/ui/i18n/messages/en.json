@@ -111,6 +111,10 @@
       "title": "No resources found.",
       "subtitle": "Try adjusting your filters or search query."
     },
+    "search": {
+      "placeholder": "Search resources...",
+      "button": "Search"
+    },
     "sort": {
       "by": "Sort by",
       "options": {

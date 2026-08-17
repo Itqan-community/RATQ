@@ -59,7 +59,7 @@ export function CatalogContent() {
               <input
                 name="search"
                 defaultValue={search}
-                placeholder={locale === 'ar' ? 'ابحث عن مورد...' : 'Search resources...'}
+                placeholder={t.catalog.search.placeholder}
                 className="h-12 flex-1 rounded-full border border-[#e7e7e7] px-5 outline-none focus:ring-2 focus:ring-black/10"
                 dir={direction}
               />
@@ -68,7 +68,7 @@ export function CatalogContent() {
                 type="submit"
                 className="rounded-full bg-black px-6 text-white"
               >
-                {locale === 'ar' ? 'بحث' : 'Search'}
+                {t.catalog.search.button}
               </button>
             </form>
           </div>
