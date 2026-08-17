@@ -3,14 +3,16 @@
 import Link from 'next/link';
 import type { ReactNode } from 'react';
 import { formatDate } from '@/shared/utils/utils';
+import { GithubRepoPreview } from '@/modules/resources/components/GithubRepoPreview';
 import { GithubStatsCard } from '@/modules/resources/components/GithubStatsCard';
 import { TrustedBySection } from '@/modules/resources/components/TrustedBySection';
 import { useLanguage } from '@/shared/ui/i18n';
-import type { Resource, ResourceType } from '@/types/resource';
+import type { GithubRepoPreview as GithubRepoPreviewData, Resource, ResourceType } from '@/types/resource';
 import arabicDescriptions from '@/shared/ui/i18n/resource-descriptions.ar.json';
 
 interface ResourceDetailClientProps {
   resource: Resource;
+  repoPreview: GithubRepoPreviewData | null;
 }
 
 const typeColors: Record<ResourceType, string> = {
@@ -44,7 +46,7 @@ function InfoItem({ icon, label, value }: { icon: ReactNode; label: string; valu
 
 const smallIcon = (path: ReactNode) => <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8}>{path}</svg>;
 
-export function ResourceDetailClient({ resource }: ResourceDetailClientProps) {
+export function ResourceDetailClient({ resource, repoPreview }: ResourceDetailClientProps) {
   const { t, locale, direction } = useLanguage();
   const arabicCopy = arabicDescriptions[resource.slug as keyof typeof arabicDescriptions];
   const localizedDescription = locale === 'ar' && arabicCopy ? arabicCopy.description : resource.description;
@@ -97,6 +99,7 @@ export function ResourceDetailClient({ resource }: ResourceDetailClientProps) {
 
             <section className="mt-6">
               <GithubStatsCard githubUrl={resource.github_url || resource.documentation_url || "#"} stats={resource.github_stats}/>
+              <GithubRepoPreview repoPreview={repoPreview} />
             </section>
           </div>
         </div>
