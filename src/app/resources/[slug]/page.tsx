@@ -22,10 +22,11 @@ export const runtime = 'edge';
 // (which both need the same resource) share one call per request instead
 // of hitting withEdgeCache's cache.match twice.
 const getCachedResource = cache(async (slug: string): Promise<Resource | null> => {
-  const cacheKeyRequest = new Request(`https://cache-key.internal/resources/${slug}`);
+  const cacheKeyRequest = new Request(`https://cache-key.internal/resources/${encodeURIComponent(slug)}`);
   const response = await withEdgeCache(cacheKeyRequest, async () => {
     const resource = await resourceAggregator.get(slug);
     return new Response(JSON.stringify(resource ?? null), {
+      status: resource ? 200 : 404,
       headers: {
         'Content-Type': 'application/json',
         'Cache-Control': 'public, s-maxage=300, stale-while-revalidate=60',

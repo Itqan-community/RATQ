@@ -103,7 +103,10 @@ describe('ResourceDetailPage', () => {
     expect((result as any).props.resource.name).toBe('Hit Resource');
   });
 
-  it('shares one aggregator call between generateMetadata and the page (React cache dedup)', async () => {
+  // NOTE: vitest calls generateMetadata/default directly, outside a real request scope,
+  // so React's cache() isn't what's deduping here — the edge-cache mock is. This test
+  // verifies edge-cache reuse, not React cache dedup.
+  it('reuses the edge cache between generateMetadata and the page', async () => {
     installMockEdgeCache();
     const resource = createResource({
       slug: 'shared-slug',
