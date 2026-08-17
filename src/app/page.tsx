@@ -153,7 +153,7 @@ export default function HomePage() {
               <h1 className="gsap-hero-copy mt-7 max-w-full break-words pb-1 text-3xl font-black leading-[1.45] tracking-normal text-black min-[360px]:text-4xl sm:mt-8 sm:text-5xl sm:leading-[1.35] lg:text-6xl">{home.hero.title}</h1>
               <p className="gsap-hero-copy mt-8 text-lg leading-9 text-[#7d8790]">{home.hero.subtitle}</p>
               <form className="gsap-hero-copy mt-9 flex items-center gap-3" action="/resources" dir={direction}>
-                <input name="q" className="h-16 min-w-0 flex-1 rounded-full border-0 bg-white px-8 text-base text-black shadow-none outline-none placeholder:text-[#9b9b9b] focus:ring-2 focus:ring-black/10" placeholder={home.hero.searchPlaceholder} dir={direction} />
+                <input name="search" className="h-16 min-w-0 flex-1 rounded-full border-0 bg-white px-8 text-base text-black shadow-none outline-none placeholder:text-[#9b9b9b] focus:ring-2 focus:ring-black/10" placeholder={home.hero.searchPlaceholder} dir={direction} />
                 <button type="submit" className="flex h-16 w-16 shrink-0 items-center justify-center rounded-full bg-black text-white transition hover:bg-[#171717]" aria-label={home.hero.searchLabel}><svg className="h-7 w-7" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}><circle cx="11" cy="11" r="7" /><path d="m20 20-3.5-3.5" /></svg></button>
               </form>
               <div className="gsap-hero-copy mt-5 flex flex-wrap gap-2">{home.hero.categories.map((category) => <span key={category} className="rounded-full bg-white/65 px-3 py-1 text-xs font-semibold text-[#9aa4ad]">{category}</span>)}</div>

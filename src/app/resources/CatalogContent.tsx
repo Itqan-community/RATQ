@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { useSearchParams } from 'next/navigation';
+import { useSearchParams, useRouter } from 'next/navigation';
 import { useLanguage } from '@/shared/ui/i18n';
 import { ResourceCard } from '@/modules/resources/components/ResourceCard';
 import { FilterPanel } from '@/modules/resources/components/FilterPanel';
@@ -17,8 +17,10 @@ export function CatalogContent() {
   const page = parsePageParam(searchParams.get('page'));
   const type = searchParams.get('type') ?? undefined;
   const license = searchParams.get('license') ?? undefined;
-  const { data, error, isLoading } = useResources({ page, page_size: PAGE_SIZE, type, license });
+  const search = searchParams.get('search') ?? '';
+  const { data, error, isLoading } = useResources({ page, page_size: PAGE_SIZE, type, license, search });
   const resources = data?.results ?? [];
+  const router = useRouter();
 
   return (
     <div className="bg-white pb-10 pt-32 text-black sm:pt-36" dir={direction}>
@@ -32,9 +34,48 @@ export function CatalogContent() {
               ? 'مصدر لكل ما تحتاجه لدراساتك القرآنية'
               : 'Everything you need for Quranic studies'}
           </p>
+          <div className="my-6">
+            <form
+              onSubmit={(event) => {
+                event.preventDefault();
+
+                const formData = new FormData(event.currentTarget);
+                const value = String(formData.get('search') ?? '').trim();
+
+                const params = new URLSearchParams(searchParams.toString());
+
+                if (value) {
+                  params.set('search', value);
+                } else {
+                  params.delete('search');
+                }
+
+                params.delete('page');
+
+                router.push(`/resources?${params.toString()}`);
+              }}
+              className="mb-6 flex gap-3"
+            >
+              <input
+                name="search"
+                defaultValue={search}
+                placeholder={t.catalog.search.placeholder}
+                className="h-12 flex-1 rounded-full border border-[#e7e7e7] px-5 outline-none focus:ring-2 focus:ring-black/10"
+                dir={direction}
+              />
+
+              <button
+                type="submit"
+                className="rounded-full bg-black px-6 text-white"
+              >
+                {t.catalog.search.button}
+              </button>
+            </form>
+          </div>
         </section>
 
         <div className="mt-7 flex flex-col gap-6 sm:flex-row sm:items-start">
+          
           <FilterPanel />
 
           <div className="min-w-0 flex-1">
