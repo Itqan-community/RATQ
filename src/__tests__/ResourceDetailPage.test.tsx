@@ -14,7 +14,11 @@ vi.mock('next/navigation', () => ({
 }));
 
 vi.mock('@/app/resources/[slug]/ResourceDetailClient', () => ({
-  ResourceDetailClient: (_props: { resource: Resource }) => null,
+  ResourceDetailClient: (_props: { resource: Resource; repoPreview: unknown }) => null,
+}));
+
+vi.mock('@/modules/resources/infrastructure/github/fetchGithubRepoPreview', () => ({
+  fetchGithubRepoPreview: vi.fn(async () => null),
 }));
 
 function createResource(overrides: Partial<Resource> = {}): Resource {

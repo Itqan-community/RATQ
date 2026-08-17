@@ -1,9 +1,11 @@
 import { cache } from 'react';
 import { notFound } from 'next/navigation';
 import { resourceAggregator } from '@/modules/resources/infrastructure/repositories/aggregate';
+import { fetchGithubRepoPreview } from '@/modules/resources/infrastructure/github/fetchGithubRepoPreview';
+import { parseGithubRepoUrl } from '@/modules/resources/infrastructure/github/parseGithubRepoUrl';
 import { withEdgeCache } from '@/shared/infrastructure/edge-cache';
 import { ResourceDetailClient } from './ResourceDetailClient';
-import type { Resource } from '@/types/resource';
+import type { GithubRepoPreview, Resource } from '@/types/resource';
 
 // Required by @cloudflare/next-on-pages: non-static routes must opt into the
 // edge runtime or the CF Pages build fails.
@@ -60,5 +62,11 @@ export default async function ResourceDetailPage({
   if (!resource) {
     notFound();
   }
-  return <ResourceDetailClient resource={resource} />;
+
+  const parsed = parseGithubRepoUrl(resource.github_url);
+  const repoPreview: GithubRepoPreview | null = parsed
+    ? await fetchGithubRepoPreview(parsed.owner, parsed.repo)
+    : null;
+
+  return <ResourceDetailClient resource={resource} repoPreview={repoPreview} />;
 }

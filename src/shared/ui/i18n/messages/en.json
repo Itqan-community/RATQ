@@ -247,7 +247,13 @@
       "previewDatasetRows": "Rows",
       "previewDatasetColumns": "Columns",
       "previewDatasetSize": "Size",
-      "previewJsonFormat": "Formatted JSON"
+      "previewJsonFormat": "Formatted JSON",
+      "githubPreview": {
+        "title": "Repository preview",
+        "topics": "Topics",
+        "recentCommits": "Recent commits",
+        "viewCommit": "View commit"
+      }
     }
   },
   "footer": {

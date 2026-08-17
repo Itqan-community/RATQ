@@ -63,6 +63,19 @@ export interface GithubStats {
   last_commit: string;  // ISO 8601
 }
 
+export interface GithubCommit {
+  sha: string;
+  message: string;
+  author: string;
+  date: string;
+  url: string;
+}
+
+export interface GithubRepoPreview {
+  topics: string[];
+  commits: GithubCommit[];
+}
+
 export interface Consumer {
   name: string;
   logo_url?: string;
