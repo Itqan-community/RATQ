@@ -8,6 +8,8 @@ import { FilterPanel } from '@/modules/resources/components/FilterPanel';
 import { Pagination } from '@/shared/ui/Pagination';
 import { useResources } from '@/hooks/useResources';
 import { parsePageParam } from '@/shared/utils/utils';
+import SortSelect from '@/modules/resources/components/SortSelect';
+import { SortOption } from '@/types/resource';
 
 const PAGE_SIZE = 12;
 
@@ -16,9 +18,10 @@ export function CatalogContent() {
   const searchParams = useSearchParams();
   const page = parsePageParam(searchParams.get('page'));
   const type = searchParams.get('type') ?? undefined;
+  const sort = (searchParams.get('sort') as SortOption) ?? undefined;
   const license = searchParams.get('license') ?? undefined;
   const search = searchParams.get('search') ?? '';
-  const { data, error, isLoading } = useResources({ page, page_size: PAGE_SIZE, type, license, search });
+  const { data, error, isLoading } = useResources({ page, page_size: PAGE_SIZE, type, license, search, sort });
   const resources = data?.results ?? [];
   const router = useRouter();
 
@@ -75,10 +78,11 @@ export function CatalogContent() {
         </section>
 
         <div className="mt-7 flex flex-col gap-6 sm:flex-row sm:items-start">
-          
+
           <FilterPanel />
 
           <div className="min-w-0 flex-1">
+            <SortSelect />
             {isLoading ? (
               <section className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3" aria-busy="true">
                 {Array.from({ length: 6 }).map((_, index) => (
