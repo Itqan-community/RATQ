@@ -102,4 +102,14 @@ export const contributors: Contributor[] = [
     issueUrl: 'https://github.com/Itqan-community/RATQ/issues/159',
     prUrl: 'https://github.com/Itqan-community/RATQ/pull/212',
   },
+  {
+    name: 'hugoboss092',
+    githubUsername: 'hugoboss092',
+    githubUrl: 'https://github.com/hugoboss092',
+    avatarUrl: 'https://github.com/hugoboss092.png',
+    contribution:
+      "Fixed the last two English strings that had slipped through the Report modal - the reason dropdown's default option and the details placeholder - wiring both through the existing i18n system with real Arabic/English translations and tests for both locales.",
+    issueUrl: 'https://github.com/Itqan-community/RATQ/issues/162',
+    prUrl: 'https://github.com/Itqan-community/RATQ/pull/214',
+  },
 ];
