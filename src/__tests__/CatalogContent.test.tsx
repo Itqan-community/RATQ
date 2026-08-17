@@ -65,21 +65,59 @@ describe('CatalogContent pagination', () => {
   it('requests page 1 by default when no page param is present', () => {
     mockUseResources.mockReturnValue({ data: { count: 0, next: null, previous: null, results: [] }, error: undefined, isLoading: false });
     renderWithProvider(<CatalogContent />);
-    expect(mockUseResources).toHaveBeenCalledWith({ page: 1, page_size: 12 });
+    expect(mockUseResources).toHaveBeenCalledWith({
+      page: 1,
+      page_size: 12,
+      type: undefined,
+      license: undefined,
+      search: '',
+    });
   });
 
   it('reads the page number from the page query param', () => {
     mockSearchParams = new URLSearchParams('page=3');
     mockUseResources.mockReturnValue({ data: { count: 30, next: null, previous: null, results: [makeResource(1)] }, error: undefined, isLoading: false });
     renderWithProvider(<CatalogContent />);
-    expect(mockUseResources).toHaveBeenCalledWith({ page: 3, page_size: 12 });
+    expect(mockUseResources).toHaveBeenCalledWith({
+      page: 3,
+      page_size: 12,
+      type: undefined,
+      license: undefined,
+      search: '',
+    });
   });
 
   it('falls back to page 1 for an invalid page param', () => {
     mockSearchParams = new URLSearchParams('page=not-a-number');
     mockUseResources.mockReturnValue({ data: { count: 0, next: null, previous: null, results: [] }, error: undefined, isLoading: false });
     renderWithProvider(<CatalogContent />);
-    expect(mockUseResources).toHaveBeenCalledWith({ page: 1, page_size: 12 });
+    expect(mockUseResources).toHaveBeenCalledWith({
+      page: 1,
+      page_size: 12,
+      type: undefined,
+      license: undefined,
+      search: '',
+    });
+  });
+
+  it('reads the search query param', () => {
+    mockSearchParams = new URLSearchParams('search=quran');
+
+    mockUseResources.mockReturnValue({
+      data: { count: 0, next: null, previous: null, results: [] },
+      error: undefined,
+      isLoading: false,
+    });
+
+    renderWithProvider(<CatalogContent />);
+
+    expect(mockUseResources).toHaveBeenCalledWith({
+      page: 1,
+      page_size: 12,
+      type: undefined,
+      license: undefined,
+      search: 'quran',
+    });
   });
 
   it('renders pagination controls when there is more than one page of results', () => {
