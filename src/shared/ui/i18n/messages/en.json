@@ -489,7 +489,7 @@
       "title": "What we collect",
       "item1": "When you sign in as a developer via GitHub, we receive your verified email and display name from GitHub to create your account and link your session.",
       "item2": "When you publish a resource or request access to one, we store the data you enter specifically for that purpose (resource description, GitHub URL, license info, and similar).",
-      "item3": "One session cookie, used only to keep you signed in — not for tracking."
+      "item3": "Your signed-in session is stored in your browser\u2019s local storage, not a cookie. We use one short-lived cookie during GitHub sign-in itself, not for tracking."
     },
     "dontDo": {
       "title": "What we don't do",
