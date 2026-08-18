@@ -31,6 +31,7 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
   // class to <html> before hydration to avoid a flash - this effect
   // just brings React's own state in sync with it on mount.
   const [theme, setThemeState] = useState<Theme>('light');
+  const [initialized, setInitialized] = useState(false);
 
   useEffect(() => {
     const saved = localStorage.getItem(STORAGE_KEY) as Theme | null;
@@ -42,13 +43,15 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
           : 'light';
     // eslint-disable-next-line react-hooks/set-state-in-effect -- Sync React state with the theme the blocking pre-hydration script already applied to <html>; SSR-safe because useState initializer runs on the server with the 'light' fallback.
     setThemeState(initial);
+    setInitialized(true);
   }, []);
 
   // Keep <html class="dark"> in sync whenever the theme state changes
   // (covers both the initial sync above and later explicit toggles).
   useEffect(() => {
+    if (!initialized) return;
     applyThemeClass(theme);
-  }, [theme]);
+  }, [theme, initialized]);
 
   const setTheme = useCallback((next: Theme) => {
     setThemeState(next);
@@ -58,10 +61,16 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
   const toggleTheme = useCallback(() => {
     setThemeState((prev) => {
       const next: Theme = prev === 'dark' ? 'light' : 'dark';
-      localStorage.setItem(STORAGE_KEY, next);
       return next;
     });
   }, []);
+  // Persist whenever the theme changes, so it stays correct regardless of
+  // how many times the updater above runs (React may invoke it more than
+  // once, e.g. under StrictMode or batched retries).
+  useEffect(() => {
+    if (!initialized) return;
+    localStorage.setItem(STORAGE_KEY, theme);
+  }, [theme, initialized]);
 
   return (
     <ThemeContext.Provider value={{ theme, setTheme, toggleTheme }}>
