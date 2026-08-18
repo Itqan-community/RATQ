@@ -247,7 +247,13 @@
       "previewDatasetRows": "صفوف",
       "previewDatasetColumns": "أعمدة",
       "previewDatasetSize": "الحجم",
-      "previewJsonFormat": "JSON منسق"
+      "previewJsonFormat": "JSON منسق",
+      "githubPreview": {
+        "title": "معاينة المستودع",
+        "topics": "المواضيع",
+        "recentCommits": "أحدث الالتزامات",
+        "viewCommit": "عرض الالتزام"
+      }
     }
   },
   "footer": {
