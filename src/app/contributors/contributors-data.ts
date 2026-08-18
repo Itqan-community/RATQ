@@ -48,9 +48,9 @@ export const contributors: Contributor[] = [
     githubUrl: 'https://github.com/usefahmed07',
     avatarUrl: 'https://github.com/usefahmed07.png',
     contribution:
-      'Built this Contributors page and fixed the developer view navbar overlap, then built out the real developer notifications backend (a new Payload collection wired into access requests, reports, and comments), wired pagination into the resources catalog, and found and fixed a stored XSS vulnerability in the JSON preview component.',
-    issueUrl: 'https://github.com/Itqan-community/RATQ/issues/197',
-    prUrl: 'https://github.com/Itqan-community/RATQ/pull/210',
+      'Built this Contributors page and fixed the developer view navbar overlap, then built out the real developer notifications backend (a new Payload collection wired into access requests, reports, and comments), wired pagination into the resources catalog, found and fixed a stored XSS vulnerability in the JSON preview component, and later added four missing content pages (Contact, Privacy, Standards, Docs) with the footer links wired to them.',
+    issueUrl: 'https://github.com/Itqan-community/RATQ/issues/219',
+    prUrl: 'https://github.com/Itqan-community/RATQ/pull/223',
   },
   {
     name: 'HamzaElabboubi',
