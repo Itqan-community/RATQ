@@ -477,5 +477,72 @@
     "subtitle": "RATQ is built with the community. These contributors have fixed bugs, closed issues, and shipped improvements to the platform.",
     "viewIssue": "Issue",
     "viewPr": "Pull request"
+  },
+  "contact": {
+    "title": "Contact Us",
+    "intro": "We'd love to hear from you — a question about a resource, a suggestion to improve the platform, a bug report, or an interest in contributing code.",
+    "noTeam": "RATQ is a community-run open-source project — there's no separate team reviewing your contribution from the outside. Everyone working on RATQ starts from the same open queue on GitHub.",
+    "howToReach": "How to reach us",
+    "email": "Email",
+    "issues": "For technical issues, bugs, or feature requests, open a GitHub Issue",
+    "forum": "For general community discussion about RATQ or other Itqan projects",
+    "contribute": "Want to contribute code? See CONTRIBUTING.md in the repo to get started."
+  },
+  "privacy": {
+    "title": "Privacy Policy",
+    "intro": "This page explains what data RATQ collects and why.",
+    "collect": {
+      "title": "What we collect",
+      "item1": "When you sign in as a developer via GitHub, we receive your verified email and display name from GitHub to create your account and link your session.",
+      "item2": "When you publish a resource or request access to one, we store the data you enter specifically for that purpose (resource description, GitHub URL, license info, and similar).",
+      "item3": "Your signed-in session is stored in your browser\u2019s local storage, not a cookie. We use one short-lived cookie during GitHub sign-in itself, not for tracking."
+    },
+    "dontDo": {
+      "title": "What we don't do",
+      "item1": "We don't use third-party analytics or advertising trackers on the site.",
+      "item2": "We don't sell your data or share it with outside parties for marketing purposes."
+    },
+    "deletion": {
+      "title": "Requesting account or data deletion",
+      "body": "Reach out via GitHub Issues (see the Contact page) and we'll handle the request."
+    },
+    "betaNote": "This is an initial policy for a platform still in Beta, and may be updated as the platform evolves."
+  },
+  "standards": {
+    "title": "Itqan Standards",
+    "intro": "RATQ encourages careful publishing and review through the Itqan Standards, to help you evaluate any resource before using it in your project. These standards look at three things:",
+    "accuracy": {
+      "title": "Accuracy",
+      "body": "Is the Quranic content (text, recitation, tafsir, or related data) sourced and consistent with what it's attributed to?"
+    },
+    "completeness": {
+      "title": "Completeness",
+      "body": "How complete and correct is the information shown about the resource — license, documentation, version, and access details?"
+    },
+    "quality": {
+      "title": "Technical quality",
+      "body": "Is the resource actively maintained, clearly documented for developers, and easy to integrate into a real project?"
+    },
+    "closing": "Every resource on the platform surfaces this information clearly — license, documentation, version, and access status — so you can evaluate it yourself before using it. The Itqan Standards aren't a stamp of approval from an internal team; they're a shared framework that helps the whole community evaluate resources the same way."
+  },
+  "docs": {
+    "title": "Docs",
+    "intro": "The starting point for using RATQ as a developer — whether you're looking for a resource or publishing one.",
+    "browse": {
+      "title": "Browsing resources",
+      "body": "Use the resource catalog to search and filter by type, license, or keyword. Every resource page shows documentation, license, version, and access information."
+    },
+    "publish": {
+      "title": "Publishing and access",
+      "body": "Have a resource to add? Sign in via GitHub from the developer dashboard to publish it and manage access requests if it's restricted."
+    },
+    "apiKeys": {
+      "title": "API keys",
+      "body": "From the developer dashboard you can generate API keys to integrate RATQ's data directly into your project."
+    },
+    "contribute": {
+      "title": "Contributing code",
+      "body": "RATQ is open source. See CONTRIBUTING.md in the GitHub repo for how to set up a dev environment and contribute code."
+    }
   }
 }
