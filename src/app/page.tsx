@@ -7,6 +7,8 @@ import { useGSAP } from "@gsap/react";
 import { useLanguage } from "@/shared/ui/i18n";
 import { useResources } from "@/hooks/useResources";
 import { ResourceCard } from "@/modules/resources/components/ResourceCard";
+import AnnouncementsCarousel from "@/modules/resources/components/AnnouncementsCarousel";
+import TrendingResources from "@/modules/resources/components/TrendingResources";
 
 gsap.registerPlugin(useGSAP);
 
@@ -71,9 +73,8 @@ export default function HomePage() {
   const { t, direction } = useLanguage();
   const home = t.home;
 
-  const { data: trendingData, isLoading: trendingLoading } = useResources({ sort: "downloads", page_size: 4 });
   const { data: featuredData, isLoading: featuredLoading } = useResources({ sort: "newest", page_size: 4 });
-  const trendingResources = trendingData?.results ?? [];
+
   const featuredResources = featuredData?.results ?? [];
   const stats: Stat[] = [
     { value: direction === "rtl" ? "12.4 ألف" : "12.4k", label: home.stats.downloads },
@@ -161,17 +162,13 @@ export default function HomePage() {
           </div>
         </div>
       </section>
-      <section className="mx-auto mt-16 w-full max-w-[1205px] px-5"><div className="grid min-h-[101px] overflow-hidden rounded-[21.8785px] bg-black text-white shadow-sm md:h-[101px] md:grid-cols-[240px_1fr_240px]" dir="ltr" style={{ background: "radial-gradient(circle at 4% 50%, rgba(67, 198, 118, 0.5) 10%, rgba(67, 198, 118, 0) 34%), radial-gradient(circle at 110% 50%, rgba(56, 185, 179, 0.95) 5%, rgba(67, 198, 118, 0) 34%), #000000" }}><div className="flex items-center justify-start gap-5 px-6 py-5" dir="ltr"><span className="text-3xl font-black leading-none text-white/40">...</span><Link href="/resources" className="rounded-full bg-white px-4 py-4 text-base font-black text-black">{home.announcements.action}</Link></div><p className="flex items-center justify-center px-6 py-5 text-center text-[18px] leading-[1.45]" dir={direction}>{home.announcements.text}</p><div className="flex items-center justify-end px-7 py-5 text-[38px] font-black leading-none" dir={direction}>{home.announcements.title}</div></div></section>
-      {(trendingLoading || trendingResources.length > 0) && (
-        <section className="mx-auto mt-16 max-w-7xl px-5">
-          <SectionHeading direction={direction}>{home.sections.trending}</SectionHeading>
-          <div className="grid gap-7 sm:grid-cols-2 lg:grid-cols-4">
-            {trendingLoading
-              ? Array.from({ length: 4 }).map((_, index) => <div key={index} className="skeleton min-h-[305px] rounded-[13px]" />)
-              : trendingResources.map((resource) => <ResourceCard key={resource.id} resource={resource} />)}
-          </div>
-        </section>
-      )}
+    
+      <AnnouncementsCarousel />
+
+  
+      <TrendingResources/>
+    
+
       {(featuredLoading || featuredResources.length > 0) && (
         <section className="mx-auto mt-16 max-w-7xl px-5">
           <SectionHeading direction={direction}>{home.sections.featured}</SectionHeading>

@@ -1,5 +1,5 @@
 import type { Resource } from '@/types/resource';
-import type { TrendingResource } from '@/types/announcement';
+import type { PeriodType, TrendingResource } from '@/types/announcement';
 
 // The ranking rule behind the mock-mode branch of trending-api.ts: only
 // resources with at least one download in the period, ranked by that
@@ -8,7 +8,7 @@ import type { TrendingResource } from '@/types/announcement';
 // "what counts as trending" would touch.
 export function rankTrendingResources(
   resources: Resource[],
-  period: '7d' | '30d' | 'all-time'
+  period: PeriodType
 ): TrendingResource[] {
   const isAllTime = period === 'all-time';
   return resources

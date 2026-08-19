@@ -1,9 +1,9 @@
-import type { TrendingResource } from '@/types/announcement';
+import type { PeriodType, TrendingResource } from '@/types/announcement';
 import { DATA_MODE, API_BASE } from '@/shared/infrastructure/data-mode';
 import { fetchResources } from './resources-api';
 import { rankTrendingResources } from '../domain/services/trending-ranking';
 
-export async function fetchTrendingResources(period: '7d' | '30d' | 'all-time'): Promise<TrendingResource[]> {
+export async function fetchTrendingResources(period: PeriodType): Promise<TrendingResource[]> {
   if (DATA_MODE === 'mock') {
     const { results } = await fetchResources({ page_size: 10_000 });
     return rankTrendingResources(results, period);

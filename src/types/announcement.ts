@@ -17,7 +17,7 @@ export interface Announcement {
 
 // ─── Trending Types ───────────────────────────────────────────────────────
 
-export type TrendingPeriod = '7d' | '30d' | 'all-time';
+export type PeriodType = '7d' | '30d' | 'all-time';
 
 export interface TrendingResource {
   id: number;

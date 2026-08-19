@@ -5,17 +5,13 @@ import Link from 'next/link';
 import { useTranslations } from '@/shared/ui/i18n';
 import { useTrendingResources } from '@/hooks/useTrendingResources';
 import { ResourceCard } from './ResourceCard';
-import type { TrendingResource, TrendingPeriod } from '@/types/announcement';
+import type { TrendingResource,PeriodType } from '@/types/announcement';
 import type { Resource } from '@/types/resource';
 
 export default function TrendingResources() {
   const t = useTranslations();
   const { resources, isLoading, period, setPeriod, periods } = useTrendingResources();
-
-  if (resources.length === 0 && !isLoading) {
-    return null;
-  }
-
+  
   const periodLabels: Record<string, string> = {
     '7d': t.trending.period7d,
     '30d': t.trending.period30d,
@@ -29,6 +25,12 @@ export default function TrendingResources() {
       downloadCount: resource.downloads,
     }));
   }, [resources]);
+  
+  const hasResourcesToShow = resources.length > 0;
+
+  if(!isLoading && !hasResourcesToShow) {
+    return null
+  }
 
   return (
     <section className="section-padding py-8" aria-label={t.trending.title}>
@@ -42,7 +44,7 @@ export default function TrendingResources() {
                   key={p}
                   role="tab"
                   aria-selected={period === p}
-                  onClick={() => setPeriod(p as '7d' | '30d' | 'all-time')}
+                  onClick={() => setPeriod(p as PeriodType)}
                   className={`px-3 py-1.5 text-sm rounded-lg transition-colors ${
                     period === p
                       ? 'bg-[var(--accent-primary)] text-white'
@@ -66,6 +68,7 @@ export default function TrendingResources() {
         </div>
 
         {isLoading ? (
+
           <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
             {[1, 2, 3].map((i) => (
               <div key={i} className="card p-5 animate-pulse">
@@ -76,7 +79,9 @@ export default function TrendingResources() {
               </div>
             ))}
           </div>
+
         ) : (
+
           <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
             {resourceCards.map(({ resource, rank, downloadCount }) => (
               <ResourceCard
@@ -87,6 +92,7 @@ export default function TrendingResources() {
               />
             ))}
           </div>
+
         )}
       </div>
     </section>
