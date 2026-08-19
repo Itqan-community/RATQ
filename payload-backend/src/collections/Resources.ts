@@ -149,5 +149,31 @@ export const Resources: CollectionConfig = {
       relationTo: 'users',
       required: true,
     },
+    {
+      name: 'github_stats',
+      type: 'group',
+      admin: { description: 'Auto-populated by the periodic GitHub stats job. Do not edit manually.' },
+      fields: [
+        { name: 'stars', type: 'number' },
+        { name: 'forks', type: 'number' },
+        { name: 'open_issues', type: 'number' },
+        { name: 'last_commit', type: 'date' },
+      ],
+    },
+    {
+      name: 'github_commits',
+      type: 'json',
+      admin: { description: 'Auto-populated by the periodic GitHub stats job.' },
+    },
+    {
+      name: 'github_topics',
+      type: 'json',
+      admin: { description: 'Auto-populated by the periodic GitHub stats job.' },
+    },
+    {
+      name: 'github_stats_fetched_at',
+      type: 'date',
+      admin: { description: 'Timestamp of the last successful GitHub API refresh.' },
+    },
   ],
 }

@@ -209,6 +209,43 @@ export interface Resource {
   status: 'draft' | 'published' | 'archived';
   version?: string | null;
   owner: number | User;
+  /**
+   * Auto-populated by the periodic GitHub stats job. Do not edit manually.
+   */
+  github_stats?: {
+    stars?: number | null;
+    forks?: number | null;
+    open_issues?: number | null;
+    last_commit?: string | null;
+  };
+  /**
+   * Auto-populated by the periodic GitHub stats job.
+   */
+  github_commits?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
+  /**
+   * Auto-populated by the periodic GitHub stats job.
+   */
+  github_topics?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
+  /**
+   * Timestamp of the last successful GitHub API refresh.
+   */
+  github_stats_fetched_at?: string | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -451,6 +488,17 @@ export interface ResourcesSelect<T extends boolean = true> {
   status?: T;
   version?: T;
   owner?: T;
+  github_stats?:
+    | T
+    | {
+        stars?: T;
+        forks?: T;
+        open_issues?: T;
+        last_commit?: T;
+      };
+  github_commits?: T;
+  github_topics?: T;
+  github_stats_fetched_at?: T;
   updatedAt?: T;
   createdAt?: T;
 }
