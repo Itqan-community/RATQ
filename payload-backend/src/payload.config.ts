@@ -6,6 +6,7 @@ import sharp from 'sharp'
 import { fileURLToPath } from 'url'
 
 import { AccessRequests } from './collections/AccessRequests'
+import { Announcements } from './collections/Announcements'
 import { APIKeys } from './collections/APIKeys'
 import { Notifications } from './collections/Notifications'
 import { Comments } from './collections/Comments'
@@ -41,7 +42,7 @@ export default buildConfig({
       beforeLogin: ['/admin/BeforeLogin#BeforeLogin'],
     },
   },
-  collections: [Users, Media, Resources, Comments, Reports, AccessRequests, APIKeys, Notifications],
+  collections: [Users, Media, Resources, Comments, Reports, AccessRequests, APIKeys, Notifications, Announcements],
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET || '',
   typescript: {
