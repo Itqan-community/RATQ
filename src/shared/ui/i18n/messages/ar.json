@@ -10,7 +10,8 @@
     "auth": {
       "login": "تسجيل الدخول",
       "register": "إنشاء حساب",
-      "logout": "تسجيل الخروج"
+      "logout": "تسجيل الخروج",
+      "forgotPassword": "نسيت كلمة المرور؟"
     },
     "langSwitch": {
       "ar": "العربية",
