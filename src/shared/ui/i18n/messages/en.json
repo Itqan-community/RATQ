@@ -10,7 +10,8 @@
     "auth": {
       "login": "Log in",
       "register": "Register",
-      "logout": "Log out"
+      "logout": "Log out",
+      "forgotPassword": "Forgot password?"
     },
     "langSwitch": {
       "ar": "العربية",
