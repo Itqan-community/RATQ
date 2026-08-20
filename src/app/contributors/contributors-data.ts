@@ -112,4 +112,34 @@ export const contributors: Contributor[] = [
     issueUrl: 'https://github.com/Itqan-community/RATQ/issues/162',
     prUrl: 'https://github.com/Itqan-community/RATQ/pull/214',
   },
+  {
+    name: 'boss-moh',
+    githubUsername: 'boss-moh',
+    githubUrl: 'https://github.com/boss-moh',
+    avatarUrl: 'https://github.com/boss-moh.png',
+    contribution:
+      'Wired the already-built AnnouncementsCarousel component into the homepage, replacing the old static banner that could only ever show one fixed message - the homepage now surfaces real, rotating announcements.',
+    issueUrl: 'https://github.com/Itqan-community/RATQ/issues/155',
+    prUrl: 'https://github.com/Itqan-community/RATQ/pull/236',
+  },
+  {
+    name: 'OmarMontaser',
+    githubUsername: 'OmarMontaser',
+    githubUrl: 'https://github.com/OmarMontaser',
+    avatarUrl: 'https://github.com/OmarMontaser.png',
+    contribution:
+      'Created CHANGELOG.md and added a Community section to the README linking to GitHub Discussions and the changelog, giving the project a public discussion channel and a clear changelog for anyone following along.',
+    issueUrl: 'https://github.com/Itqan-community/RATQ/issues/168',
+    prUrl: 'https://github.com/Itqan-community/RATQ/pull/237',
+  },
+  {
+    name: 'samyrebiha',
+    githubUsername: 'samyrebiha',
+    githubUrl: 'https://github.com/samyrebiha',
+    avatarUrl: 'https://github.com/samyrebiha.png',
+    contribution:
+      "Fixed a UX gap where an already-authenticated user could still land on the login page and see the form again - added an automatic redirect to the dashboard, with a loading guard so the form never flashes on screen while the session is being checked, plus tests covering both states.",
+    issueUrl: 'https://github.com/Itqan-community/RATQ/issues/239',
+    prUrl: 'https://github.com/Itqan-community/RATQ/pull/240',
+  },
 ];
