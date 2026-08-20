@@ -8,6 +8,7 @@ import { useLanguage } from "@/shared/ui/i18n";
 import { useResources } from "@/hooks/useResources";
 import { ResourceCard } from "@/modules/resources/components/ResourceCard";
 import AnnouncementsCarousel from "@/modules/resources/components/AnnouncementsCarousel";
+import TrendingResources from "@/modules/resources/components/TrendingResources";
 
 gsap.registerPlugin(useGSAP);
 
@@ -72,9 +73,7 @@ export default function HomePage() {
   const { t, direction } = useLanguage();
   const home = t.home;
 
-  const { data: trendingData, isLoading: trendingLoading } = useResources({ sort: "downloads", page_size: 4 });
   const { data: featuredData, isLoading: featuredLoading } = useResources({ sort: "newest", page_size: 4 });
-  const trendingResources = trendingData?.results ?? [];
   const featuredResources = featuredData?.results ?? [];
   const stats: Stat[] = [
     { value: direction === "rtl" ? "12.4 ألف" : "12.4k", label: home.stats.downloads },
@@ -165,16 +164,8 @@ export default function HomePage() {
     
       <AnnouncementsCarousel />
 
-      {(trendingLoading || trendingResources.length > 0) && (
-        <section className="mx-auto mt-16 max-w-7xl px-5">
-          <SectionHeading direction={direction}>{home.sections.trending}</SectionHeading>
-          <div className="grid gap-7 sm:grid-cols-2 lg:grid-cols-4">
-            {trendingLoading
-              ? Array.from({ length: 4 }).map((_, index) => <div key={index} className="skeleton min-h-[305px] rounded-[13px]" />)
-              : trendingResources.map((resource) => <ResourceCard key={resource.id} resource={resource} />)}
-          </div>
-        </section>
-      )}
+      <TrendingResources />
+
       {(featuredLoading || featuredResources.length > 0) && (
         <section className="mx-auto mt-16 max-w-7xl px-5">
           <SectionHeading direction={direction}>{home.sections.featured}</SectionHeading>
