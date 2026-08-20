@@ -122,7 +122,7 @@ export function ResourceCard({ resource, rank, downloadCount }: ResourceCardProp
       <h3 className="mt-5 line-clamp-2 text-xl font-black leading-8 text-black">
         {resource.name}
       </h3>
-      <p className="mt-3 line-clamp-2 flex-1 text-sm leading-7 text-[#8b8b8b]">
+      <p className="mt-3 line-clamp-3 flex-1 text-sm leading-7 text-[#8b8b8b]">
         {description}
       </p>
 

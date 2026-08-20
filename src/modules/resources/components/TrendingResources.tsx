@@ -12,9 +12,7 @@ export default function TrendingResources() {
   const t = useTranslations();
   const { resources, isLoading, period, setPeriod, periods } = useTrendingResources();
 
-  if (resources.length === 0 && !isLoading) {
-    return null;
-  }
+
 
   const periodLabels: Record<string, string> = {
     '7d': t.trending.period7d,
@@ -30,6 +28,11 @@ export default function TrendingResources() {
     }));
   }, [resources]);
 
+  const hasResourcesToShow = resourceCards.length > 0;
+    if (!hasResourcesToShow && !isLoading) {
+    return null;
+  }
+
   return (
     <section className="section-padding py-8" aria-label={t.trending.title}>
       <div className="max-w-6xl mx-auto">
@@ -42,7 +45,7 @@ export default function TrendingResources() {
                   key={p}
                   role="tab"
                   aria-selected={period === p}
-                  onClick={() => setPeriod(p as '7d' | '30d' | 'all-time')}
+                  onClick={() => setPeriod(p as TrendingPeriod)}
                   className={`px-3 py-1.5 text-sm rounded-lg transition-colors ${
                     period === p
                       ? 'bg-[var(--accent-primary)] text-white'
