@@ -2,7 +2,7 @@ import type { Announcement } from '@/types/announcement';
 import { DATA_MODE, API_BASE } from '@/shared/infrastructure/data-mode';
 import { mockAnnouncements } from './mock-data';
 
-// Payload REST returns a paginated envelope ({ docs, totalDocs, ... }), not a
+// Payload REST returns a paginated envelope ({ docs, hasNextPage, ... }), not a
 // bare array, so this unwraps docs and normalizes each doc to the frontend
 // Announcement contract. createdAt (Payload's built-in timestamp) becomes
 // created_at, same mapping as developer/infrastructure/notifications-api.ts.
@@ -20,7 +20,11 @@ interface PayloadAnnouncementDoc {
 }
 
 interface PayloadAnnouncementsResponse {
-  docs: PayloadAnnouncementDoc[];
+  docs?: PayloadAnnouncementDoc[];
+  hasNextPage?: boolean;
+  nextPage?: number | null;
+  page?: number;
+  totalPages?: number;
 }
 
 // Announcements link to Payload-native resources, whose aggregator slug is
@@ -45,23 +49,46 @@ function toAnnouncement(doc: PayloadAnnouncementDoc): Announcement {
   };
 }
 
-export function fetchAnnouncements(): Promise<Announcement[]> {
+// depth=1 populates the resource_id relationship so the adapter can derive
+// a routable aggregator slug; limit/sort mirror notifications-api.ts
+// (newest first, no truncation at Payload's default limit of 10).
+async function fetchAnnouncementPage(page: number): Promise<PayloadAnnouncementsResponse> {
+  const res = await fetch(
+    `${API_BASE}/api/announcements/?depth=1&limit=100&sort=-createdAt&page=${page}`,
+  );
+  if (!res.ok) throw new Error('Failed to fetch announcements');
+  return res.json();
+}
+
+export async function fetchAnnouncements(): Promise<Announcement[]> {
   if (DATA_MODE === 'mock') {
     const now = new Date();
-    return Promise.resolve(
-      mockAnnouncements.filter((a) => {
-        if (!a.is_active) return false;
-        if (a.expires_at && new Date(a.expires_at) < now) return false;
-        return true;
-      })
-    );
+    return mockAnnouncements.filter((a) => {
+      if (!a.is_active) return false;
+      if (a.expires_at && new Date(a.expires_at) < now) return false;
+      return true;
+    });
   }
 
-  // depth=1 populates the resource_id relationship so the adapter can derive
-  // a routable aggregator slug; limit/sort mirror notifications-api.ts
-  // (newest first, no truncation at Payload's default limit of 10).
-  return fetch(`${API_BASE}/api/announcements/?depth=1&limit=100&sort=-createdAt`).then((res) => {
-    if (!res.ok) throw new Error('Failed to fetch announcements');
-    return res.json().then((data: PayloadAnnouncementsResponse) => data.docs.map(toAnnouncement));
-  });
+  // Payload pages the REST list (default limit 10); walk page 1 onwards and
+  // concatenate docs, preserving the server-side sort order. Loop is guarded
+  // against malformed metadata: stop when hasNextPage is false, when the
+  // response claims no valid forward-moving next page, or when totalPages is
+  // reached - so a buggy/misbehaving server cannot cause an infinite fetch.
+  const docs: PayloadAnnouncementDoc[] = [];
+  let page = 1;
+
+  while (true) {
+    const data = await fetchAnnouncementPage(page);
+    if (Array.isArray(data.docs)) docs.push(...data.docs);
+
+    if (!data.hasNextPage) break;
+    if (typeof data.totalPages === 'number' && page >= data.totalPages) break;
+
+    const nextPage = typeof data.nextPage === 'number' ? data.nextPage : 0;
+    if (!Number.isInteger(nextPage) || nextPage <= page) break;
+    page = nextPage;
+  }
+
+  return docs.map(toAnnouncement);
 }
