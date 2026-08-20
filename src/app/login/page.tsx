@@ -1,14 +1,33 @@
 'use client';
 
+import { useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
 import { LoginForm } from '@/modules/auth/components/LoginForm';
 import { useLanguage } from '@/shared/ui/i18n';
+import { useAuth } from '@/hooks/useAuth';
 
 function CheckIcon() { return <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="m5 12 4 4L19 6" /></svg>; }
 
 export default function LoginPage() {
   const { t, direction } = useLanguage();
+  const { user, loading } = useAuth();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (!loading && user) {
+      router.push('/dashboard');
+    }
+  }, [user, loading, router]);
+
+  if (loading || user) {
+    return (
+      <div className="flex min-h-[60vh] items-center justify-center">
+        <div className="h-8 w-8 animate-spin rounded-full border-4 border-solid border-[#171717] border-t-transparent" />
+      </div>
+    );
+  }
   const copy = t.auth;
   const highlights = [copy.loginBenefit1, copy.loginBenefit2, copy.loginBenefit3];
   return (
