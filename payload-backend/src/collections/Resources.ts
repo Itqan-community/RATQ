@@ -152,6 +152,7 @@ export const Resources: CollectionConfig = {
     {
       name: 'github_stats',
       type: 'group',
+      access: { create: () => false, update: () => false },
       admin: { description: 'Auto-populated by the periodic GitHub stats job. Do not edit manually.' },
       fields: [
         { name: 'stars', type: 'number' },
@@ -163,16 +164,19 @@ export const Resources: CollectionConfig = {
     {
       name: 'github_commits',
       type: 'json',
+      access: { create: () => false, update: () => false },
       admin: { description: 'Auto-populated by the periodic GitHub stats job.' },
     },
     {
       name: 'github_topics',
       type: 'json',
+      access: { create: () => false, update: () => false },
       admin: { description: 'Auto-populated by the periodic GitHub stats job.' },
     },
     {
       name: 'github_stats_fetched_at',
       type: 'date',
+      access: { create: () => false, update: () => false },
       admin: { description: 'Timestamp of the last successful GitHub API refresh.' },
     },
   ],
