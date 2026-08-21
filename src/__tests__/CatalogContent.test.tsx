@@ -146,3 +146,19 @@ describe('CatalogContent pagination', () => {
     expect(screen.queryByRole('navigation', { name: /pagination/i })).not.toBeInTheDocument();
   });
 });
+
+describe("CatalogContent accessibility", () => {
+    it("provides an accessible name for the catalog search input", () => {
+        mockUseResources.mockReturnValue({
+            data: { count: 0, next: null, previous: null, results: [] },
+            error: undefined,
+            isLoading: false,
+        });
+
+        renderWithProvider(<CatalogContent />);
+
+        expect(
+            screen.getByRole("textbox", { name: "Search resources" }),
+        ).toBeInTheDocument();
+    });
+});
