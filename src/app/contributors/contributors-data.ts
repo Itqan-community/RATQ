@@ -162,4 +162,14 @@ export const contributors: Contributor[] = [
     issueUrl: 'https://github.com/Itqan-community/RATQ/issues/232',
     prUrl: 'https://github.com/Itqan-community/RATQ/pull/243',
   },
+  {
+    name: 'Ramahadam',
+    githubUsername: 'Ramahadam',
+    githubUrl: 'https://github.com/Ramahadam',
+    avatarUrl: 'https://github.com/Ramahadam.png',
+    contribution:
+      "Added session-expiry handling for authenticated API requests - an expired or invalid JWT now clears auth state and redirects to login with a clear message, while keeping that distinct from a genuine permission denial on a still-valid session.",
+    issueUrl: 'https://github.com/Itqan-community/RATQ/issues/165',
+    prUrl: 'https://github.com/Itqan-community/RATQ/pull/245',
+  },
 ];
