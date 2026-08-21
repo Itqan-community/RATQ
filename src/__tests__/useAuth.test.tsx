@@ -4,7 +4,17 @@ import { renderToString } from 'react-dom/server';
 import { render, screen, waitFor } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { AuthProvider, useAuth } from '@/hooks/useAuth';
+import {
+  SESSION_EXPIRED_REASON,
+  notifySessionExpired,
+} from '@/shared/infrastructure/session-expiry';
 import type { User } from '@/types/resource';
+
+const mockReplace = vi.fn();
+
+vi.mock('next/navigation', () => ({
+  useRouter: () => ({ replace: mockReplace }),
+}));
 
 const storedUser: User = {
   id: 42,
@@ -28,12 +38,15 @@ function storeSession(exp: number) {
 }
 
 function AuthStateProbe() {
-  const { user, loading } = useAuth();
+  const { user, loading, error } = useAuth();
 
   return (
-    <p data-testid="auth-state">
-      {loading ? 'loading' : user?.email ?? 'anonymous'}
-    </p>
+    <>
+      <p data-testid="auth-state">
+        {loading ? 'loading' : user?.email ?? 'anonymous'}
+      </p>
+      {error && <p data-testid="auth-error">{error}</p>}
+    </>
   );
 }
 
@@ -41,6 +54,7 @@ describe('AuthProvider hydration', () => {
   beforeEach(() => {
     localStorage.clear();
     vi.restoreAllMocks();
+    mockReplace.mockClear();
   });
 
   it('hydrates without a mismatch and restores a stored session', async () => {
@@ -118,5 +132,30 @@ describe('AuthProvider hydration', () => {
     expect(localStorage.getItem('ratq_access_token')).toBeNull();
     expect(localStorage.getItem('ratq_refresh_token')).toBeNull();
     expect(localStorage.getItem('ratq_user')).toBeNull();
+  });
+
+  it('clears an active stale session and directs the user to log in again', async () => {
+    storeSession(Math.floor(Date.now() / 1000) + 3600);
+
+    render(
+      <AuthProvider>
+        <AuthStateProbe />
+      </AuthProvider>
+    );
+
+    await waitFor(() => {
+      expect(screen.getByTestId('auth-state')).toHaveTextContent(storedUser.email);
+    });
+
+    act(() => notifySessionExpired());
+
+    await waitFor(() => {
+      expect(screen.getByTestId('auth-state')).toHaveTextContent('anonymous');
+    });
+    expect(localStorage.getItem('ratq_access_token')).toBeNull();
+    expect(localStorage.getItem('ratq_refresh_token')).toBeNull();
+    expect(localStorage.getItem('ratq_user')).toBeNull();
+    expect(screen.getByTestId('auth-error')).toHaveTextContent(SESSION_EXPIRED_REASON);
+    expect(mockReplace).toHaveBeenCalledWith('/login');
   });
 });

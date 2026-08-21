@@ -118,9 +118,9 @@ export const contributors: Contributor[] = [
     githubUrl: 'https://github.com/boss-moh',
     avatarUrl: 'https://github.com/boss-moh.png',
     contribution:
-      'Wired the already-built AnnouncementsCarousel component into the homepage, replacing the old static banner that could only ever show one fixed message - the homepage now surfaces real, rotating announcements.',
+      'Wired the already-built AnnouncementsCarousel component into the homepage, replacing the old static banner that could only ever show one fixed message - the homepage now surfaces real, rotating announcements. Later did the same for Trending Resources, and found the real reason it had nothing to show (a downloads-based filter with no real download data yet to filter on).',
     issueUrl: 'https://github.com/Itqan-community/RATQ/issues/155',
-    prUrl: 'https://github.com/Itqan-community/RATQ/pull/236',
+    prUrl: 'https://github.com/Itqan-community/RATQ/pull/241',
   },
   {
     name: 'OmarMontaser',
@@ -138,8 +138,28 @@ export const contributors: Contributor[] = [
     githubUrl: 'https://github.com/samyrebiha',
     avatarUrl: 'https://github.com/samyrebiha.png',
     contribution:
-      "Fixed a UX gap where an already-authenticated user could still land on the login page and see the form again - added an automatic redirect to the dashboard, with a loading guard so the form never flashes on screen while the session is being checked, plus tests covering both states.",
+      "Fixed a UX gap where an already-authenticated user could still land on the login page and see the form again - added an automatic redirect to the dashboard, with a loading guard so the form never flashes on screen while the session is being checked, plus tests covering both states. Later added the access-control test coverage the Users and Resources collections were missing - privilege escalation, owner-spoofing, and slug-collision handling all included.",
     issueUrl: 'https://github.com/Itqan-community/RATQ/issues/239',
-    prUrl: 'https://github.com/Itqan-community/RATQ/pull/240',
+    prUrl: 'https://github.com/Itqan-community/RATQ/pull/244',
+  },
+  {
+    name: 'Walid-Khalfa',
+    githubUsername: 'Walid-Khalfa',
+    githubUrl: 'https://github.com/Walid-Khalfa',
+    avatarUrl: 'https://github.com/Walid-Khalfa.png',
+    contribution:
+      'Built the real Payload backend for Announcements, replacing the mock data it had been running on - a proper collection with admin-only writes, public reads scoped to active/non-expired announcements, and resource links that resolve through the real catalog instead of pointing at fake resource IDs.',
+    issueUrl: 'https://github.com/Itqan-community/RATQ/issues/235',
+    prUrl: 'https://github.com/Itqan-community/RATQ/pull/242',
+  },
+  {
+    name: 'Zyad-Eltayabi',
+    githubUsername: 'Zyad-Eltayabi',
+    githubUrl: 'https://github.com/Zyad-Eltayabi',
+    avatarUrl: 'https://github.com/Zyad-Eltayabi.png',
+    contribution:
+      "Added accessible names to the catalog search input and the consumer avatar links, so screen reader users get a real label instead of relying on placeholder text or nothing at all.",
+    issueUrl: 'https://github.com/Itqan-community/RATQ/issues/232',
+    prUrl: 'https://github.com/Itqan-community/RATQ/pull/243',
   },
 ];

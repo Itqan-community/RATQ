@@ -112,8 +112,9 @@
       "subtitle": "Try adjusting your filters or search query."
     },
     "search": {
-      "placeholder": "Search resources...",
-      "button": "Search"
+        "placeholder": "Search resources...",
+        "button": "Search",
+        "label": "Search resources"
     },
     "sort": {
       "by": "Sort by",
@@ -470,7 +471,8 @@
     "publisher": "Publisher",
     "publisherDescription": "Share and manage resources",
     "createAccount": "Create account",
-    "creatingAccount": "Creating account..."
+    "creatingAccount": "Creating account...",
+    "sessionExpired": "Your session has expired. Please log in again."
   },
   "contributors": {
     "pageTitle": "Contributors",
