@@ -81,6 +81,7 @@ export function ConsumerAvatar({ consumer, size, onMouseEnter, onMouseLeave }: C
         className={wrapperClasses}
         onMouseEnter={onMouseEnter}
         onMouseLeave={onMouseLeave}
+        aria-label={consumer.name}
       >
         <div
           className={`flex aspect-square items-center justify-center rounded-full bg-gradient-to-br ${gradient} shadow-sm ${sizes.avatar}`}
