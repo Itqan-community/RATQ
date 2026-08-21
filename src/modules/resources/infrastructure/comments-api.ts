@@ -45,7 +45,11 @@ export async function postComment(resourceId: number, content: string): Promise<
     },
     body: JSON.stringify({ content, resource: resourceId - 200_000 }),
   });
-  if (!res.ok) throw new Error(await payloadErrorMessage(res, 'Failed to post comment'));
+  if (!res.ok) {
+    throw new Error(
+      await payloadErrorMessage(res, 'Failed to post comment', { authenticated: true })
+    );
+  }
   const result: { doc: PayloadCommentDoc } = await res.json();
   return toComment(result.doc);
 }

@@ -8,6 +8,7 @@ import {
   useCallback,
   type ReactNode,
 } from 'react';
+import { useRouter } from 'next/navigation';
 import { login as loginUseCase } from '@/modules/auth/application/use-cases/login';
 import { register as registerUseCase } from '@/modules/auth/application/use-cases/register';
 import { completeOAuth } from '@/modules/auth/application/use-cases/complete-oauth';
@@ -19,6 +20,10 @@ import {
   getStoredUser,
   setStoredUser,
 } from '@/shared/infrastructure/token-storage';
+import {
+  SESSION_EXPIRED_REASON,
+  subscribeToSessionExpiry,
+} from '@/shared/infrastructure/session-expiry';
 import type { User } from '@/types/resource';
 
 // Discards a stale session up front instead of letting an expired token fail
@@ -51,9 +56,15 @@ type AuthContextType = {
 const AuthContext = createContext<AuthContextType | null>(null);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
+  const router = useRouter();
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+
+  const logout = useCallback(() => {
+    logoutUseCase();
+    setUser(null);
+  }, []);
 
   useEffect(() => {
     /* eslint-disable react-hooks/set-state-in-effect -- Restore browser-only auth state after hydration so the server and first client render match. */
@@ -61,6 +72,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setLoading(false);
     /* eslint-enable react-hooks/set-state-in-effect */
   }, []);
+
+  useEffect(
+    () =>
+      subscribeToSessionExpiry(() => {
+        logout();
+        setError(SESSION_EXPIRED_REASON);
+        router.replace('/login');
+      }),
+    [logout, router]
+  );
 
   const login = useCallback(async (email: string, password: string) => {
     setLoading(true);
@@ -118,11 +139,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     },
     []
   );
-
-  const logout = useCallback(() => {
-    logoutUseCase();
-    setUser(null);
-  }, []);
 
   return (
     <AuthContext.Provider
