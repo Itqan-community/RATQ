@@ -45,7 +45,13 @@ export async function markNotificationAsRead(notificationId: number) {
     },
     body: JSON.stringify({ read: true }),
   });
-  if (!res.ok) throw new Error(await payloadErrorMessage(res, 'Failed to mark notification as read'));
+  if (!res.ok) {
+    throw new Error(
+      await payloadErrorMessage(res, 'Failed to mark notification as read', {
+        authenticated: true,
+      })
+    );
+  }
   return res.json();
 }
 
@@ -64,6 +70,12 @@ export async function markAllNotificationsAsRead() {
       body: JSON.stringify({ read: true }),
     }
   );
-  if (!res.ok) throw new Error(await payloadErrorMessage(res, 'Failed to mark all notifications as read'));
+  if (!res.ok) {
+    throw new Error(
+      await payloadErrorMessage(res, 'Failed to mark all notifications as read', {
+        authenticated: true,
+      })
+    );
+  }
   return res.json();
 }
