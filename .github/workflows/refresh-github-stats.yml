@@ -1,0 +1,14 @@
+name: Refresh GitHub stats
+on:
+  schedule:
+    - cron: '0 */6 * * *'
+  workflow_dispatch: {}
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger refresh job
+        run: |
+          curl -sf -X POST "${{ secrets.PAYLOAD_BACKEND_URL }}/api/jobs/refresh-github-stats" \
+            -H "x-job-secret: ${{ secrets.JOBS_SECRET }}"
