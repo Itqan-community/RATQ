@@ -54,34 +54,38 @@ export async function fetchResourceGithubData(
   const encodedOwner = encodeURIComponent(owner)
   const encodedRepo = encodeURIComponent(repo)
 
-  const [repoRes, commitsRes, topicsRes] = await Promise.all([
-    fetch(`${GITHUB_API}/repos/${encodedOwner}/${encodedRepo}`, { headers }),
-    fetch(`${GITHUB_API}/repos/${encodedOwner}/${encodedRepo}/commits?per_page=5`, { headers }),
-    fetch(`${GITHUB_API}/repos/${encodedOwner}/${encodedRepo}/topics`, { headers }),
-  ])
+  try {
+    const [repoRes, commitsRes, topicsRes] = await Promise.all([
+      fetch(`${GITHUB_API}/repos/${encodedOwner}/${encodedRepo}`, { headers }),
+      fetch(`${GITHUB_API}/repos/${encodedOwner}/${encodedRepo}/commits?per_page=5`, { headers }),
+      fetch(`${GITHUB_API}/repos/${encodedOwner}/${encodedRepo}/topics`, { headers }),
+    ])
 
-  if (!repoRes.ok || !commitsRes.ok || !topicsRes.ok) return null
+    if (!repoRes.ok || !commitsRes.ok || !topicsRes.ok) return null
 
-  const repoJson: GithubRepoStatsResponse = await repoRes.json()
-  const commitsJson = (await commitsRes.json()) as GithubCommitResponse[]
-  const topicsJson = (await topicsRes.json()) as GithubTopicsResponse
+    const repoJson: GithubRepoStatsResponse = await repoRes.json()
+    const commitsJson = (await commitsRes.json()) as GithubCommitResponse[]
+    const topicsJson = (await topicsRes.json()) as GithubTopicsResponse
 
-  if (!Array.isArray(commitsJson)) return null
+    if (!Array.isArray(commitsJson)) return null
 
-  return {
-    stats: {
-      stars: repoJson.stargazers_count,
-      forks: repoJson.forks_count,
-      open_issues: repoJson.open_issues_count,
-      last_commit: repoJson.pushed_at,
-    },
-    commits: commitsJson.map((item) => ({
-      sha: item.sha,
-      message: (item.commit?.message ?? '').split('\n')[0]?.trim() ?? '',
-      author: item.commit?.author?.name || item.author?.login || '',
-      date: item.commit?.author?.date || '',
-      url: item.html_url,
-    })),
-    topics: Array.isArray(topicsJson.names) ? topicsJson.names : [],
+    return {
+      stats: {
+        stars: repoJson.stargazers_count,
+        forks: repoJson.forks_count,
+        open_issues: repoJson.open_issues_count,
+        last_commit: repoJson.pushed_at,
+      },
+      commits: commitsJson.map((item) => ({
+        sha: item.sha,
+        message: (item.commit?.message ?? '').split('\n')[0]?.trim() ?? '',
+        author: item.commit?.author?.name || item.author?.login || '',
+        date: item.commit?.author?.date || '',
+        url: item.html_url,
+      })),
+      topics: Array.isArray(topicsJson.names) ? topicsJson.names : [],
+    }
+  } catch {
+    return null
   }
 }

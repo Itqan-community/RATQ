@@ -7,6 +7,7 @@ import * as migration_20260730_204548_add_access_requests_collection from './202
 import * as migration_20260730_210259_add_api_keys_collection from './20260730_210259_add_api_keys_collection';
 import * as migration_20260730_214007_add_comments_author_name from './20260730_214007_add_comments_author_name';
 import * as migration_20260731_000000_cascade_required_relationships from './20260731_000000_cascade_required_relationships';
+import * as migration_20260821_084001_add_github_stats_fields_to_resources from './20260821_084001';
 
 export const migrations = [
   {
@@ -53,5 +54,10 @@ export const migrations = [
     up: migration_20260731_000000_cascade_required_relationships.up,
     down: migration_20260731_000000_cascade_required_relationships.down,
     name: '20260731_000000_cascade_required_relationships'
+  },
+  {
+    up: migration_20260821_084001_add_github_stats_fields_to_resources.up,
+    down: migration_20260821_084001_add_github_stats_fields_to_resources.down,
+    name: '20260821_084001',
   },
 ];
