@@ -40,7 +40,11 @@ export async function submitReport(resourceId: number, reason: ReportReason, det
     },
     body: JSON.stringify({ resource: resourceId - 200_000, reason, details }),
   });
-  if (!res.ok) throw new Error(await payloadErrorMessage(res, 'Failed to submit report'));
+  if (!res.ok) {
+    throw new Error(
+      await payloadErrorMessage(res, 'Failed to submit report', { authenticated: true })
+    );
+  }
   const result: { doc: PayloadReportDoc } = await res.json();
   return toReport(result.doc);
 }

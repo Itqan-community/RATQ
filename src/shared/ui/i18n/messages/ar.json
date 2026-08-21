@@ -112,8 +112,9 @@
       "subtitle": "حاول تعديل البحث أو الفلاتر."
     },
     "search": {
-      "placeholder": "ابحث عن مورد...",
-      "button": "بحث"
+        "placeholder": "ابحث عن مورد...",
+        "button": "بحث",
+        "label": "البحث عن الموارد"
     },
     "sort": {
       "by": "ترتيب حسب",
@@ -470,7 +471,8 @@
     "publisher": "ناشر",
     "publisherDescription": "أشارك الموارد وأديرها",
     "createAccount": "إنشاء الحساب",
-    "creatingAccount": "جاري إنشاء الحساب..."
+    "creatingAccount": "جاري إنشاء الحساب...",
+    "sessionExpired": "انتهت صلاحية جلستك. يُرجى تسجيل الدخول مرة أخرى."
   },
   "contributors": {
     "pageTitle": "المساهمون",
