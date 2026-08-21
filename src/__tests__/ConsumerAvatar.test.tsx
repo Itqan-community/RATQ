@@ -11,10 +11,10 @@ const consumer: Consumer = {
 
 describe("ConsumerAvatar accessibility", () => {
     it("provides an accessible name for a clickable consumer avatar", () => {
-        render(<ConsumerAvatar consumer={consumer} size="featured" />);
+        render(<ConsumerAvatar consumer={consumer} size="sidebar" />);
 
-        expect(
-            screen.getByRole("link", { name: "Quran Foundation" }),
-        ).toBeInTheDocument();
+        const link = screen.getByRole("link", { name: "Quran Foundation" });
+
+        expect(link).toHaveAttribute("aria-label", "Quran Foundation");
     });
 });
