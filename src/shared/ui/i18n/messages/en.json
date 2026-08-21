@@ -112,8 +112,9 @@
       "subtitle": "Try adjusting your filters or search query."
     },
     "search": {
-      "placeholder": "Search resources...",
-      "button": "Search"
+        "placeholder": "Search resources...",
+        "button": "Search",
+        "label": "Search resources"
     },
     "sort": {
       "by": "Sort by",

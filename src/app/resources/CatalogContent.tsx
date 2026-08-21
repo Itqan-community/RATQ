@@ -65,6 +65,7 @@ export function CatalogContent() {
                 placeholder={t.catalog.search.placeholder}
                 className="h-12 flex-1 rounded-full border border-[#e7e7e7] px-5 outline-none focus:ring-2 focus:ring-black/10"
                 dir={direction}
+                aria-label={t.catalog.search.label}
               />
 
               <button
