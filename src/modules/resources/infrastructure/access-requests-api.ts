@@ -45,7 +45,11 @@ export async function submitAccessRequest(resourceId: number, message: string): 
     },
     body: JSON.stringify({ resource: resourceId - 200_000, message }),
   });
-  if (!res.ok) throw new Error(await payloadErrorMessage(res, 'Failed to submit request'));
+  if (!res.ok) {
+    throw new Error(
+      await payloadErrorMessage(res, 'Failed to submit request', { authenticated: true })
+    );
+  }
   const result: { doc: PayloadAccessRequestDoc } = await res.json();
   return toAccessRequest(result.doc);
 }
