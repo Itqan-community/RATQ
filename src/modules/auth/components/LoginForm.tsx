@@ -4,12 +4,16 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/hooks/useAuth';
 import { githubOAuthUrl } from '@/modules/auth/application/use-cases/get-github-oauth-url';
+import { SESSION_EXPIRED_REASON } from '@/shared/infrastructure/session-expiry';
+import { useLanguage } from '@/shared/ui/i18n';
 
 export function LoginForm() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const { login, loading, error } = useAuth();
   const router = useRouter();
+  const { t } = useLanguage();
+  const displayedError = error === SESSION_EXPIRED_REASON ? t.auth.sessionExpired : error;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -22,9 +26,9 @@ export function LoginForm() {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-5">
-      {error && (
+      {displayedError && (
         <div className="rounded-lg border border-red-200 bg-red-50 p-3 text-sm leading-6 text-red-700">
-          {error}
+          {displayedError}
         </div>
       )}
 
