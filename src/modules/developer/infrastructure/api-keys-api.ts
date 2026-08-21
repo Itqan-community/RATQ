@@ -56,7 +56,11 @@ export async function createDeveloperApiKey(resourceId: number, scope: string, n
     },
     body: JSON.stringify({ name: name || `key-${resourceId}`, resource: resourceId - 200_000, scope }),
   });
-  if (!res.ok) throw new Error(await payloadErrorMessage(res, 'Failed to create API key'));
+  if (!res.ok) {
+    throw new Error(
+      await payloadErrorMessage(res, 'Failed to create API key', { authenticated: true })
+    );
+  }
   const result: { doc: PayloadApiKeyDoc } = await res.json();
   return toApiKey(result.doc);
 }
@@ -66,6 +70,10 @@ export async function revokeDeveloperApiKey(keyId: number) {
     method: 'DELETE',
     headers: { Authorization: `JWT ${getAccessToken()}` },
   });
-  if (!res.ok) throw new Error(await payloadErrorMessage(res, 'Failed to revoke API key'));
+  if (!res.ok) {
+    throw new Error(
+      await payloadErrorMessage(res, 'Failed to revoke API key', { authenticated: true })
+    );
+  }
   return res.json();
 }

@@ -37,7 +37,11 @@ export async function createDeveloperResource(data: CreateResourceInput): Promis
     },
     body: JSON.stringify(data),
   });
-  if (!res.ok) throw new Error(await payloadErrorMessage(res, 'Failed to publish resource'));
+  if (!res.ok) {
+    throw new Error(
+      await payloadErrorMessage(res, 'Failed to publish resource', { authenticated: true })
+    );
+  }
   const result: { doc: PayloadResourceDoc } = await res.json();
   return toResource(result.doc);
 }
@@ -56,7 +60,11 @@ export async function updateDeveloperResource(id: number, data: UpdateResourceIn
     },
     body: JSON.stringify(data),
   });
-  if (!res.ok) throw new Error(await payloadErrorMessage(res, 'Failed to update resource'));
+  if (!res.ok) {
+    throw new Error(
+      await payloadErrorMessage(res, 'Failed to update resource', { authenticated: true })
+    );
+  }
   const result: { doc: PayloadResourceDoc } = await res.json();
   return toResource(result.doc);
 }
@@ -66,6 +74,10 @@ export async function deleteDeveloperResource(id: number) {
     method: 'DELETE',
     headers: { Authorization: `JWT ${getAccessToken()}` },
   });
-  if (!res.ok) throw new Error(await payloadErrorMessage(res, 'Failed to delete resource'));
+  if (!res.ok) {
+    throw new Error(
+      await payloadErrorMessage(res, 'Failed to delete resource', { authenticated: true })
+    );
+  }
   return res.json();
 }
