@@ -471,7 +471,8 @@
     "publisher": "Publisher",
     "publisherDescription": "Share and manage resources",
     "createAccount": "Create account",
-    "creatingAccount": "Creating account..."
+    "creatingAccount": "Creating account...",
+    "sessionExpired": "Your session has expired. Please log in again."
   },
   "contributors": {
     "pageTitle": "Contributors",
