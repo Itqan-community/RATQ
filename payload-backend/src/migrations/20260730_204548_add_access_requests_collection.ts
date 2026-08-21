@@ -27,11 +27,10 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
 
 export async function down({ db, payload, req }: MigrateDownArgs): Promise<void> {
   await db.execute(sql`
-   ALTER TABLE "access_requests" DISABLE ROW LEVEL SECURITY;
-  DROP TABLE "access_requests" CASCADE;
-  ALTER TABLE "payload_locked_documents_rels" DROP CONSTRAINT "payload_locked_documents_rels_access_requests_fk";
-  
+   ALTER TABLE "payload_locked_documents_rels" DROP CONSTRAINT "payload_locked_documents_rels_access_requests_fk";
   DROP INDEX "payload_locked_documents_rels_access_requests_id_idx";
   ALTER TABLE "payload_locked_documents_rels" DROP COLUMN "access_requests_id";
+  ALTER TABLE "access_requests" DISABLE ROW LEVEL SECURITY;
+  DROP TABLE "access_requests" CASCADE;
   DROP TYPE "public"."enum_access_requests_status";`)
 }
