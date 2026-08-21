@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/hooks/useAuth';
 import { githubOAuthUrl } from '@/modules/auth/application/use-cases/get-github-oauth-url';
@@ -8,8 +8,12 @@ import { githubOAuthUrl } from '@/modules/auth/application/use-cases/get-github-
 export function LoginForm() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const { login, loading, error } = useAuth();
+  const { login, loading, error, clearError } = useAuth();
   const router = useRouter();
+
+  useEffect(() => {
+    clearError();
+  }, [clearError]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

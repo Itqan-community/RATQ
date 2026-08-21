@@ -37,6 +37,7 @@ type AuthContextType = {
   user: User | null;
   loading: boolean;
   error: string | null;
+  clearError: () => void;
   login: (email: string, password: string) => Promise<{ success: boolean; error?: string }>;
   loginWithToken: (token: string) => Promise<{ success: boolean; error?: string }>;
   register: (
@@ -124,12 +125,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setUser(null);
   }, []);
 
+  const clearError = useCallback(() => {
+    setError(null);
+  }, []);
+
   return (
     <AuthContext.Provider
       value={{
         user,
         loading,
         error,
+        clearError,
         login,
         loginWithToken,
         register,

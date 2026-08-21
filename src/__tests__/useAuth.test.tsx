@@ -119,4 +119,46 @@ describe('AuthProvider hydration', () => {
     expect(localStorage.getItem('ratq_refresh_token')).toBeNull();
     expect(localStorage.getItem('ratq_user')).toBeNull();
   });
+
+  it('clears error state when clearError is called', async () => {
+    const loginModule = await import('@/modules/auth/application/use-cases/login');
+    vi.spyOn(loginModule, 'login').mockRejectedValue(new Error('Invalid credentials'));
+
+    function ErrorProbe() {
+      const { error, clearError, login } = useAuth();
+      return (
+        <div>
+          <span data-testid="error-msg">{error ?? 'none'}</span>
+          <button type="button" data-testid="fail-login" onClick={() => login('wrong@test.com', 'wrongpass')}>
+            Trigger Login
+          </button>
+          <button type="button" data-testid="clear-btn" onClick={clearError}>
+            Clear
+          </button>
+        </div>
+      );
+    }
+
+    render(
+      <AuthProvider>
+        <ErrorProbe />
+      </AuthProvider>
+    );
+
+    expect(screen.getByTestId('error-msg')).toHaveTextContent('none');
+
+    await act(async () => {
+      screen.getByTestId('fail-login').click();
+    });
+
+    await waitFor(() => {
+      expect(screen.getByTestId('error-msg')).toHaveTextContent('Invalid credentials');
+    });
+
+    await act(async () => {
+      screen.getByTestId('clear-btn').click();
+    });
+
+    expect(screen.getByTestId('error-msg')).toHaveTextContent('none');
+  });
 });

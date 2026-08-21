@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/hooks/useAuth';
 import { useLanguage } from '@/shared/ui/i18n';
@@ -10,10 +10,14 @@ export function RegisterForm() {
   const [password, setPassword] = useState('');
   const [displayName, setDisplayName] = useState('');
   const [role, setRole] = useState<'developer' | 'publisher'>('developer');
-  const { register, loading, error } = useAuth();
+  const { register, loading, error, clearError } = useAuth();
   const { t } = useLanguage();
   const router = useRouter();
   const copy = t.auth;
+
+  useEffect(() => {
+    clearError();
+  }, [clearError]);
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
