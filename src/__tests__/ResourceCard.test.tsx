@@ -112,13 +112,13 @@ describe('ResourceCard', () => {
     expect(screen.queryByText('Demo')).not.toBeInTheDocument();
   });
 
-  it('clamps short description to 2 lines', () => {
+  it('clamps short description to 3 lines', () => {
     renderWithProvider(
       <ResourceCard resource={createResource({
-        short_description: 'This is a very long description that should be clamped to two lines maximum regardless of how much text is provided here to ensure the card stays compact.',
+        short_description: 'This is a very long description that should be clamped to three lines maximum regardless of how much text is provided here to ensure the card stays compact.',
       })} />
     );
     const descriptionEl = screen.getByText(/This is a very long description/i);
-    expect(descriptionEl.closest('p')).toHaveClass('line-clamp-2');
+    expect(descriptionEl.closest('p')).toHaveClass('line-clamp-3');
   });
 });

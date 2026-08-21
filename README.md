@@ -35,6 +35,12 @@ Every merged contribution gets a shoutout on the [Contributors page](https://rat
 
 <img src="./docs/images/contributors-page.png" alt="RATQ Contributors page" width="600" />
 
+## Community
+
+Have questions or want to discuss design decisions? Use [GitHub Discussions](https://github.com/Itqan-community/RATQ/discussions).
+
+See [CHANGELOG.md](https://github.com/Itqan-community/RATQ/blob/main/CHANGELOG.md) for a history of notable changes.
+
 ## License
 
 [MIT](./LICENSE)

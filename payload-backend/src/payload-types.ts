@@ -75,6 +75,7 @@ export interface Config {
     'access-requests': AccessRequest;
     'api-keys': ApiKey;
     notifications: Notification;
+    announcements: Announcement;
     'payload-kv': PayloadKv;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
@@ -90,6 +91,7 @@ export interface Config {
     'access-requests': AccessRequestsSelect<false> | AccessRequestsSelect<true>;
     'api-keys': ApiKeysSelect<false> | ApiKeysSelect<true>;
     notifications: NotificationsSelect<false> | NotificationsSelect<true>;
+    announcements: AnnouncementsSelect<false> | AnnouncementsSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
@@ -333,6 +335,23 @@ export interface Notification {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "announcements".
+ */
+export interface Announcement {
+  id: number;
+  type: 'release' | 'new_resource' | 'maintenance' | 'breaking_change';
+  title: string;
+  description: string;
+  resource_id?: (number | null) | Resource;
+  cta_url?: string | null;
+  cta_label?: string | null;
+  expires_at?: string | null;
+  is_active: boolean;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-kv".
  */
 export interface PayloadKv {
@@ -386,6 +405,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'notifications';
         value: number | Notification;
+      } | null)
+    | ({
+        relationTo: 'announcements';
+        value: number | Announcement;
       } | null);
   globalSlug?: string | null;
   user: {
@@ -569,6 +592,22 @@ export interface NotificationsSelect<T extends boolean = true> {
   related_report?: T;
   related_comment?: T;
   read?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "announcements_select".
+ */
+export interface AnnouncementsSelect<T extends boolean = true> {
+  type?: T;
+  title?: T;
+  description?: T;
+  resource_id?: T;
+  cta_url?: T;
+  cta_label?: T;
+  expires_at?: T;
+  is_active?: T;
   updatedAt?: T;
   createdAt?: T;
 }
