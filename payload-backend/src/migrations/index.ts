@@ -8,6 +8,8 @@ import * as migration_20260730_210259_add_api_keys_collection from './20260730_2
 import * as migration_20260730_214007_add_comments_author_name from './20260730_214007_add_comments_author_name';
 import * as migration_20260731_000000_cascade_required_relationships from './20260731_000000_cascade_required_relationships';
 import * as migration_20260821_084001_add_github_stats_fields_to_resources from './20260821_084001';
+import * as migration_20260821_071445_add_announcements_collection from './20260821_071445_add_announcements_collection';
+import * as migration_20260821_074500_add_notifications_migration_history from './20260821_074500_add_notifications_migration_history';
 
 export const migrations = [
   {
@@ -48,12 +50,22 @@ export const migrations = [
   {
     up: migration_20260730_214007_add_comments_author_name.up,
     down: migration_20260730_214007_add_comments_author_name.down,
-    name: '20260730_214007_add_comments_author_name'
+    name: '20260730_214007_add_comments_author_name',
   },
   {
     up: migration_20260731_000000_cascade_required_relationships.up,
     down: migration_20260731_000000_cascade_required_relationships.down,
-    name: '20260731_000000_cascade_required_relationships'
+    name: '20260731_000000_cascade_required_relationships',
+  },
+  {
+    up: migration_20260821_071445_add_announcements_collection.up,
+    down: migration_20260821_071445_add_announcements_collection.down,
+    name: '20260821_071445_add_announcements_collection'
+  },
+  {
+    up: migration_20260821_074500_add_notifications_migration_history.up,
+    down: migration_20260821_074500_add_notifications_migration_history.down,
+    name: '20260821_074500_add_notifications_migration_history'
   },
   {
     up: migration_20260821_084001_add_github_stats_fields_to_resources.up,
