@@ -14,7 +14,6 @@ export function LoginForm() {
   const [password, setPassword] = useState('');
   const { login, loading, error } = useAuth();
   const router = useRouter();
-  const { t } = useLanguage();
   const displayedError = error === SESSION_EXPIRED_REASON ? t.auth.sessionExpired : error;
 
   const handleSubmit = async (e: React.FormEvent) => {
