@@ -10,8 +10,7 @@
     "auth": {
       "login": "Log in",
       "register": "Register",
-      "logout": "Log out",
-      "forgotPassword": "Forgot password?"
+      "logout": "Log out"
     },
     "langSwitch": {
       "ar": "العربية",
@@ -473,7 +472,18 @@
     "publisherDescription": "Share and manage resources",
     "createAccount": "Create account",
     "creatingAccount": "Creating account...",
-    "sessionExpired": "Your session has expired. Please log in again."
+    "sessionExpired": "Your session has expired. Please log in again.",
+    "forgotPassword": "Forgot password?",
+    "rememberPassword": "Remember your password?",
+    "forgotPasswordTitle": "Forgot password",
+    "forgotPasswordSubtitle": "Enter your email address to reset your password.",
+    "forgotPasswordButton": "Continue",
+    "resetLinkSentHeading": "Check your email",
+    "resetLinkSentSubtitle": "We've sent you an email with instructions to reset your password. Please check your inbox.",
+    "resetLinkSentButton": "Resend Email",
+    "sendingEmail": "Sending email...",
+    "didntReceiveEmail": "Didn't receive the email?",
+    "resentAvailableIn": "Email sent again. Please check your inbox. You can resend after 30 seconds."
   },
   "contributors": {
     "pageTitle": "Contributors",
