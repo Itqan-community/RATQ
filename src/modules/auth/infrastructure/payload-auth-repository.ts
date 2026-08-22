@@ -75,3 +75,13 @@ export async function forgotPassword(email: string){
   if (!res.ok) throw new Error(await payloadErrorMessage(res, 'Forgot password request failed'));
   return { success: true };
 }
+
+export async function resetPassword(token: string, password: string) {
+  const res = await fetch(`${PAYLOAD_API_BASE}/users/reset-password`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ token, password }),
+  });
+  if (!res.ok) throw new Error(await payloadErrorMessage(res, 'Reset password failed'));
+  return { success: true };
+}
