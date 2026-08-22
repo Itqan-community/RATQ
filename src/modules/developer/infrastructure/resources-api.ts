@@ -17,10 +17,30 @@ export async function fetchDeveloperResources(userId: number): Promise<Resource[
   return data.docs.map(toResource);
 }
 
+// Uploads a new file to Payload's media collection and returns the created
+// doc (id + url). Used by ResourceForm before create/update so the resource
+// payload can reference an already-existing media id (Payload's `upload`
+// relationship field expects an id, not a raw file, on the owning doc).
+export async function uploadMedia(file: File): Promise<{ id: number; url: string }> {
+  const formData = new FormData();
+  formData.append('file', file);
+  const res = await fetch(`${PAYLOAD_API_BASE}/media`, {
+    method: 'POST',
+    headers: { Authorization: `JWT ${getAccessToken()}` },
+    body: formData,
+  });
+  if (!res.ok) {
+    throw new Error(await payloadErrorMessage(res, 'Failed to upload image', { authenticated: true }));
+  }
+  const doc: { id: number; url: string } = await res.json();
+  return doc;
+}
+
 export interface CreateResourceInput {
   name: string;
   type: ResourceType;
   short_description: string;
+  image?: number | null;
   description: string;
   license: string;
   github_url: string;

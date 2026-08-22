@@ -99,6 +99,12 @@ export function ResourceCard({ resource, rank, downloadCount }: ResourceCardProp
         className="absolute inset-0 z-10 rounded-[13px]"
       />
 
+      {resource.image_url && (
+        <div className="relative -mx-5 -mt-5 mb-4 h-32 overflow-hidden rounded-t-[13px]">
+          <img src={resource.image_url} alt="" className="h-full w-full object-cover" />
+        </div>
+      )}
+
       {rank != null && (
         <span aria-label={`Rank ${rank}`} className="mb-3 text-sm font-black text-[#171717]">
           #{rank}

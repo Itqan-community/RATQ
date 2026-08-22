@@ -204,6 +204,7 @@ export interface Resource {
     | 'tajweed';
   description: string;
   short_description: string;
+  image?: (number | null) | Media;
   documentation_url?: string | null;
   github_url?: string | null;
   license: string;
@@ -504,6 +505,7 @@ export interface ResourcesSelect<T extends boolean = true> {
   type?: T;
   description?: T;
   short_description?: T;
+  image?: T;
   documentation_url?: T;
   github_url?: T;
   license?: T;
