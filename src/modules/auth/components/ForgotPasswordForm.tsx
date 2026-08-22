@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import { useEffect, useRef, useState } from "react";
 import { useAuth } from "@/hooks/useAuth";
@@ -7,12 +7,12 @@ import Image from "next/image";
 
 export function ForgotPasswordForm() {
   const { t, direction } = useLanguage();
-  const [emailSent, setEmailSent] = useState<"idle" | "sent">("idle");
+  const [emailSent, setEmailSent] = useState<'idle' | 'sent'>('idle');
   const [resendCooldown, setResendCooldown] = useState<boolean>(false);
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const RESEND_COOLDOWN_MS = 30_000; // 30 seconds
 
-  const [email, setEmail] = useState("");
+  const [email, setEmail] = useState('');
   const { forgotPassword, error } = useAuth();
   const [submitting, setSubmitting] = useState(false);
 

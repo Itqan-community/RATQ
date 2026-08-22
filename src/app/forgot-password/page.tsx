@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import { useLanguage } from "@/shared/ui/i18n";
 import { useAuth } from "@/hooks/useAuth";
@@ -36,7 +36,7 @@ export default function ForgotPasswordPage() {
       <section className="mx-auto w-fit max-w-full px-4 sm:px-6">
         <div className="flex items-start justify-center min-h-[29.6rem] overflow-hidden rounded-2xl border border-[#ededed] bg-[#fafafa] shadow-[0_16px_44px_rgba(15,23,42,0.05)]">
           <div className="px-6 py-10 sm:px-6 lg:px-6">
-          <div className="w-full max-w-[360px]">
+          <div className="w-full max-w-[500px]">
               <ForgotPasswordForm/>
               <p className="mt-6 text-center text-sm text-[#6f7780]">
                 {copy.rememberPassword}{" "}
