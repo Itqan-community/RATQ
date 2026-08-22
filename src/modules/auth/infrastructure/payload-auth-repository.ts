@@ -65,3 +65,13 @@ export async function register(
   if (!res.ok) throw new Error(await payloadErrorMessage(res, 'Registration failed'));
   return login(email, password);
 }
+
+export async function forgotPassword(email: string){
+  const res = await fetch(`${PAYLOAD_API_BASE}/users/forgot-password`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ email }),
+  });
+  if (!res.ok) throw new Error(await payloadErrorMessage(res, 'Forgot password request failed'));
+  return { success: true };
+}

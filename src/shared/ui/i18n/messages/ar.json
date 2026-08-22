@@ -10,8 +10,7 @@
     "auth": {
       "login": "تسجيل الدخول",
       "register": "إنشاء حساب",
-      "logout": "تسجيل الخروج",
-      "forgotPassword": "نسيت كلمة المرور؟"
+      "logout": "تسجيل الخروج"
     },
     "langSwitch": {
       "ar": "العربية",
@@ -473,7 +472,18 @@
     "publisherDescription": "أشارك الموارد وأديرها",
     "createAccount": "إنشاء الحساب",
     "creatingAccount": "جاري إنشاء الحساب...",
-    "sessionExpired": "انتهت صلاحية جلستك. يُرجى تسجيل الدخول مرة أخرى."
+    "sessionExpired": "انتهت صلاحية جلستك. يُرجى تسجيل الدخول مرة أخرى.",
+    "forgotPassword": "هل نسيت كلمة المرور؟",
+    "rememberPassword": "هل تتذكر كلمة المرور؟",
+    "forgotPasswordTitle": "نسيت كلمة المرور",
+    "forgotPasswordSubtitle": "أدخل بريدك الإلكتروني لإعادة تعيين كلمة المرور.",
+    "forgotPasswordButton": "متابعة",
+    "resetLinkSentHeading": "تحقق من بريدك الإلكتروني",
+    "resetLinkSentSubtitle": "لقد أرسلنا إليك رسالة إلكترونية تحتوي على تعليمات لإعادة تعيين كلمة المرور. يرجى التحقق من بريدك الوارد.",
+    "resetLinkSentButton": "إعادة الإرسال",
+    "sendingEmail": "جارٍ الإرسال…",
+    "didntReceiveEmail": "لم تستلم الرسالة؟",
+    "resentAvailableIn": "تم إرسال البريد الإلكتروني مرة أخرى. يرجى التحقق من بريدك الوارد. يمكنك إعادة الإرسال بعد 30 ثانية."
   },
   "contributors": {
     "pageTitle": "المساهمون",

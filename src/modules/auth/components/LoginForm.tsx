@@ -68,7 +68,7 @@ export function LoginForm() {
         />
         <div className='w-fit'>
           <Link href="/forgot-password" dir={direction} className={`${locale === 'ar' ? 'text-right' : 'text-left'} mt-2 font-medium text-sm text-[#171717] block transition hover:underline`}>
-            {copy.forgotPassword}
+            {t.auth.forgotPassword}
           </Link>
         </div>
       </div>
