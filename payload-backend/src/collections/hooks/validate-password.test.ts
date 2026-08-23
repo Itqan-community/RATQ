@@ -2,6 +2,8 @@ import { describe, expect, it } from 'vitest'
 import { APIError } from 'payload'
 import { passwordValidation } from './validate-password'
 
+const lengthError = 'Password must be between 8 and 64 characters long'
+
 async function runHook(data: Record<string, unknown> | undefined) {
   return passwordValidation({ data } as Parameters<typeof passwordValidation>[0])
 }
@@ -11,24 +13,29 @@ describe('passwordValidation', () => {
     await expect(runHook(undefined)).resolves.toBeUndefined()
   })
 
-  it('rejects a missing password', async () => {
-    await expect(runHook({ email: 'dev@example.com' })).rejects.toMatchObject({
-      message: 'Password is required',
+  it('allows an update with no password field', async () => {
+    const data = { email: 'dev@example.com' }
+    await expect(runHook(data)).resolves.toEqual(data)
+  })
+
+  it('rejects an empty password string', async () => {
+    await expect(runHook({ password: '' })).rejects.toMatchObject({
+      message: lengthError,
       status: 422,
     })
-    await expect(runHook({ email: 'dev@example.com' })).rejects.toBeInstanceOf(APIError)
+    await expect(runHook({ password: '' })).rejects.toBeInstanceOf(APIError)
   })
 
   it('rejects a password shorter than 8 characters', async () => {
     await expect(runHook({ password: 'short' })).rejects.toMatchObject({
-      message: 'Password must be at least 8 characters long',
+      message: lengthError,
       status: 422,
     })
   })
 
   it('rejects a password longer than 64 characters', async () => {
     await expect(runHook({ password: 'a'.repeat(65) })).rejects.toMatchObject({
-      message: 'Password must be less than 64 characters long',
+      message: lengthError,
       status: 422,
     })
   })
