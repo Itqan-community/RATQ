@@ -1,6 +1,57 @@
 import { describe, expect, it } from 'vitest'
 import { Comments } from './Comments'
 
+describe('Comments access.read (canReadComment)', () => {
+  const canReadComment = Comments.access!.read as (args: {
+    req: { user: { id: number | string; role?: string } | null }
+  }) => unknown
+
+  it('scopes anonymous callers to comments on published resources only', () => {
+    expect(canReadComment({ req: { user: null } })).toEqual({
+      'resource.status': { equals: 'published' },
+    })
+  })
+
+  it('allows authenticated resource owner to see comments on published resources or resources they own', () => {
+    expect(
+      canReadComment({
+        req: { user: { id: 'user-1', role: 'developer' } },
+      }),
+    ).toEqual({
+      or: [
+        { 'resource.status': { equals: 'published' } },
+        { 'resource.owner': { equals: 'user-1' } },
+      ],
+    })
+  })
+
+  it('ensures non-owner authenticated callers are scoped to their own resources and cannot access comments on others drafts', () => {
+    const result = canReadComment({
+      req: { user: { id: 'user-2', role: 'developer' } },
+    })
+    expect(result).toEqual({
+      or: [
+        { 'resource.status': { equals: 'published' } },
+        { 'resource.owner': { equals: 'user-2' } },
+      ],
+    })
+    expect(result).not.toEqual({
+      or: [
+        { 'resource.status': { equals: 'published' } },
+        { 'resource.owner': { equals: 'user-1' } },
+      ],
+    })
+  })
+
+  it('allows admin users full bypass to view comments on any resource', () => {
+    expect(
+      canReadComment({
+        req: { user: { id: 'admin-1', role: 'admin' } },
+      }),
+    ).toBe(true)
+  })
+})
+
 describe('Comments access.create', () => {
   const create = Comments.access!.create as (args: { req: { user: unknown } }) => unknown
 
