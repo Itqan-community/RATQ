@@ -73,6 +73,65 @@ describe('APIKeys access.delete (isOwner)', () => {
   })
 })
 
+describe('APIKeys beforeValidate hook (ownership/access guard)', () => {
+  const hook = APIKeys.hooks!.beforeValidate![0] as (args: any) => Promise<unknown>
+
+  it('allows API key creation if the user is the resource owner', async () => {
+    const payload = {
+      findByID: async () => ({ id: 10, owner: 1 }),
+      count: async () => ({ totalDocs: 0 }),
+    }
+    const data = { resource: 10, name: 'Owner Key' }
+    const result = await hook({
+      req: { user: { id: 1, role: 'developer' }, payload },
+      data,
+      operation: 'create',
+    })
+    expect(result).toBe(data)
+  })
+
+  it('allows API key creation if the user has an approved access request', async () => {
+    let capturedQuery: any
+    const payload = {
+      findByID: async () => ({ id: 10, owner: 99 }),
+      count: async (args: any) => {
+        capturedQuery = args
+        return { totalDocs: 1 }
+      },
+    }
+    const data = { resource: 10, name: 'Approved Key' }
+    const result = await hook({
+      req: { user: { id: 1, role: 'developer' }, payload },
+      data,
+      operation: 'create',
+    })
+
+    expect(result).toBe(data)
+    expect(capturedQuery.collection).toBe('access-requests')
+    expect(capturedQuery.where).toEqual({
+      and: [
+        { resource: { equals: 10 } },
+        { applicant: { equals: 1 } },
+        { status: { equals: 'approved' } },
+      ],
+    })
+  })
+
+  it('rejects API key creation if user is neither owner nor approved applicant', async () => {
+    const payload = {
+      findByID: async () => ({ id: 10, owner: 99 }),
+      count: async () => ({ totalDocs: 0 }),
+    }
+    await expect(
+      hook({
+        req: { user: { id: 1, role: 'developer' }, payload },
+        data: { resource: 10, name: 'Unauthorized Key' },
+        operation: 'create',
+      }),
+    ).rejects.toThrow('You do not have permission to generate an API key for this resource.')
+  })
+})
+
 describe('APIKeys beforeChange hook', () => {
   const hook = APIKeys.hooks!.beforeChange![0] as (args: {
     req: { user: unknown; context: Record<string, unknown> }
