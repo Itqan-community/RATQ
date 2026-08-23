@@ -47,8 +47,8 @@ describe('ResetPasswordPage', () => {
 
   beforeEach(() => {
     vi.clearAllMocks();
-    vi.mocked(useRouter).mockReturnValue({ push: pushMock } as ReturnType<typeof useRouter>);
-    vi.mocked(useAuth).mockReturnValue({
+      vi.mocked(useRouter).mockReturnValue({ push: pushMock } as unknown as ReturnType<typeof useRouter>);
+      vi.mocked(useAuth).mockReturnValue({
       user: null,
       loading: false,
       error: null,
@@ -58,6 +58,7 @@ describe('ResetPasswordPage', () => {
       forgotPassword: vi.fn(),
       resetPassword: vi.fn(),
       logout: vi.fn(),
+      verifyEmail: vi.fn(),
     });
   });
 
@@ -74,7 +75,7 @@ describe('ResetPasswordPage', () => {
   it('shows an invalid-link message when the token is missing', () => {
     vi.mocked(useSearchParams).mockReturnValue({
       get: () => null,
-    } as ReturnType<typeof useSearchParams>);
+    } as unknown as ReturnType<typeof useSearchParams>);
 
     render(<ResetPasswordPage />);
 
@@ -94,7 +95,7 @@ describe('ResetPasswordPage', () => {
   it('redirects an active logged-in user to /dashboard', () => {
     vi.mocked(useSearchParams).mockReturnValue({
       get: () => 'reset-token',
-    } as ReturnType<typeof useSearchParams>);
+    } as unknown as ReturnType<typeof useSearchParams>);
     vi.mocked(useAuth).mockReturnValue({
       user: { id: 1, email: 'dev@example.com', display_name: 'Test Dev', role: 'developer' } as never,
       loading: false,
@@ -105,6 +106,7 @@ describe('ResetPasswordPage', () => {
       forgotPassword: vi.fn(),
       resetPassword: vi.fn(),
       logout: vi.fn(),
+      verifyEmail: vi.fn(),
     });
 
     render(<ResetPasswordPage />);

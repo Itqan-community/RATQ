@@ -85,3 +85,12 @@ export async function resetPassword(token: string, password: string) {
   if (!res.ok) throw new Error(await payloadErrorMessage(res, 'Reset password failed'));
   return { success: true };
 }
+
+export async function verifyEmail(token: string) {
+  const res = await fetch(`${PAYLOAD_API_BASE}/users/verify/${encodeURIComponent(token)}`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+  });
+  if (!res.ok) throw new Error(await payloadErrorMessage(res, 'Email verification failed'));
+  return { success: true };
+}

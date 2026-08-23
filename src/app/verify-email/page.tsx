@@ -1,44 +1,26 @@
 'use client';
 
-import { Suspense, useEffect } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
-import Link from "next/link";
-import { useLanguage } from "@/shared/ui/i18n";
-import { useAuth } from "@/hooks/useAuth";
-import { ResetPasswordForm } from "@/modules/auth/components/ResetPasswordForm";
-import Image from "next/image";
+import { Suspense } from 'react';
+import { useSearchParams } from 'next/navigation';
+import Link from 'next/link';
+import Image from 'next/image';
+import { useLanguage } from '@/shared/ui/i18n';
+import { VerifyEmailStatus } from '@/modules/auth/components/VerifyEmailStatus';
 
-function ResetPasswordInner() {
+function VerifyEmailInner() {
   const { t, direction } = useLanguage();
-  const { user, loading } = useAuth();
-  const router = useRouter();
-  const token = useSearchParams().get("token");
+  const token = useSearchParams().get('token');
   const copy = t.auth;
 
-  useEffect(() => {
-    if (!loading && user) {
-      router.push("/dashboard");
-    }
-  }, [user, loading, router]);
-
-  if (loading || user) {
-    return (
-      <div className="flex min-h-[60vh] items-center justify-center">
-        <div className="h-8 w-8 animate-spin rounded-full border-4 border-solid border-[#171717] border-t-transparent" />
-      </div>
-    );
-  }
-
   return (
-    <main
-      className="page-enter bg-white pb-20 pt-32 text-black"
-      dir={direction}
-    >
+    <main className="page-enter bg-white pb-20 pt-32 text-black" dir={direction}>
       <section className="mx-auto w-fit max-w-full px-4 sm:px-6">
         <div className="flex min-h-[29.6rem] items-start justify-center overflow-hidden rounded-2xl border border-[#ededed] bg-[#fafafa] shadow-[0_16px_44px_rgba(15,23,42,0.05)]">
           <div className="px-8 py-10">
             <div className="w-full max-w-[440px]">
-              {token ? <ResetPasswordForm token={token} /> : (
+              {token ? (
+                <VerifyEmailStatus token={token} />
+              ) : (
                 <>
                   <div className="mb-8 flex items-center gap-3">
                     <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-white shadow-[0_8px_22px_rgba(15,23,42,0.06)]">
@@ -53,18 +35,18 @@ function ResetPasswordInner() {
                     <div>
                       <p className="text-sm font-black text-[#7d8790]">RATQ</p>
                       <h1 className="text-3xl font-black leading-tight text-black sm:text-4xl">
-                        {copy.invalidResetLink}
+                        {copy.invalidVerifyLink}
                       </h1>
                     </div>
                   </div>
                   <p className="mb-8 text-base leading-8 text-[#59636d]">
-                    {copy.invalidResetLinkSubtitle}
+                    {copy.invalidVerifyLinkSubtitle}
                   </p>
                   <Link
-                    href="/forgot-password"
-                    className="flex h-12 w-full items-center justify-center rounded-full bg-black px-5 text-sm font-black text-white transition hover:bg-[#171717] disabled:cursor-not-allowed disabled:opacity-60"
+                    href="/login"
+                    className="flex h-12 w-full items-center justify-center rounded-full bg-black px-5 text-sm font-black text-white transition hover:bg-[#171717]"
                   >
-                      {copy.requestNewResetLink}
+                    {copy.loginNow}
                   </Link>
                 </>
               )}
@@ -76,7 +58,7 @@ function ResetPasswordInner() {
   );
 }
 
-export default function ResetPasswordPage() {
+export default function VerifyEmailPage() {
   return (
     <Suspense
       fallback={
@@ -85,7 +67,7 @@ export default function ResetPasswordPage() {
         </div>
       }
     >
-      <ResetPasswordInner />
+      <VerifyEmailInner />
     </Suspense>
   );
 }

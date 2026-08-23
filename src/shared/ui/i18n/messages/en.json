@@ -495,7 +495,13 @@
     "resetPasswordSuccess": "Your password has been updated.",
     "passwordMismatch": "Passwords do not match.",
     "passwordLength": "Password must be between 8 and 64 characters.",
-    "requestNewResetLink": "Request a new link"
+    "requestNewResetLink": "Request a new link",
+    "verifyingEmailTitle": "Verifying email",
+    "verifyingEmailSubtitle": "Please wait while we confirm your email address.",
+    "verifyEmailTitle": "Email verified",
+    "verifyEmailSuccess": "Your email has been verified. You can log in now.",
+    "invalidVerifyLink": "Invalid verification link",
+    "invalidVerifyLinkSubtitle": "This verification link is missing or invalid. Please use the link from your email, or log in if you already verified."
   },
   "contributors": {
     "pageTitle": "Contributors",

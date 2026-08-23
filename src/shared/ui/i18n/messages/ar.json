@@ -495,7 +495,13 @@
     "resetPasswordSuccess": "تم تحديث كلمة المرور.",
     "passwordMismatch": "كلمتا المرور غير متطابقتين.",
     "passwordLength": "يجب أن تكون كلمة المرور بين 8 و64 حرفًا.",
-    "requestNewResetLink": "طلب رابط جديد"
+    "requestNewResetLink": "طلب رابط جديد",
+    "verifyingEmailTitle": "جارٍ التحقق من البريد الإلكتروني",
+    "verifyingEmailSubtitle": "يرجى الانتظار بينما نؤكد عنوان بريدك الإلكتروني.",
+    "verifyEmailTitle": "تم التحقق من البريد الإلكتروني",
+    "verifyEmailSuccess": "تم التحقق من بريدك الإلكتروني. يمكنك تسجيل الدخول الآن.",
+    "invalidVerifyLink": "رابط التحقق غير صالح",
+    "invalidVerifyLinkSubtitle": "رابط التحقق مفقود أو غير صالح. يرجى استخدام الرابط من بريدك الإلكتروني، أو تسجيل الدخول إذا سبق التحقق."
   },
   "contributors": {
     "pageTitle": "المساهمون",
