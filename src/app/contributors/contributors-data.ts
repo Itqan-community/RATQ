@@ -182,4 +182,14 @@ export const contributors: Contributor[] = [
     issueUrl: 'https://github.com/Itqan-community/RATQ/issues/152',
     prUrl: 'https://github.com/Itqan-community/RATQ/pull/252',
   },
+  {
+    name: 'ekafe',
+    githubUsername: 'ekafe',
+    githubUrl: 'https://github.com/ekafe',
+    avatarUrl: 'https://github.com/ekafe.png',
+    contribution:
+      "Added forgot-password, reset-password, and email-verification flows - previously missing entirely, so users who forgot their password now have a real way to recover their account.",
+    issueUrl: 'https://github.com/Itqan-community/RATQ/issues/233',
+    prUrl: 'https://github.com/Itqan-community/RATQ/pull/253',
+  },
 ];
