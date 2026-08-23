@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/hooks/useAuth';
 import { useLanguage } from '@/shared/ui/i18n';
+import { validatePassword } from '@/shared/utils/utils';
 
 export function RegisterForm() {
   const [email, setEmail] = useState('');
@@ -11,22 +12,31 @@ export function RegisterForm() {
   const [displayName, setDisplayName] = useState('');
   const [role, setRole] = useState<'developer' | 'publisher'>('developer');
   const { register, loading, error } = useAuth();
+  const [formError, setFormError] = useState<string | null>(null);
   const { t } = useLanguage();
   const router = useRouter();
   const copy = t.auth;
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
+
+    if (!validatePassword(password)){
+      setFormError(copy.passwordLength);
+      return
+    }
+
     const result = await register(email, password, displayName, role);
     if (result.success) {
       router.push('/dashboard');
       router.refresh();
+    }else{
+      setFormError(result.error ?? null);
     }
   };
 
   return (
     <form onSubmit={handleSubmit} className="space-y-5">
-      {error && <div className="rounded-lg border border-red-200 bg-red-50 p-3 text-sm leading-6 text-red-700">{error}</div>}
+      {formError && <div className="rounded-lg border border-red-200 bg-red-50 p-3 text-sm leading-6 text-red-700">{formError}</div>}
 
       <div>
         <label htmlFor="reg-name" className="mb-2 block text-sm font-black text-[#3f4851]">{copy.displayName}</label>
