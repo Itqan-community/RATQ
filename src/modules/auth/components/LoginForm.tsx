@@ -6,13 +6,14 @@ import { useAuth } from '@/hooks/useAuth';
 import { githubOAuthUrl } from '@/modules/auth/application/use-cases/get-github-oauth-url';
 import { SESSION_EXPIRED_REASON } from '@/shared/infrastructure/session-expiry';
 import { useLanguage } from '@/shared/ui/i18n';
+import Link from 'next/link';
 
 export function LoginForm() {
+  const { t, direction, locale } = useLanguage();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const { login, loading, error } = useAuth();
   const router = useRouter();
-  const { t } = useLanguage();
   const displayedError = error === SESSION_EXPIRED_REASON ? t.auth.sessionExpired : error;
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -23,6 +24,8 @@ export function LoginForm() {
       router.refresh();
     }
   };
+
+  const copy = t.header.auth;
 
   return (
     <form onSubmit={handleSubmit} className="space-y-5">
@@ -62,6 +65,11 @@ export function LoginForm() {
           placeholder="••••••••"
           dir="ltr"
         />
+        <div className='w-fit'>
+          <Link href="/forgot-password" dir={direction} className={`${locale === 'ar' ? 'text-right' : 'text-left'} mt-2 font-medium text-sm text-[#171717] block transition hover:underline`}>
+            {t.auth.forgotPassword}
+          </Link>
+        </div>
       </div>
 
       <button
