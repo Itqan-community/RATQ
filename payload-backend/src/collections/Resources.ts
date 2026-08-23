@@ -2,15 +2,19 @@ import type { Access, CollectionConfig, FieldAccess } from 'payload'
 
 const canReadResource: Access = ({ req }) => {
   if (req.user?.role === 'admin') return true
-  if (req.user) {
+
+  if (!req.user) {
     return {
-      or: [
-        { status: { equals: 'published' } },
-        { owner: { equals: req.user.id } },
-      ],
+      status: { equals: 'published' },
     }
   }
-  return { status: { equals: 'published' } }
+
+  return {
+    or: [
+      { status: { equals: 'published' } },
+      { owner: { equals: req.user.id } },
+    ],
+  }
 }
 
 const isOwner: Access = ({ req }) => {

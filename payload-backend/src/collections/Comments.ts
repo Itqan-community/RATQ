@@ -2,15 +2,19 @@ import type { Access, CollectionConfig } from 'payload'
 
 const canReadComment: Access = ({ req }) => {
   if (req.user?.role === 'admin') return true
-  if (req.user) {
+
+  if (!req.user) {
     return {
-      or: [
-        { 'resource.status': { equals: 'published' } },
-        { 'resource.owner': { equals: req.user.id } },
-      ],
+      'resource.status': { equals: 'published' },
     }
   }
-  return { 'resource.status': { equals: 'published' } }
+
+  return {
+    or: [
+      { 'resource.status': { equals: 'published' } },
+      { 'resource.owner': { equals: req.user.id } },
+    ],
+  }
 }
 
 const canModifyComment: Access = ({ req }) => {
