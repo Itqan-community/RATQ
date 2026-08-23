@@ -1,20 +1,22 @@
 import type { Access,AccessResult, CollectionConfig, FieldAccess, Where } from 'payload'
 
-const canReadResource: Access = ({ req }) : AccessResult => {
+const canReadResource: Access = ({ req }) => {
   if (req.user?.role === 'admin') return true
 
   if (!req.user) {
-    return {
+    const where: Where = {
       status: { equals: 'published' },
-    } as unknown as AccessResult
+    }
+    return where
   }
 
-  return {
+  const where: Where = {
     or: [
-      { status: { equals: 'published' } } as Where,
-      { owner: { equals: req.user.id } } as Where,
+      { status: { equals: 'published' } },
+      { owner: { equals: req.user.id } },
     ],
-  } as unknown as AccessResult
+  }
+  return where
 }
 
 const isOwner: Access = ({ req }) => {
