@@ -32,8 +32,8 @@ export async function uploadMedia(file: File): Promise<{ id: number; url: string
   if (!res.ok) {
     throw new Error(await payloadErrorMessage(res, 'Failed to upload image', { authenticated: true }));
   }
-  const doc: { id: number; url: string } = await res.json();
-  return doc;
+  const result: { doc: { id: number; url: string } } = await res.json();
+  return result.doc;
 }
 
 export interface CreateResourceInput {
