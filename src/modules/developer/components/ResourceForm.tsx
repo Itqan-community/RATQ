@@ -101,7 +101,7 @@ export function ResourceForm({ onSubmit, initial, submitLabel }: ResourceFormPro
         <textarea value={description} onChange={(e) => setDescription(e.target.value)} className="input-field min-h-[100px] resize-y" required placeholder={copy.fullDescriptionPlaceholder} />
       </div>
       <div>
-        <label className="mb-1 block text-sm font-heading text-[var(--text-secondary)]">Image</label>
+        <label className="mb-1 block text-sm font-heading text-[var(--text-secondary)]">{copy.image}</label>
         {imagePreview && (
           <img src={imagePreview} alt="" className="mb-2 h-32 w-full rounded-lg object-cover" />
         )}
@@ -120,7 +120,7 @@ export function ResourceForm({ onSubmit, initial, submitLabel }: ResourceFormPro
         <label className="mb-1 block text-sm font-heading text-[var(--text-secondary)]">{copy.documentationUrl}</label>
         <input type="url" value={documentation_url} onChange={(e) => setDocumentationUrl(e.target.value)} className="input-field" placeholder={copy.docsPlaceholder} dir="ltr" />
       </div>
-      <button type="submit" disabled={uploadingImage} className="btn-primary w-full disabled:opacity-60">{uploadingImage ? 'Uploading image...' : (submitLabel || t.dashboard.resources.saveResource)}</button>
+      <button type="submit" disabled={uploadingImage} className="btn-primary w-full disabled:opacity-60">{uploadingImage ? copy.uploadingImage : (submitLabel || t.dashboard.resources.saveResource)}</button>
     </form>
   );
 }
