@@ -198,7 +198,6 @@ describe('fetchGithubRepoPreview edge cache', () => {
     expect(cache.put).toHaveBeenCalledTimes(1);
     const putResponse = (cache.put as unknown as { mock: { calls: [Request, Response][] } }).mock.calls[0][1];
     expect(putResponse.headers.get('Cache-Control')).toContain('s-maxage=300');
-    expect(putResponse.headers.get('Cache-Control')).toContain('s-maxage=300');
 
     vi.mocked(fetch).mockClear();
     const second = await fetchGithubRepoPreview('owner', 'repo');
