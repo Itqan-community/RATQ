@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useAuth } from "@/hooks/useAuth";
 import { useLanguage } from "@/shared/ui/i18n";
 import Image from "next/image";
+import { validatePassword } from "@/shared/utils/utils";
 
 export function ResetPasswordForm({ token }: { token: string }) {
   const { t } = useLanguage();
@@ -19,7 +20,9 @@ export function ResetPasswordForm({ token }: { token: string }) {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (password.length < 8 || password.length > 64) {
+    
+    // Validate password
+    if (!validatePassword(password)) {
       setFormError(copy.passwordLength);
       return;
     }

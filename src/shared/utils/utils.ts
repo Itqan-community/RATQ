@@ -15,3 +15,15 @@ export function formatDate(dateString: string, locale: 'ar' | 'en' = 'ar'): stri
     day: 'numeric',
   });
 }
+
+const PASSWORD_MIN_LENGTH = 8;
+const PASSWORD_MAX_LENGTH = 64;
+export function validatePassword(password: string): boolean {
+  if (password.length < PASSWORD_MIN_LENGTH) {
+    return false;
+  }
+  if (password.length > PASSWORD_MAX_LENGTH) {
+    return false;
+  }
+  return true;
+}
