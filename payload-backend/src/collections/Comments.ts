@@ -1,4 +1,4 @@
-import type { Access, CollectionConfig } from 'payload'
+import type { Access, CollectionConfig, Where } from 'payload'
 
 const canReadComment: Access = ({ req }) => {
   if (req.user?.role === 'admin') return true
@@ -11,8 +11,8 @@ const canReadComment: Access = ({ req }) => {
 
   return {
     or: [
-      { 'resource.status': { equals: 'published' } },
-      { 'resource.owner': { equals: req.user.id } },
+      { 'resource.status': { equals: 'published' } } as Where,
+      { 'resource.owner': { equals: req.user.id } } as Where,
     ],
   }
 }
