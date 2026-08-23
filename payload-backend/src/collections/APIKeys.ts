@@ -1,4 +1,5 @@
 import crypto from 'crypto'
+import { APIError } from 'payload'
 import type { Access, CollectionConfig } from 'payload'
 
 const isOwner: Access = ({ req }) => {
@@ -35,6 +36,53 @@ export const APIKeys: CollectionConfig = {
     useAsTitle: 'name',
   },
   hooks: {
+    beforeValidate: [
+      async ({ req, data, operation }) => {
+        if (operation !== 'create' || !data || !req.user) return data
+        if (req.user.role === 'admin') return data
+
+        const resourceId =
+          typeof data.resource === 'object' ? data.resource.id : data.resource
+        if (!resourceId) return data
+
+        const resource = await req.payload.findByID({
+          collection: 'resources',
+          id: resourceId,
+          depth: 0,
+        })
+
+        if (!resource) {
+          throw new APIError('Resource not found.', 404)
+        }
+
+        const resourceOwnerId =
+          typeof resource.owner === 'object' ? resource.owner.id : resource.owner
+
+        if (resourceOwnerId === req.user.id) {
+          return data
+        }
+
+        const { totalDocs } = await req.payload.count({
+          collection: 'access-requests',
+          where: {
+            and: [
+              { resource: { equals: resourceId } },
+              { applicant: { equals: req.user.id } },
+              { status: { equals: 'approved' } },
+            ],
+          },
+        })
+
+        if (totalDocs > 0) {
+          return data
+        }
+
+        throw new APIError(
+          'You do not have permission to generate an API key for this resource.',
+          403,
+        )
+      },
+    ],
     beforeChange: [
       ({ req, data, operation }) => {
         if (req.user) {
