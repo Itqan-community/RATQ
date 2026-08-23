@@ -148,9 +148,9 @@ export const contributors: Contributor[] = [
     githubUrl: 'https://github.com/Walid-Khalfa',
     avatarUrl: 'https://github.com/Walid-Khalfa.png',
     contribution:
-      'Built the real Payload backend for Announcements, replacing the mock data it had been running on - a proper collection with admin-only writes, public reads scoped to active/non-expired announcements, and resource links that resolve through the real catalog instead of pointing at fake resource IDs.',
-    issueUrl: 'https://github.com/Itqan-community/RATQ/issues/235',
-    prUrl: 'https://github.com/Itqan-community/RATQ/pull/242',
+      'Built the real Payload backend for Announcements, replacing the mock data it had been running on - a proper collection with admin-only writes, public reads scoped to active/non-expired announcements, and resource links that resolve through the real catalog instead of pointing at fake resource IDs. Later added Edge Cache for GitHub repository previews, caching successful responses per-repository while explicitly excluding failed, invalid, or missing-token results from the cache.',
+    issueUrl: 'https://github.com/Itqan-community/RATQ/issues/222',
+    prUrl: 'https://github.com/Itqan-community/RATQ/pull/256',
   },
   {
     name: 'Zyad-Eltayabi',
