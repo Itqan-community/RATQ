@@ -11,7 +11,7 @@ export function RegisterForm() {
   const [password, setPassword] = useState('');
   const [displayName, setDisplayName] = useState('');
   const [role, setRole] = useState<'developer' | 'publisher'>('developer');
-  const { register, error } = useAuth();
+  const { register } = useAuth();
   const [submitting, setSubmitting] = useState(false);
   const [formError, setFormError] = useState<string | null>(null);
   const { t } = useLanguage();
@@ -26,6 +26,7 @@ export function RegisterForm() {
       return;
     }
 
+    setFormError(null);
     setSubmitting(true);
     try {
       const result = await register(email, password, displayName, role);
