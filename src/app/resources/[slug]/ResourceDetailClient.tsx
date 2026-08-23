@@ -54,6 +54,12 @@ export function ResourceDetailClient({ resource, repoPreview }: ResourceDetailCl
   return (
     <div className="bg-white pb-10 pt-32 text-black sm:pt-36" dir={direction}>
       <main className="mx-auto max-w-[1050px] px-4 sm:px-6">
+        {resource.image_url && (
+          <div className="mx-auto mb-8 max-w-[760px] overflow-hidden rounded-2xl lg:ms-auto lg:me-0">
+            <img src={resource.image_url} alt="" className="h-[220px] w-full object-cover sm:h-[300px]" />
+          </div>
+        )}
+
         <header className="mx-auto max-w-[760px] text-start lg:ms-auto lg:me-0">
           <div className="flex flex-wrap items-center gap-2">
             <span className={`inline-flex items-center gap-2 rounded-full px-4 py-2 text-xs font-black ${typeColors[resource.type]}`}><TypeIcon type={resource.type}/>{t.catalog.types[resource.type]}</span>

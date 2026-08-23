@@ -11,6 +11,10 @@ export interface PayloadResourceDoc {
   type: ResourceType;
   description: string;
   short_description: string;
+  // Payload REST API populates relationships by default (depth=1), so this
+  // comes back as the full media doc - but guard for the bare-id/null shapes
+  // too (e.g. if depth is ever overridden to 0, or no image was set).
+  image?: { url: string } | number | string | null;
   documentation_url: string | null;
   github_url: string | null;
   license: string;
@@ -38,6 +42,7 @@ export function toResource(doc: PayloadResourceDoc): Resource {
     type: doc.type,
     description: doc.description,
     short_description: doc.short_description,
+    image_url: typeof doc.image === 'object' && doc.image !== null ? doc.image.url : null,
     documentation_url: doc.documentation_url,
     github_url: doc.github_url,
     license: doc.license,
