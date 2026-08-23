@@ -11,7 +11,8 @@ export function RegisterForm() {
   const [password, setPassword] = useState('');
   const [displayName, setDisplayName] = useState('');
   const [role, setRole] = useState<'developer' | 'publisher'>('developer');
-  const { register, loading, error } = useAuth();
+  const { register, error } = useAuth();
+  const [submitting, setSubmitting] = useState(false);
   const [formError, setFormError] = useState<string | null>(null);
   const { t } = useLanguage();
   const router = useRouter();
@@ -20,17 +21,22 @@ export function RegisterForm() {
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
 
-    if (!validatePassword(password)){
+    if (!validatePassword(password)) {
       setFormError(copy.passwordLength);
-      return
+      return;
     }
 
-    const result = await register(email, password, displayName, role);
-    if (result.success) {
-      router.push('/dashboard');
-      router.refresh();
-    }else{
-      setFormError(result.error ?? null);
+    setSubmitting(true);
+    try {
+      const result = await register(email, password, displayName, role);
+      if (result.success) {
+        router.push('/dashboard');
+        router.refresh();
+      } else {
+        setFormError(result.error ?? null);
+      }
+    } finally {
+      setSubmitting(false);
     }
   };
 
@@ -49,8 +55,22 @@ export function RegisterForm() {
           <input id="reg-email" type="email" value={email} onChange={(event) => setEmail(event.target.value)} className="input-field h-12 rounded-lg" required placeholder="you@example.com" dir="ltr" />
         </div>
         <div>
-          <label htmlFor="reg-password" className="mb-2 block text-sm font-black text-[#3f4851]">{copy.password}</label>
-          <input id="reg-password" type="password" value={password} onChange={(event) => setPassword(event.target.value)} className="input-field h-12 rounded-lg" required placeholder="********" dir="ltr" />
+          <label
+            htmlFor="reg-password"
+            className="mb-2 block text-sm font-black text-[#3f4851]"
+          >
+            {copy.password}
+          </label>
+          <input
+            id="reg-password"
+            type="password"
+            value={password}
+            onChange={(event) => setPassword(event.target.value)}
+            className="input-field h-12 rounded-lg"
+            required
+            placeholder="********"
+            dir="ltr"
+          />
         </div>
       </div>
 
@@ -74,8 +94,12 @@ export function RegisterForm() {
         </div>
       </fieldset>
 
-      <button type="submit" disabled={loading} className="flex h-12 w-full items-center justify-center rounded-full bg-black px-5 text-sm font-black text-white transition hover:bg-[#171717] disabled:cursor-not-allowed disabled:opacity-60">
-        {loading ? copy.creatingAccount : copy.createAccount}
+      <button
+        type="submit"
+        disabled={submitting}
+        className="flex h-12 w-full items-center justify-center rounded-full bg-black px-5 text-sm font-black text-white transition hover:bg-[#171717] disabled:cursor-not-allowed disabled:opacity-60"
+      >
+        {submitting ? copy.creatingAccount : copy.createAccount}
       </button>
     </form>
   );
