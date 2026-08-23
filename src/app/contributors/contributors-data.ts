@@ -48,9 +48,9 @@ export const contributors: Contributor[] = [
     githubUrl: 'https://github.com/usefahmed07',
     avatarUrl: 'https://github.com/usefahmed07.png',
     contribution:
-      'Built this Contributors page and fixed the developer view navbar overlap, then built out the real developer notifications backend (a new Payload collection wired into access requests, reports, and comments), wired pagination into the resources catalog, found and fixed a stored XSS vulnerability in the JSON preview component, and later added four missing content pages (Contact, Privacy, Standards, Docs) with the footer links wired to them.',
-    issueUrl: 'https://github.com/Itqan-community/RATQ/issues/219',
-    prUrl: 'https://github.com/Itqan-community/RATQ/pull/223',
+      'Built this Contributors page and fixed the developer view navbar overlap, then built out the real developer notifications backend (a new Payload collection wired into access requests, reports, and comments), wired pagination into the resources catalog, found and fixed a stored XSS vulnerability in the JSON preview component, and later added four missing content pages (Contact, Privacy, Standards, Docs) with the footer links wired to them. Later added image upload support for resources, and then added a payload-backend typecheck step to CI after a type error slipped through undetected.',
+    issueUrl: 'https://github.com/Itqan-community/RATQ/issues/250',
+    prUrl: 'https://github.com/Itqan-community/RATQ/pull/251',
   },
   {
     name: 'HamzaElabboubi',
@@ -171,5 +171,15 @@ export const contributors: Contributor[] = [
       "Added session-expiry handling for authenticated API requests - an expired or invalid JWT now clears auth state and redirects to login with a clear message, while keeping that distinct from a genuine permission denial on a still-valid session.",
     issueUrl: 'https://github.com/Itqan-community/RATQ/issues/165',
     prUrl: 'https://github.com/Itqan-community/RATQ/pull/245',
+  },
+  {
+    name: 'bessmasarri',
+    githubUsername: 'bessmasarri',
+    githubUrl: 'https://github.com/bessmasarri',
+    avatarUrl: 'https://github.com/bessmasarri.png',
+    contribution:
+      "Fixed a security gap where any authenticated user could generate an API key for any resource regardless of ownership or an approved access request - added a validation guard requiring resource ownership or an approved access request before allowing key creation, with test coverage for all three cases.",
+    issueUrl: 'https://github.com/Itqan-community/RATQ/issues/152',
+    prUrl: 'https://github.com/Itqan-community/RATQ/pull/252',
   },
 ];
