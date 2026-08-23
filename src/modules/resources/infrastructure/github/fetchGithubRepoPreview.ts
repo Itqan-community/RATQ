@@ -1,4 +1,5 @@
 import type { GithubCommit, GithubRepoPreview } from '@/types/resource';
+import { withEdgeCache } from '@/shared/infrastructure/edge-cache';
 
 interface GithubCommitAuthor {
   name?: string;
@@ -60,29 +61,51 @@ export async function fetchGithubRepoPreview(
   const encodedRepo = encodeURIComponent(repo);
   const headers = githubHeaders(token);
 
+  const cacheKeyRequest = new Request(
+    `https://cache-key.internal/github-preview/${encodedOwner}/${encodedRepo}`,
+  );
+
+  const response = await withEdgeCache(cacheKeyRequest, async () => {
+    try {
+      const [commitsRes, topicsRes] = await Promise.all([
+        fetch(`${GITHUB_API}/repos/${encodedOwner}/${encodedRepo}/commits?per_page=5`, {
+          headers,
+          next: { revalidate: REVALIDATE },
+        }),
+        fetch(`${GITHUB_API}/repos/${encodedOwner}/${encodedRepo}/topics`, {
+          headers,
+          next: { revalidate: REVALIDATE },
+        }),
+      ]);
+
+      if (!commitsRes.ok || !topicsRes.ok) return new Response(null, { status: 502 });
+
+      const commitsJson = (await commitsRes.json()) as GithubCommitResponse[];
+      const topicsJson = (await topicsRes.json()) as GithubTopicsResponse;
+
+      if (!Array.isArray(commitsJson)) return new Response(null, { status: 502 });
+
+      const preview: GithubRepoPreview = {
+        topics: Array.isArray(topicsJson.names) ? topicsJson.names : [],
+        commits: commitsJson.map(mapCommit),
+      };
+
+      return new Response(JSON.stringify(preview), {
+        status: 200,
+        headers: {
+          'Content-Type': 'application/json',
+          'Cache-Control': `public, s-maxage=${REVALIDATE}, stale-while-revalidate=60`,
+        },
+      });
+    } catch {
+      return new Response(null, { status: 500 });
+    }
+  });
+
+  if (!response.ok) return null;
+
   try {
-    const [commitsRes, topicsRes] = await Promise.all([
-      fetch(`${GITHUB_API}/repos/${encodedOwner}/${encodedRepo}/commits?per_page=5`, {
-        headers,
-        next: { revalidate: REVALIDATE },
-      }),
-      fetch(`${GITHUB_API}/repos/${encodedOwner}/${encodedRepo}/topics`, {
-        headers,
-        next: { revalidate: REVALIDATE },
-      }),
-    ]);
-
-    if (!commitsRes.ok || !topicsRes.ok) return null;
-
-    const commitsJson = (await commitsRes.json()) as GithubCommitResponse[];
-    const topicsJson = (await topicsRes.json()) as GithubTopicsResponse;
-
-    if (!Array.isArray(commitsJson)) return null;
-
-    return {
-      topics: Array.isArray(topicsJson.names) ? topicsJson.names : [],
-      commits: commitsJson.map(mapCommit),
-    };
+    return (await response.json()) as GithubRepoPreview;
   } catch {
     return null;
   }
