@@ -1,12 +1,12 @@
-import type { Access, CollectionConfig, Where } from 'payload'
+import type { Access,AccessResult , CollectionConfig, Where } from 'payload'
 
-const canReadComment: Access = ({ req }) => {
+const canReadComment: Access = ({ req }) : AccessResult => {
   if (req.user?.role === 'admin') return true
 
   if (!req.user) {
     return {
       'resource.status': { equals: 'published' },
-    }
+    } as unknown as AccessResult
   }
 
   return {
@@ -14,13 +14,13 @@ const canReadComment: Access = ({ req }) => {
       { 'resource.status': { equals: 'published' } } as Where,
       { 'resource.owner': { equals: req.user.id } } as Where,
     ],
-  }
+  } as unknown as AccessResult
 }
 
-const canModifyComment: Access = ({ req }) => {
+const canModifyComment: Access = ({ req })  : AccessResult => {
   if (!req.user) return false
   if (req.user.role === 'admin') return true
-  return { author: { equals: req.user.id } }
+  return { author: { equals: req.user.id } } as unknown as AccessResult
 }
 
 export const Comments: CollectionConfig = {
