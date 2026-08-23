@@ -11,6 +11,9 @@ import {
 import { useRouter } from 'next/navigation';
 import { login as loginUseCase } from '@/modules/auth/application/use-cases/login';
 import { register as registerUseCase } from '@/modules/auth/application/use-cases/register';
+import { forgotPassword as forgotPasswordUseCase } from '@/modules/auth/application/use-cases/forgot-password';
+import { resetPassword as resetPasswordUseCase } from '@/modules/auth/application/use-cases/reset-password';
+import { verifyEmail as verifyEmailUseCase } from '@/modules/auth/application/use-cases/verify-email';
 import { completeOAuth } from '@/modules/auth/application/use-cases/complete-oauth';
 import { logout as logoutUseCase } from '@/modules/auth/application/use-cases/logout';
 import { AuthToken } from '@/modules/auth/domain/auth-token';
@@ -50,6 +53,9 @@ type AuthContextType = {
     display_name: string,
     role?: 'developer' | 'publisher'
   ) => Promise<{ success: boolean; error?: string }>;
+  forgotPassword: (email: string) => Promise<{success: boolean; error?: string}>;
+  resetPassword: (token: string, password: string) => Promise<{ success: boolean; error?: string }>;
+  verifyEmail: (token: string) => Promise<{ success: boolean; error?: string }>;
   logout: () => void;
 };
 
@@ -140,6 +146,42 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     []
   );
 
+  const forgotPassword = useCallback(async (email: string) => {
+    setError(null);
+    try {
+      await forgotPasswordUseCase(email);
+      return { success: true };
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : 'Forgot password request failed';
+      setError(message);
+      return { success: false, error: message };
+    }
+  }, []);
+
+  const resetPassword = useCallback(async (token: string, password: string) => {
+    setError(null);
+    try {
+      await resetPasswordUseCase(token, password);
+      return { success: true };
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : 'Reset password failed';
+      setError(message);
+      return { success: false, error: message };
+    }
+  }, []);
+
+  const verifyEmail = useCallback(async (token: string) => {
+    setError(null);
+    try {
+      await verifyEmailUseCase(token);
+      return { success: true };
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : 'Email verification failed';
+      setError(message);
+      return { success: false, error: message };
+    }
+  }, []);
+
   return (
     <AuthContext.Provider
       value={{
@@ -150,6 +192,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         loginWithToken,
         register,
         logout,
+        forgotPassword,
+        resetPassword,
+        verifyEmail,
       }}
     >
       {children}
