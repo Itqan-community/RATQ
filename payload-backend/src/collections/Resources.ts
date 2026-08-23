@@ -1,5 +1,18 @@
 import type { Access, CollectionConfig, FieldAccess } from 'payload'
 
+const canReadResource: Access = ({ req }) => {
+  if (req.user?.role === 'admin') return true
+  if (req.user) {
+    return {
+      or: [
+        { status: { equals: 'published' } },
+        { owner: { equals: req.user.id } },
+      ],
+    }
+  }
+  return { status: { equals: 'published' } }
+}
+
 const isOwner: Access = ({ req }) => {
   if (!req.user) return false
   return { owner: { equals: req.user.id } }
@@ -45,7 +58,7 @@ const RESOURCE_TYPES = [
 export const Resources: CollectionConfig = {
   slug: 'resources',
   access: {
-    read: () => true,
+    read: canReadResource,
     create: ({ req }) => Boolean(req.user),
     update: isOwner,
     delete: isOwner,

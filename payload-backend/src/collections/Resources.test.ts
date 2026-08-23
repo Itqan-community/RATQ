@@ -4,22 +4,53 @@ import { Resources } from './Resources'
 type ReqUser = { id: number | string; role?: string } | null
 
 function makeReq(user: ReqUser) {
-  return { req: { user } } as any
+  return { req: { user } }
 }
 
 describe('Resources collection access', () => {
   const access = Resources.access!
 
   describe('read access', () => {
-    const readAccess = access.read as () => boolean
+    const readAccess = access.read as (args: { req: { user: ReqUser } }) => unknown
 
-    it('allows public read access to resources catalog', () => {
-      expect(readAccess()).toBe(true)
+    it('scopes anonymous callers to published resources only', () => {
+      expect(readAccess(makeReq(null))).toEqual({
+        status: { equals: 'published' },
+      })
+    })
+
+    it('allows authenticated owner to see published resources or their own draft/archived resources', () => {
+      expect(readAccess(makeReq({ id: 'user-1', role: 'developer' }))).toEqual({
+        or: [
+          { status: { equals: 'published' } },
+          { owner: { equals: 'user-1' } },
+        ],
+      })
+    })
+
+    it('ensures non-owner authenticated callers are scoped to their own resources and cannot access others drafts', () => {
+      const result = readAccess(makeReq({ id: 'user-2', role: 'developer' }))
+      expect(result).toEqual({
+        or: [
+          { status: { equals: 'published' } },
+          { owner: { equals: 'user-2' } },
+        ],
+      })
+      expect(result).not.toEqual({
+        or: [
+          { status: { equals: 'published' } },
+          { owner: { equals: 'user-1' } },
+        ],
+      })
+    })
+
+    it('allows admin users full bypass to view all resources', () => {
+      expect(readAccess(makeReq({ id: 'admin-1', role: 'admin' }))).toBe(true)
     })
   })
 
   describe('create access', () => {
-    const createAccess = access.create as (args: any) => boolean
+    const createAccess = access.create as (args: { req: { user: ReqUser } }) => boolean
 
     it('allows authenticated users (developers/publishers) to create resources', () => {
       expect(createAccess(makeReq({ id: 1, role: 'developer' }))).toBe(true)
@@ -32,7 +63,7 @@ describe('Resources collection access', () => {
   })
 
   describe('update access (isOwner)', () => {
-    const updateAccess = access.update as (args: any) => unknown
+    const updateAccess = access.update as (args: { req: { user: ReqUser } }) => unknown
 
     it('denies when there is no logged-in user', () => {
       expect(updateAccess(makeReq(null))).toBe(false)
@@ -46,7 +77,7 @@ describe('Resources collection access', () => {
   })
 
   describe('delete access (isOwner)', () => {
-    const deleteAccess = access.delete as (args: any) => unknown
+    const deleteAccess = access.delete as (args: { req: { user: ReqUser } }) => unknown
 
     it('denies when there is no logged-in user', () => {
       expect(deleteAccess(makeReq(null))).toBe(false)
@@ -63,7 +94,7 @@ describe('Resources collection access', () => {
 describe('Resources field access (itqan_badge security)', () => {
   const badgeField = Resources.fields.find(
     (f) => 'name' in f && f.name === 'itqan_badge',
-  ) as { access: { create: (args: any) => boolean; update: (args: any) => boolean } }
+  ) as { access: { create: (args: { req: { user: ReqUser } }) => boolean; update: (args: { req: { user: ReqUser } }) => boolean } }
 
   describe('itqan_badge create access', () => {
     it('denies non-admin developer from self-awarding the Itqan badge on create', () => {
@@ -94,8 +125,14 @@ describe('Resources field access (itqan_badge security)', () => {
   })
 })
 
+interface BeforeChangeArgs {
+  req: { user: ReqUser }
+  data: Record<string, unknown>
+  operation: string
+}
+
 describe('Resources beforeChange hook (owner-spoofing prevention)', () => {
-  const beforeChangeHook = Resources.hooks!.beforeChange![0] as (args: any) => any
+  const beforeChangeHook = Resources.hooks!.beforeChange![0] as (args: BeforeChangeArgs) => Record<string, unknown>
 
   it('forces owner to match the authenticated user id, overwriting client-supplied spoofed owner', () => {
     const data = { name: 'New Dataset', owner: 999 } // Spoofed owner id 999
@@ -121,8 +158,19 @@ describe('Resources beforeChange hook (owner-spoofing prevention)', () => {
   })
 })
 
+interface CountSlugArgs {
+  collection?: string
+  where: { slug: { equals: string } }
+}
+
+interface BeforeValidateSlugArgs {
+  req: { payload: { count: (args: CountSlugArgs) => Promise<{ totalDocs: number }> } }
+  data: Record<string, unknown>
+  operation: string
+}
+
 describe('Resources beforeValidate hook (slugification and uniqueness)', () => {
-  const beforeValidateHook = Resources.hooks!.beforeValidate![0] as (args: any) => Promise<any>
+  const beforeValidateHook = Resources.hooks!.beforeValidate![0] as (args: BeforeValidateSlugArgs) => Promise<Record<string, unknown>>
 
   it('generates a clean ASCII slug for English resource names', async () => {
     const payload = { count: async () => ({ totalDocs: 0 }) }
@@ -151,7 +199,7 @@ describe('Resources beforeValidate hook (slugification and uniqueness)', () => {
   it('appends incrementing numerical suffix when slug collision occurs', async () => {
     let callCount = 0
     const payload = {
-      count: async (args: any) => {
+      count: async (args: CountSlugArgs) => {
         callCount += 1
         // First check ('tafsir-api') collides, second check ('tafsir-api-1') collides, third is free
         if (args.where.slug.equals === 'tafsir-api' || args.where.slug.equals === 'tafsir-api-1') {
