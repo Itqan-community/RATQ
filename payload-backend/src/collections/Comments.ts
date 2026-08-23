@@ -1,20 +1,34 @@
-import type { Access, CollectionConfig } from 'payload'
+import type { Access,AccessResult , CollectionConfig, Where } from 'payload'
 
-const isOwner: Access = ({ req }) => {
-  if (!req.user) return false
-  return { author: { equals: req.user.id } }
+const canReadComment: Access = ({ req }) => {
+  if (req.user?.role === 'admin') return true
+
+  if (!req.user) {
+    const where: Where = {
+      'resource.status': { equals: 'published' },
+    }
+    return where
+  }
+
+  const where: Where = {
+    or: [
+      { 'resource.status': { equals: 'published' } },
+      { 'resource.owner': { equals: req.user.id } },
+    ],
+  }
+  return where
 }
 
-const canModifyComment: Access = ({ req }) => {
+const canModifyComment: Access = ({ req })  : AccessResult => {
   if (!req.user) return false
   if (req.user.role === 'admin') return true
-  return { author: { equals: req.user.id } }
+  return { author: { equals: req.user.id } } as unknown as AccessResult
 }
 
 export const Comments: CollectionConfig = {
   slug: 'comments',
   access: {
-    read: () => true,
+    read: canReadComment,
     create: ({ req }) => Boolean(req.user),
     update: canModifyComment,
     delete: canModifyComment,
