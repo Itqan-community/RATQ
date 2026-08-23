@@ -5,6 +5,9 @@ on:
     branches: [main, beta]
     paths:
       - 'payload-backend/**'
+  pull_request:
+    paths:
+      - 'payload-backend/**'
   workflow_dispatch: {}
 
 jobs:
@@ -24,10 +27,12 @@ jobs:
           cache: pnpm
           cache-dependency-path: payload-backend/pnpm-lock.yaml
       - run: pnpm install --frozen-lockfile
+      - run: pnpm run typecheck
       - run: pnpm test
 
   deploy:
     needs: test
+    if: github.event_name == 'push'
     runs-on: ubuntu-latest
     steps:
       - name: Deploy to droplet
