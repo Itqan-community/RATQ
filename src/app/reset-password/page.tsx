@@ -61,7 +61,7 @@ function ResetPasswordInner() {
                     {copy.invalidResetLinkSubtitle}
                   </p>
                   <Link
-                    href={"/forgot-password"}
+                    href="/forgot-password"
                     className="flex h-12 w-full items-center justify-center rounded-full bg-black px-5 text-sm font-black text-white transition hover:bg-[#171717] disabled:cursor-not-allowed disabled:opacity-60"
                   >
                       {copy.requestNewResetLink}

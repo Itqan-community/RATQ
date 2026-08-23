@@ -12,6 +12,7 @@ import type { User } from '@/types/resource';
 
 const mockForgotPassword = vi.fn();
 const mockResetPassword = vi.fn();
+const mockVerifyEmail = vi.fn();
 
 vi.mock('@/modules/auth/application/use-cases/forgot-password', () => ({
   forgotPassword: (...args: unknown[]) => mockForgotPassword(...args),
@@ -19,6 +20,10 @@ vi.mock('@/modules/auth/application/use-cases/forgot-password', () => ({
 
 vi.mock('@/modules/auth/application/use-cases/reset-password', () => ({
   resetPassword: (...args: unknown[]) => mockResetPassword(...args),
+}));
+
+vi.mock('@/modules/auth/application/use-cases/verify-email', () => ({
+  verifyEmail: (...args: unknown[]) => mockVerifyEmail(...args),
 }));
 
 const mockReplace = vi.fn();
@@ -172,7 +177,7 @@ describe('AuthProvider hydration', () => {
 });
 
 function PasswordFlowProbe() {
-  const { forgotPassword, resetPassword, error, loading } = useAuth();
+  const { forgotPassword, resetPassword, verifyEmail, error, loading } = useAuth();
 
   return (
     <div>
@@ -183,6 +188,9 @@ function PasswordFlowProbe() {
       </button>
       <button type="button" onClick={() => void resetPassword('reset-token', 'new-password')}>
         reset
+      </button>
+      <button type="button" onClick={() => void verifyEmail('verify-token')}>
+        verify
       </button>
     </div>
   );
@@ -276,6 +284,49 @@ describe('AuthProvider password reset', () => {
 
     await waitFor(() => {
       expect(screen.getByTestId('error')).toHaveTextContent('Reset password failed');
+    });
+    expect(screen.getByTestId('loading')).toHaveTextContent('idle');
+  });
+
+  it('verifyEmail succeeds without toggling session loading', async () => {
+    mockVerifyEmail.mockResolvedValue({ success: true });
+
+    render(
+      <AuthProvider>
+        <PasswordFlowProbe />
+      </AuthProvider>
+    );
+
+    await waitFor(() => {
+      expect(screen.getByTestId('loading')).toHaveTextContent('idle');
+    });
+
+    fireEvent.click(screen.getByRole('button', { name: 'verify' }));
+
+    await waitFor(() => {
+      expect(mockVerifyEmail).toHaveBeenCalledWith('verify-token');
+    });
+    expect(screen.getByTestId('loading')).toHaveTextContent('idle');
+    expect(screen.getByTestId('error')).toHaveTextContent('');
+  });
+
+  it('verifyEmail stores the error and keeps session loading idle', async () => {
+    mockVerifyEmail.mockRejectedValue(new Error('Email verification failed'));
+
+    render(
+      <AuthProvider>
+        <PasswordFlowProbe />
+      </AuthProvider>
+    );
+
+    await waitFor(() => {
+      expect(screen.getByTestId('loading')).toHaveTextContent('idle');
+    });
+
+    fireEvent.click(screen.getByRole('button', { name: 'verify' }));
+
+    await waitFor(() => {
+      expect(screen.getByTestId('error')).toHaveTextContent('Email verification failed');
     });
     expect(screen.getByTestId('loading')).toHaveTextContent('idle');
   });

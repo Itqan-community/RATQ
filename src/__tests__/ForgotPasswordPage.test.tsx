@@ -55,6 +55,7 @@ describe('ForgotPasswordPage', () => {
       forgotPassword: vi.fn(),
       resetPassword: vi.fn(),
       logout: vi.fn(),
+      verifyEmail: vi.fn(),
     });
 
     render(<ForgotPasswordPage />);
@@ -74,6 +75,7 @@ describe('ForgotPasswordPage', () => {
       forgotPassword: vi.fn(),
       resetPassword: vi.fn(),
       logout: vi.fn(),
+      verifyEmail: vi.fn(),
     });
 
     render(<ForgotPasswordPage />);
@@ -94,6 +96,7 @@ describe('ForgotPasswordPage', () => {
       forgotPassword: vi.fn(),
       resetPassword: vi.fn(),
       logout: vi.fn(),
+      verifyEmail: vi.fn(),
     });
 
     render(<ForgotPasswordPage />);
