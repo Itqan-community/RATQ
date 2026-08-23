@@ -178,9 +178,9 @@ export const contributors: Contributor[] = [
     githubUrl: 'https://github.com/bessmasarri',
     avatarUrl: 'https://github.com/bessmasarri.png',
     contribution:
-      "Fixed a security gap where any authenticated user could generate an API key for any resource regardless of ownership or an approved access request - added a validation guard requiring resource ownership or an approved access request before allowing key creation, with test coverage for all three cases.",
-    issueUrl: 'https://github.com/Itqan-community/RATQ/issues/152',
-    prUrl: 'https://github.com/Itqan-community/RATQ/pull/252',
+      "Fixed a security gap where any authenticated user could generate an API key for any resource regardless of ownership or an approved access request - added a validation guard requiring resource ownership or an approved access request before allowing key creation, with test coverage for all three cases. Later fixed another security gap where draft/unpublished resources and their comments were publicly readable via the API - added multi-tier access control (owner, admin, public-published-only) to both collections, with full test coverage.",
+    issueUrl: 'https://github.com/Itqan-community/RATQ/issues/151',
+    prUrl: 'https://github.com/Itqan-community/RATQ/pull/254',
   },
   {
     name: 'ekafe',
