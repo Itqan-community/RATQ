@@ -22,6 +22,7 @@ export interface Resource {
   type: ResourceType;
   description: string;
   short_description: string;
+  image_url?: string | null;
   documentation_url: string | null;
   github_url: string | null;
   license: string;

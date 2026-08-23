@@ -437,7 +437,9 @@
       "fullDescriptionPlaceholder": "وصف تفصيلي يظهر في صفحة المورد",
       "licensePlaceholder": "مثال: MIT أو GPL-3.0",
       "githubPlaceholder": "https://github.com/...",
-      "docsPlaceholder": "https://docs.example.com/..."
+      "docsPlaceholder": "https://docs.example.com/...",
+      "image": "الصورة",
+      "uploadingImage": "جاري رفع الصورة..."
     }
   },
   "auth": {

@@ -43,6 +43,12 @@ export default buildConfig({
     },
   },
   collections: [Users, Media, Resources, Comments, Reports, AccessRequests, APIKeys, Notifications, Announcements],
+  // 5MB cap applies to all upload-enabled collections (currently just Media).
+  upload: {
+    limits: {
+      fileSize: 5_000_000,
+    },
+  },
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET || '',
   typescript: {

@@ -111,6 +111,11 @@ export const Resources: CollectionConfig = {
       required: true,
     },
     {
+      name: 'image',
+      type: 'upload',
+      relationTo: 'media',
+    },
+    {
       name: 'documentation_url',
       type: 'text',
     },

@@ -4,12 +4,14 @@ import { useState } from 'react';
 import { useTranslations } from '@/shared/ui/i18n';
 import { Slug } from '@/modules/resources/domain/value-objects/slug';
 import type { ResourceType } from '@/types/resource';
+import { uploadMedia } from '@/modules/developer/infrastructure/resources-api';
 
 interface ResourceFormProps {
   onSubmit: (data: {
     name: string;
     type: ResourceType;
     short_description: string;
+    image?: number | null;
     description: string;
     license: string;
     github_url: string;
@@ -19,6 +21,7 @@ interface ResourceFormProps {
     name?: string;
     type?: ResourceType;
     short_description?: string;
+    image_url?: string | null;
     description?: string;
     license?: string;
     github_url?: string;
@@ -37,10 +40,34 @@ export function ResourceForm({ onSubmit, initial, submitLabel }: ResourceFormPro
   const [license, setLicense] = useState(initial?.license || '');
   const [github_url, setGithubUrl] = useState(initial?.github_url || '');
   const [documentation_url, setDocumentationUrl] = useState(initial?.documentation_url || '');
+  const [imageFile, setImageFile] = useState<File | null>(null);
+  const [imagePreview, setImagePreview] = useState<string | null>(initial?.image_url || null);
+  const [uploadingImage, setUploadingImage] = useState(false);
+  const [imageError, setImageError] = useState<string | null>(null);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0] || null;
+    setImageFile(file);
+    setImagePreview(file ? URL.createObjectURL(file) : initial?.image_url || null);
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    onSubmit({ name, type, short_description: shortDescription, description, license, github_url, documentation_url });
+    setImageError(null);
+    let image: number | null | undefined = undefined;
+    if (imageFile) {
+      setUploadingImage(true);
+      try {
+        const uploaded = await uploadMedia(imageFile);
+        image = uploaded.id;
+      } catch (err) {
+        setUploadingImage(false);
+        setImageError(err instanceof Error ? err.message : 'Failed to upload image');
+        return;
+      }
+      setUploadingImage(false);
+    }
+    onSubmit({ name, type, short_description: shortDescription, image, description, license, github_url, documentation_url });
   };
 
   const resourceTypes: { value: ResourceType; label: string }[] = [
@@ -74,6 +101,14 @@ export function ResourceForm({ onSubmit, initial, submitLabel }: ResourceFormPro
         <textarea value={description} onChange={(e) => setDescription(e.target.value)} className="input-field min-h-[100px] resize-y" required placeholder={copy.fullDescriptionPlaceholder} />
       </div>
       <div>
+        <label className="mb-1 block text-sm font-heading text-[var(--text-secondary)]">{copy.image}</label>
+        {imagePreview && (
+          <img src={imagePreview} alt="" className="mb-2 h-32 w-full rounded-lg object-cover" />
+        )}
+        <input type="file" accept="image/*" onChange={handleImageChange} className="input-field" />
+        {imageError && <p className="mt-1 text-xs text-red-600">{imageError}</p>}
+      </div>
+      <div>
         <label className="mb-1 block text-sm font-heading text-[var(--text-secondary)]">{copy.license}</label>
         <input type="text" value={license} onChange={(e) => setLicense(e.target.value)} className="input-field" required placeholder={copy.licensePlaceholder} />
       </div>
@@ -85,7 +120,7 @@ export function ResourceForm({ onSubmit, initial, submitLabel }: ResourceFormPro
         <label className="mb-1 block text-sm font-heading text-[var(--text-secondary)]">{copy.documentationUrl}</label>
         <input type="url" value={documentation_url} onChange={(e) => setDocumentationUrl(e.target.value)} className="input-field" placeholder={copy.docsPlaceholder} dir="ltr" />
       </div>
-      <button type="submit" className="btn-primary w-full">{submitLabel || t.dashboard.resources.saveResource}</button>
+      <button type="submit" disabled={uploadingImage} className="btn-primary w-full disabled:opacity-60">{uploadingImage ? copy.uploadingImage : (submitLabel || t.dashboard.resources.saveResource)}</button>
     </form>
   );
 }
