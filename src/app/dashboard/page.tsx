@@ -7,12 +7,9 @@ import { useAuth } from '@/hooks/useAuth';
 import { useLanguage } from '@/shared/ui/i18n';
 import { Sidebar } from '@/shared/ui/layout/Sidebar';
 import { RequestCard } from '@/modules/developer/components/RequestCard';
-import type { AccessRequest } from '@/types/resource';
+import { useDeveloperRequests } from '@/hooks/useDeveloperRequests';
+import { useUpdateAccessRequest } from '@/hooks/useUpdateAccessRequest';
 
-const mockRecentRequests: AccessRequest[] = [
-  { id: 101, applicant_name: 'user@example.com', applicant_display_name: 'Ahmed Mohammed', resource_slug: 'quranic-text-toolkit', resource_name: 'Quranic Text Toolkit (QTT)', status: 'pending', message: 'I need this resource for research on Quranic text analysis.', publisher_notes: null, created_at: '2026-04-20T10:00:00Z', updated_at: '2026-04-20T10:00:00Z' },
-  { id: 102, applicant_name: 'dev@test.com', applicant_display_name: 'Fatimah Ali', resource_slug: 'surah-navigator-sdk', resource_name: 'Surah Navigator SDK', status: 'pending', message: 'I am building a Quran app and need an SDK for navigating between surahs.', publisher_notes: null, created_at: '2026-04-18T14:30:00Z', updated_at: '2026-04-18T14:30:00Z' },
-];
 
 type StatCardProps = { label: string; value: ReactNode; detail: string; tone: 'green' | 'gold' | 'blue' | 'neutral'; icon: ReactNode; };
 const iconClassName = 'h-5 w-5';
@@ -34,6 +31,11 @@ export default function DashboardPage() {
   const [isClient, setIsClient] = useState(false);
   const copy = t.dashboard.overview;
   useEffect(() => { setIsClient(true); if (!user) router.push('/login'); }, [user, router]);
+
+  const requestsResponse = useDeveloperRequests()
+    const {handleApprove, handleDeny} = useUpdateAccessRequest()
+
+
   if (!isClient || !user) return <div className="flex min-h-[60vh] items-center justify-center bg-white"><div className="h-6 w-32 animate-pulse rounded bg-[#ededed]" /></div>;
   return (
     <div className="min-h-screen bg-white text-black lg:flex" dir={direction}>
@@ -42,9 +44,64 @@ export default function DashboardPage() {
         <header className="border-b border-[#ededed] bg-white px-4 py-4 sm:px-6 lg:px-8"><div className="mx-auto flex max-w-[1180px] items-center justify-between gap-4"><div className="min-w-0"><p className="text-xs font-black text-[#8b949e]">RATQ</p><h1 className="truncate text-xl font-black text-black">{copy.title}</h1></div><div className="flex shrink-0 items-center gap-3"><span className="hidden max-w-[220px] truncate text-sm font-bold text-[#59636d] sm:inline">{t.dashboard.common.welcome}, {user.display_name}</span><button type="button" onClick={logout} className="rounded-full border border-[#ededed] bg-white px-4 py-2 text-xs font-black text-[#6f7780] transition hover:border-red-200 hover:bg-red-50 hover:text-red-700">{t.dashboard.common.logout}</button></div></div></header>
         <main className="mx-auto max-w-[1180px] px-4 py-8 text-center sm:px-6 lg:px-8">
           <section className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_320px]"><div className="rounded-2xl bg-[linear-gradient(122.15deg,#EBEFF0_30.7%,#D8E8F5_86.27%)] p-6 sm:p-8"><span className="inline-flex rounded-full bg-[#e8ef3d] px-4 py-2 text-sm font-black text-black">{copy.activitySummary}</span><h2 className="mx-auto mt-5 max-w-3xl text-3xl font-black leading-[1.25] text-black sm:text-4xl">{format(copy.welcomeBack, { name: user.display_name })}</h2><p className="mx-auto mt-4 max-w-2xl text-base leading-8 text-[#59636d]">{copy.summary}</p></div><aside className="rounded-lg bg-[#171717] p-6 text-white"><p className="text-sm font-black text-[#e8ef3d]">{copy.nextAction}</p><h3 className="mx-auto mt-4 max-w-sm text-2xl font-black leading-9">{copy.nextActionTitle}</h3><Link href="/dashboard/resources" className="mt-6 inline-flex h-11 items-center justify-center gap-2 rounded-full bg-white px-5 text-sm font-black text-black transition hover:bg-[#e8ef3d]"><PlusIcon />{copy.addResource}</Link></aside></section>
-          <section className="mt-7 grid gap-4 sm:grid-cols-2 xl:grid-cols-4"><StatCard label={copy.publishedResources} value="0" detail={copy.publishedResourcesDetail} tone="green" icon={<BoxIcon />} /><StatCard label={copy.pendingRequests} value={mockRecentRequests.length} detail={copy.pendingRequestsDetail} tone="gold" icon={<ClockIcon />} /><StatCard label={copy.apiKeys} value="0" detail={copy.apiKeysDetail} tone="blue" icon={<KeyIcon />} /><StatCard label={copy.role} value={<span className="text-xl capitalize">{user.role}</span>} detail={copy.roleDetail} tone="neutral" icon={<UserIcon />} /></section>
-          <section className="mt-10 grid gap-7 lg:grid-cols-[minmax(0,1fr)_320px]"><div><div className="mb-5 flex flex-col items-center gap-3"><h2 className="text-2xl font-black text-black">{copy.recentRequests}</h2><p className="max-w-xl text-sm leading-6 text-[#6f7780]">{copy.recentRequestsDetail}</p><Link href="/dashboard/resources" className="text-sm font-black text-[#171717] transition hover:text-black">{copy.manageResources}</Link></div><div className="grid gap-4 text-start">{mockRecentRequests.map((request) => <RequestCard key={request.id} request={request} onApprove={(id) => console.log('Approve request', id)} onDeny={(id) => console.log('Deny request', id)} />)}</div></div><aside className="rounded-lg border border-[#ededed] bg-[#fafafa] p-6"><h2 className="text-xl font-black text-black">{copy.shortcuts}</h2><div className="mt-5 grid gap-3"><Link href="/dashboard/resources" className="rounded-lg bg-white p-4 text-sm font-black text-black transition hover:bg-[#f7f7f7]">{copy.myResources}</Link><Link href="/resources" className="rounded-lg bg-white p-4 text-sm font-black text-black transition hover:bg-[#f7f7f7]">{t.dashboard.side.browseCatalog}</Link><Link href="/about" className="rounded-lg bg-white p-4 text-sm font-black text-black transition hover:bg-[#f7f7f7]">{copy.aboutRatq}</Link></div></aside></section>
+          <section className="mt-7 grid gap-4 sm:grid-cols-2 xl:grid-cols-4"><StatCard label={copy.publishedResources} value="0" detail={copy.publishedResourcesDetail} tone="green" icon={<BoxIcon />} /><StatCard label={copy.pendingRequests} value={requestsResponse.data?.length} detail={copy.pendingRequestsDetail} tone="gold" icon={<ClockIcon />} /><StatCard label={copy.apiKeys} value="0" detail={copy.apiKeysDetail} tone="blue" icon={<KeyIcon />} /><StatCard label={copy.role} value={<span className="text-xl capitalize">{user.role}</span>} detail={copy.roleDetail} tone="neutral" icon={<UserIcon />} /></section>
+          <section className="mt-10 grid gap-7 lg:grid-cols-[minmax(0,1fr)_320px]">
+            <div>
+              <div className="mb-5 flex flex-col items-center gap-3">
+                <h2 className="text-2xl font-black text-black">
+                  {copy.recentRequests}
+                </h2>
+                <p className="max-w-xl text-sm leading-6 text-[#6f7780]">
+                  {copy.recentRequestsDetail}
+                </p>
+                <Link
+                  href="/dashboard/resources"
+                  className="text-sm font-black text-[#171717] transition hover:text-black"
+                >
+                  {copy.manageResources}
+                </Link>
+              </div>
+              <div className="grid gap-4 text-start">
+                {requestsResponse.data?.map((request) => (
+                  <RequestCard
+                    key={request.id}
+                    request={request}
+                    onApprove={handleApprove}
+                    onDeny={handleDeny}
+                  
+                  />
+                ))}
+              </div>
+            </div>
+            <aside className="rounded-lg border border-[#ededed] bg-[#fafafa] p-6">
+              <h2 className="text-xl font-black text-black">
+                {copy.shortcuts}
+              </h2>
+              <div className="mt-5 grid gap-3">
+                <Link
+                  href="/dashboard/resources"
+                  className="rounded-lg bg-white p-4 text-sm font-black text-black transition hover:bg-[#f7f7f7]"
+                >
+                  {copy.myResources}
+                </Link>
+                <Link
+                  href="/resources"
+                  className="rounded-lg bg-white p-4 text-sm font-black text-black transition hover:bg-[#f7f7f7]"
+                >
+                  {t.dashboard.side.browseCatalog}
+                </Link>
+                <Link
+                  href="/about"
+                  className="rounded-lg bg-white p-4 text-sm font-black text-black transition hover:bg-[#f7f7f7]"
+                >
+                  {copy.aboutRatq}
+                </Link>
+              </div>
+            </aside>
+          </section>
         </main>
+
+
       </div>
     </div>
   );

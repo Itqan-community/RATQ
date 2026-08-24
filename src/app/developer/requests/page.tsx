@@ -1,24 +1,26 @@
-'use client';
+"use client";
 
 import { useState } from 'react';
 import { useDeveloperRequests } from '@/hooks/useDeveloperRequests';
-import { RequestRow } from '@/modules/developer/components/RequestRow';
 import type { AccessRequest } from '@/types/resource';
+import { RequestCard, RequestCardSkeleton } from '@/modules/developer/components/RequestCard';
+import { useUpdateAccessRequest } from '@/hooks/useUpdateAccessRequest';
 
 export default function DeveloperRequestsPage() {
   const { data: requests, isLoading } = useDeveloperRequests();
-  const [statusFilter, setStatusFilter] = useState<string>('');
+    const {handleApprove, handleDeny} = useUpdateAccessRequest()
+  
+  const [statusFilter, setStatusFilter] = useState<string>("");
 
   if (isLoading) {
     return (
-      <div className="space-y-3">
-        {Array.from({ length: 3 }).map((_, i) => (
-          <div key={i} className="card p-4 animate-pulse">
-            <div className="skeleton h-4 w-1/2 rounded mb-2" />
-            <div className="skeleton h-3 w-1/3 rounded" />
-          </div>
-        ))}
-      </div>
+      <>
+        <div className="space-y-3">
+          {Array.from({ length: 3 }).map((_, i) => (
+            <RequestCardSkeleton key={i} />
+          ))}
+        </div>
+      </>
     );
   }
 
@@ -29,7 +31,9 @@ export default function DeveloperRequestsPage() {
 
   return (
     <div>
-      <h2 className="font-heading text-xl font-bold text-[var(--text-primary)] mb-6">طلبات الوصول</h2>
+      <h2 className="font-heading text-xl font-bold text-[var(--text-primary)] mb-6">
+        طلبات الوصول
+      </h2>
 
       {/* Filter */}
       <select
@@ -43,18 +47,22 @@ export default function DeveloperRequestsPage() {
         <option value="denied">مرفوض</option>
       </select>
 
-      {/* Requests list */}
-      {filtered.length === 0 ? (
-        <div className="card p-8 text-center">
-          <p className="text-[var(--text-muted)]">لا توجد طلبات وصول</p>
-        </div>
-      ) : (
-        <div className="space-y-3">
-          {filtered.map((request: AccessRequest) => (
-            <RequestRow key={request.id} request={request} />
-          ))}
-        </div>
-      )}
+      <div className="space-y-3">
+        {!!filtered.length ? (
+          filtered.map((request: AccessRequest) => (
+            <RequestCard
+              key={request.id}
+              request={request}
+              onApprove={handleApprove}
+              onDeny={handleDeny}
+            />
+          ))
+        ) : (
+          <div className="card p-8 text-center">
+            <p className="text-[var(--text-muted)]">لا توجد طلبات وصول</p>
+          </div>
+        )}
+      </div>
     </div>
   );
 }
