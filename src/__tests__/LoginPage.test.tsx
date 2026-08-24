@@ -57,7 +57,7 @@ describe('LoginPage', () => {
   it('redirects an active logged-in user to /dashboard', () => {
     vi.mocked(useAuth).mockReturnValue(
         createMockAuthContext({
-          user: { id: 1, email: 'dev@example.com', display_name: 'Test Dev', role: 'developer' } as never,
+          user: { id: 1, email: 'dev@example.com', display_name: 'Test Dev', role: 'developer', created_at: '2026-01-01T00:00:00Z' },
           loading: false,
         })
       );
