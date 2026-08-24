@@ -3,6 +3,7 @@ import { render, screen } from '@testing-library/react';
 import ForgotPasswordPage from '@/app/forgot-password/page';
 import { useAuth } from '@/hooks/useAuth';
 import { useRouter } from 'next/navigation';
+import { createMockRouter } from './test-utils/mockRouter';
 
 vi.mock('next/navigation', () => ({
   useRouter: vi.fn(),
@@ -41,7 +42,7 @@ describe('ForgotPasswordPage', () => {
 
   beforeEach(() => {
     vi.clearAllMocks();
-    vi.mocked(useRouter).mockReturnValue({ push: pushMock } as ReturnType<typeof useRouter>);
+    vi.mocked(useRouter).mockReturnValue(createMockRouter({ push: pushMock }));
   });
 
   it('redirects an active logged-in user to /dashboard', () => {
