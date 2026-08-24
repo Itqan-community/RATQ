@@ -6,6 +6,33 @@ import type { AccessRequest } from '@/types/resource';
 
 interface RequestCardProps { request: AccessRequest; onApprove?: (id: number) => void; onDeny?: (id: number) => void; }
 
+export function RequestCardSkeleton() {
+  return (
+    <article
+      aria-busy="true"
+      aria-label="Loading access request"
+      className="rounded-lg border border-[#ededed] bg-white p-5 shadow-[0_8px_24px_rgba(15,23,42,0.035)]"
+    >
+      <div className='animate-pulse'>
+        <div className=" flex justify-between items-center">
+          <div className="w-full">
+            <div className="skeleton h-4 w-1/2 rounded mb-2" />
+          </div>
+          <div className="flex gap-2">
+            <div className="skeleton h-6 w-16 rounded-full" />
+            <div className="skeleton h-6 w-16 rounded-full" />
+          </div>
+
+        </div>
+        <div className="skeleton h-20 w-full rounded mt-4" />
+      </div>
+
+    </article>
+
+
+  );
+}
+
 export function RequestCard({ request, onApprove, onDeny }: RequestCardProps) {
   const { t, locale } = useLanguage();
   const copy = t.dashboard.requests;

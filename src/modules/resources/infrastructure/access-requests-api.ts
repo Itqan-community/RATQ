@@ -1,7 +1,10 @@
-import type { AccessRequest, RequestStatus } from '@/types/resource';
-import { getAccessToken, getCurrentUserId } from '@/shared/infrastructure/token-storage';
-import { payloadErrorMessage } from '@/shared/infrastructure/payload-error';
-import { PAYLOAD_API_BASE } from '@/shared/infrastructure/payload-config';
+import type { AccessRequest, RequestStatus, updatableStatus } from "@/types/resource";
+import {
+  getAccessToken,
+  getCurrentUserId,
+} from "@/shared/infrastructure/token-storage";
+import { payloadErrorMessage } from "@/shared/infrastructure/payload-error";
+import { PAYLOAD_API_BASE } from "@/shared/infrastructure/payload-config";
 
 // Only payload-sourced resources have a real backing doc - resourceId is the
 // aggregator-facing id, undone the same way comments-api.ts does.
@@ -13,15 +16,23 @@ interface PayloadAccessRequestDoc {
   publisher_notes?: string | null;
   createdAt: string;
   updatedAt: string;
-  applicant: number | { id: number; display_name?: string | null; email: string };
+  applicant:
+    | number
+    | { id: number; display_name?: string | null; email: string };
   resource: number | { id: number; slug: string; name: string };
 }
 
 function toAccessRequest(doc: PayloadAccessRequestDoc): AccessRequest {
   const applicantName =
-    typeof doc.applicant === 'object' ? doc.applicant.display_name || doc.applicant.email : 'Unknown';
-  const resourceSlug = typeof doc.resource === 'object' ? `payload-${doc.resource.slug}` : String(doc.resource);
-  const resourceName = typeof doc.resource === 'object' ? doc.resource.name : '';
+    typeof doc.applicant === "object"
+      ? doc.applicant.display_name || doc.applicant.email
+      : "Unknown";
+  const resourceSlug =
+    typeof doc.resource === "object"
+      ? `payload-${doc.resource.slug}`
+      : String(doc.resource);
+  const resourceName =
+    typeof doc.resource === "object" ? doc.resource.name : "";
   return {
     id: doc.id,
     applicant_name: applicantName,
@@ -36,18 +47,23 @@ function toAccessRequest(doc: PayloadAccessRequestDoc): AccessRequest {
   };
 }
 
-export async function submitAccessRequest(resourceId: number, message: string): Promise<AccessRequest> {
+export async function submitAccessRequest(
+  resourceId: number,
+  message: string,
+): Promise<AccessRequest> {
   const res = await fetch(`${PAYLOAD_API_BASE}/access-requests`, {
-    method: 'POST',
+    method: "POST",
     headers: {
-      'Content-Type': 'application/json',
+      "Content-Type": "application/json",
       Authorization: `JWT ${getAccessToken()}`,
     },
     body: JSON.stringify({ resource: resourceId - 200_000, message }),
   });
   if (!res.ok) {
     throw new Error(
-      await payloadErrorMessage(res, 'Failed to submit request', { authenticated: true })
+      await payloadErrorMessage(res, "Failed to submit request", {
+        authenticated: true,
+      }),
     );
   }
   const result: { doc: PayloadAccessRequestDoc } = await res.json();
@@ -60,9 +76,41 @@ export async function fetchMyRequests(): Promise<AccessRequest[]> {
 
   const res = await fetch(
     `${PAYLOAD_API_BASE}/access-requests?where[applicant][equals]=${userId}&sort=-createdAt&depth=1&limit=100`,
-    { headers: { Authorization: `JWT ${getAccessToken()}` } }
+    { headers: { Authorization: `JWT ${getAccessToken()}` } },
   );
-  if (!res.ok) throw new Error('Failed to fetch requests');
+  if (!res.ok) throw new Error("Failed to fetch requests");
   const data: { docs: PayloadAccessRequestDoc[] } = await res.json();
   return data.docs.map(toAccessRequest);
+}
+
+
+
+
+
+
+type updateAccessRequestType = {
+  status: updatableStatus;
+};
+
+export async function fetchUpdateAccessRequest(
+  id: number,
+  data: updateAccessRequestType,
+): Promise<AccessRequest> {
+  const res = await fetch(`${PAYLOAD_API_BASE}/access-requests/${id}`, {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `JWT ${getAccessToken()}`,
+    },
+    body: JSON.stringify(data),
+  });
+  if (!res.ok) {
+    throw new Error(
+      await payloadErrorMessage(res, "Failed to update access request", {
+        authenticated: true,
+      }),
+    );
+  }
+  const result: { doc: PayloadAccessRequestDoc } = await res.json();
+  return toAccessRequest(result.doc);
 }
