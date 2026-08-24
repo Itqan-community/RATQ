@@ -3,13 +3,15 @@ import { render, screen } from '@testing-library/react';
 import LoginPage from '@/app/login/page';
 import { useAuth } from '@/hooks/useAuth';
 import { useRouter } from 'next/navigation';
+import { createMockRouter } from './test-utils/mockRouter';
+import { createMockAuthContext } from './test-utils/mockAuth';
 
 vi.mock('next/navigation', () => ({
   useRouter: vi.fn(),
 }));
 
 vi.mock('next/link', () => ({
-  default: ({ children, href, className }: any) => (
+  default: ({ children, href, className }: { children: React.ReactNode; href: string; className?: string }) => (
     <a href={href} className={className}>
       {children}
     </a>
@@ -49,19 +51,16 @@ describe('LoginPage', () => {
 
   beforeEach(() => {
     vi.clearAllMocks();
-    vi.mocked(useRouter).mockReturnValue({ push: pushMock } as any);
+    vi.mocked(useRouter).mockReturnValue(createMockRouter({ push: pushMock }));
   });
 
   it('redirects an active logged-in user to /dashboard', () => {
-    vi.mocked(useAuth).mockReturnValue({
-      user: { id: 1, email: 'dev@example.com', display_name: 'Test Dev', role: 'developer' } as any,
-      loading: false,
-      error: null,
-      login: vi.fn(),
-      loginWithToken: vi.fn(),
-      register: vi.fn(),
-      logout: vi.fn(),
-    });
+    vi.mocked(useAuth).mockReturnValue(
+        createMockAuthContext({
+          user: { id: 1, email: 'dev@example.com', display_name: 'Test Dev', role: 'developer' } as never,
+          loading: false,
+        })
+      );
 
     render(<LoginPage />);
 
@@ -70,15 +69,7 @@ describe('LoginPage', () => {
   });
 
   it('renders login form when no active user session exists', () => {
-    vi.mocked(useAuth).mockReturnValue({
-      user: null,
-      loading: false,
-      error: null,
-      login: vi.fn(),
-      loginWithToken: vi.fn(),
-      register: vi.fn(),
-      logout: vi.fn(),
-    });
+    vi.mocked(useAuth).mockReturnValue(createMockAuthContext({ loading: false }));
 
     render(<LoginPage />);
 
@@ -87,15 +78,7 @@ describe('LoginPage', () => {
   });
 
   it('shows loading indicator and prevents form flash while auth state is resolving', () => {
-    vi.mocked(useAuth).mockReturnValue({
-      user: null,
-      loading: true,
-      error: null,
-      login: vi.fn(),
-      loginWithToken: vi.fn(),
-      register: vi.fn(),
-      logout: vi.fn(),
-    });
+    vi.mocked(useAuth).mockReturnValue(createMockAuthContext({ loading: true }));
 
     render(<LoginPage />);
 
