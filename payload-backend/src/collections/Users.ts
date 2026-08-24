@@ -1,4 +1,5 @@
 import type { CollectionConfig, FieldAccess } from 'payload'
+import { passwordValidation } from './hooks/validate-password'
 
 // Mirrors the itqan_badge pattern in Resources.ts - role is a privilege
 // escalation vector, not self-declared metadata, so only an existing admin
@@ -12,6 +13,9 @@ export const Users: CollectionConfig = {
     useAsTitle: 'email',
   },
   auth: true,
+  hooks: {
+    beforeValidate: [passwordValidation],
+  },
   access: {
     // Public self-registration (no default access config would otherwise
     // require an authenticated user even to create an account).
