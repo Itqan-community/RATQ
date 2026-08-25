@@ -38,6 +38,10 @@ services:
       - '443:443'
     environment:
       SITE_DOMAIN: ${SITE_DOMAIN}
+      # docker compose only recreates a container when its resolved service
+      # config changes, not when a bind-mounted file's content changes - bump
+      # this whenever Caddyfile changes so the deploy actually picks it up.
+      CADDYFILE_REV: '2'
     volumes:
       - ./Caddyfile:/etc/caddy/Caddyfile:ro
       - caddy_data:/data
