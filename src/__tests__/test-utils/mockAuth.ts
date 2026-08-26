@@ -1,4 +1,5 @@
 import { vi } from 'vitest';
+
 import type { useAuth } from '@/hooks/useAuth';
 
 export function createMockAuthContext(
@@ -8,6 +9,7 @@ export function createMockAuthContext(
     user: null,
     loading: false,
     error: null,
+    clearError: vi.fn(),
     login: vi.fn(),
     loginWithToken: vi.fn(),
     register: vi.fn(),

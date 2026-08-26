@@ -4,6 +4,8 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { RegisterForm } from '@/modules/auth/components/RegisterForm';
 import { useLanguage } from '@/shared/ui/i18n';
+import { useAuth } from '@/hooks/useAuth';
+import { useEffect } from 'react';
 
 function CheckIcon() {
   return <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="m5 12 4 4L19 6" /></svg>;
@@ -11,8 +13,13 @@ function CheckIcon() {
 
 export default function RegisterPage() {
   const { t, direction } = useLanguage();
+  const { clearError } = useAuth();
   const copy = t.auth;
   const benefits = [copy.registerBenefit1, copy.registerBenefit2, copy.registerBenefit3];
+
+  useEffect(() => {
+    clearError();
+  }, [clearError]);
 
   return (
     <main className="page-enter bg-white pb-20 pt-32 text-black" dir={direction}>

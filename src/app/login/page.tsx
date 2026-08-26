@@ -12,7 +12,7 @@ function CheckIcon() { return <svg className="h-4 w-4" fill="none" stroke="curre
 
 export default function LoginPage() {
   const { t, direction } = useLanguage();
-  const { user, loading } = useAuth();
+  const { user, loading, clearError } = useAuth();
   const router = useRouter();
 
   useEffect(() => {
@@ -20,6 +20,10 @@ export default function LoginPage() {
       router.push('/dashboard');
     }
   }, [user, loading, router]);
+
+  useEffect(() => {
+    clearError({ preserveSessionExpiry: true });
+  }, [clearError]);
 
   if (loading || user) {
     return (
