@@ -45,6 +45,7 @@ type AuthContextType = {
   user: User | null;
   loading: boolean;
   error: string | null;
+  clearError: (options?: { preserveSessionExpiry?: boolean }) => void;
   login: (email: string, password: string) => Promise<{ success: boolean; error?: string }>;
   loginWithToken: (token: string) => Promise<{ success: boolean; error?: string }>;
   register: (
@@ -66,6 +67,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+
+  const clearError = useCallback(
+    ({ preserveSessionExpiry = false }: { preserveSessionExpiry?: boolean } = {}) => {
+      setError((current) =>
+        preserveSessionExpiry && current === SESSION_EXPIRED_REASON ? current : null
+      );
+    },
+    []
+  );
 
   const logout = useCallback(() => {
     logoutUseCase();
@@ -188,6 +198,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         user,
         loading,
         error,
+        clearError,
         login,
         loginWithToken,
         register,

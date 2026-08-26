@@ -47,6 +47,7 @@ describe('RegisterForm', () => {
       user: null,
       loading: false,
       error: null,
+      clearError: vi.fn(),
       login: vi.fn(),
       loginWithToken: vi.fn(),
       register,
