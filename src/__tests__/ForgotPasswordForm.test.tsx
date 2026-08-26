@@ -41,7 +41,7 @@ describe('ForgotPasswordForm', () => {
       loading: false,
       error: null,
       login: vi.fn(),
-      loginWithToken: vi.fn(),
+      loginWithCode: vi.fn(),
       register: vi.fn(),
       forgotPassword,
       resetPassword: vi.fn(),

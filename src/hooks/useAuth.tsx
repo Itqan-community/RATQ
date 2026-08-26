@@ -46,7 +46,7 @@ type AuthContextType = {
   loading: boolean;
   error: string | null;
   login: (email: string, password: string) => Promise<{ success: boolean; error?: string }>;
-  loginWithToken: (token: string) => Promise<{ success: boolean; error?: string }>;
+  loginWithCode: (code: string) => Promise<{ success: boolean; error?: string }>;
   register: (
     email: string,
     password: string,
@@ -107,11 +107,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   }, []);
 
-  const loginWithToken = useCallback(async (token: string) => {
+  const loginWithCode = useCallback(async (code: string) => {
     setLoading(true);
     setError(null);
     try {
-      const data = await completeOAuth(token);
+      const data = await completeOAuth(code);
       setAuthTokens(data.access, data.refresh);
       setStoredUser(data.user);
       setUser(data.user);
@@ -189,7 +189,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         loading,
         error,
         login,
-        loginWithToken,
+        loginWithCode,
         register,
         logout,
         forgotPassword,
