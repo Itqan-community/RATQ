@@ -9,7 +9,7 @@ import { ForgotPasswordForm } from "@/modules/auth/components/ForgotPasswordForm
 
 export default function ForgotPasswordPage() {
   const { t, direction } = useLanguage();
-  const { user, loading } = useAuth();
+  const { user, loading, clearError } = useAuth();
 
   const router = useRouter();
 
@@ -18,6 +18,10 @@ export default function ForgotPasswordPage() {
       router.push("/dashboard");
     }
   }, [user, loading, router]);
+
+  useEffect(() => {
+    clearError();
+  }, [clearError]);
 
   if (loading || user) {
     return (
