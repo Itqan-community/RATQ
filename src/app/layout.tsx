@@ -1,29 +1,30 @@
-import type { Metadata } from 'next';
-import { IBM_Plex_Sans_Arabic } from 'next/font/google';
-import { Header } from '@/shared/ui/layout/Header';
-import { Footer } from '@/shared/ui/layout/Footer';
-import { LanguageProvider } from '@/shared/ui/i18n';
-import { AuthProvider } from '@/hooks/useAuth';
-import '@/styles/globals.css';
+import type { Metadata } from "next";
+import { IBM_Plex_Sans_Arabic } from "next/font/google";
+import { Header } from "@/shared/ui/layout/Header";
+import { Footer } from "@/shared/ui/layout/Footer";
+import { LanguageProvider } from "@/shared/ui/i18n";
+import { AuthProvider } from "@/hooks/useAuth";
+import "@/styles/globals.css";
+import { ToastProvider } from "@/shared/ui/Toast";
 
 const plexSansArabic = IBM_Plex_Sans_Arabic({
-  variable: '--font-plex-sans-arabic',
-  subsets: ['latin', 'arabic'],
-  weight: ['400', '500', '600', '700'],
-  display: 'swap',
+  variable: "--font-plex-sans-arabic",
+  subsets: ["latin", "arabic"],
+  weight: ["400", "500", "600", "700"],
+  display: "swap",
 });
 
 export const metadata: Metadata = {
   title: {
-    default: 'RATQ — Community Platform',
-    template: '%s | RATQ Community Platform',
+    default: "RATQ — Community Platform",
+    template: "%s | RATQ Community Platform",
   },
   description:
-    'A community-driven hub for discovering, distributing, and governing Quranic development assets. Libraries, SDKs, datasets, APIs, and scholarly resources.',
+    "A community-driven hub for discovering, distributing, and governing Quranic development assets. Libraries, SDKs, datasets, APIs, and scholarly resources.",
   icons: {
-    icon: '/images/logo.png',
-    shortcut: '/images/logo.png',
-    apple: '/images/logo.png',
+    icon: "/images/logo.png",
+    shortcut: "/images/logo.png",
+    apple: "/images/logo.png",
   },
 };
 
@@ -34,17 +35,19 @@ export default function RootLayout({
 }) {
   return (
     <html
-      lang='ar'
-      dir='rtl'
+      lang="ar"
+      dir="rtl"
       className={plexSansArabic.variable}
-      data-scroll-behavior='smooth'
+      data-scroll-behavior="smooth"
     >
-      <body className='min-h-screen flex flex-col bg-[var(--bg-primary)]'>
+      <body className="min-h-screen flex flex-col bg-[var(--bg-primary)]">
         <LanguageProvider>
           <AuthProvider>
-            <Header />
-            <main className='flex-grow'>{children}</main>
-            <Footer />
+            <ToastProvider>
+              <Header />
+              <main className="flex-grow">{children}</main>
+              <Footer />
+            </ToastProvider>
           </AuthProvider>
         </LanguageProvider>
       </body>
