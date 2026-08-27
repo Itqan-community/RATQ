@@ -4,13 +4,14 @@ import { useState } from 'react';
 import { useDeveloperRequests } from '@/hooks/useDeveloperRequests';
 import type { AccessRequest } from '@/types/resource';
 import { RequestCard, RequestCardSkeleton } from '@/modules/developer/components/RequestCard';
-import { useUpdateAccessRequest } from '@/hooks/useUpdateAccessRequest';
+import { useLanguage } from '@/shared/ui/i18n';
 
 export default function DeveloperRequestsPage() {
   const { data: requests, isLoading } = useDeveloperRequests();
-    const {handleApprove, handleDeny} = useUpdateAccessRequest()
-  
+
   const [statusFilter, setStatusFilter] = useState<string>("");
+
+  const { t } = useLanguage()
 
   if (isLoading) {
     return (
@@ -53,13 +54,11 @@ export default function DeveloperRequestsPage() {
             <RequestCard
               key={request.id}
               request={request}
-              onApprove={handleApprove}
-              onDeny={handleDeny}
             />
           ))
         ) : (
           <div className="card p-8 text-center">
-            <p className="text-[var(--text-muted)]">لا توجد طلبات وصول</p>
+            <p className="text-[var(--text-muted)]">{t.dashboard.requests.noRequests}</p>
           </div>
         )}
       </div>

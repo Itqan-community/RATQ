@@ -7,7 +7,6 @@ import { useLanguage } from "@/shared/ui/i18n";
 import { Sidebar } from "@/shared/ui/layout/Sidebar";
 import { RequestCard, RequestCardSkeleton } from "@/modules/developer/components/RequestCard";
 import { useDeveloperRequests } from "@/hooks/useDeveloperRequests";
-import { useUpdateAccessRequest } from "@/hooks/useUpdateAccessRequest";
 
 
 
@@ -19,7 +18,8 @@ export default function DashboardRequestsPage() {
   const [isClient, setIsClient] = useState(false);
   const requestsResponse = useDeveloperRequests()
 
-  const {handleApprove, handleDeny} = useUpdateAccessRequest()
+  const filteredRequests = requestsResponse.data?.filter((request) => request.status === 'pending') || [];
+  const hasFilterItems = filteredRequests.length === 0 ? false : true
 
   useEffect(() => {
     setIsClient(true);
@@ -53,16 +53,22 @@ export default function DashboardRequestsPage() {
 
             {
               requestsResponse.isLoading ? (
+
                 Array.from({ length: 3 }).map((_, i) => (
                   <RequestCardSkeleton key={i} />
                 ))
+
+              ) : !hasFilterItems ? (
+
+                <div className="text-center text-[#6f7780]">
+                  {t.dashboard.requests.noRequests}
+                </div>
+
               ) : (
-                requestsResponse.data?.map((request) => (
+                filteredRequests.map((request) => (
                   <RequestCard
                     key={request.id}
                     request={request}
-                    onApprove={handleApprove}
-                    onDeny={handleDeny}
                   />
                 ))
               )}
