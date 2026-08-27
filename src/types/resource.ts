@@ -101,6 +101,8 @@ export interface CommentWithResource {
 // ─── Access Request Types ─────────────────────────────────────────────────
 
 export type RequestStatus = 'pending' | 'approved' | 'denied';
+export type updatableStatus = Extract<RequestStatus, "approved" | "denied">;
+
 
 export interface AccessRequest {
   id: number;
