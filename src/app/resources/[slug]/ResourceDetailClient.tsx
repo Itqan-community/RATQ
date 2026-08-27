@@ -9,6 +9,12 @@ import { TrustedBySection } from '@/modules/resources/components/TrustedBySectio
 import { useLanguage } from '@/shared/ui/i18n';
 import type { GithubRepoPreview as GithubRepoPreviewData, Resource, ResourceType } from '@/types/resource';
 import arabicDescriptions from '@/shared/ui/i18n/resource-descriptions.ar.json';
+import { ResourcePreview } from '@/modules/resources/components/ResourcePreview';
+import { RelatedResources } from '@/modules/resources/components/RelatedResources';
+import { CommentSection } from '@/modules/resources/components/CommentSection';
+import { usePreview } from '@/hooks/usePreview';
+import { AccessRequestButton } from '@/modules/resources/components/AccessRequestButton';
+import { ReportButton } from '@/modules/resources/components/ReportButton';
 
 interface ResourceDetailClientProps {
   resource: Resource;
@@ -51,6 +57,8 @@ export function ResourceDetailClient({ resource, repoPreview }: ResourceDetailCl
   const arabicCopy = arabicDescriptions[resource.slug as keyof typeof arabicDescriptions];
   const localizedDescription = locale === 'ar' && arabicCopy ? arabicCopy.description : resource.description;
 
+  const dataPreview = usePreview(resource.slug, resource.type);
+  const IsFromPayloadResource = resource.source === 'payload';
   return (
     <div className="bg-white pb-10 pt-32 text-black sm:pt-36" dir={direction}>
       <main className="mx-auto max-w-[1050px] px-4 sm:px-6">
@@ -83,10 +91,25 @@ export function ResourceDetailClient({ resource, repoPreview }: ResourceDetailCl
                 <li className="flex items-center justify-between"><span>{t.resource.detail.itqanCertified}</span><strong>{resource.itqan_badge ? t.resource.detail.yes : t.resource.detail.no}</strong></li>
               </ul>
             </section>
+
+            {IsFromPayloadResource && (
+              <>
+                <AccessRequestButton
+                  resourceId={resource.id}
+                  resourceName={resource.name}
+                  resourceSlug={resource.slug}
+                />
+
+                <ReportButton
+                  resourceId={resource.id}
+                  resourceSlug={resource.slug}
+                  resourceName={resource.name}
+                />
+              </>
+            )}
           </aside>
 
           <div className="min-w-0" dir={direction}>
-
             <section className="mt-6">
               <h2 className="text-xl font-black">{t.resource.detail.description}</h2>
               <p className="mt-3 whitespace-pre-line text-sm leading-8 text-[#808080]">{localizedDescription}</p>
@@ -110,6 +133,27 @@ export function ResourceDetailClient({ resource, repoPreview }: ResourceDetailCl
           </div>
         </div>
 
+            {IsFromPayloadResource && (
+              <div className="mt-12">
+                <ResourcePreview
+                  loading={dataPreview.loading}
+                  previewData={dataPreview.data}
+                  resourceType={resource.type}
+                />
+
+                <RelatedResources
+                  currentResourceId={resource.id}
+                  currentResourceType={resource.type}
+                />
+
+                <CommentSection
+                  resourceId={resource.id}
+                  resourceSlug={resource.slug}
+                />
+              </div>
+
+            )}
+    
         <section className="mt-24 overflow-hidden rounded-[24px] bg-[linear-gradient(112deg,#edf1f1_15%,#dbeaf6_100%)] px-7 sm:px-12">
           <div className="grid items-stretch md:min-h-[340px] gap-8 md:grid-cols-[330px_1fr]" dir="ltr">
             <div className="flex h-[220px] items-end justify-center self-stretch overflow-hidden sm:h-[270px] md:h-full"><img src="/images/rocket.png" alt="" className="h-full w-auto max-w-full object-contain object-bottom md:max-w-none"/></div>

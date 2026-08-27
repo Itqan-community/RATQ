@@ -400,7 +400,14 @@
       "requestedBy": "Requested by {{name}} - {{date}}",
       "pending": "Pending",
       "approved": "Approved",
-      "denied": "Denied"
+      "denied": "Denied",
+      "requestApproved": "Request approved successfully",
+      "requestDenied": "Request denied successfully",
+      "requestFailed": "Request failed",
+      "loading": "Loading",
+      "loadingMassgesSkeleton": "Loading access requests",
+      "noRequests": "No requests",
+      "errorRequest": "Can't update access request. Please try again later."
     },
     "apiKeys": {
       "badge": "API keys",
