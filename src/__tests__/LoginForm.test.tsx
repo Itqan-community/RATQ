@@ -13,6 +13,7 @@ vi.mock('@/hooks/useAuth', () => ({
     login: vi.fn(),
     loading: false,
     error: SESSION_EXPIRED_REASON,
+    clearError: vi.fn(),
   }),
 }));
 
