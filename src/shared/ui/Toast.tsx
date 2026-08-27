@@ -1,8 +1,14 @@
-'use client';
+"use client";
 
-import { useState, useEffect, useCallback } from 'react';
+import {
+  useState,
+  useCallback,
+  createContext,
+  useContext,
+  ReactNode,
+} from "react";
 
-type ToastType = 'success' | 'error' | 'info';
+type ToastType = "success" | "error" | "info";
 
 interface ToastData {
   id: number;
@@ -12,10 +18,16 @@ interface ToastData {
 
 let toastId = 0;
 
-export function useToast() {
+type ToastContextType = {
+  toast: (message: string, type?: ToastType) => void;
+};
+
+const ToastContext = createContext<ToastContextType | null>(null);
+
+export function ToastProvider({ children }: { children: ReactNode }) {
   const [toasts, setToasts] = useState<ToastData[]>([]);
 
-  const toast = useCallback((message: string, type: ToastType = 'info') => {
+  const toast = useCallback((message: string, type: ToastType = "info") => {
     const id = ++toastId;
     setToasts((prev) => [...prev, { id, message, type }]);
     setTimeout(() => {
@@ -27,14 +39,35 @@ export function useToast() {
     setToasts((prev) => prev.filter((t) => t.id !== id));
   }, []);
 
-  return { toast, toasts, removeToast };
+  return (
+    <ToastContext.Provider value={{ toast }}>
+      {children}
+      <ToastContainer toasts={toasts} removeToast={removeToast} />
+    </ToastContext.Provider>
+  );
 }
 
-export function ToastContainer({ toasts, removeToast }: { toasts: ToastData[]; removeToast: (id: number) => void }) {
+export function useToast() {
+  const context = useContext(ToastContext);
+
+  if (!context) {
+    throw new Error("useToast must be used within a ToastProvider");
+  }
+
+  return context;
+}
+
+export function ToastContainer({
+  toasts,
+  removeToast,
+}: {
+  toasts: ToastData[];
+  removeToast: (id: number) => void;
+}) {
   const styles: Record<ToastType, string> = {
-    success: 'bg-green-50 border-green-200 text-green-800',
-    error: 'bg-red-50 border-red-200 text-red-800',
-    info: 'bg-blue-50 border-blue-200 text-blue-800',
+    success: "bg-green-50 border-green-200 text-green-800",
+    error: "bg-red-50 border-red-200 text-red-800",
+    info: "bg-blue-50 border-blue-200 text-blue-800",
   };
 
   return (
