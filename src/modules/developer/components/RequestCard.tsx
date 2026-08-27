@@ -1,16 +1,21 @@
 'use client';
 
+import { useState } from 'react';
 import { useLanguage } from '@/shared/ui/i18n';
 import { canApproveOrDeny } from '@/modules/developer/domain/services/access-request-status';
 import type { AccessRequest } from '@/types/resource';
+import { useUpdateAccessRequest } from '@/hooks/useUpdateAccessRequest';
 
-interface RequestCardProps { request: AccessRequest; onApprove?: (id: number) => void; onDeny?: (id: number) => void; }
+interface RequestCardProps { request: AccessRequest; }
 
 export function RequestCardSkeleton() {
+  const { t } = useLanguage();
   return (
     <article
       aria-busy="true"
-      aria-label="Loading access request"
+      aria-label={
+        t.dashboard.requests.loadingMassgesSkeleton
+      }
       className="rounded-lg border border-[#ededed] bg-white p-5 shadow-[0_8px_24px_rgba(15,23,42,0.035)]"
     >
       <div className='animate-pulse'>
@@ -33,7 +38,7 @@ export function RequestCardSkeleton() {
   );
 }
 
-export function RequestCard({ request, onApprove, onDeny }: RequestCardProps) {
+export function RequestCard({ request }: RequestCardProps) {
   const { t, locale } = useLanguage();
   const copy = t.dashboard.requests;
   const statusStyles: Record<AccessRequest['status'], { bg: string; text: string; label: string }> = {
@@ -45,6 +50,44 @@ export function RequestCard({ request, onApprove, onDeny }: RequestCardProps) {
   const date = new Date(request.created_at).toLocaleDateString(locale === 'ar' ? 'ar-SA' : 'en-US', { year: 'numeric', month: 'short', day: 'numeric' });
   const requestedBy = copy.requestedBy.replace('{{name}}', request.applicant_display_name).replace('{{date}}', date);
 
+  const { trigger, isMutating, error } = useUpdateAccessRequest();
+  const [pendingAction, setPendingAction] = useState<'approved' | 'denied' | null>(null);
+
+
+  const handleApprove = async (id: number) => {
+
+    if (isMutating) return // Just to prevent the extra request 
+
+    setPendingAction('approved');
+    try {
+      await trigger([id, 'approved'], {
+        onError: (error) => {
+          // TODO: Add a toast notification to show the error message
+          console.error('Error updating access request:', error);
+        },
+      });
+    } finally {
+      setPendingAction(null);
+    }
+  };
+
+  const handleDeny = async (id: number) => {
+    if (isMutating) return // Just to prevent the extra request 
+
+    setPendingAction('denied');
+    try {
+      await trigger([id, 'denied'], {
+        onError: (error) => {
+          // TODO: Add a toast notification to show the error message
+          console.error('Error updating access request:', error);
+          console.error('Can\'t update access request:', error);
+        },
+      });
+    } finally {
+      setPendingAction(null);
+    }
+  };
+
   return (
     <article className="rounded-lg border border-[#ededed] bg-white p-5 shadow-[0_8px_24px_rgba(15,23,42,0.035)]">
       <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
@@ -54,8 +97,37 @@ export function RequestCard({ request, onApprove, onDeny }: RequestCardProps) {
           <p className="mt-4 rounded-lg bg-[#fafafa] p-4 text-sm leading-7 text-[#59636d]">{request.message}</p>
           {request.publisher_notes && <p className="mt-3 text-sm italic leading-6 text-[#8b949e]">Notes: {request.publisher_notes}</p>}
         </div>
-        {canApproveOrDeny(request) && onApprove && onDeny && <div className="flex shrink-0 gap-2"><button type="button" onClick={() => onApprove(request.id)} className="h-9 rounded-full bg-[#171717] px-4 text-xs font-black text-white transition hover:bg-black">{copy.approve}</button><button type="button" onClick={() => onDeny(request.id)} className="h-9 rounded-full border border-red-200 bg-white px-4 text-xs font-black text-red-700 transition hover:bg-red-50">{copy.deny}</button></div>}
+        {canApproveOrDeny(request) && (
+          <div className="flex shrink-0 gap-2">
+            <button
+              type="button"
+              onClick={() => handleApprove(request.id)}
+              disabled={isMutating}
+              className="h-9 rounded-full bg-[#171717] px-4 text-xs font-black text-white transition hover:bg-black"
+            >
+              {isMutating && pendingAction === 'approved' ? t.dashboard.requests.loading : copy.approve}
+            </button>
+            <button
+              type="button"
+              onClick={() => handleDeny(request.id)}
+              disabled={isMutating}
+              className="h-9 rounded-full border border-red-200 bg-white px-4 text-xs font-black text-red-700 transition hover:bg-red-50"
+            >
+              {isMutating && pendingAction === 'denied' ? t.dashboard.requests.loading : copy.deny}
+            </button>
+          </div>
+        )}
       </div>
+
+      {
+        // #TODo: Add a toast notification to show the error message instead of showing it here
+        error && (
+          <div className={"mt-4 rounded-lg bg-red-50 p-4 text-sm text-red-700 " + (isMutating ? 'animate-pulse' : '')}>
+            {t.dashboard.requests.errorRequest}
+          </div>
+        )
+      }
+
     </article>
   );
 }

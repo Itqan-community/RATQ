@@ -6,9 +6,8 @@ import Link from 'next/link';
 import { useAuth } from '@/hooks/useAuth';
 import { useLanguage } from '@/shared/ui/i18n';
 import { Sidebar } from '@/shared/ui/layout/Sidebar';
-import { RequestCard } from '@/modules/developer/components/RequestCard';
+import { RequestCard, RequestCardSkeleton } from '@/modules/developer/components/RequestCard';
 import { useDeveloperRequests } from '@/hooks/useDeveloperRequests';
-import { useUpdateAccessRequest } from '@/hooks/useUpdateAccessRequest';
 
 
 type StatCardProps = { label: string; value: ReactNode; detail: string; tone: 'green' | 'gold' | 'blue' | 'neutral'; icon: ReactNode; };
@@ -33,7 +32,7 @@ export default function DashboardPage() {
   useEffect(() => { setIsClient(true); if (!user) router.push('/login'); }, [user, router]);
 
   const requestsResponse = useDeveloperRequests()
-    const {handleApprove, handleDeny} = useUpdateAccessRequest()
+  const filteredRequests = requestsResponse.data?.filter((request) => request.status === 'pending');
 
 
   if (!isClient || !user) return <div className="flex min-h-[60vh] items-center justify-center bg-white"><div className="h-6 w-32 animate-pulse rounded bg-[#ededed]" /></div>;
@@ -62,15 +61,20 @@ export default function DashboardPage() {
                 </Link>
               </div>
               <div className="grid gap-4 text-start">
-                {requestsResponse.data?.map((request) => (
-                  <RequestCard
-                    key={request.id}
-                    request={request}
-                    onApprove={handleApprove}
-                    onDeny={handleDeny}
-                  
-                  />
-                ))}
+                {requestsResponse.isLoading ? Array.from({ length: 3 }).map((_, index) => (
+                  <RequestCardSkeleton key={index} />
+                )) : filteredRequests?.length === 0 ? (
+                  <div className="text-center text-[#6f7780]">
+                    {t.dashboard.requests.noRequests}
+                  </div>
+                ) : (
+                  filteredRequests?.map((request) => (
+                    <RequestCard
+                      key={request.id}
+                      request={request}
+                    />
+                  ))
+                )}
               </div>
             </div>
             <aside className="rounded-lg border border-[#ededed] bg-[#fafafa] p-6">
