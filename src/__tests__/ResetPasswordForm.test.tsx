@@ -55,7 +55,7 @@ describe('ResetPasswordForm', () => {
       error: null,
       clearError: vi.fn(),
       login: vi.fn(),
-      loginWithToken: vi.fn(),
+      loginWithCode: vi.fn(),
       register: vi.fn(),
       forgotPassword: vi.fn(),
       resetPassword,
