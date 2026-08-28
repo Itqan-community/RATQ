@@ -13,11 +13,12 @@ vi.mock('@/lib/oauth/github', () => ({
 }))
 
 const { getPayload } = await import('payload')
-const { pickVerifiedEmail, signSessionJWT } = await import('@/lib/oauth/github')
+const { pickVerifiedEmail, signSessionJWT, signExchangeToken } = await import('@/lib/oauth/github')
 
 const mockedGetPayload = vi.mocked(getPayload)
 const mockedPickVerifiedEmail = vi.mocked(pickVerifiedEmail)
 const mockedSignSessionJWT = vi.mocked(signSessionJWT)
+const mockedSignExchangeToken = vi.mocked(signExchangeToken)
 
 // GitHub OAuth issue #263: the route previously generated passwords by
 // concatenating two UUIDs (36+36=72 chars), which exceeded the 64-char max
@@ -138,6 +139,9 @@ describe('GitHub OAuth callback - first-time signup', () => {
     await GET(request)
 
     expect(mockPayload.create).not.toHaveBeenCalled()
-    expect(mockPayload.update).toHaveBeenCalledTimes(1)
+    expect(mockedSignExchangeToken).toHaveBeenCalledTimes(1)
+    expect(mockedSignExchangeToken).toHaveBeenCalledWith(
+      expect.objectContaining({ userId: existingUser.id, secret: mockPayload.secret }),
+    )
   })
 })
