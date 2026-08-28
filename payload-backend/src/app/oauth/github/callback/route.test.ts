@@ -9,6 +9,7 @@ vi.mock('@payload-config', () => ({ default: {} }))
 vi.mock('@/lib/oauth/github', () => ({
   pickVerifiedEmail: vi.fn(),
   signSessionJWT: vi.fn(),
+  signExchangeToken: vi.fn().mockResolvedValue('fake-exchange-token'),
 }))
 
 const { getPayload } = await import('payload')
