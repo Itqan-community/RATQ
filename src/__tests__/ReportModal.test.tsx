@@ -1,38 +1,49 @@
-import { act } from 'react';
-import { render, screen } from '@testing-library/react';
-import { describe, expect, it } from 'vitest';
-import { ReportModal } from '@/modules/resources/components/ReportModal';
-import { LanguageProvider } from '@/shared/ui/i18n/LanguageContext';
+import { act } from "react";
+import { render, screen } from "@testing-library/react";
+import { describe, expect, it } from "vitest";
+import { ReportModal } from "@/modules/resources/components/ReportModal";
+import { LanguageProvider } from "@/shared/ui/i18n/LanguageContext";
+import { ToastProvider } from "@/shared/ui/Toast";
 
-function renderModal(locale: 'ar' | 'en') {
-  localStorage.setItem('ratq_locale', locale);
+function renderModal(locale: "ar" | "en") {
+  localStorage.setItem("ratq_locale", locale);
 
   render(
     <LanguageProvider>
-      <ReportModal
-        isOpen
-        onClose={() => {}}
-        resourceId={1}
-        resourceName="Test resource"
-      />
+      <ToastProvider>
+        <ReportModal
+          isOpen
+          onClose={() => {}}
+          resourceId={1}
+          resourceName="Test resource"
+        />
+      </ToastProvider>
     </LanguageProvider>,
   );
 
   act(() => {});
 }
 
-describe('ReportModal', () => {
-  it('renders the report placeholders in Arabic', () => {
-    renderModal('ar');
+describe("ReportModal", () => {
+  it("renders the report placeholders in Arabic", () => {
+    renderModal("ar");
 
-    expect(screen.getByRole('option', { name: 'اختر سببا' })).toBeInTheDocument();
-    expect(screen.getByPlaceholderText('قدم تفاصيل إضافية...')).toBeInTheDocument();
+    expect(
+      screen.getByRole("option", { name: "اختر سببا" }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByPlaceholderText("قدم تفاصيل إضافية..."),
+    ).toBeInTheDocument();
   });
 
-  it('renders the report placeholders in English', () => {
-    renderModal('en');
+  it("renders the report placeholders in English", () => {
+    renderModal("en");
 
-    expect(screen.getByRole('option', { name: 'Select a reason' })).toBeInTheDocument();
-    expect(screen.getByPlaceholderText('Provide additional context...')).toBeInTheDocument();
+    expect(
+      screen.getByRole("option", { name: "Select a reason" }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByPlaceholderText("Provide additional context..."),
+    ).toBeInTheDocument();
   });
 });
