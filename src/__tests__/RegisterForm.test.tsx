@@ -49,7 +49,7 @@ describe('RegisterForm', () => {
       error: null,
       clearError: vi.fn(),
       login: vi.fn(),
-      loginWithToken: vi.fn(),
+      loginWithCode: vi.fn(),
       register,
       forgotPassword: vi.fn(),
       resetPassword: vi.fn(),

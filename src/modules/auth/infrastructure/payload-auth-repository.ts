@@ -41,6 +41,20 @@ export async function login(email: string, password: string) {
   return { access: data.token, refresh: data.token, user: toUser(data.user) };
 }
 
+// Redeems the one-time code the OAuth callback leaves in the URL fragment for
+// the real session token (issue #229). The token comes back in the response
+// body, so unlike the old ?token= redirect it never touches a URL.
+export async function exchangeOAuthCode(code: string) {
+  const res = await fetch(`${PAYLOAD_ORIGIN}/oauth/github/exchange`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ code }),
+  });
+  if (!res.ok) throw new Error(await payloadErrorMessage(res, 'Login failed'));
+  const data: { token: string } = await res.json();
+  return data.token;
+}
+
 export async function loginWithToken(token: string) {
   const res = await fetch(`${PAYLOAD_API_BASE}/users/me`, {
     headers: { Authorization: `JWT ${token}` },
