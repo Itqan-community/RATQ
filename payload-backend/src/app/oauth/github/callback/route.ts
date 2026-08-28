@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server'
 import { getPayload } from 'payload'
 
 import config from '@payload-config'
-import { pickVerifiedEmail, signSessionJWT } from '@/lib/oauth/github'
+import { pickVerifiedEmail, signExchangeToken } from '@/lib/oauth/github'
 
 interface GitHubTokenResponse {
   access_token?: string
@@ -101,41 +101,24 @@ export async function GET(request: Request) {
         },
       })
 
-  const usersConfig = payload.collections.users.config
-  const tokenExpiration = usersConfig.auth.tokenExpiration
-
-  // Users has useSessions: true (Payload's default) - the JWT strategy
-  // (node_modules/payload/dist/auth/strategies/jwt.js) rejects any token
-  // whose sid doesn't match a session stored on the user doc, so a session
-  // record must exist before the token is usable.
+  // The session is deliberately NOT created here. /oauth/github/exchange
+  // creates it when this ticket is redeemed, which is what makes the ticket
+  // single-use: the session existing for this sid can only mean it was
+  // already spent. It also means an abandoned login leaves nothing behind.
   const sid = crypto.randomUUID()
-  const now = new Date()
-  const existingSessions = ((user.sessions as { id: string; expiresAt: string }[]) || []).filter(
-    (session) => new Date(session.expiresAt) > now
-  )
-  await payload.update({
-    collection: 'users',
-    id: user.id,
-    data: {
-      sessions: [
-        ...existingSessions,
-        { id: sid, createdAt: now.toISOString(), expiresAt: new Date(now.getTime() + tokenExpiration * 1000).toISOString() },
-      ],
-    },
-  })
 
   // payload.secret is NOT process.env.PAYLOAD_SECRET - Payload derives it as
-  // sha256(config.secret).hex.slice(0, 32) (node_modules/payload/dist/index.js)
-  // and that derived value is what its own JWT strategy verifies against.
-  const token = await signSessionJWT({
-    id: user.id,
-    email: user.email,
-    secret: payload.secret,
+  // sha256(config.secret).hex.slice(0, 32) (node_modules/payload/dist/index.js).
+  const exchangeToken = await signExchangeToken({
+    userId: user.id,
     sid,
-    tokenExpiration,
+    secret: payload.secret,
   })
 
-  const response = NextResponse.redirect(`${frontendUrl}/oauth/callback?token=${token}`)
+  // Fragment, not a query string: fragments are never sent to a server and
+  // never appear in a Referer header, so even this short-lived ticket stays
+  // out of access logs (issue #229).
+  const response = NextResponse.redirect(`${frontendUrl}/oauth/callback#code=${exchangeToken}`)
   response.cookies.set('oauth_state', '', { path: '/oauth/github', maxAge: 0 })
   return response
 }
