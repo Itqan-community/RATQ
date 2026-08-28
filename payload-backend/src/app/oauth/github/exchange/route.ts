@@ -1,3 +1,4 @@
+import { sql } from '@payloadcms/db-postgres'
 import { NextResponse } from 'next/server'
 import { getPayload } from 'payload'
 
@@ -67,30 +68,33 @@ export async function POST(request: Request) {
   if (!user) return fail(401, 'invalid_code')
 
   const now = new Date()
-  const sessions = (user.sessions as { id: string; expiresAt: string }[]) || []
+  const tokenExpiration = payload.collections.users.config.auth.tokenExpiration
+  const expiresAt = new Date(now.getTime() + tokenExpiration * 1000)
 
   // Single-use, without a table of spent tickets: the callback deliberately
   // does NOT create the session, so this sid existing can only mean this
   // ticket was already redeemed. Creating the session IS spending the ticket.
-  if (sessions.some((session) => session.id === claims.sid)) {
-    return fail(401, 'code_already_used')
-  }
+  //
+  // Written as a conditional INSERT rather than read-then-payload.update
+  // because those are two separate operations, and two requests carrying the
+  // same code could both pass the read before either wrote. users_sessions.id
+  // is the primary key, so ON CONFLICT DO NOTHING makes Postgres itself the
+  // arbiter: concurrent redemptions of one code yield exactly one insert, and
+  // an empty RETURNING is how the loser finds out.
+  const inserted = await payload.db.drizzle.execute(sql`
+    INSERT INTO users_sessions (_order, _parent_id, id, created_at, expires_at)
+    SELECT COALESCE(MAX(_order), 0) + 1, ${user.id}, ${claims.sid}, ${now}, ${expiresAt}
+    FROM users_sessions WHERE _parent_id = ${user.id}
+    ON CONFLICT (id) DO NOTHING
+    RETURNING id
+  `)
+  if (inserted.rows.length === 0) return fail(401, 'code_already_used')
 
-  const tokenExpiration = payload.collections.users.config.auth.tokenExpiration
-  await payload.update({
-    collection: 'users',
-    id: user.id,
-    data: {
-      sessions: [
-        ...sessions.filter((session) => new Date(session.expiresAt) > now),
-        {
-          id: claims.sid,
-          createdAt: now.toISOString(),
-          expiresAt: new Date(now.getTime() + tokenExpiration * 1000).toISOString(),
-        },
-      ],
-    },
-  })
+  // payload.update used to drop expired sessions as a side effect of rewriting
+  // the whole array; the targeted insert above doesn't, so prune them here.
+  await payload.db.drizzle.execute(sql`
+    DELETE FROM users_sessions WHERE _parent_id = ${user.id} AND expires_at <= ${now}
+  `)
 
   const token = await signSessionJWT({
     id: user.id,
