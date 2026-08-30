@@ -615,3 +615,105 @@ describe('AccessRequests afterChange hook (api-key deletion failures)', () => {
     expect(createCalls).toHaveLength(1)
   })
 })
+
+interface TxCall {
+  collection: string
+  req?: unknown
+  where?: Record<string, unknown>
+  data?: Record<string, unknown>
+}
+
+describe('AccessRequests afterChange hook (transaction propagation)', () => {
+  const hook = AccessRequests.hooks!.afterChange![0] as (
+    args: RevokeAfterChangeArgs,
+  ) => Promise<Record<string, unknown>>
+
+  // Payload's Local API only joins the caller's transaction when it is handed
+  // `req`. Without it a delete commits on its own, so a later throw rolls back
+  // the access-request row while the deleted keys stay gone. These assertions
+  // pin the argument; the transaction behaviour itself was checked against a
+  // real Postgres, which a stub cannot model.
+  function capturing(calls: TxCall[]) {
+    return {
+      findByID: async () => ({ id: 200, name: 'Verse Search API' }),
+      create: async (args: TxCall) => {
+        calls.push(args)
+        return { id: 900 }
+      },
+      delete: async (args: TxCall) => {
+        calls.push(args)
+        return { docs: [], errors: [] }
+      },
+    }
+  }
+
+  const REQ = Symbol('parent-request')
+
+  function revoke(calls: TxCall[]) {
+    return hook({
+      req: { payload: capturing(calls), transactionID: REQ } as never,
+      doc: { id: 5, status: 'revoked', applicant: 42, resource: 200 },
+      previousDoc: { id: 5, status: 'approved', applicant: 42, resource: 200 },
+      operation: 'update',
+    })
+  }
+
+  it('deletes the api-keys on the caller transaction, not a fresh one', async () => {
+    const calls: TxCall[] = []
+    await revoke(calls)
+
+    const del = calls.find((c) => c.collection === 'api-keys')!
+    expect(del.req).toBeDefined()
+    expect((del.req as { transactionID: symbol }).transactionID).toBe(REQ)
+  })
+
+  it('creates the notification on the caller transaction too', async () => {
+    const calls: TxCall[] = []
+    await revoke(calls)
+
+    const note = calls.find((c) => c.collection === 'notifications')!
+    expect(note.req).toBeDefined()
+    expect((note.req as { transactionID: symbol }).transactionID).toBe(REQ)
+  })
+
+  it('threads the transaction through approvals as well', async () => {
+    const calls: TxCall[] = []
+    await hook({
+      req: { payload: capturing(calls), transactionID: REQ } as never,
+      doc: { id: 5, status: 'approved', applicant: 42, resource: 200 },
+      previousDoc: { id: 5, status: 'pending', applicant: 42, resource: 200 },
+      operation: 'update',
+    })
+
+    const note = calls.find((c) => c.collection === 'notifications')!
+    expect((note.req as { transactionID: symbol }).transactionID).toBe(REQ)
+  })
+
+  it('fails the revoke when only SOME of the matched keys could be deleted', async () => {
+    // The partial case is the dangerous one: without a shared transaction the
+    // successfully-deleted keys would stay gone after the row rolled back.
+    const calls: TxCall[] = []
+    const payload = {
+      findByID: async () => ({ id: 200, name: 'Verse Search API' }),
+      create: async (args: TxCall) => {
+        calls.push(args)
+        return { id: 900 }
+      },
+      delete: async () => ({
+        docs: [{ id: 1 }],
+        errors: [{ id: 2, message: 'delete failed' }],
+      }),
+    }
+
+    await expect(
+      hook({
+        req: { payload, transactionID: REQ } as never,
+        doc: { id: 5, status: 'revoked', applicant: 42, resource: 200 },
+        previousDoc: { id: 5, status: 'approved', applicant: 42, resource: 200 },
+        operation: 'update',
+      }),
+    ).rejects.toThrow('Could not revoke access')
+
+    expect(calls.filter((c) => c.collection === 'notifications')).toHaveLength(0)
+  })
+})
