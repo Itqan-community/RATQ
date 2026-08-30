@@ -95,16 +95,21 @@ export async function fetchMyRequests(): Promise<AccessRequest[]> {
 // their own. Revoked requests are excluded rather than shown greyed out - the
 // tab answers "who has access", and a revoked row is a past state, still
 // readable through the requests list.
+// The 100 cap matches every other list query in the app (api-keys, resources,
+// comments). `total` comes back alongside so the UI can say when it is showing
+// a truncated list rather than quietly implying that is everyone.
+export const RESOURCE_ACCESS_PAGE_SIZE = 100;
+
 export async function fetchResourceAccessGrants(
   resourceId: number,
-): Promise<AccessRequest[]> {
+): Promise<{ grants: AccessRequest[]; total: number }> {
   const res = await fetch(
-    `${PAYLOAD_API_BASE}/access-requests?where[resource][equals]=${resourceId - 200_000}&where[status][equals]=approved&sort=-updatedAt&depth=1&limit=100`,
+    `${PAYLOAD_API_BASE}/access-requests?where[resource][equals]=${resourceId - 200_000}&where[status][equals]=approved&sort=-updatedAt&depth=1&limit=${RESOURCE_ACCESS_PAGE_SIZE}`,
     { headers: { Authorization: `JWT ${getAccessToken()}` } },
   );
   if (!res.ok) throw new Error("Failed to fetch resource access");
-  const data: { docs: PayloadAccessRequestDoc[] } = await res.json();
-  return data.docs.map(toAccessRequest);
+  const data: { docs: PayloadAccessRequestDoc[]; totalDocs: number } = await res.json();
+  return { grants: data.docs.map(toAccessRequest), total: data.totalDocs };
 }
 
 type updateAccessRequestType = {

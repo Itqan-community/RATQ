@@ -154,12 +154,24 @@ export const AccessRequests: CollectionConfig = {
         // so the publisher cannot clear these themselves - this goes
         // through the local API rather than loosening that rule.
         if (doc.status === 'revoked') {
-          await req.payload.delete({
+          // A bulk delete reports per-document failures in `errors` rather
+          // than throwing, so ignoring them would leave a working key behind
+          // while we tell the applicant their access is gone. Throwing here
+          // rolls the whole update back, so the request stays `approved` and
+          // the publisher can retry, rather than the record and the real
+          // access disagreeing.
+          const { errors } = await req.payload.delete({
             collection: 'api-keys',
             where: {
               and: [{ owner: { equals: recipientId } }, { resource: { equals: resource.id } }],
             },
           })
+          if (errors?.length) {
+            throw new APIError(
+              `Could not revoke access: ${errors.length} API key(s) for this resource could not be deleted.`,
+              500,
+            )
+          }
         }
 
         await req.payload.create({
