@@ -160,8 +160,16 @@ export const AccessRequests: CollectionConfig = {
           // rolls the whole update back, so the request stays `approved` and
           // the publisher can retry, rather than the record and the real
           // access disagreeing.
+          //
+          // `req` is what makes that true. The Local API only joins the
+          // caller's transaction when it is handed the request; without it
+          // this delete would commit on its own, and a throw would roll back
+          // only the access-request row, leaving already-deleted keys gone
+          // while the record reverted to `approved`. Same split brain, from
+          // the other direction.
           const { errors } = await req.payload.delete({
             collection: 'api-keys',
+            req,
             where: {
               and: [{ owner: { equals: recipientId } }, { resource: { equals: resource.id } }],
             },
@@ -174,8 +182,11 @@ export const AccessRequests: CollectionConfig = {
           }
         }
 
+        // Also on the parent transaction: a notification announcing a revoke
+        // that later rolled back would outlive the thing it announced.
         await req.payload.create({
           collection: 'notifications',
+          req,
           data: {
             recipient: recipientId,
             type: notification.type,
