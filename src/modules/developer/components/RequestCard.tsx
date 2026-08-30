@@ -45,6 +45,9 @@ export function RequestCard({ request }: RequestCardProps) {
     pending: { bg: 'bg-[#fff7e6]', text: 'text-[#9a5a00]', label: copy.pending },
     approved: { bg: 'bg-green-50', text: 'text-green-700', label: copy.approved },
     denied: { bg: 'bg-red-50', text: 'text-red-700', label: copy.denied },
+    // Neutral rather than red: denied means the request was refused, revoked
+    // means access was granted and later withdrawn - different states.
+    revoked: { bg: 'bg-[#f3f4f6]', text: 'text-[#4b5563]', label: copy.revoked },
   };
   const style = statusStyles[request.status];
   const date = new Date(request.created_at).toLocaleDateString(locale === 'ar' ? 'ar-SA' : 'en-US', { year: 'numeric', month: 'short', day: 'numeric' });

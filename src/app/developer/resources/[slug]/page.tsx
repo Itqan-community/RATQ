@@ -7,6 +7,8 @@ import { useParams } from 'next/navigation';
 import Link from 'next/link';
 import { useDeveloperResources } from '@/hooks/useDeveloperResources';
 import { ResourceBadge } from '@/shared/ui/Badge';
+import { ResourceAccessList } from '@/modules/developer/components/ResourceAccessList';
+import { useLanguage } from '@/shared/ui/i18n';
 import type { Resource } from '@/types/resource';
 
 const tabs = [
@@ -21,6 +23,8 @@ export default function ResourceDetailPage() {
   const { data: resources, isLoading } = useDeveloperResources();
   const resource = resources?.find((r: Resource) => r.slug === slug) as Resource | undefined;
   const [activeTab, setActiveTab] = useState('overview');
+  const { t } = useLanguage();
+  const accessCopy = t.dashboard.resourceAccess;
 
   if (isLoading) {
     return (
@@ -128,34 +132,15 @@ export default function ResourceDetailPage() {
 
       {activeTab === 'access' && resource.type === 'api' && (
         <div role="tabpanel" className="card p-6">
-          <h3 className="font-heading font-semibold mb-4">إدارة الوصول</h3>
-          <p className="text-sm text-[var(--text-muted)] mb-4">
-            هذه الميزة تتيح دعوة مطورين بالبريد الإلكتروني أو الموافقة على طلبات الوصول.
-          </p>
-          {/* Invite form placeholder - TODO: connect to backend API */}
-          <div className="flex gap-3 mb-4">
-            <input
-              type="email"
-              placeholder="email@example.com"
-              disabled
-              className="input-field text-sm py-2 px-3 flex-grow"
-            />
-            <select disabled className="input-field text-sm py-2 px-3">
-              <option value="read">قراءة فقط</option>
-              <option value="read,write">قراءة وكتابة</option>
-            </select>
-            <button type="button" disabled className="btn-primary text-sm py-2 px-4">دعوة</button>
-          </div>
-          {/* Access requests list placeholder */}
-          <div className="card p-4 bg-[var(--bg-secondary)]">
-            <p className="text-sm text-[var(--text-muted)]">لا توجد طلبات وصول معلقة</p>
-          </div>
+          <h3 className="font-heading font-semibold mb-1">{accessCopy.listTitle}</h3>
+          <p className="text-sm text-[var(--text-muted)] mb-4">{accessCopy.tabDescription}</p>
+          <ResourceAccessList resourceId={resource.id} />
         </div>
       )}
 
       {activeTab === 'access' && resource.type !== 'api' && (
         <div role="tabpanel" className="card p-6">
-          <p className="text-sm text-[var(--text-muted)]">إدارة الوصول متاحة فقط للموارد من نوع API</p>
+          <p className="text-sm text-[var(--text-muted)]">{accessCopy.apiOnly}</p>
         </div>
       )}
 
