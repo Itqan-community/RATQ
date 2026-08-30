@@ -2,6 +2,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import {
   fetchResourceAccessGrants,
   fetchRevokeAccessRequest,
+  RESOURCE_ACCESS_PAGE_SIZE,
 } from '@/modules/resources/infrastructure/access-requests-api';
 import { PAYLOAD_API_BASE } from '@/shared/infrastructure/payload-config';
 
@@ -66,16 +67,39 @@ describe('fetchResourceAccessGrants', () => {
   });
 
   it('maps Payload docs onto the shape the UI renders', async () => {
-    const fetchMock = vi.fn().mockResolvedValue(okJson({ docs: [payloadDoc] }));
+    const fetchMock = vi.fn().mockResolvedValue(okJson({ docs: [payloadDoc], totalDocs: 1 }));
     vi.stubGlobal('fetch', fetchMock);
 
-    const grants = await fetchResourceAccessGrants(200_001);
+    const { grants } = await fetchResourceAccessGrants(200_001);
 
     expect(grants).toHaveLength(1);
     expect(grants[0].id).toBe(77);
     expect(grants[0].applicant_display_name).toBe('Sara Ahmed');
     expect(grants[0].status).toBe('approved');
     expect(grants[0].updated_at).toBe('2026-08-02T10:00:00Z');
+  });
+
+  it('reports the true total so a capped list can say it is capped', async () => {
+    // The query asks for at most RESOURCE_ACCESS_PAGE_SIZE. Without the total
+    // the UI cannot tell "these are all of them" from "these are the first 100".
+    vi.stubGlobal(
+      'fetch',
+      vi.fn().mockResolvedValue(okJson({ docs: [payloadDoc], totalDocs: 137 })),
+    );
+
+    const { grants, total } = await fetchResourceAccessGrants(200_001);
+
+    expect(grants).toHaveLength(1);
+    expect(total).toBe(137);
+  });
+
+  it('requests at most one page of grants', async () => {
+    const fetchMock = vi.fn().mockResolvedValue(okJson({ docs: [], totalDocs: 0 }));
+    vi.stubGlobal('fetch', fetchMock);
+
+    await fetchResourceAccessGrants(200_001);
+
+    expect(fetchMock.mock.calls[0][0]).toContain(`limit=${RESOURCE_ACCESS_PAGE_SIZE}`);
   });
 
   it('throws rather than returning an empty list when the request fails', async () => {

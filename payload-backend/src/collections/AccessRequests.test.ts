@@ -549,3 +549,69 @@ describe('AccessRequests afterChange hook (revoking)', () => {
     expect(createCalls[0].data.recipient).toBe(42)
   })
 })
+
+describe('AccessRequests afterChange hook (api-key deletion failures)', () => {
+  const hook = AccessRequests.hooks!.afterChange![0] as (
+    args: RevokeAfterChangeArgs,
+  ) => Promise<Record<string, unknown>>
+
+  function payloadWithDeleteErrors(
+    errors: unknown[],
+    createCalls: NotificationCreateCall[] = [],
+  ): RevokePayloadStub {
+    return {
+      findByID: async () => ({ id: 200, name: 'Verse Search API' }),
+      create: async (args: NotificationCreateCall) => {
+        createCalls.push(args)
+        return { id: 900 }
+      },
+      // Payload reports per-document delete failures here instead of throwing.
+      delete: async () => ({ docs: [], errors }),
+    }
+  }
+
+  const revoking = (payload: RevokePayloadStub) =>
+    hook({
+      req: { payload },
+      doc: { id: 5, status: 'revoked', applicant: 42, resource: 200 },
+      previousDoc: { id: 5, status: 'approved', applicant: 42, resource: 200 },
+      operation: 'update',
+    })
+
+  it('fails the revoke when a key could not be deleted, rather than reporting success', async () => {
+    await expect(
+      revoking(payloadWithDeleteErrors([{ id: 7, message: 'locked' }])),
+    ).rejects.toThrow('Could not revoke access')
+  })
+
+  it('does not notify the applicant when the keys survived', async () => {
+    // Telling someone their access is gone while their key still works is
+    // the worst of the two failure modes.
+    const createCalls: NotificationCreateCall[] = []
+    await expect(
+      revoking(payloadWithDeleteErrors([{ id: 7, message: 'locked' }], createCalls)),
+    ).rejects.toThrow()
+    expect(createCalls).toHaveLength(0)
+  })
+
+  it('proceeds normally when the delete reports no errors', async () => {
+    const createCalls: NotificationCreateCall[] = []
+    await revoking(payloadWithDeleteErrors([], createCalls))
+    expect(createCalls).toHaveLength(1)
+    expect(createCalls[0].data.type).toBe('access_revoked')
+  })
+
+  it('treats a delete that matched nothing as success, not failure', async () => {
+    // A developer holding no keys is normal, not an error.
+    const createCalls: NotificationCreateCall[] = []
+    await revoking({
+      findByID: async () => ({ id: 200, name: 'Verse Search API' }),
+      create: async (args: NotificationCreateCall) => {
+        createCalls.push(args)
+        return { id: 900 }
+      },
+      delete: async () => ({ docs: [], errors: [] }),
+    })
+    expect(createCalls).toHaveLength(1)
+  })
+})

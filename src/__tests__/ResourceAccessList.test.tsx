@@ -58,10 +58,13 @@ describe('ResourceAccessList', () => {
   });
 
   it('lists everyone holding access to the resource', async () => {
-    mockList.mockResolvedValue([
-      grant({ id: 1, applicant_display_name: 'Sara Ahmed' }),
-      grant({ id: 2, applicant_display_name: 'Bilal Nour' }),
-    ]);
+    mockList.mockResolvedValue({
+      grants: [
+        grant({ id: 1, applicant_display_name: 'Sara Ahmed' }),
+        grant({ id: 2, applicant_display_name: 'Bilal Nour' }),
+      ],
+      total: 2,
+    });
 
     renderList();
 
@@ -71,7 +74,7 @@ describe('ResourceAccessList', () => {
   });
 
   it('shows the empty state when nobody has access', async () => {
-    mockList.mockResolvedValue([]);
+    mockList.mockResolvedValue({ grants: [], total: 0 });
 
     renderList();
 
@@ -80,8 +83,32 @@ describe('ResourceAccessList', () => {
     ).toBeInTheDocument();
   });
 
+  it('shows a failure, not an empty list, when the grants cannot be loaded', async () => {
+    // "No one has access" and "we could not find out who has access" are very
+    // different statements to make to a publisher.
+    mockList.mockRejectedValue(new Error('500'));
+
+    renderList();
+
+    expect(
+      await screen.findByText("Couldn't load the access list."),
+    ).toBeInTheDocument();
+    expect(
+      screen.queryByText('No one has access to this resource yet.'),
+    ).not.toBeInTheDocument();
+  });
+
+  it('offers a retry that refetches the list', async () => {
+    mockList.mockRejectedValueOnce(new Error('500')).mockResolvedValue({ grants: [grant()], total: 1 });
+
+    renderList();
+    fireEvent.click(await screen.findByRole('button', { name: 'Try again' }));
+
+    expect(await screen.findByText('Sara Ahmed')).toBeInTheDocument();
+  });
+
   it('does not revoke on the first click - it asks for confirmation', async () => {
-    mockList.mockResolvedValue([grant()]);
+    mockList.mockResolvedValue({ grants: [grant()], total: 1 });
 
     renderList();
     fireEvent.click(await screen.findByRole('button', { name: /Revoke access - Sara Ahmed/ }));
@@ -91,7 +118,7 @@ describe('ResourceAccessList', () => {
   });
 
   it('revokes the right request once confirmed', async () => {
-    mockList.mockResolvedValue([grant({ id: 77, applicant_display_name: 'Sara Ahmed' })]);
+    mockList.mockResolvedValue({ grants: [grant({ id: 77, applicant_display_name: 'Sara Ahmed' })], total: 1 });
     mockRevoke.mockResolvedValue(grant({ id: 77, status: 'revoked' }));
 
     renderList();
@@ -103,7 +130,7 @@ describe('ResourceAccessList', () => {
   });
 
   it('cancelling leaves the access in place', async () => {
-    mockList.mockResolvedValue([grant()]);
+    mockList.mockResolvedValue({ grants: [grant()], total: 1 });
 
     renderList();
     fireEvent.click(await screen.findByRole('button', { name: /Revoke access - Sara Ahmed/ }));
@@ -114,7 +141,7 @@ describe('ResourceAccessList', () => {
   });
 
   it('surfaces a failure instead of pretending the revoke worked', async () => {
-    mockList.mockResolvedValue([grant()]);
+    mockList.mockResolvedValue({ grants: [grant()], total: 1 });
     mockRevoke.mockRejectedValue(new Error('403'));
 
     renderList();
@@ -131,7 +158,7 @@ describe('ResourceAccessList', () => {
   it('keeps the confirm and cancel labels distinct', async () => {
     // In Arabic the resting label is "إلغاء الوصول" and Cancel is "إلغاء";
     // reusing the resting label to confirm makes the two easy to mix up.
-    mockList.mockResolvedValue([grant()]);
+    mockList.mockResolvedValue({ grants: [grant()], total: 1 });
 
     renderList();
     fireEvent.click(await screen.findByRole('button', { name: /Revoke access - Sara Ahmed/ }));
@@ -141,11 +168,31 @@ describe('ResourceAccessList', () => {
     expect(screen.queryByRole('button', { name: 'Revoke access' })).not.toBeInTheDocument();
   });
 
+  it('says so when the list is capped, instead of implying it is everyone', async () => {
+    mockList.mockResolvedValue({ grants: [grant()], total: 137 });
+
+    renderList();
+
+    expect(await screen.findByText(/Showing the first 1 of 137/)).toBeInTheDocument();
+  });
+
+  it('says nothing about paging when the whole list fits', async () => {
+    mockList.mockResolvedValue({ grants: [grant()], total: 1 });
+
+    renderList();
+    await screen.findByText('Sara Ahmed');
+
+    expect(screen.queryByText(/Showing the first/)).not.toBeInTheDocument();
+  });
+
   it('names the person on each revoke button so the controls are distinguishable', async () => {
-    mockList.mockResolvedValue([
-      grant({ id: 1, applicant_display_name: 'Sara Ahmed' }),
-      grant({ id: 2, applicant_display_name: 'Bilal Nour' }),
-    ]);
+    mockList.mockResolvedValue({
+      grants: [
+        grant({ id: 1, applicant_display_name: 'Sara Ahmed' }),
+        grant({ id: 2, applicant_display_name: 'Bilal Nour' }),
+      ],
+      total: 2,
+    });
 
     renderList();
 

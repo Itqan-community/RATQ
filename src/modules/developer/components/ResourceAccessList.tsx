@@ -25,7 +25,8 @@ export function ResourceAccessList({ resourceId }: { resourceId: number }) {
   const copy = t.dashboard.resourceAccess;
   const { toast } = useToast();
 
-  const { data: grants, isLoading } = useResourceAccess(resourceId);
+  const { data, isLoading, error, mutate } = useResourceAccess(resourceId);
+  const grants = data?.grants;
   const { trigger, isMutating } = useRevokeAccess(resourceId);
 
   // Which row is awaiting confirmation. Revoking is destructive and cannot be
@@ -47,6 +48,24 @@ export function ResourceAccessList({ resourceId }: { resourceId: number }) {
 
   if (isLoading) return <ResourceAccessListSkeleton />;
 
+  // Before the empty state, not after it: a failed fetch also leaves `grants`
+  // undefined, and "no one has access" is a very different claim to make to a
+  // publisher than "we could not find out who has access".
+  if (error) {
+    return (
+      <div className="card p-6 text-center bg-[var(--bg-secondary)]">
+        <p className="text-sm text-[var(--text-secondary)]">{copy.loadFailed}</p>
+        <button
+          type="button"
+          onClick={() => mutate()}
+          className="mt-3 h-9 rounded-full border border-[var(--border-color)] bg-white px-4 text-xs font-black text-[var(--text-secondary)] transition hover:bg-white/60"
+        >
+          {copy.retry}
+        </button>
+      </div>
+    );
+  }
+
   if (!grants?.length) {
     return (
       <div className="card p-6 text-center bg-[var(--bg-secondary)]">
@@ -55,7 +74,10 @@ export function ResourceAccessList({ resourceId }: { resourceId: number }) {
     );
   }
 
+  const hiddenCount = (data?.total ?? 0) - grants.length;
+
   return (
+    <>
     <ul className="space-y-2">
       {grants.map((grant: AccessRequest) => {
         const grantedOn = copy.grantedOn.replace(
@@ -124,5 +146,15 @@ export function ResourceAccessList({ resourceId }: { resourceId: number }) {
         );
       })}
     </ul>
+    {hiddenCount > 0 && (
+      // The query is capped like every other list in the app. Say so rather
+      // than letting a publisher believe this is everyone with access.
+      <p className="mt-3 text-xs text-[var(--text-muted)]">
+        {copy.showingFirst
+          .replace('{{shown}}', String(grants.length))
+          .replace('{{total}}', String(data?.total ?? grants.length))}
+      </p>
+    )}
+    </>
   );
 }
