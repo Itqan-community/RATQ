@@ -34,6 +34,32 @@ const canWritePublisherNotes: FieldAccess = ({ req }) => {
   return req.user.role === 'admin' || req.user.role === 'publisher'
 }
 
+// Applicant-facing copy for each decided state. Revoking notifies the
+// applicant exactly the way approving and denying already do -
+// 'access_revoked' has been a valid notification type (with an icon in
+// developer/notifications/page.tsx) since before this hook existed, but
+// nothing ever emitted it.
+const NOTIFICATION_BY_STATUS: Record<
+  string,
+  {
+    type: 'access_approved' | 'access_denied' | 'access_revoked'
+    message: (resourceName: string) => string
+  }
+> = {
+  approved: {
+    type: 'access_approved',
+    message: (name) => `تمت الموافقة على طلب الوصول إلى "${name}"`,
+  },
+  denied: {
+    type: 'access_denied',
+    message: (name) => `تم رفض طلب الوصول إلى "${name}"`,
+  },
+  revoked: {
+    type: 'access_revoked',
+    message: (name) => `تم إلغاء وصولك إلى "${name}"`,
+  },
+}
+
 // Note: AccessRequests only applies to Payload-sourced resources.
 // CMS- and mock-sourced resources have no real owner relationship to notify or approve requests.
 export const AccessRequests: CollectionConfig = {
@@ -79,16 +105,27 @@ export const AccessRequests: CollectionConfig = {
         if (operation === 'create') {
           data.status = 'pending'
         }
-        // Once a request has been decided, its status is final - no re-opening
-        // and no switching between approved/denied.
-        if (
-          operation === 'update' &&
-          originalDoc &&
-          originalDoc.status !== 'pending' &&
-          data.status &&
-          data.status !== originalDoc.status
-        ) {
-          throw new APIError('Access request status cannot be changed once decided.', 400)
+        if (operation === 'update' && originalDoc && data.status && data.status !== originalDoc.status) {
+          const isRevokingApprovedAccess =
+            originalDoc.status === 'approved' && data.status === 'revoked'
+
+          // Revoking is for access that was actually granted. A request
+          // still awaiting a decision is denied, not revoked - otherwise
+          // pending -> revoked would be a second, unreviewed way to refuse
+          // one, and it would report the wrong thing to the applicant.
+          if (data.status === 'revoked' && !isRevokingApprovedAccess) {
+            throw new APIError('Only an approved access request can be revoked.', 400)
+          }
+
+          // Once a request has been decided, its status is final - no
+          // re-opening and no switching between approved/denied. Revoking an
+          // approved request is the single exception, and is itself terminal:
+          // revoked never goes back to approved. An applicant who wants
+          // access again submits a fresh request, which the pending-only
+          // duplicate guard in beforeValidate already allows.
+          if (originalDoc.status !== 'pending' && !isRevokingApprovedAccess) {
+            throw new APIError('Access request status cannot be changed once decided.', 400)
+          }
         }
         return data
       },
@@ -97,7 +134,8 @@ export const AccessRequests: CollectionConfig = {
       async ({ req, doc, previousDoc, operation }) => {
         if (operation !== 'update') return doc
         if (!previousDoc || previousDoc.status === doc.status) return doc
-        if (doc.status !== 'approved' && doc.status !== 'denied') return doc
+        const notification = NOTIFICATION_BY_STATUS[doc.status]
+        if (!notification) return doc
 
         const resourceId = typeof doc.resource === 'object' ? doc.resource.id : doc.resource
         const resource = await req.payload.findByID({
@@ -107,15 +145,29 @@ export const AccessRequests: CollectionConfig = {
         })
         const recipientId = typeof doc.applicant === 'object' ? doc.applicant.id : doc.applicant
 
+        // Revoking has to reach the access itself, not just this record.
+        // APIKeys' beforeValidate only requires an approved request when a
+        // key is *created*, and nothing re-checks afterwards, so a key
+        // issued while the request was approved would otherwise keep
+        // working indefinitely. APIKeys.delete is scoped to the key's own
+        // holder (delete: isOwner, with no admin or resource-owner branch),
+        // so the publisher cannot clear these themselves - this goes
+        // through the local API rather than loosening that rule.
+        if (doc.status === 'revoked') {
+          await req.payload.delete({
+            collection: 'api-keys',
+            where: {
+              and: [{ owner: { equals: recipientId } }, { resource: { equals: resource.id } }],
+            },
+          })
+        }
+
         await req.payload.create({
           collection: 'notifications',
           data: {
             recipient: recipientId,
-            type: doc.status === 'approved' ? 'access_approved' : 'access_denied',
-            message:
-              doc.status === 'approved'
-                ? `تمت الموافقة على طلب الوصول إلى "${resource.name}"`
-                : `تم رفض طلب الوصول إلى "${resource.name}"`,
+            type: notification.type,
+            message: notification.message(resource.name),
             resource: resource.id,
             resource_name: resource.name,
             related_access_request: doc.id,
@@ -145,7 +197,7 @@ export const AccessRequests: CollectionConfig = {
       name: 'status',
       type: 'select',
       required: true,
-      options: ['pending', 'approved', 'denied'],
+      options: ['pending', 'approved', 'denied', 'revoked'],
       defaultValue: 'pending',
     },
     {
