@@ -1,3 +1,4 @@
+import crypto from 'crypto'
 import { NextResponse } from 'next/server'
 import { getPayload } from 'payload'
 
@@ -96,7 +97,10 @@ export async function GET(request: Request) {
           email,
           // Never used for login - this account only ever authenticates via
           // GitHub. Payload's auth:true collections require some password.
-          password: crypto.randomUUID() + crypto.randomUUID(),
+          // crypto.randomBytes(32).toString('hex') yields exactly 64
+          // hex chars, staying within the max length enforced by the
+          // passwordValidation beforeValidate hook (PR #259).
+          password: crypto.randomBytes(32).toString('hex'),
           display_name: githubUser.name || githubUser.login,
         },
       })
