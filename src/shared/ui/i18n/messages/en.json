@@ -401,6 +401,7 @@
       "pending": "Pending",
       "approved": "Approved",
       "denied": "Denied",
+      "revoked": "Revoked",
       "requestApproved": "Request approved successfully",
       "requestDenied": "Request denied successfully",
       "requestFailed": "Request failed",
@@ -408,6 +409,18 @@
       "loadingMassgesSkeleton": "Loading access requests",
       "noRequests": "No requests",
       "errorRequest": "Can't update access request. Please try again later."
+    },
+    "resourceAccess": {
+      "tabDescription": "Review who has access to this resource, and revoke it when needed.",
+      "apiOnly": "Access management is only available for API resources",
+      "listTitle": "Who has access",
+      "empty": "No one has access to this resource yet.",
+      "grantedOn": "Access granted {{date}}",
+      "revoke": "Revoke access",
+      "revoking": "Revoking",
+      "confirmRevoke": "Revoke access for {{name}}? Any API keys they hold for this resource stop working immediately.",
+      "confirmAction": "Confirm revoke",
+      "revokeFailed": "Couldn't revoke access. Please try again later."
     },
     "apiKeys": {
       "badge": "API keys",

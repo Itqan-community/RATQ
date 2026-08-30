@@ -401,6 +401,7 @@
       "pending": "معلق",
       "approved": "مقبول",
       "denied": "مرفوض",
+      "revoked": "ملغى",
       "requestApproved": "تم قبول الطلب بنجاح",
       "requestDenied": "تم رفض الطلب بنجاح",
       "requestFailed": "فشل الطلب",
@@ -408,6 +409,18 @@
       "loadingMassgesSkeleton": "جاري تحميل طلبات الوصول",
       "noRequests": "لا توجد طلبات",
       "errorRequest": "لا يمكن تحديث حالة الطلب. يرجى المحاولة لاحقاً."
+    },
+    "resourceAccess": {
+      "tabDescription": "راجع من لديه وصول إلى هذا المورد، وألغِ الوصول عند الحاجة.",
+      "apiOnly": "إدارة الوصول متاحة فقط للموارد من نوع API",
+      "listTitle": "من لديه وصول",
+      "empty": "لا أحد لديه وصول إلى هذا المورد بعد.",
+      "grantedOn": "مُنح الوصول في {{date}}",
+      "revoke": "إلغاء الوصول",
+      "revoking": "جارٍ الإلغاء",
+      "confirmRevoke": "إلغاء وصول {{name}}؟ ستتوقف أي مفاتيح API لديه لهذا المورد عن العمل فوراً.",
+      "confirmAction": "تأكيد الإلغاء",
+      "revokeFailed": "تعذّر إلغاء الوصول. يرجى المحاولة لاحقاً."
     },
     "apiKeys": {
       "badge": "مفاتيح API",

@@ -287,7 +287,7 @@ export interface AccessRequest {
   id: number;
   resource: number | Resource;
   applicant: number | User;
-  status: 'pending' | 'approved' | 'denied';
+  status: 'pending' | 'approved' | 'denied' | 'revoked';
   message: string;
   publisher_notes?: string | null;
   updatedAt: string;
