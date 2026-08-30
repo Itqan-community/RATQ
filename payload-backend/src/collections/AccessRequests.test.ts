@@ -333,3 +333,387 @@ describe('AccessRequests afterChange hook', () => {
     expect(createCalls).toHaveLength(0)
   })
 })
+
+describe('AccessRequests status field', () => {
+  it('offers revoked alongside the original three states', () => {
+    const status = AccessRequests.fields.find(
+      (f) => 'name' in f && f.name === 'status',
+    ) as { options: string[] }
+    expect(status.options).toEqual(['pending', 'approved', 'denied', 'revoked'])
+  })
+})
+
+interface StatusTransitionArgs {
+  req: { user: { id: number; role?: string } }
+  data: Record<string, unknown>
+  operation: string
+  originalDoc: { status: string }
+}
+
+describe('AccessRequests beforeChange hook (revoke transitions)', () => {
+  const hook = AccessRequests.hooks!.beforeChange![0] as (
+    args: StatusTransitionArgs,
+  ) => Record<string, unknown>
+
+  function transition(from: string, to: string, user: { id: number; role?: string }) {
+    return () =>
+      hook({
+        req: { user },
+        data: { status: to },
+        operation: 'update',
+        originalDoc: { status: from },
+      })
+  }
+
+  const publisher = { id: 5, role: 'publisher' }
+  const admin = { id: 99, role: 'admin' }
+
+  it('lets the publisher revoke an approved request', () => {
+    expect(transition('approved', 'revoked', publisher)().status).toBe('revoked')
+  })
+
+  it('lets an admin revoke an approved request', () => {
+    expect(transition('approved', 'revoked', admin)().status).toBe('revoked')
+  })
+
+  it('refuses to revoke a request that is still pending (deny it instead)', () => {
+    expect(transition('pending', 'revoked', publisher)).toThrow(
+      'Only an approved access request can be revoked.',
+    )
+  })
+
+  it('refuses to revoke a denied request', () => {
+    expect(transition('denied', 'revoked', publisher)).toThrow(
+      'Only an approved access request can be revoked.',
+    )
+  })
+
+  it('treats re-revoking an already-revoked request as a no-op, not an error', () => {
+    // Same status in and out, so the transition block never runs. Worth
+    // pinning: a double-click on Revoke must not surface an error.
+    expect(transition('revoked', 'revoked', publisher)().status).toBe('revoked')
+  })
+
+  it('treats revoked as terminal - it cannot go back to approved', () => {
+    expect(transition('revoked', 'approved', publisher)).toThrow(
+      'Access request status cannot be changed once decided.',
+    )
+  })
+
+  it('treats revoked as terminal - it cannot become denied', () => {
+    expect(transition('revoked', 'denied', publisher)).toThrow(
+      'Access request status cannot be changed once decided.',
+    )
+  })
+
+  it('still refuses approved -> denied, the invariant revoking does not relax', () => {
+    expect(transition('approved', 'denied', publisher)).toThrow(
+      'Access request status cannot be changed once decided.',
+    )
+  })
+
+  it('still refuses denied -> approved', () => {
+    expect(transition('denied', 'approved', publisher)).toThrow(
+      'Access request status cannot be changed once decided.',
+    )
+  })
+
+  it('still allows deciding a pending request either way', () => {
+    expect(transition('pending', 'approved', publisher)().status).toBe('approved')
+    expect(transition('pending', 'denied', publisher)().status).toBe('denied')
+  })
+})
+
+interface DeleteCall {
+  collection: string
+  where: Record<string, unknown>
+}
+
+interface RevokePayloadStub extends AccessRequestsPayloadStub {
+  delete: (args: DeleteCall) => Promise<{ docs: unknown[]; errors: unknown[] }>
+}
+
+interface RevokeAfterChangeArgs {
+  req: { payload: RevokePayloadStub }
+  doc: Record<string, unknown>
+  previousDoc?: Record<string, unknown>
+  operation: string
+}
+
+describe('AccessRequests afterChange hook (revoking)', () => {
+  const hook = AccessRequests.hooks!.afterChange![0] as (
+    args: RevokeAfterChangeArgs,
+  ) => Promise<Record<string, unknown>>
+
+  function makePayload(createCalls: NotificationCreateCall[], deleteCalls: DeleteCall[]) {
+    return {
+      findByID: async () => ({ id: 200, name: 'Verse Search API' }),
+      create: async (args: NotificationCreateCall) => {
+        createCalls.push(args)
+        return { id: 900, ...args.data }
+      },
+      delete: async (args: DeleteCall) => {
+        deleteCalls.push(args)
+        return { docs: [], errors: [] }
+      },
+    }
+  }
+
+  function revoke(createCalls: NotificationCreateCall[], deleteCalls: DeleteCall[]) {
+    return hook({
+      req: { payload: makePayload(createCalls, deleteCalls) },
+      doc: { id: 5, status: 'revoked', applicant: 42, resource: 200 },
+      previousDoc: { id: 5, status: 'approved', applicant: 42, resource: 200 },
+      operation: 'update',
+    })
+  }
+
+  it('notifies the applicant with access_revoked, like approved/denied do', async () => {
+    const createCalls: NotificationCreateCall[] = []
+    await revoke(createCalls, [])
+
+    expect(createCalls).toHaveLength(1)
+    expect(createCalls[0].collection).toBe('notifications')
+    expect(createCalls[0].data.recipient).toBe(42)
+    expect(createCalls[0].data.type).toBe('access_revoked')
+    expect(createCalls[0].data.related_access_request).toBe(5)
+    expect(createCalls[0].data.resource_name).toBe('Verse Search API')
+    expect(createCalls[0].data.message).toContain('Verse Search API')
+  })
+
+  it('clears the applicant api-keys for that resource, scoped to both', async () => {
+    // Without this the revoke is cosmetic: APIKeys.beforeValidate only
+    // checks for an approved request when a key is created, so a key issued
+    // earlier would keep working.
+    const deleteCalls: DeleteCall[] = []
+    await revoke([], deleteCalls)
+
+    expect(deleteCalls).toHaveLength(1)
+    expect(deleteCalls[0].collection).toBe('api-keys')
+    expect(deleteCalls[0].where).toEqual({
+      and: [{ owner: { equals: 42 } }, { resource: { equals: 200 } }],
+    })
+  })
+
+  it('does not touch api-keys belonging to anyone else or any other resource', async () => {
+    const deleteCalls: DeleteCall[] = []
+    await revoke([], deleteCalls)
+
+    const where = deleteCalls[0].where as { and: Array<Record<string, { equals: number }>> }
+    expect(where.and.find((c) => 'owner' in c)!.owner.equals).toBe(42)
+    expect(where.and.find((c) => 'resource' in c)!.resource.equals).toBe(200)
+  })
+
+  it('does not delete any api-keys when a request is approved', async () => {
+    const deleteCalls: DeleteCall[] = []
+    await hook({
+      req: { payload: makePayload([], deleteCalls) },
+      doc: { id: 5, status: 'approved', applicant: 42, resource: 200 },
+      previousDoc: { id: 5, status: 'pending', applicant: 42, resource: 200 },
+      operation: 'update',
+    })
+
+    expect(deleteCalls).toHaveLength(0)
+  })
+
+  it('does not delete any api-keys when a request is denied', async () => {
+    const deleteCalls: DeleteCall[] = []
+    await hook({
+      req: { payload: makePayload([], deleteCalls) },
+      doc: { id: 5, status: 'denied', applicant: 42, resource: 200 },
+      previousDoc: { id: 5, status: 'pending', applicant: 42, resource: 200 },
+      operation: 'update',
+    })
+
+    expect(deleteCalls).toHaveLength(0)
+  })
+
+  it('resolves the applicant and resource when they arrive as populated objects', async () => {
+    const createCalls: NotificationCreateCall[] = []
+    const deleteCalls: DeleteCall[] = []
+    await hook({
+      req: { payload: makePayload(createCalls, deleteCalls) },
+      doc: {
+        id: 5,
+        status: 'revoked',
+        applicant: { id: 42, email: 'dev@example.com' },
+        resource: { id: 200, slug: 'verse-search' },
+      },
+      previousDoc: { id: 5, status: 'approved', applicant: 42, resource: 200 },
+      operation: 'update',
+    })
+
+    expect(deleteCalls[0].where).toEqual({
+      and: [{ owner: { equals: 42 } }, { resource: { equals: 200 } }],
+    })
+    expect(createCalls[0].data.recipient).toBe(42)
+  })
+})
+
+describe('AccessRequests afterChange hook (api-key deletion failures)', () => {
+  const hook = AccessRequests.hooks!.afterChange![0] as (
+    args: RevokeAfterChangeArgs,
+  ) => Promise<Record<string, unknown>>
+
+  function payloadWithDeleteErrors(
+    errors: unknown[],
+    createCalls: NotificationCreateCall[] = [],
+  ): RevokePayloadStub {
+    return {
+      findByID: async () => ({ id: 200, name: 'Verse Search API' }),
+      create: async (args: NotificationCreateCall) => {
+        createCalls.push(args)
+        return { id: 900 }
+      },
+      // Payload reports per-document delete failures here instead of throwing.
+      delete: async () => ({ docs: [], errors }),
+    }
+  }
+
+  const revoking = (payload: RevokePayloadStub) =>
+    hook({
+      req: { payload },
+      doc: { id: 5, status: 'revoked', applicant: 42, resource: 200 },
+      previousDoc: { id: 5, status: 'approved', applicant: 42, resource: 200 },
+      operation: 'update',
+    })
+
+  it('fails the revoke when a key could not be deleted, rather than reporting success', async () => {
+    await expect(
+      revoking(payloadWithDeleteErrors([{ id: 7, message: 'locked' }])),
+    ).rejects.toThrow('Could not revoke access')
+  })
+
+  it('does not notify the applicant when the keys survived', async () => {
+    // Telling someone their access is gone while their key still works is
+    // the worst of the two failure modes.
+    const createCalls: NotificationCreateCall[] = []
+    await expect(
+      revoking(payloadWithDeleteErrors([{ id: 7, message: 'locked' }], createCalls)),
+    ).rejects.toThrow()
+    expect(createCalls).toHaveLength(0)
+  })
+
+  it('proceeds normally when the delete reports no errors', async () => {
+    const createCalls: NotificationCreateCall[] = []
+    await revoking(payloadWithDeleteErrors([], createCalls))
+    expect(createCalls).toHaveLength(1)
+    expect(createCalls[0].data.type).toBe('access_revoked')
+  })
+
+  it('treats a delete that matched nothing as success, not failure', async () => {
+    // A developer holding no keys is normal, not an error.
+    const createCalls: NotificationCreateCall[] = []
+    await revoking({
+      findByID: async () => ({ id: 200, name: 'Verse Search API' }),
+      create: async (args: NotificationCreateCall) => {
+        createCalls.push(args)
+        return { id: 900 }
+      },
+      delete: async () => ({ docs: [], errors: [] }),
+    })
+    expect(createCalls).toHaveLength(1)
+  })
+})
+
+interface TxCall {
+  collection: string
+  req?: unknown
+  where?: Record<string, unknown>
+  data?: Record<string, unknown>
+}
+
+describe('AccessRequests afterChange hook (transaction propagation)', () => {
+  const hook = AccessRequests.hooks!.afterChange![0] as (
+    args: RevokeAfterChangeArgs,
+  ) => Promise<Record<string, unknown>>
+
+  // Payload's Local API only joins the caller's transaction when it is handed
+  // `req`. Without it a delete commits on its own, so a later throw rolls back
+  // the access-request row while the deleted keys stay gone. These assertions
+  // pin the argument; the transaction behaviour itself was checked against a
+  // real Postgres, which a stub cannot model.
+  function capturing(calls: TxCall[]) {
+    return {
+      findByID: async () => ({ id: 200, name: 'Verse Search API' }),
+      create: async (args: TxCall) => {
+        calls.push(args)
+        return { id: 900 }
+      },
+      delete: async (args: TxCall) => {
+        calls.push(args)
+        return { docs: [], errors: [] }
+      },
+    }
+  }
+
+  const REQ = Symbol('parent-request')
+
+  function revoke(calls: TxCall[]) {
+    return hook({
+      req: { payload: capturing(calls), transactionID: REQ } as never,
+      doc: { id: 5, status: 'revoked', applicant: 42, resource: 200 },
+      previousDoc: { id: 5, status: 'approved', applicant: 42, resource: 200 },
+      operation: 'update',
+    })
+  }
+
+  it('deletes the api-keys on the caller transaction, not a fresh one', async () => {
+    const calls: TxCall[] = []
+    await revoke(calls)
+
+    const del = calls.find((c) => c.collection === 'api-keys')!
+    expect(del.req).toBeDefined()
+    expect((del.req as { transactionID: symbol }).transactionID).toBe(REQ)
+  })
+
+  it('creates the notification on the caller transaction too', async () => {
+    const calls: TxCall[] = []
+    await revoke(calls)
+
+    const note = calls.find((c) => c.collection === 'notifications')!
+    expect(note.req).toBeDefined()
+    expect((note.req as { transactionID: symbol }).transactionID).toBe(REQ)
+  })
+
+  it('threads the transaction through approvals as well', async () => {
+    const calls: TxCall[] = []
+    await hook({
+      req: { payload: capturing(calls), transactionID: REQ } as never,
+      doc: { id: 5, status: 'approved', applicant: 42, resource: 200 },
+      previousDoc: { id: 5, status: 'pending', applicant: 42, resource: 200 },
+      operation: 'update',
+    })
+
+    const note = calls.find((c) => c.collection === 'notifications')!
+    expect((note.req as { transactionID: symbol }).transactionID).toBe(REQ)
+  })
+
+  it('fails the revoke when only SOME of the matched keys could be deleted', async () => {
+    // The partial case is the dangerous one: without a shared transaction the
+    // successfully-deleted keys would stay gone after the row rolled back.
+    const calls: TxCall[] = []
+    const payload = {
+      findByID: async () => ({ id: 200, name: 'Verse Search API' }),
+      create: async (args: TxCall) => {
+        calls.push(args)
+        return { id: 900 }
+      },
+      delete: async () => ({
+        docs: [{ id: 1 }],
+        errors: [{ id: 2, message: 'delete failed' }],
+      }),
+    }
+
+    await expect(
+      hook({
+        req: { payload, transactionID: REQ } as never,
+        doc: { id: 5, status: 'revoked', applicant: 42, resource: 200 },
+        previousDoc: { id: 5, status: 'approved', applicant: 42, resource: 200 },
+        operation: 'update',
+      }),
+    ).rejects.toThrow('Could not revoke access')
+
+    expect(calls.filter((c) => c.collection === 'notifications')).toHaveLength(0)
+  })
+})
