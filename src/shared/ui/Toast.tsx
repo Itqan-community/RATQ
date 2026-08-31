@@ -7,6 +7,7 @@ import {
   useContext,
   ReactNode,
 } from "react";
+import { useLanguage } from "@/shared/ui/i18n";
 
 type ToastType = "success" | "error" | "info";
 
@@ -64,6 +65,8 @@ export function ToastContainer({
   toasts: ToastData[];
   removeToast: (id: number) => void;
 }) {
+  const { direction } = useLanguage();
+
   const styles: Record<ToastType, string> = {
     success: "bg-green-50 border-green-200 text-green-800",
     error: "bg-red-50 border-red-200 text-red-800",
@@ -71,7 +74,10 @@ export function ToastContainer({
   };
 
   return (
-    <div className="fixed bottom-4 left-4 z-50 flex flex-col gap-2" dir="ltr">
+    <div
+      className={`fixed bottom-4 ${direction === "rtl" ? "right-4" : "left-4"} z-50 flex flex-col gap-2`}
+      dir={direction}
+    >
       {toasts.map((t) => (
         <div
           key={t.id}
