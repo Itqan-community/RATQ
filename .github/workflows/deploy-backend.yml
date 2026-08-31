@@ -33,6 +33,10 @@ jobs:
   deploy:
     needs: test
     if: github.event_name == 'push'
+    concurrency:
+      group: deploy-backend
+      cancel-in-progress: false
+      queue: max
     runs-on: ubuntu-latest
     steps:
       - name: Deploy to droplet
