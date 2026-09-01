@@ -108,6 +108,7 @@ export interface AccessRequest {
   id: number;
   applicant_name: string;
   applicant_display_name: string;
+  resource_owner_id: number;
   resource_slug: string;
   resource_name: string;
   status: RequestStatus;
