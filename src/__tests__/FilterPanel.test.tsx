@@ -25,6 +25,27 @@ describe('FilterPanel', () => {
     mockSearchParams = new URLSearchParams();
   });
 
+  it('renders all 16 type filter buttons with translated labels (including CMS types)', () => {
+    renderWithProvider(<FilterPanel />);
+    expect(screen.getByRole('button', { name: 'Library' })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Recitation' })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Mushaf' })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Tajweed' })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Translation' })).toBeInTheDocument();
+    // 16 type buttons + license buttons
+    expect(
+      screen.getAllByRole('button', {
+        name: /Library|SDK|Dataset|API|Tafsir|Audio|PDF|JSON|Recitation|Mushaf|Program|Linguistic|Translation|Font|Search|Tajweed/,
+      }),
+    ).toHaveLength(16);
+  });
+
+  it('pushes a CMS type filter (e.g. recitation) onto the URL', () => {
+    renderWithProvider(<FilterPanel />);
+    fireEvent.click(screen.getByRole('button', { name: 'Recitation' }));
+    expect(mockPush).toHaveBeenCalledWith('/resources?type=recitation', { scroll: false });
+  });
+
   it('pushes a type filter onto the URL when a type is selected', () => {
     renderWithProvider(<FilterPanel />);
 
