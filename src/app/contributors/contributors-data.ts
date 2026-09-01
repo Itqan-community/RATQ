@@ -192,4 +192,14 @@ export const contributors: Contributor[] = [
     issueUrl: 'https://github.com/Itqan-community/RATQ/issues/233',
     prUrl: 'https://github.com/Itqan-community/RATQ/pull/253',
   },
+  {
+    name: 'farhaghallab3',
+    githubUsername: 'farhaghallab3',
+    githubUrl: 'https://github.com/farhaghallab3',
+    avatarUrl: 'https://github.com/farhaghallab3.png',
+    contribution:
+      'Fixed toast notifications always rendering left-aligned with LTR text regardless of the active language, even in Arabic mode - now reads the real direction from useLanguage() and switches both positioning and the dir attribute accordingly, with tests covering both locales.',
+    issueUrl: 'https://github.com/Itqan-community/RATQ/issues/276',
+    prUrl: 'https://github.com/Itqan-community/RATQ/pull/277',
+  },
 ];
