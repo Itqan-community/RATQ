@@ -24,6 +24,7 @@ function grant(overrides: Partial<AccessRequest> = {}): AccessRequest {
     id: 1,
     applicant_name: 'sara',
     applicant_display_name: 'Sara Ahmed',
+    resource_owner_id: 1,
     resource_slug: 'payload-verse-search',
     resource_name: 'Verse Search API',
     status: 'approved',
