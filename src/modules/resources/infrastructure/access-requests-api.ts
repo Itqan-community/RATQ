@@ -19,7 +19,7 @@ interface PayloadAccessRequestDoc {
   applicant:
     | number
     | { id: number; display_name?: string | null; email: string };
-  resource: number | { id: number; slug: string; name: string };
+  resource: number | { id: number; slug: string; name: string; owner: number };
 }
 
 function toAccessRequest(doc: PayloadAccessRequestDoc): AccessRequest {
@@ -33,10 +33,13 @@ function toAccessRequest(doc: PayloadAccessRequestDoc): AccessRequest {
       : String(doc.resource);
   const resourceName =
     typeof doc.resource === "object" ? doc.resource.name : "";
+    const resourceOwnerId =
+    typeof doc.resource === "object" ? doc.resource.owner : -1;
   return {
     id: doc.id,
     applicant_name: applicantName,
     applicant_display_name: applicantName,
+    resource_owner_id: resourceOwnerId,
     resource_slug: resourceSlug,
     resource_name: resourceName,
     status: doc.status,
