@@ -5,6 +5,7 @@ import { useLanguage } from '@/shared/ui/i18n';
 import { canApproveOrDeny } from '@/modules/developer/domain/services/access-request-status';
 import type { AccessRequest } from '@/types/resource';
 import { useUpdateAccessRequest } from '@/hooks/useUpdateAccessRequest';
+import { useAuth } from '@/hooks/useAuth';
 
 interface RequestCardProps { request: AccessRequest; }
 
@@ -40,6 +41,7 @@ export function RequestCardSkeleton() {
 
 export function RequestCard({ request }: RequestCardProps) {
   const { t, locale } = useLanguage();
+  const { user } = useAuth();
   const copy = t.dashboard.requests;
   const statusStyles: Record<AccessRequest['status'], { bg: string; text: string; label: string }> = {
     pending: { bg: 'bg-[#fff7e6]', text: 'text-[#9a5a00]', label: copy.pending },
@@ -100,7 +102,8 @@ export function RequestCard({ request }: RequestCardProps) {
           <p className="mt-4 rounded-lg bg-[#fafafa] p-4 text-sm leading-7 text-[#59636d]">{request.message}</p>
           {request.publisher_notes && <p className="mt-3 text-sm italic leading-6 text-[#8b949e]">Notes: {request.publisher_notes}</p>}
         </div>
-        {canApproveOrDeny(request) && (
+        {canApproveOrDeny(request) &&
+        request.resource_owner_id === user?.id && (
           <div className="flex shrink-0 gap-2">
             <button
               type="button"
