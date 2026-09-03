@@ -30,6 +30,7 @@ function corsHeaders(origin: string | null): Record<string, string> {
     headers['Access-Control-Allow-Origin'] = origin
     headers['Access-Control-Allow-Methods'] = 'POST, OPTIONS'
     headers['Access-Control-Allow-Headers'] = 'Content-Type'
+    headers['Access-Control-Allow-Credentials'] = 'true'
   }
   return headers
 }
@@ -104,5 +105,30 @@ export async function POST(request: Request) {
     tokenExpiration,
   })
 
-  return NextResponse.json({ token }, { headers })
+  const response = NextResponse.json(
+    {
+      message: 'Authenticated',
+      user: {
+        id: user.id,
+        email: user.email,
+        display_name: user.display_name,
+        role: user.role,
+      },
+      exp: Math.floor(expiresAt.getTime() / 1000),
+    },
+    { headers },
+  )
+
+  response.cookies.set('payload-token',token,{
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      path: '/',
+      maxAge: tokenExpiration,
+      expires: expiresAt,
+      domain: process.env.NODE_ENV === 'production' ? '.itqan.dev' : undefined,
+    })
+
+  return response;
+
 }

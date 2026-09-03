@@ -16,11 +16,7 @@ import { resetPassword as resetPasswordUseCase } from '@/modules/auth/applicatio
 import { verifyEmail as verifyEmailUseCase } from '@/modules/auth/application/use-cases/verify-email';
 import { completeOAuth } from '@/modules/auth/application/use-cases/complete-oauth';
 import { logout as logoutUseCase } from '@/modules/auth/application/use-cases/logout';
-import { AuthToken } from '@/modules/auth/domain/auth-token';
 import {
-  getAccessToken,
-  setAuthTokens,
-  getStoredUser,
   setStoredUser,
 } from '@/shared/infrastructure/token-storage';
 import {
@@ -28,18 +24,28 @@ import {
   subscribeToSessionExpiry,
 } from '@/shared/infrastructure/session-expiry';
 import type { User } from '@/types/resource';
+import {
+  fetchUserDetails,
+  logout as logoutRequest,
+} from '@/modules/auth/infrastructure/payload-auth-repository';
 
 // Discards a stale session up front instead of letting an expired token fail
 // silently on the first authenticated API call (issue #165).
-function getUserFromStorage(): User | null {
-  const token = getAccessToken();
-  if (!token) return null;
-  if (AuthToken.from(token).isExpired()) {
-    logoutUseCase();
-    return null;
-  }
-  return getStoredUser();
-}
+// function getUserFromStorage(): User | null {
+//   const token = getAccessToken();
+//   if (!token) return null;
+//   if (AuthToken.from(token).isExpired()) {
+//     logoutUseCase();
+//     return null;
+//   }
+//   const user = getStoredUser();
+//   if(!user) {
+
+//   }
+
+//   return getStoredUser();
+// }
+
 
 type AuthContextType = {
   user: User | null;
@@ -77,16 +83,26 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     []
   );
 
-  const logout = useCallback(() => {
+  const logout = useCallback(async () => {
+    try {
+      await logoutRequest();
+    } catch {
+      /* best-effort: clear local state even if the server call fails */
+    }
     logoutUseCase();
     setUser(null);
   }, []);
 
   useEffect(() => {
-    /* eslint-disable react-hooks/set-state-in-effect -- Restore browser-only auth state after hydration so the server and first client render match. */
-    setUser(getUserFromStorage());
-    setLoading(false);
-    /* eslint-enable react-hooks/set-state-in-effect */
+    const restoreUser = async () => {
+      /* eslint-disable react-hooks/set-state-in-effect -- Restore browser-only auth state after hydration so the server and first client render match. */
+      // setUser(getUserFromStorage());
+      setUser(await getUserData());
+      setLoading(false);
+      /* eslint-enable react-hooks/set-state-in-effect */
+    };
+
+    void restoreUser();
   }, []);
 
   useEffect(
@@ -104,7 +120,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setError(null);
     try {
       const data = await loginUseCase(email, password);
-      setAuthTokens(data.access, data.refresh);
+      // setAuthTokens(data.access, data.refresh);
       setStoredUser(data.user);
       setUser(data.user);
       return { success: true };
@@ -117,14 +133,31 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   }, []);
 
+  
+  const getUserData = useCallback(async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const userData = await fetchUserDetails();
+      return userData
+    } catch(err: unknown) {
+      /* Logout case */
+      logoutUseCase();
+      return null;
+    } finally {
+      setLoading(false)
+    }
+
+  }, []);
+
   const loginWithCode = useCallback(async (code: string) => {
     setLoading(true);
     setError(null);
     try {
-      const data = await completeOAuth(code);
-      setAuthTokens(data.access, data.refresh);
-      setStoredUser(data.user);
-      setUser(data.user);
+      const user = await completeOAuth(code);
+      // setAuthTokens(data.access, data.refresh);
+      setStoredUser(user);
+      setUser(user);
       return { success: true };
     } catch (err: unknown) {
       const message = err instanceof Error ? err.message : 'Login failed';
@@ -141,7 +174,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setError(null);
       try {
         const data = await registerUseCase(email, password, display_name, role);
-        setAuthTokens(data.access, data.refresh);
+        /* Login with same credentials (To retrieve cookie) */
+        await loginUseCase(email, password);
+        // setAuthTokens(data.access, data.refresh);
         setStoredUser(data.user);
         setUser(data.user);
         return { success: true };
