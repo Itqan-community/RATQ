@@ -27,6 +27,7 @@ const mockAccessRequestBase: Omit<AccessRequest, 'status'> = {
   id: 1,
   applicant_name: 'test_user',
   applicant_display_name: 'Test User',
+  resource_owner_id: 1,
   resource_slug: 'quran-api',
   resource_name: 'Quran API',
   message: 'I want access to the API.',
