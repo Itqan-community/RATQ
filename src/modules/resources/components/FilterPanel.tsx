@@ -2,14 +2,7 @@
 
 import { useRouter, usePathname, useSearchParams } from 'next/navigation';
 import { useLanguage } from '@/shared/ui/i18n';
-import type { ResourceType } from '@/types/resource';
-
-// Static list matching the ResourceType union in src/types/resource.ts.
-// Kept here (not imported) since ResourceType is a type, not a runtime value.
-const RESOURCE_TYPES: ResourceType[] = [
-  'library', 'sdk', 'dataset', 'api', 'tafsir', 'audio', 'pdf', 'json',
-  'recitation', 'mushaf', 'program', 'linguistic', 'translation', 'font', 'search', 'tajweed',
-];
+import { RESOURCE_TYPES } from '@/shared/constants/resource-types';
 
 // Free-form strings from resource data (not an enum in src/types/resource.ts).
 // Sourced from observed values across mock-data.ts / cms.ts / payload.ts.

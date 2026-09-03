@@ -3,25 +3,21 @@
 import { useState } from 'react';
 import { useDeveloperResources } from '@/hooks/useDeveloperResources';
 import { ResourceTable } from '@/modules/developer/components/ResourceTable';
-import type { Resource } from '@/types/resource';
-
-const typeFilters: { value: string; label: string }[] = [
-  { value: '', label: 'الكل' },
-  { value: 'library', label: 'مكتبة' },
-  { value: 'sdk', label: 'SDK' },
-  { value: 'api', label: 'API' },
-  { value: 'dataset', label: 'بيانات' },
-  { value: 'tafsir', label: 'تفسير' },
-  { value: 'audio', label: 'صوت' },
-  { value: 'pdf', label: 'PDF' },
-  { value: 'json', label: 'JSON' },
-];
+import type { Resource, ResourceType } from '@/types/resource';
+import { RESOURCE_TYPES } from '@/shared/constants/resource-types';
+import { useLanguage } from '@/shared/ui/i18n';
 
 export default function DeveloperResourcesPage() {
+  const { t } = useLanguage();
   const { data: resources, isLoading } = useDeveloperResources();
   const [statusFilter, setStatusFilter] = useState<string>('');
-  const [typeFilter, setTypeFilter] = useState<string>('');
+  const [typeFilter, setTypeFilter] = useState<ResourceType | ''>('');
   const [searchQuery, setSearchQuery] = useState('');
+
+  const typeFilters: { value: ResourceType | ''; label: string }[] = [
+    { value: '', label: t.catalog.filters.allTypes },
+    ...RESOURCE_TYPES.map((value) => ({ value, label: t.catalog.types[value] })),
+  ];
 
   if (isLoading) {
     return (
@@ -73,11 +69,11 @@ export default function DeveloperResourcesPage() {
         </select>
         <select
           value={typeFilter}
-          onChange={(e) => setTypeFilter(e.target.value)}
+          onChange={(e) => setTypeFilter(e.target.value as ResourceType | '')}
           className="input-field text-sm py-2 px-3"
         >
           {typeFilters.map((f) => (
-            <option key={f.value} value={f.value}>{f.label}</option>
+            <option key={f.value || 'all'} value={f.value}>{f.label}</option>
           ))}
         </select>
       </div>

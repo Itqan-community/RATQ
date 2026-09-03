@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useTranslations } from '@/shared/ui/i18n';
 import { Slug } from '@/modules/resources/domain/value-objects/slug';
 import type { ResourceType } from '@/types/resource';
+import { RESOURCE_TYPES } from '@/shared/constants/resource-types';
 import { uploadMedia } from '@/modules/developer/infrastructure/resources-api';
 
 interface ResourceFormProps {
@@ -70,13 +71,10 @@ export function ResourceForm({ onSubmit, initial, submitLabel }: ResourceFormPro
     onSubmit({ name, type, short_description: shortDescription, image, description, license, github_url, documentation_url });
   };
 
-  const resourceTypes: { value: ResourceType; label: string }[] = [
-    { value: 'library', label: t.catalog.types.library },
-    { value: 'sdk', label: t.catalog.types.sdk },
-    { value: 'dataset', label: t.catalog.types.dataset },
-    { value: 'api', label: t.catalog.types.api },
-    { value: 'tafsir', label: t.catalog.types.tafsir },
-  ];
+  const resourceTypes: { value: ResourceType; label: string }[] = RESOURCE_TYPES.map((value) => ({
+    value,
+    label: t.catalog.types[value],
+  }));
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4 text-start">
