@@ -1,6 +1,5 @@
-import { clearAuth, clearStoredUser } from '@/shared/infrastructure/token-storage';
+import {  clearStoredUser } from '@/shared/infrastructure/token-storage';
 
 export function logout() {
-  clearAuth();
   clearStoredUser();
 }

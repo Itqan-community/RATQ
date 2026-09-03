@@ -1,6 +1,5 @@
 import type { Resource, ResourceType } from '@/types/resource';
 import { payloadErrorMessage } from '@/shared/infrastructure/payload-error';
-import { getAccessToken } from '@/shared/infrastructure/token-storage';
 import { toResource, type PayloadResourceDoc } from '@/shared/infrastructure/payload-resource-mapper';
 import { PAYLOAD_API_BASE } from '@/shared/infrastructure/payload-config';
 
@@ -10,7 +9,7 @@ import { PAYLOAD_API_BASE } from '@/shared/infrastructure/payload-config';
 export async function fetchDeveloperResources(userId: number): Promise<Resource[]> {
   const res = await fetch(
     `${PAYLOAD_API_BASE}/resources?where[owner][equals]=${userId}&limit=100`,
-    { headers: { Authorization: `JWT ${getAccessToken()}` } }
+    { credentials: 'include' }
   );
   if (!res.ok) throw new Error('Failed to fetch developer resources');
   const data: { docs: PayloadResourceDoc[] } = await res.json();
@@ -26,7 +25,7 @@ export async function uploadMedia(file: File): Promise<{ id: number; url: string
   formData.append('file', file);
   const res = await fetch(`${PAYLOAD_API_BASE}/media`, {
     method: 'POST',
-    headers: { Authorization: `JWT ${getAccessToken()}` },
+    credentials: 'include',
     body: formData,
   });
   if (!res.ok) {
@@ -52,9 +51,9 @@ export async function createDeveloperResource(data: CreateResourceInput): Promis
   const res = await fetch(`${PAYLOAD_API_BASE}/resources`, {
     method: 'POST',
     headers: {
-      'Content-Type': 'application/json',
-      Authorization: `JWT ${getAccessToken()}`,
+      'Content-Type': 'application/json'
     },
+    credentials: 'include',
     body: JSON.stringify(data),
   });
   if (!res.ok) {
@@ -75,9 +74,9 @@ export async function updateDeveloperResource(id: number, data: UpdateResourceIn
   const res = await fetch(`${PAYLOAD_API_BASE}/resources/${id - 200_000}`, {
     method: 'PATCH',
     headers: {
-      'Content-Type': 'application/json',
-      Authorization: `JWT ${getAccessToken()}`,
+      'Content-Type': 'application/json'
     },
+    credentials: 'include',
     body: JSON.stringify(data),
   });
   if (!res.ok) {
@@ -92,7 +91,7 @@ export async function updateDeveloperResource(id: number, data: UpdateResourceIn
 export async function deleteDeveloperResource(id: number) {
   const res = await fetch(`${PAYLOAD_API_BASE}/resources/${id - 200_000}`, {
     method: 'DELETE',
-    headers: { Authorization: `JWT ${getAccessToken()}` },
+    credentials: 'include',
   });
   if (!res.ok) {
     throw new Error(

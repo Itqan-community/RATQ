@@ -26,7 +26,6 @@ const payloadDoc = {
 describe('fetchResourceAccessGrants', () => {
   beforeEach(() => {
     localStorage.clear();
-    localStorage.setItem('ratq_access_token', 'test-token');
   });
 
   afterEach(() => {
@@ -56,14 +55,15 @@ describe('fetchResourceAccessGrants', () => {
     expect(url).toContain(`${PAYLOAD_API_BASE}/access-requests?`);
   });
 
-  it('sends the stored token so Payload can scope the read to this publisher', async () => {
+  it('relies on the HttpOnly session cookie so Payload can scope the read to this publisher', async () => {
     const fetchMock = vi.fn().mockResolvedValue(okJson({ docs: [] }));
     vi.stubGlobal('fetch', fetchMock);
 
     await fetchResourceAccessGrants(200_001);
 
     const init = fetchMock.mock.calls[0][1] as RequestInit;
-    expect((init.headers as Record<string, string>).Authorization).toBe('JWT test-token');
+    expect(init.credentials).toBe('include');
+    expect(init.headers).toBeUndefined();
   });
 
   it('maps Payload docs onto the shape the UI renders', async () => {
@@ -114,7 +114,6 @@ describe('fetchResourceAccessGrants', () => {
 describe('fetchRevokeAccessRequest', () => {
   beforeEach(() => {
     localStorage.clear();
-    localStorage.setItem('ratq_access_token', 'test-token');
   });
 
   afterEach(() => {

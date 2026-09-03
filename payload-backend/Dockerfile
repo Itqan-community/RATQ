@@ -15,5 +15,5 @@ FROM base AS runner
 ENV NODE_ENV=production
 COPY --from=deps /app/node_modules ./node_modules
 COPY --from=build /app ./
-EXPOSE 3000
-CMD node_modules/.bin/payload migrate && node_modules/.bin/next start -p 3000
+EXPOSE 4000
+CMD node_modules/.bin/payload migrate && node_modules/.bin/next start -p 4000
