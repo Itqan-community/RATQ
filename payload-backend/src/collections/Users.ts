@@ -12,10 +12,30 @@ export const Users: CollectionConfig = {
   admin: {
     useAsTitle: 'email',
   },
-  auth: true,
+  auth: {
+    // 1. Session lifespan (in seconds) - e.g., 7 days
+    tokenExpiration: 7 * 24 * 60 * 60,
+
+    // 2. Brute-force protection
+    maxLoginAttempts: 5,
+    lockTime: 10 * 60 * 1000, // Lock for 10 minutes after 5 failures
+
+    // 3. Cookie specifications
+    cookies: {
+      // Ensures the cookie is only transmitted over HTTPS in production
+      secure: process.env.NODE_ENV === 'production',
+      // 'Lax' protects against CSRF while allowing top-level link navigations
+      sameSite: 'Lax',
+
+      // // Shares the cookie across all *.itqan.dev subdomains in production
+      // // Omitted in development so localhost cookies are not scoped improperly
+      domain: process.env.NODE_ENV === 'production' ? '.itqan.dev' : undefined,
+    },
+  },
   hooks: {
     beforeValidate: [passwordValidation],
   },
+
   access: {
     // Public self-registration (no default access config would otherwise
     // require an authenticated user even to create an account).

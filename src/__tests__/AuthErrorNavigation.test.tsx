@@ -28,6 +28,14 @@ vi.mock('@/modules/auth/application/use-cases/login', () => ({
   login: (...args: unknown[]) => mockLoginUseCase(...args),
 }));
 
+const mockFetchUserDetails = vi.fn();
+const mockLogoutRequest = vi.fn();
+
+vi.mock('@/modules/auth/infrastructure/payload-auth-repository', () => ({
+  fetchUserDetails: (...args: unknown[]) => mockFetchUserDetails(...args),
+  logout: (...args: unknown[]) => mockLogoutRequest(...args),
+}));
+
 const mockPush = vi.fn();
 const mockReplace = vi.fn();
 const mockRefresh = vi.fn();
@@ -209,6 +217,9 @@ function fillLoginForm(
 describe('auth error navigation', () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    mockFetchUserDetails.mockReset();
+    mockLogoutRequest.mockReset();
+    mockFetchUserDetails.mockRejectedValue(new Error('Failed to load user'));
     localStorage.clear();
   });
 
@@ -262,6 +273,10 @@ describe('auth error navigation', () => {
         <AuthFlowHarness initialPage="login" />
       </AuthProvider>
     );
+
+    await waitFor(() => {
+      expect(screen.getByLabelText('Email')).toBeInTheDocument();
+    });
 
     fillLoginForm();
 
@@ -339,6 +354,10 @@ describe('auth error navigation', () => {
         <AuthFlowHarness initialPage="login" />
       </AuthProvider>
     );
+
+    await waitFor(() => {
+      expect(screen.getByLabelText('Email')).toBeInTheDocument();
+    });
 
     fillLoginForm();
 

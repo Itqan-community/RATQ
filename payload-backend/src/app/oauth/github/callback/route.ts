@@ -76,6 +76,7 @@ export async function GET(request: Request) {
   const emails: GitHubEmail[] = await emailsRes.json()
   // No fallback to githubUser.email here - only a *verified* email is safe to
   // auto-link an existing RATQ account to (see pickVerifiedEmail).
+
   const email = pickVerifiedEmail(emails)
 
   if (!email) {
@@ -88,6 +89,7 @@ export async function GET(request: Request) {
     where: { email: { equals: email } },
     limit: 1,
   })
+
 
   const user = existing.docs[0]
     ? existing.docs[0]
