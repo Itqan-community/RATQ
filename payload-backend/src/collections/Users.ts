@@ -29,7 +29,7 @@ export const Users: CollectionConfig = {
 
       // // Shares the cookie across all *.itqan.dev subdomains in production
       // // Omitted in development so localhost cookies are not scoped improperly
-      domain: process.env.NODE_ENV === 'production' ? '.itqan.dev' : undefined,
+      domain: process.env.NODE_ENV === 'production' ? '.ratq.itqan.dev'  : undefined,
     },
   },
   hooks: {
