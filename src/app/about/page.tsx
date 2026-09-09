@@ -20,7 +20,7 @@ const decorativeStars = [
 ] as const;
 
 function BrandText({ text }: { text: string }) {
-  return text.split('RATQ').map((part, index, parts) => (
+  return text.split(/RATQ|رَتْق/).map((part, index, parts) => (
     <Fragment key={`${part}-${index}`}>
       {part}
       {index < parts.length - 1 && (
