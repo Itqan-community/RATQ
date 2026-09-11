@@ -78,7 +78,7 @@ export async function GET(request: Request) {
   // auto-link an existing RATQ account to (see pickVerifiedEmail).
 
   const email = pickVerifiedEmail(emails)
-
+  
   if (!email) {
     return loginFailure(frontendUrl, 'oauth_no_verified_email')
   }

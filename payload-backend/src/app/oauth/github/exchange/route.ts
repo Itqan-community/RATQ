@@ -126,7 +126,7 @@ export async function POST(request: Request) {
       path: '/',
       maxAge: tokenExpiration,
       expires: expiresAt,
-      domain: process.env.NODE_ENV === 'production' ? '.itqan.dev' : undefined,
+      domain: process.env.NODE_ENV === 'production' ? '.ratq.itqan.dev' : undefined,
     })
 
   return response;
