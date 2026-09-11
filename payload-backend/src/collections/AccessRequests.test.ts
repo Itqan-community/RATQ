@@ -717,3 +717,39 @@ describe('AccessRequests afterChange hook (transaction propagation)', () => {
     expect(calls.filter((c) => c.collection === 'notifications')).toHaveLength(0)
   })
 })
+
+describe('AccessRequests immutable field access', () => {
+  const getFieldUpdateAccess = (fieldName: string) => {
+    const field = AccessRequests.fields.find((f) => 'name' in f && f.name === fieldName) as {
+      access?: { update?: (args: { req: { user: unknown } }) => unknown }
+    }
+    return field?.access?.update
+  }
+
+  it.each(['resource', 'applicant', 'message'])(
+    'prohibits update on %s for a resource publisher',
+    (fieldName) => {
+      const update = getFieldUpdateAccess(fieldName)
+      expect(update).toBeDefined()
+      expect(update!({ req: { user: { id: 5, role: 'publisher' } } })).toBe(false)
+    },
+  )
+
+  it.each(['resource', 'applicant', 'message'])(
+    'prohibits update on %s for an admin',
+    (fieldName) => {
+      const update = getFieldUpdateAccess(fieldName)
+      expect(update).toBeDefined()
+      expect(update!({ req: { user: { id: 99, role: 'admin' } } })).toBe(false)
+    },
+  )
+
+  it.each(['resource', 'applicant', 'message'])(
+    'prohibits update on %s for an unauthenticated user',
+    (fieldName) => {
+      const update = getFieldUpdateAccess(fieldName)
+      expect(update).toBeDefined()
+      expect(update!({ req: { user: null } })).toBe(false)
+    },
+  )
+})
