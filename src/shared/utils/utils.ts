@@ -27,3 +27,12 @@ export function validatePassword(password: string): boolean {
   }
   return true;
 }
+
+export function normalizeArabic(text: string): string {
+  return text
+    .replace(/[\u0610-\u061A\u064B-\u065F]/g, '')  // strip tashkeel/diacritics
+    .replace(/[أإآٱ]/g, 'ا')                        // alef variants → bare alef
+    .replace(/ى/g, 'ي')                              // alef maqsura → yaa
+    .replace(/ة/g, 'ه')                              // taa marbuta → haa
+    .toLowerCase();
+}
