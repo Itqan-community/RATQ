@@ -131,6 +131,9 @@ export const Comments: CollectionConfig = {
       relationTo: 'resources',
       required: true,
       index: true,
+      access: {
+        update: () => false,
+      },
     },
   ],
 }

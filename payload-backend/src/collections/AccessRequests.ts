@@ -208,6 +208,9 @@ export const AccessRequests: CollectionConfig = {
       relationTo: 'resources',
       required: true,
       index: true,
+      access: {
+        update: () => false,
+      },
     },
     {
       name: 'applicant',
@@ -215,6 +218,9 @@ export const AccessRequests: CollectionConfig = {
       relationTo: 'users',
       required: true,
       index: true,
+      access: {
+        update: () => false,
+      },
     },
     {
       name: 'status',
@@ -228,6 +234,9 @@ export const AccessRequests: CollectionConfig = {
       type: 'textarea',
       required: true,
       maxLength: 2000,
+      access: {
+        update: () => false,
+      },
     },
     {
       name: 'publisher_notes',

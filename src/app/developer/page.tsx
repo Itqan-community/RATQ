@@ -27,7 +27,7 @@ export default function DeveloperOverviewPage() {
         <h2 className="font-heading text-2xl font-bold text-[var(--text-primary)] mb-2">
           مرحباً بعودتك، {user?.display_name}
         </h2>
-        <p className="text-[var(--text-secondary)]">إليك ملخص نشاطك على منصة RATQ</p>
+        <p className="text-[var(--text-secondary)]">إليك ملخص نشاطك على منصة رَتْق</p>
       </div>
 
       {/* Stats cards */}

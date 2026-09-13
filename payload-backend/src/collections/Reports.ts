@@ -1,3 +1,4 @@
+import { APIError } from 'payload'
 import type { Access, CollectionConfig, Where } from 'payload'
 
 const isAdmin: Access = ({ req }) => req.user?.role === 'admin'
@@ -34,6 +35,35 @@ export const Reports: CollectionConfig = {
     useAsTitle: 'reason',
   },
   hooks: {
+    beforeValidate: [
+      async ({ req, data, operation }) => {
+        if (operation !== 'create' || !data || !req.user) return data
+        const resourceId =
+          typeof data.resource === 'object' && data.resource !== null
+            ? (data.resource as { id: unknown }).id
+            : data.resource
+
+        if (!resourceId) return data
+
+        const { totalDocs } = await req.payload.count({
+          collection: 'reports',
+          where: {
+            and: [
+              { resource: { equals: resourceId } },
+              { reporter: { equals: req.user.id } },
+              { status: { equals: 'open' } },
+            ],
+          },
+        })
+        if (totalDocs > 0) {
+          throw new APIError(
+            'You already have an open report for this resource.',
+            400,
+          )
+        }
+        return data
+      },
+    ],
     beforeChange: [
       ({ req, data, operation }) => {
         if (operation === 'create' && req.user) {
