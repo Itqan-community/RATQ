@@ -1,6 +1,7 @@
 import type { PaginatedResponse, Resource, ResourceListParams } from '@/types/resource';
 import type { ResourceSource } from './types';
 import { toResource, type PayloadResourceDoc } from '@/shared/infrastructure/payload-resource-mapper';
+import { normalizeArabic } from '@/shared/utils/utils';
 
 export type { PayloadResourceDoc };
 
@@ -52,8 +53,8 @@ async function list(params: ResourceListParams): Promise<PaginatedResponse<Resou
     if (params.itqan_badge === 'true' && !r.itqan_badge) return false;
     if (params.itqan_badge === 'false' && r.itqan_badge) return false;
     if (params.search) {
-      const q = params.search.toLowerCase();
-      if (!r.name.toLowerCase().includes(q) && !r.description.toLowerCase().includes(q)) return false;
+      const q = normalizeArabic(params.search);
+      if (!normalizeArabic(r.name).includes(q) && !normalizeArabic(r.description).includes(q)) return false;
     }
     return true;
   });
