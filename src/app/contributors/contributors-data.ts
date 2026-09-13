@@ -212,4 +212,14 @@ export const contributors: Contributor[] = [
     issueUrl: 'https://github.com/Itqan-community/RATQ/issues/287',
     prUrl: 'https://github.com/Itqan-community/RATQ/pull/288',
   },
+  {
+    name: 'MahmoudSheemy127',
+    githubUsername: 'MahmoudSheemy127',
+    githubUrl: 'https://github.com/MahmoudSheemy127',
+    avatarUrl: 'https://github.com/MahmoudSheemy127.png',
+    contribution:
+      "Migrated authentication from a JWT stored in localStorage to a secure HttpOnly cookie, closing an XSS exposure - reconfigured Payload's auth settings, updated the GitHub OAuth flow to match, and moved every frontend request over to session-based auth.",
+    issueUrl: 'https://github.com/Itqan-community/RATQ/issues/269',
+    prUrl: 'https://github.com/Itqan-community/RATQ/pull/281',
+  },
 ];
