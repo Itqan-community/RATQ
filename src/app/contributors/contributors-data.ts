@@ -202,4 +202,14 @@ export const contributors: Contributor[] = [
     issueUrl: 'https://github.com/Itqan-community/RATQ/issues/276',
     prUrl: 'https://github.com/Itqan-community/RATQ/pull/277',
   },
+  {
+    name: 'Abdalluh28',
+    githubUsername: 'Abdalluh28',
+    githubUrl: 'https://github.com/Abdalluh28',
+    avatarUrl: 'https://github.com/Abdalluh28.png',
+    contribution:
+      "Added a normalizeArabic() utility so Arabic letter-form variants (alef forms, alef maqsura/yaa, tashkeel) match as equivalent in search, applied consistently across all three resource sources with thorough unit and integration test coverage.",
+    issueUrl: 'https://github.com/Itqan-community/RATQ/issues/287',
+    prUrl: 'https://github.com/Itqan-community/RATQ/pull/288',
+  },
 ];
