@@ -1,6 +1,6 @@
 import type { APIKey } from '@/types/resource';
 import { payloadErrorMessage } from '@/shared/infrastructure/payload-error';
-import { getAccessToken, getCurrentUserId } from '@/shared/infrastructure/token-storage';
+import {  getCurrentUserId } from '@/shared/infrastructure/token-storage';
 import { PAYLOAD_API_BASE } from '@/shared/infrastructure/payload-config';
 
 // resourceId is the aggregator-facing id, undone the same way comments-api.ts
@@ -40,7 +40,7 @@ export async function fetchDeveloperAPIKeys(): Promise<APIKey[]> {
 
   const res = await fetch(
     `${PAYLOAD_API_BASE}/api-keys?where[owner][equals]=${userId}&depth=1&limit=100`,
-    { headers: { Authorization: `JWT ${getAccessToken()}` } }
+    { credentials: 'include'}
   );
   if (!res.ok) throw new Error('Failed to fetch API keys');
   const data: { docs: PayloadApiKeyDoc[] } = await res.json();
@@ -51,9 +51,9 @@ export async function createDeveloperApiKey(resourceId: number, scope: string, n
   const res = await fetch(`${PAYLOAD_API_BASE}/api-keys`, {
     method: 'POST',
     headers: {
-      'Content-Type': 'application/json',
-      Authorization: `JWT ${getAccessToken()}`,
+      'Content-Type': 'application/json'
     },
+    credentials: 'include',
     body: JSON.stringify({ name: name || `key-${resourceId}`, resource: resourceId - 200_000, scope }),
   });
   if (!res.ok) {
@@ -68,7 +68,7 @@ export async function createDeveloperApiKey(resourceId: number, scope: string, n
 export async function revokeDeveloperApiKey(keyId: number) {
   const res = await fetch(`${PAYLOAD_API_BASE}/api-keys/${keyId}`, {
     method: 'DELETE',
-    headers: { Authorization: `JWT ${getAccessToken()}` },
+    credentials: 'include',
   });
   if (!res.ok) {
     throw new Error(

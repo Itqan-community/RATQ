@@ -34,6 +34,7 @@ export async function login(email: string, password: string) {
   const res = await fetch(`${PAYLOAD_API_BASE}/users/login`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
+    credentials: 'include',
     body: JSON.stringify({ email, password }),
   });
   if (!res.ok) throw new Error(await payloadErrorMessage(res, 'Login failed'));
@@ -49,21 +50,30 @@ export async function exchangeOAuthCode(code: string) {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ code }),
+    credentials: 'include',
   });
   if (!res.ok) throw new Error(await payloadErrorMessage(res, 'Login failed'));
-  const data: { token: string } = await res.json();
-  return data.token;
 }
 
-export async function loginWithToken(token: string) {
+export async function logout() {
+  const res = await fetch(`${PAYLOAD_API_BASE}/users/logout`, {
+    method: 'POST',
+    credentials: 'include',
+  });
+  if (!res.ok) throw new Error(await payloadErrorMessage(res, 'Logout failed'));
+}
+
+/* Fetching user details */
+export async function fetchUserDetails() {
   const res = await fetch(`${PAYLOAD_API_BASE}/users/me`, {
-    headers: { Authorization: `JWT ${token}` },
+    credentials: 'include',
   });
   if (!res.ok) throw new Error('Failed to load user');
   const data: { user: PayloadUserDoc | null } = await res.json();
   if (!data.user) throw new Error('Failed to load user');
-  return { access: token, refresh: token, user: toUser(data.user) };
+  return toUser(data.user);
 }
+
 
 export async function register(
   email: string,

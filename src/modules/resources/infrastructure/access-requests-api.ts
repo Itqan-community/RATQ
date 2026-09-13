@@ -1,8 +1,5 @@
 import type { AccessRequest, RequestStatus, updatableStatus } from "@/types/resource";
-import {
-  getAccessToken,
-  getCurrentUserId,
-} from "@/shared/infrastructure/token-storage";
+import { getCurrentUserId } from "@/shared/infrastructure/token-storage";
 import { payloadErrorMessage } from "@/shared/infrastructure/payload-error";
 import { PAYLOAD_API_BASE } from "@/shared/infrastructure/payload-config";
 
@@ -57,9 +54,9 @@ export async function submitAccessRequest(
   const res = await fetch(`${PAYLOAD_API_BASE}/access-requests`, {
     method: "POST",
     headers: {
-      "Content-Type": "application/json",
-      Authorization: `JWT ${getAccessToken()}`,
+      "Content-Type": "application/json"
     },
+    credentials: "include",
     body: JSON.stringify({ resource: resourceId - 200_000, message }),
   });
   if (!res.ok) {
@@ -79,7 +76,7 @@ export async function fetchMyRequests(): Promise<AccessRequest[]> {
 
   const res = await fetch(
     `${PAYLOAD_API_BASE}/access-requests?where[applicant][equals]=${userId}&sort=-createdAt&depth=1&limit=100`,
-    { headers: { Authorization: `JWT ${getAccessToken()}` } },
+    { credentials: 'include' }
   );
   if (!res.ok) throw new Error("Failed to fetch requests");
   const data: { docs: PayloadAccessRequestDoc[] } = await res.json();
@@ -108,7 +105,7 @@ export async function fetchResourceAccessGrants(
 ): Promise<{ grants: AccessRequest[]; total: number }> {
   const res = await fetch(
     `${PAYLOAD_API_BASE}/access-requests?where[resource][equals]=${resourceId - 200_000}&where[status][equals]=approved&sort=-updatedAt&depth=1&limit=${RESOURCE_ACCESS_PAGE_SIZE}`,
-    { headers: { Authorization: `JWT ${getAccessToken()}` } },
+    { credentials: 'include' },
   );
   if (!res.ok) throw new Error("Failed to fetch resource access");
   const data: { docs: PayloadAccessRequestDoc[]; totalDocs: number } = await res.json();
@@ -127,9 +124,9 @@ async function patchAccessRequestStatus(
   const res = await fetch(`${PAYLOAD_API_BASE}/access-requests/${id}`, {
     method: "PATCH",
     headers: {
-      "Content-Type": "application/json",
-      Authorization: `JWT ${getAccessToken()}`,
+      "Content-Type": "application/json"
     },
+    credentials: "include",
     body: JSON.stringify({ status }),
   });
   if (!res.ok) {

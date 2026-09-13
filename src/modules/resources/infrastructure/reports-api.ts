@@ -1,5 +1,5 @@
 import type { Report, ReportReason, ReportStatus } from '@/types/resource';
-import { getAccessToken, getCurrentUserId } from '@/shared/infrastructure/token-storage';
+import { getCurrentUserId } from '@/shared/infrastructure/token-storage';
 import { payloadErrorMessage } from '@/shared/infrastructure/payload-error';
 import { PAYLOAD_API_BASE } from '@/shared/infrastructure/payload-config';
 
@@ -35,9 +35,9 @@ export async function submitReport(resourceId: number, reason: ReportReason, det
   const res = await fetch(`${PAYLOAD_API_BASE}/reports`, {
     method: 'POST',
     headers: {
-      'Content-Type': 'application/json',
-      Authorization: `JWT ${getAccessToken()}`,
+      'Content-Type': 'application/json'
     },
+    credentials: 'include',
     body: JSON.stringify({ resource: resourceId - 200_000, reason, details }),
   });
   if (!res.ok) {
@@ -55,7 +55,7 @@ export async function fetchMyReports(): Promise<Report[]> {
 
   const res = await fetch(
     `${PAYLOAD_API_BASE}/reports?where[reporter][equals]=${userId}&sort=-createdAt&depth=1&limit=100`,
-    { headers: { Authorization: `JWT ${getAccessToken()}` } }
+    { credentials: 'include' }
   );
   if (!res.ok) throw new Error('Failed to fetch reports');
   const data: { docs: PayloadReportDoc[] } = await res.json();

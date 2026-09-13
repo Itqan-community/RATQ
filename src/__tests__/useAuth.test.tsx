@@ -26,6 +26,14 @@ vi.mock('@/modules/auth/application/use-cases/verify-email', () => ({
   verifyEmail: (...args: unknown[]) => mockVerifyEmail(...args),
 }));
 
+const mockFetchUserDetails = vi.fn();
+const mockLogoutRequest = vi.fn();
+
+vi.mock('@/modules/auth/infrastructure/payload-auth-repository', () => ({
+  fetchUserDetails: (...args: unknown[]) => mockFetchUserDetails(...args),
+  logout: (...args: unknown[]) => mockLogoutRequest(...args),
+}));
+
 const mockReplace = vi.fn();
 
 vi.mock('next/navigation', () => ({
@@ -40,16 +48,7 @@ const storedUser: User = {
   created_at: '2026-08-14T00:00:00.000Z',
 };
 
-function jwtWithExp(exp: number): string {
-  const header = btoa(JSON.stringify({ alg: 'HS256' }));
-  const payload = btoa(JSON.stringify({ exp }));
-  return `${header}.${payload}.signature`;
-}
-
-function storeSession(exp: number) {
-  const token = jwtWithExp(exp);
-  localStorage.setItem('ratq_access_token', token);
-  localStorage.setItem('ratq_refresh_token', token);
+function storeStoredUser() {
   localStorage.setItem('ratq_user', JSON.stringify(storedUser));
 }
 
@@ -70,10 +69,14 @@ describe('AuthProvider hydration', () => {
   beforeEach(() => {
     localStorage.clear();
     vi.restoreAllMocks();
+    mockFetchUserDetails.mockReset();
+    mockLogoutRequest.mockReset();
     mockReplace.mockClear();
   });
 
-  it('hydrates without a mismatch and restores a stored session', async () => {
+  it('hydrates without a mismatch and restores the cookie session', async () => {
+    mockFetchUserDetails.mockResolvedValue(storedUser);
+
     const serverHtml = renderToString(
       <AuthProvider>
         <AuthStateProbe />
@@ -84,7 +87,6 @@ describe('AuthProvider hydration', () => {
     const container = document.createElement('div');
     container.innerHTML = serverHtml;
     document.body.appendChild(container);
-    storeSession(Math.floor(Date.now() / 1000) + 3600);
 
     const consoleError = vi.spyOn(console, 'error').mockImplementation(() => {});
     const root = await act(() =>
@@ -107,8 +109,8 @@ describe('AuthProvider hydration', () => {
     container.remove();
   });
 
-  it('restores a valid stored user after mounting', async () => {
-    storeSession(Math.floor(Date.now() / 1000) + 3600);
+  it('restores the cookie-session user after mounting', async () => {
+    mockFetchUserDetails.mockResolvedValue(storedUser);
 
     render(
       <AuthProvider>
@@ -121,7 +123,9 @@ describe('AuthProvider hydration', () => {
     });
   });
 
-  it('resolves to anonymous when no session is stored', async () => {
+  it('resolves to anonymous when there is no cookie session', async () => {
+    mockFetchUserDetails.mockRejectedValue(new Error('Failed to load user'));
+
     render(
       <AuthProvider>
         <AuthStateProbe />
@@ -133,8 +137,9 @@ describe('AuthProvider hydration', () => {
     });
   });
 
-  it('clears an expired stored session', async () => {
-    storeSession(Math.floor(Date.now() / 1000) - 60);
+  it('clears the stored user when the cookie session is gone', async () => {
+    storeStoredUser();
+    mockFetchUserDetails.mockRejectedValue(new Error('Failed to load user'));
 
     render(
       <AuthProvider>
@@ -145,13 +150,11 @@ describe('AuthProvider hydration', () => {
     await waitFor(() => {
       expect(screen.getByTestId('auth-state')).toHaveTextContent('anonymous');
     });
-    expect(localStorage.getItem('ratq_access_token')).toBeNull();
-    expect(localStorage.getItem('ratq_refresh_token')).toBeNull();
     expect(localStorage.getItem('ratq_user')).toBeNull();
   });
 
-  it('clears an active stale session and directs the user to log in again', async () => {
-    storeSession(Math.floor(Date.now() / 1000) + 3600);
+  it('clears the session and directs the user to log in again', async () => {
+    mockFetchUserDetails.mockResolvedValue(storedUser);
 
     render(
       <AuthProvider>
@@ -168,8 +171,7 @@ describe('AuthProvider hydration', () => {
     await waitFor(() => {
       expect(screen.getByTestId('auth-state')).toHaveTextContent('anonymous');
     });
-    expect(localStorage.getItem('ratq_access_token')).toBeNull();
-    expect(localStorage.getItem('ratq_refresh_token')).toBeNull();
+    expect(mockLogoutRequest).toHaveBeenCalled();
     expect(localStorage.getItem('ratq_user')).toBeNull();
     expect(screen.getByTestId('auth-error')).toHaveTextContent(SESSION_EXPIRED_REASON);
     expect(mockReplace).toHaveBeenCalledWith('/login');
@@ -200,6 +202,9 @@ describe('AuthProvider password reset', () => {
   beforeEach(() => {
     localStorage.clear();
     vi.clearAllMocks();
+    mockFetchUserDetails.mockReset();
+    mockLogoutRequest.mockReset();
+    mockFetchUserDetails.mockRejectedValue(new Error('Failed to load user'));
   });
 
   it('forgotPassword succeeds without toggling session loading', async () => {
