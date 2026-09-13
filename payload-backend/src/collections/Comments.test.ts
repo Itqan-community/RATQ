@@ -329,3 +329,27 @@ describe('Comments afterChange hook', () => {
     expect(createCalls).toHaveLength(0)
   })
 })
+
+describe('Comments resource field access', () => {
+  const resourceField = Comments.fields.find(
+    (f) => 'name' in f && f.name === 'resource',
+  ) as { access?: { update?: (args: { req: { user: unknown } }) => unknown } }
+
+  it('prohibits update on the resource field for a regular user', () => {
+    const update = resourceField.access?.update
+    expect(update).toBeDefined()
+    expect(update!({ req: { user: { id: 'user-1', role: 'developer' } } })).toBe(false)
+  })
+
+  it('prohibits update on the resource field for an admin', () => {
+    const update = resourceField.access?.update
+    expect(update).toBeDefined()
+    expect(update!({ req: { user: { id: 'admin-1', role: 'admin' } } })).toBe(false)
+  })
+
+  it('prohibits update on the resource field for an unauthenticated user', () => {
+    const update = resourceField.access?.update
+    expect(update).toBeDefined()
+    expect(update!({ req: { user: null } })).toBe(false)
+  })
+})

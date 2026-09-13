@@ -193,3 +193,96 @@ describe('Reports afterChange hook', () => {
     expect(createCalls).toHaveLength(0)
   })
 })
+
+describe('Reports beforeValidate hook (duplicate-report guard)', () => {
+  const hook = Reports.hooks!.beforeValidate![0] as (args: {
+    req: { user: ReqUser; payload: { count: (args: unknown) => Promise<{ totalDocs: number }> } }
+    data: Record<string, unknown>
+    operation: string
+  }) => Promise<unknown>
+
+  it('queries by resource, reporter, and open status, and rejects when an open report already exists', async () => {
+    let capturedArgs: { collection?: string; where?: { and?: Array<Record<string, unknown>> } } = {}
+    const payload = {
+      count: async (args: unknown) => {
+        capturedArgs = args as typeof capturedArgs
+        return { totalDocs: 1 }
+      },
+    }
+    await expect(
+      hook({
+        req: { user: { id: 1, role: 'developer' }, payload },
+        data: { resource: 10, reason: 'spam' },
+        operation: 'create',
+      }),
+    ).rejects.toThrow('You already have an open report for this resource.')
+
+    expect(capturedArgs.collection).toBe('reports')
+    expect(capturedArgs.where).toEqual({
+      and: [
+        { resource: { equals: 10 } },
+        { reporter: { equals: 1 } },
+        { status: { equals: 'open' } },
+      ],
+    })
+  })
+
+  it('allows a new report when no open report exists for the resource', async () => {
+    const payload = { count: async () => ({ totalDocs: 0 }) }
+    const data = { resource: 10, reason: 'spam' }
+    const result = await hook({
+      req: { user: { id: 1, role: 'developer' }, payload },
+      data,
+      operation: 'create',
+    })
+    expect(result).toBe(data)
+  })
+
+  it('allows a new report if previous reports on the same resource are resolved or closed', async () => {
+    let capturedWhere: { and?: Array<Record<string, unknown>> } = {}
+    const payload = {
+      count: async (args: unknown) => {
+        capturedWhere = (args as { where: typeof capturedWhere }).where
+        return { totalDocs: 0 }
+      },
+    }
+    await hook({
+      req: { user: { id: 1, role: 'developer' }, payload },
+      data: { resource: 10, reason: 'outdated' },
+      operation: 'create',
+    })
+    expect(capturedWhere.and).toContainEqual({ status: { equals: 'open' } })
+    expect(capturedWhere.and).toContainEqual({ reporter: { equals: 1 } })
+  })
+
+  it('handles populated resource objects gracefully ({ id: 10 })', async () => {
+    let capturedWhere: { and?: Array<Record<string, unknown>> } = {}
+    const payload = {
+      count: async (args: unknown) => {
+        capturedWhere = (args as { where: typeof capturedWhere }).where
+        return { totalDocs: 0 }
+      },
+    }
+    await hook({
+      req: { user: { id: 1, role: 'developer' }, payload },
+      data: { resource: { id: 10, name: 'Sample Resource' }, reason: 'spam' },
+      operation: 'create',
+    })
+    expect(capturedWhere.and).toContainEqual({ resource: { equals: 10 } })
+  })
+
+  it('bypasses check on update operations', async () => {
+    const payload = {
+      count: async () => {
+        throw new Error('count should not be called')
+      },
+    }
+    const data = { status: 'resolved' }
+    const result = await hook({
+      req: { user: { id: 99, role: 'admin' }, payload },
+      data,
+      operation: 'update',
+    })
+    expect(result).toBe(data)
+  })
+})
