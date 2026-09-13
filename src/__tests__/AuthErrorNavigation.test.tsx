@@ -7,6 +7,7 @@ import {
   waitFor,
 } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { useAuth } from '@/hooks/useAuth';
 
 import { AuthProvider } from '@/hooks/useAuth';
 import ForgotPasswordPage from '@/app/forgot-password/page';
@@ -228,11 +229,44 @@ describe('auth error navigation', () => {
       new Error('Email already exists')
     );
 
+    // This test needs a variant of AuthFlowHarness that also surfaces
+    // AuthProvider.error. RegisterPage's guard (loading || user) unmounts
+    // RegisterForm while AuthProvider.register is in flight, which destroys
+    // RegisterForm's local formError state before it can be rendered.
+    // The error that survives the remount is AuthProvider.error (context-level).
+    // AuthContextErrorDisplay surfaces it so the assertion below can find it.
+    function AuthContextErrorDisplay() {
+      const { error } = useAuth();
+      return error ? <p data-testid="auth-context-error">{error}</p> : null;
+    }
+
+    function HarnessWithErrorDisplay() {
+      const [page, setPage] = useState<'register' | 'login'>('register');
+      return (
+        <>
+          <nav>
+            <button type="button" onClick={() => setPage('login')}>Go to login</button>
+          </nav>
+          <AuthContextErrorDisplay />
+          {page === 'register' && <RegisterPage />}
+          {page === 'login' && <LoginPage />}
+        </>
+      );
+    }
+
     render(
       <AuthProvider>
-        <AuthFlowHarness initialPage="register" />
+        <HarnessWithErrorDisplay />
       </AuthProvider>
     );
+
+    // AuthProvider starts with loading:true while it checks for an existing
+    // session. RegisterPage's guard shows a spinner until that resolves.
+    // fetchUserDetails is mocked to reject in beforeEach, so the check
+    // settles quickly — but we still need to wait for it before filling the form.
+    await waitFor(() => {
+      expect(screen.getByLabelText('Display name')).toBeInTheDocument();
+    });
 
     fillRegisterForm('validpass');
 
@@ -242,13 +276,13 @@ describe('auth error navigation', () => {
       })
     );
 
-
+    // Wait for AuthProvider.error to be set. RegisterForm's local state is
+    // gone (form unmounted during loading), but context-level error persists.
     await waitFor(() => {
       expect(
-        screen.getByText('Email already exists')
-      ).toBeInTheDocument();
+        screen.getByTestId('auth-context-error')
+      ).toHaveTextContent('Email already exists');
     });
-
 
     fireEvent.click(
       screen.getByRole('button', {
@@ -256,8 +290,10 @@ describe('auth error navigation', () => {
       })
     );
 
+    // LoginPage mounts and calls clearError() — the stale registration error
+    // must be cleared from context before the user sees the login form.
     expect(
-      screen.queryByText('Email already exists')
+      screen.queryByTestId('auth-context-error')
     ).not.toBeInTheDocument();
   });
 
