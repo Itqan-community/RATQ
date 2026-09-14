@@ -6,6 +6,7 @@ import { RegisterForm } from '@/modules/auth/components/RegisterForm';
 import { useLanguage } from '@/shared/ui/i18n';
 import { useAuth } from '@/hooks/useAuth';
 import { useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 
 function CheckIcon() {
   return <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="m5 12 4 4L19 6" /></svg>;
@@ -13,14 +14,29 @@ function CheckIcon() {
 
 export default function RegisterPage() {
   const { t, direction } = useLanguage();
-  const { clearError } = useAuth();
-  const copy = t.auth;
-  const benefits = [copy.registerBenefit1, copy.registerBenefit2, copy.registerBenefit3];
+  const { user, loading, clearError } = useAuth();
+  const router = useRouter();
+  
+  useEffect(() => {
+    if (!loading && user) {
+      router.push('/dashboard');
+    }
+  }, [user, loading, router]);
 
   useEffect(() => {
     clearError();
   }, [clearError]);
-
+  
+  if (loading || user) {
+    return (
+      <div className="flex min-h-[60vh] items-center justify-center">
+        <div className="h-8 w-8 animate-spin rounded-full border-4 border-solid border-[#171717] border-t-transparent" />
+      </div>
+    );
+  }
+  
+  const copy = t.auth;
+  const benefits = [copy.registerBenefit1, copy.registerBenefit2, copy.registerBenefit3];
   return (
     <main className="page-enter bg-white pb-20 pt-32 text-black" dir={direction}>
       <section className="mx-auto max-w-[1180px] px-4 sm:px-6 lg:px-8">
