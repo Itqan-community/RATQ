@@ -7,7 +7,7 @@ import { GithubRepoPreview } from '@/modules/resources/components/GithubRepoPrev
 import { GithubStatsCard } from '@/modules/resources/components/GithubStatsCard';
 import { TrustedBySection } from '@/modules/resources/components/TrustedBySection';
 import { useLanguage } from '@/shared/ui/i18n';
-import type { GithubRepoPreview as GithubRepoPreviewData, Resource, ResourceType } from '@/types/resource';
+import type { GithubRepoPreview as GithubRepoPreviewData, Resource } from '@/types/resource';
 import arabicDescriptions from '@/shared/ui/i18n/resource-descriptions.ar.json';
 import { ResourcePreview } from '@/modules/resources/components/ResourcePreview';
 import { RelatedResources } from '@/modules/resources/components/RelatedResources';
@@ -15,36 +15,16 @@ import { CommentSection } from '@/modules/resources/components/CommentSection';
 import { usePreview } from '@/hooks/usePreview';
 import { AccessRequestButton } from '@/modules/resources/components/AccessRequestButton';
 import { ReportButton } from '@/modules/resources/components/ReportButton';
+import { RESOURCE_TYPE_COLORS } from '@/shared/constants/resource-type-colors';
+import { TypeIcon } from '@/shared/constants/resource-type-icon';
 
 interface ResourceDetailClientProps {
   resource: Resource;
   repoPreview: GithubRepoPreviewData | null;
 }
 
-const typeColors: Record<ResourceType, string> = {
-  library: 'bg-[#e7ef3e]', sdk: 'bg-[#28b8f4]', dataset: 'bg-[#20df78]', api: 'bg-[#ff9c44]',
-  tafsir: 'bg-[#17e4ad]', audio: 'bg-[#f4a7cd]', pdf: 'bg-[#ff8a80]', json: 'bg-[#8de5a1]',
-  recitation: 'bg-[#a78bfa]', mushaf: 'bg-[#6ee7b7]', program: 'bg-[#67e8f9]', linguistic: 'bg-[#bef264]',
-  translation: 'bg-[#7dd3fc]', font: 'bg-[#f0abfc]', search: 'bg-[#fde047]', tajweed: 'bg-[#fda4af]',
-};
-
-const genericTypeIcon = <><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M4 9h16M9 4v16"/></>;
-
-function TypeIcon({ type }: { type: ResourceType }) {
-  const paths: Record<ResourceType, ReactNode> = {
-    library: <><path d="M6 4h11a2 2 0 0 1 2 2v13H8a2 2 0 0 1-2-2V4Z"/><path d="M8 19a2 2 0 0 1 0-4h11M9 8h6"/></>,
-    sdk: <><path d="m8 9-4 3 4 3M16 9l4 3-4 3M14 5l-4 14"/></>,
-    dataset: <><rect x="4" y="5" width="16" height="14" rx="1"/><path d="M4 10h16M10 5v14"/></>,
-    api: <><path d="m8 9-4 3 4 3M16 9l4 3-4 3M14 5l-4 14"/></>,
-    tafsir: <><path d="M12 3v18M5 7l14 10M19 7 5 17"/></>,
-    audio: <><path d="M9 18V5l10-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="16" cy="16" r="3"/></>,
-    pdf: <><path d="M6 3h9l3 3v15H6z"/><path d="M14 3v4h4M9 13h6"/></>,
-    json: <><path d="M9 4c-2 0-3 1-3 3v2c0 2-1 3-3 3 2 0 3 1 3 3v2c0 2 1 3 3 3M15 4c2 0 3 1 3 3v2c0 2 1 3 3 3-2 0-3 1-3 3v2c0 2-1 3-3 3"/></>,
-    recitation: genericTypeIcon, mushaf: genericTypeIcon, program: genericTypeIcon, linguistic: genericTypeIcon,
-    translation: genericTypeIcon, font: genericTypeIcon, search: genericTypeIcon, tajweed: genericTypeIcon,
-  };
-  return <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round">{paths[type]}</svg>;
-}
+// Alias kept for readability within this file.
+const typeColors = RESOURCE_TYPE_COLORS;
 
 function InfoItem({ icon, label, value }: { icon: ReactNode; label: string; value: string }) {
   return <div className="flex items-center gap-3 text-sm"><span className="text-[#777]">{icon}</span><span><strong>{label}:</strong> {value}</span></div>;

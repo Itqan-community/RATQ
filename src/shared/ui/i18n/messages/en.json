@@ -129,14 +129,25 @@
     },
     "filters": {
       "title": "Filters",
+      "subtitle": "Filter by the following",
+      "resourceType": "Resource type",
       "type": "Type",
       "allTypes": "All Types",
+      "licenses": "Licenses",
       "license": "License",
       "allLicenses": "All",
       "itqanBadge": "Itqan Verified",
       "verifiedOnly": "Verified only",
       "notVerified": "Not verified",
-      "clearAll": "Clear all"
+      "clearAll": "Clear all",
+      "licenseLabels": {
+        "cc0":          "Fully open",
+        "cc_by":        "With attribution",
+        "cc_by_sa":     "Attribution + share-alike",
+        "cc_by_nd":     "Attribution, no derivatives",
+        "cc_by_nc_sa":  "Attribution, non-commercial + share-alike",
+        "cc_by_nc_nd":  "Attribution, non-commercial, no derivatives"
+      }
     },
     "types": {
       "library": "Library",

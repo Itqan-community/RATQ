@@ -19,7 +19,10 @@ export function CatalogContent() {
   const page = parsePageParam(searchParams.get('page'));
   const type = searchParams.get('type') ?? undefined;
   const sort = (searchParams.get('sort') as SortOption) ?? undefined;
-  const license = searchParams.get('license') ?? undefined;
+  // license is a multi-value param (?license=a&license=b); pass as string[] or
+  // undefined so the aggregator uses OR logic across selected values.
+  const licenseParams = searchParams.getAll('license');
+  const license = licenseParams.length > 0 ? licenseParams : undefined;
   const search = searchParams.get('search') ?? '';
   const { data, error, isLoading } = useResources({ page, page_size: PAGE_SIZE, type, license, search, sort });
   const resources = data?.results ?? [];

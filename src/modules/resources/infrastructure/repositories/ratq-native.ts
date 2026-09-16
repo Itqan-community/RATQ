@@ -2,6 +2,7 @@ import type { PaginatedResponse, Resource, ResourceListParams } from '@/types/re
 import { mockResources } from '../mock-data';
 import type { ResourceSource } from './types';
 import { normalizeArabic } from '@/shared/utils/utils';
+import { matchesLicenseFilter } from '@/shared/utils/license-filter';
 
 const resources: Resource[] = mockResources.map((r) => ({ ...r, source: 'ratq', source_url: null }));
 
@@ -10,7 +11,7 @@ const resources: Resource[] = mockResources.map((r) => ({ ...r, source: 'ratq', 
 async function list(params: ResourceListParams): Promise<PaginatedResponse<Resource>> {
   const filtered = resources.filter((r) => {
     if (params.type && r.type !== params.type) return false;
-    if (params.license && r.license !== params.license) return false;
+    if (!matchesLicenseFilter(r.license, params.license)) return false;
     if (params.itqan_badge === 'true' && !r.itqan_badge) return false;
     if (params.itqan_badge === 'false' && r.itqan_badge) return false;
     if (params.search) {
