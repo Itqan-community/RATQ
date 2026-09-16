@@ -80,15 +80,24 @@ export const TRACKED_LICENSE_VALUES = new Set(
  *
  * Rules:
  *  - No selection active  → always include (return true).
+ *  - `selected` contains only unrecognised values (e.g. empty string, typo,
+ *    stale value from a hand-edited URL) → treat as no filter, always include.
  *  - Resource license is NOT tracked (e.g. MIT, Apache, custom, CC-BY-NC-4.0)
  *    → always include (unfilterable, never hidden).
- *  - Resource license IS tracked → include only if it appears in `selected`.
+ *  - Resource license IS tracked → include only if it appears in the validated
+ *    (recognised-only) subset of `selected`.
  */
 export function matchesLicenseFilter(
     resourceLicense: string,
     selected: string[] | undefined,
 ): boolean {
-    if (!selected || selected.length === 0) return true;
+    // Strip any values that aren't real tracked licenses (empty strings, typos,
+    // stale/removed values from bookmarked or hand-edited URLs, etc.).
+    const validSelected = selected?.filter((v) =>
+        TRACKED_LICENSE_VALUES.has(v),
+    );
+
+    if (!validSelected || validSelected.length === 0) return true;
     if (!TRACKED_LICENSE_VALUES.has(resourceLicense)) return true;
-    return selected.includes(resourceLicense);
+    return validSelected.includes(resourceLicense);
 }

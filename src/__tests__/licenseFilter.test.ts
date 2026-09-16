@@ -135,4 +135,57 @@ describe("matchesLicenseFilter", () => {
         const expected = new Set(CC_LICENSE_ROWS.flatMap((row) => row.values));
         expect(TRACKED_LICENSE_VALUES).toEqual(expected);
     });
+
+    // ── Unrecognised values ──────────────────────────────────────────────────
+    // A hand-edited, bookmarked, or shared URL can contain `?license=` (empty
+    // string) or `?license=not-a-real-license` (typo / stale value).  Neither
+    // should hide any resources — they must be treated as "no filter active".
+
+    it("returns true for a tracked license when selected contains only an empty string", () => {
+        expect(matchesLicenseFilter("CC-BY-4.0", [""])).toBe(true);
+    });
+
+    it("returns true for a tracked license when selected contains only an unrecognised value", () => {
+        expect(matchesLicenseFilter("CC-BY-4.0", ["not-a-real-license"])).toBe(
+            true,
+        );
+    });
+
+    it("returns true for an untracked license when selected contains only invalid values", () => {
+        expect(matchesLicenseFilter("MIT", ["", "not-a-real-license"])).toBe(
+            true,
+        );
+    });
+
+    it("filters on the valid value and drops an empty-string entry", () => {
+        // resource matching the valid value → included
+        expect(matchesLicenseFilter("CC-BY-4.0", ["CC-BY-4.0", ""])).toBe(
+            true,
+        );
+        // resource NOT matching the valid value → excluded
+        expect(matchesLicenseFilter("CC-BY-SA-4.0", ["CC-BY-4.0", ""])).toBe(
+            false,
+        );
+    });
+
+    it("filters on the valid value and drops an unrecognised-string entry", () => {
+        expect(
+            matchesLicenseFilter("CC-BY-4.0", [
+                "CC-BY-4.0",
+                "not-a-real-license",
+            ]),
+        ).toBe(true);
+        expect(
+            matchesLicenseFilter("CC-BY-SA-4.0", [
+                "CC-BY-4.0",
+                "not-a-real-license",
+            ]),
+        ).toBe(false);
+    });
+
+    it("untracked license still passes through when selected mixes valid and invalid values", () => {
+        expect(
+            matchesLicenseFilter("MIT", ["CC-BY-4.0", "not-a-real-license"]),
+        ).toBe(true);
+    });
 });
