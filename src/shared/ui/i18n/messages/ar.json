@@ -129,14 +129,25 @@
     },
     "filters": {
       "title": "الفلاتر",
+      "subtitle": "الفلترة حسب المعلومات التالية",
+      "resourceType": "نوع المورد",
       "type": "النوع",
       "allTypes": "كل الأنواع",
+      "licenses": "التراخيص",
       "license": "الرخصة",
       "allLicenses": "الكل",
       "itqanBadge": "موثق بإتقان",
       "verifiedOnly": "الموثق فقط",
       "notVerified": "غير موثق",
-      "clearAll": "مسح الكل"
+      "clearAll": "مسح الكل",
+      "licenseLabels": {
+        "cc0":          "مفتوح بالكامل",
+        "cc_by":        "مع إسناد",
+        "cc_by_sa":     "إسناد ومشاركة بالمثل",
+        "cc_by_nd":     "إسناد بلا اشتقاق",
+        "cc_by_nc_sa":  "إسناد غير تجاري ومشاركة بالمثل",
+        "cc_by_nc_nd":  "إسناد غير تجاري بلا اشتقاق"
+      }
     },
     "types": {
       "library": "مكتبة",

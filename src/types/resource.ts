@@ -175,7 +175,9 @@ export type SortOption = 'relevance' | 'downloads' | 'newest' | 'oldest' | 'name
 
 export interface ResourceListParams {
   type?: string;
-  license?: string;
+  /** One or more license values to filter by (OR logic). Replaces the former
+   *  single-string param — URL shape: ?license=a&license=b */
+  license?: string[];
   itqan_badge?: string;
   search?: string;
   sort?: SortOption;
