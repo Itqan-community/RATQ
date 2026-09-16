@@ -1,26 +1,29 @@
 import type { Resource, PaginatedResponse, ResourceListParams } from '@/types/resource';
 
-// Resource listing/detail is always backed by the multi-source aggregator
-// (repositories/) - live sources (CMS, Payload) by default, independent of
-// DATA_MODE (which still governs auth/requests/api-keys/reports). RATQ's own
-// mock resources are an opt-in source, see registry.ts.
-//
-// This client code calls RATQ's own /api/resources route rather than the
-// aggregator directly, so source fetches (e.g. CMS) run server-side where
-// Next's fetch cache/revalidate applies, instead of once per visitor's browser.
-export async function fetchResources(
-  params: ResourceListParams = {}
-): Promise<PaginatedResponse<Resource>> {
+/**
+ * Builds the query string for a resource list request.
+ * Used as both the SWR cache key and the actual fetch URL so they are
+ * always in sync — no object-serialization ambiguity with array values.
+ */
+export function buildResourcesUrl(params: ResourceListParams = {}): string {
   const qs = new URLSearchParams();
   if (params.type) qs.set('type', params.type);
-  if (params.license) qs.set('license', params.license);
+  // license is multi-value: append each as a separate ?license= param
+  if (params.license && params.license.length > 0) {
+    params.license.forEach((l) => qs.append('license', l));
+  }
   if (params.itqan_badge !== undefined) qs.set('itqan_badge', params.itqan_badge);
   if (params.search) qs.set('search', params.search);
   if (params.sort) qs.set('sort', params.sort);
   if (params.page) qs.set('page', String(params.page));
   if (params.page_size) qs.set('page_size', String(params.page_size));
+  return `/api/resources?${qs}`;
+}
 
-  const res = await fetch(`/api/resources?${qs}`);
+export async function fetchResources(
+  params: ResourceListParams = {}
+): Promise<PaginatedResponse<Resource>> {
+  const res = await fetch(buildResourcesUrl(params));
   if (!res.ok) throw new Error('Failed to fetch resources');
   return res.json();
 }

@@ -2,6 +2,7 @@ import type { PaginatedResponse, Resource, ResourceListParams } from '@/types/re
 import type { ResourceSource } from './types';
 import { toResource, type PayloadResourceDoc } from '@/shared/infrastructure/payload-resource-mapper';
 import { normalizeArabic } from '@/shared/utils/utils';
+import { matchesLicenseFilter } from '@/shared/utils/license-filter';
 
 export type { PayloadResourceDoc };
 
@@ -49,7 +50,7 @@ async function list(params: ResourceListParams): Promise<PaginatedResponse<Resou
 
   const filtered = resources.filter((r) => {
     if (params.type && r.type !== params.type) return false;
-    if (params.license && r.license !== params.license) return false;
+    if (!matchesLicenseFilter(r.license, params.license)) return false;
     if (params.itqan_badge === 'true' && !r.itqan_badge) return false;
     if (params.itqan_badge === 'false' && r.itqan_badge) return false;
     if (params.search) {

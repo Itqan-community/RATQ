@@ -13,7 +13,8 @@ export async function GET(request: NextRequest) {
     const sp = request.nextUrl.searchParams;
     const params: ResourceListParams = {
       type: sp.get('type') || undefined,
-      license: sp.get('license') || undefined,
+      // license is a repeated param: ?license=a&license=b → string[]
+      license: sp.getAll('license').length > 0 ? sp.getAll('license') : undefined,
       itqan_badge: sp.get('itqan_badge') || undefined,
       search: sp.get('search') || undefined,
       sort: (sp.get('sort') as SortOption) || undefined,
