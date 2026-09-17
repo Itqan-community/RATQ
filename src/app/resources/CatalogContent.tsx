@@ -7,7 +7,7 @@ import { ResourceCard } from '@/modules/resources/components/ResourceCard';
 import { FilterPanel } from '@/modules/resources/components/FilterPanel';
 import { Pagination } from '@/shared/ui/Pagination';
 import { useResources } from '@/hooks/useResources';
-import { parsePageParam } from '@/shared/utils/utils';
+import { interpolate, parsePageParam } from '@/shared/utils/utils';
 import SortSelect from '@/modules/resources/components/SortSelect';
 import { SortOption } from '@/types/resource';
 
@@ -27,6 +27,20 @@ export function CatalogContent() {
   const { data, error, isLoading } = useResources({ page, page_size: PAGE_SIZE, type, license, search, sort });
   const resources = data?.results ?? [];
   const router = useRouter();
+
+  const resourcesCount = data?.count || 0
+  const pageResourcesCount = resources.length
+  let countMessage;
+
+  if (isLoading || error) {
+    countMessage = null
+  } else if (!search) {
+    countMessage = interpolate(t.catalog.showing,{count:pageResourcesCount,total:resourcesCount})
+  } else if (resourcesCount < 1) {
+    countMessage = interpolate(t.catalog.showingEmpty,{query:search})
+  } else {
+    countMessage = interpolate(t.catalog.showingSearch,{count:pageResourcesCount,total:resourcesCount,query:search})
+  }  
 
   return (
     <div className="bg-white pb-10 pt-32 text-black sm:pt-36" dir={direction}>
@@ -86,7 +100,10 @@ export function CatalogContent() {
           <FilterPanel />
 
           <div className="min-w-0 flex-1">
-            <SortSelect />
+            <div className="flex items-center gap-8 mb-6">
+              <SortSelect />
+              {countMessage && <p className="font-bold text-sm">{countMessage}</p>}
+            </div>
             {isLoading ? (
               <section className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3" aria-busy="true">
                 {Array.from({ length: 6 }).map((_, index) => (

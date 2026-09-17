@@ -107,6 +107,7 @@
     "subtitle": "Discover Quranic development resources.",
     "showing": "Showing {{count}} of {{total}} resources",
     "showingSearch": "Showing {{count}} of {{total}} resources for \"{{query}}\"",
+    "showingEmpty": "0 results for \"{{query}}\"",
     "empty": {
       "title": "No resources found.",
       "subtitle": "Try adjusting your filters or search query."
