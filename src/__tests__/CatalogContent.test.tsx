@@ -162,3 +162,80 @@ describe("CatalogContent accessibility", () => {
         ).toBeInTheDocument();
     });
 });
+
+describe('CatalogContent result count message', () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+    mockSearchParams = new URLSearchParams();
+  });
+
+  it('does not show the count message while loading', () => {
+    mockUseResources.mockReturnValue({ data: undefined, error: undefined, isLoading: true });
+
+    renderWithProvider(<CatalogContent />);
+
+    expect(screen.queryByText(/Showing/)).not.toBeInTheDocument();
+    expect(screen.queryByText(/results for/)).not.toBeInTheDocument();
+  });
+
+  it('does not show the count message on error', () => {
+    mockUseResources.mockReturnValue({
+      data: undefined,
+      error: new Error('failed'),
+      isLoading: false,
+    });
+
+    renderWithProvider(<CatalogContent />);
+
+    expect(screen.queryByText(/Showing/)).not.toBeInTheDocument();
+    expect(screen.queryByText(/results for/)).not.toBeInTheDocument();
+  });
+
+  it('shows the total count only when there is no search term', () => {
+    mockUseResources.mockReturnValue({
+      data: {
+        count: 47,
+        next: null,
+        previous: null,
+        results: Array.from({ length: 12 }, (_, i) => makeResource(i + 1)),
+      },
+      error: undefined,
+      isLoading: false,
+    });
+
+    renderWithProvider(<CatalogContent />);
+
+    expect(screen.getByText('Showing 12 of 47 resources')).toBeInTheDocument();
+  });
+
+  it('shows the page count, total count and search term when a search matches', () => {
+    mockSearchParams = new URLSearchParams('search=quran');
+    mockUseResources.mockReturnValue({
+      data: {
+        count: 47,
+        next: null,
+        previous: null,
+        results: Array.from({ length: 12 }, (_, i) => makeResource(i + 1)),
+      },
+      error: undefined,
+      isLoading: false,
+    });
+
+    renderWithProvider(<CatalogContent />);
+
+    expect(screen.getByText('Showing 12 of 47 resources for "quran"')).toBeInTheDocument();
+  });
+
+  it('shows a zero results message when a search matches nothing', () => {
+    mockSearchParams = new URLSearchParams('search=zzzz');
+    mockUseResources.mockReturnValue({
+      data: { count: 0, next: null, previous: null, results: [] },
+      error: undefined,
+      isLoading: false,
+    });
+
+    renderWithProvider(<CatalogContent />);
+
+    expect(screen.getByText('0 results for "zzzz"')).toBeInTheDocument();
+  });
+});

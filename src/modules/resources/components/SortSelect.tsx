@@ -28,7 +28,7 @@ export default function SortSelect() {
   }
 
   return (
-    <div className='flex items-center gap-3 mb-6' dir={direction}>
+    <div className='flex items-center gap-3' dir={direction}>
       <label htmlFor='sort' className='text-sm font-black text-[#8b8b8b]'>
         {t.catalog.sort.by}
       </label>

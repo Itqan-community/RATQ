@@ -107,6 +107,7 @@
     "subtitle": "اكتشف موارد التطوير القرآنية.",
     "showing": "عرض {{count}} من {{total}} مورد",
     "showingSearch": "عرض {{count}} من {{total}} مورد لـ \"{{query}}\"",
+    "showingEmpty": "0 نتيجة لـ \"{{query}}\"",
     "empty": {
       "title": "لم يتم العثور على موارد.",
       "subtitle": "حاول تعديل البحث أو الفلاتر."
