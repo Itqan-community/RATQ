@@ -73,7 +73,7 @@ export function ResourceDetailClient({ resource, repoPreview }: ResourceDetailCl
           
             {IsFromPayloadResource && (
               <>
-               {/* // Alias kept for readability within this file. */}
+               {/* Access requests button temporarily hidden */}
 
                 <ReportButton
                   resourceId={resource.id}
