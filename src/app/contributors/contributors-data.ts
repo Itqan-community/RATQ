@@ -222,4 +222,14 @@ export const contributors: Contributor[] = [
     issueUrl: 'https://github.com/Itqan-community/RATQ/issues/269',
     prUrl: 'https://github.com/Itqan-community/RATQ/pull/281',
   },
+  {
+    name: 'Salmaameer',
+    githubUsername: 'Salmaameer',
+    githubUrl: 'https://github.com/Salmaameer',
+    avatarUrl: 'https://github.com/Salmaameer.png',
+    contribution:
+      'Hid the resource access-request button on the resource detail page, while keeping the report button, preview, related resources, and comments working exactly as before.',
+    issueUrl: 'https://github.com/Itqan-community/RATQ/issues/300',
+    prUrl: 'https://github.com/Itqan-community/RATQ/pull/310',
+  },
 ];
