@@ -13,7 +13,6 @@ import { ResourcePreview } from '@/modules/resources/components/ResourcePreview'
 import { RelatedResources } from '@/modules/resources/components/RelatedResources';
 import { CommentSection } from '@/modules/resources/components/CommentSection';
 import { usePreview } from '@/hooks/usePreview';
-import { AccessRequestButton } from '@/modules/resources/components/AccessRequestButton';
 import { ReportButton } from '@/modules/resources/components/ReportButton';
 import { RESOURCE_TYPE_COLORS } from '@/shared/constants/resource-type-colors';
 import { TypeIcon } from '@/shared/constants/resource-type-icon';
@@ -71,14 +70,10 @@ export function ResourceDetailClient({ resource, repoPreview }: ResourceDetailCl
                 <li className="flex items-center justify-between"><span>{t.resource.detail.itqanCertified}</span><strong>{resource.itqan_badge ? t.resource.detail.yes : t.resource.detail.no}</strong></li>
               </ul>
             </section>
-
+          
             {IsFromPayloadResource && (
               <>
-                <AccessRequestButton
-                  resourceId={resource.id}
-                  resourceName={resource.name}
-                  resourceSlug={resource.slug}
-                />
+               {/* Access requests button temporarily hidden */}
 
                 <ReportButton
                   resourceId={resource.id}
