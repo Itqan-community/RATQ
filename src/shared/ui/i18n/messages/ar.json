@@ -78,6 +78,7 @@
   },
   "announcements": {
     "title": "الإعلانات",
+    "newLabel": "جديد:",
     "types": {
       "release": "إصدار جديد",
       "new_resource": "مورد جديد",

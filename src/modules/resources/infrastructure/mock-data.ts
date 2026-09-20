@@ -499,7 +499,7 @@ export const mockAnnouncements: Announcement[] = [
   {
     id: '2',
     type: 'new_resource',
-    title: 'New: Quranic Text Toolkit (QTT) SDK',
+    title: 'Quranic Text Toolkit (QTT) SDK',
     description: 'A comprehensive SDK for Quranic text processing and analysis.',
     resource_id: 'cms-10',
     cta_url: '/resources/cms-10',
@@ -539,7 +539,7 @@ export const mockAnnouncements: Announcement[] = [
   {
     id: '6',
     type: 'new_resource',
-    title: 'New: Tafsir Ibn Kathir Digital Edition',
+    title: 'Tafsir Ibn Kathir Digital Edition',
     description: 'Complete digital edition of Tafsir Ibn Kathir with search and cross-references.',
     resource_id: 'cms-133',
     cta_url: '/resources/cms-133',
