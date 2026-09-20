@@ -10,6 +10,11 @@ const AUTO_ROTATE_MS = 8000;
 
 function resolveHref(slide: Announcement): string {
   if (slide.cta_url) return slide.cta_url;
+
+  if (slide.type === "breaking_change" && slide.resource_id) {
+    return `/resources/${slide.resource_id}`;
+  }
+
   return "/resources";
 }
 

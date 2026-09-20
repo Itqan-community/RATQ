@@ -432,6 +432,27 @@ describe('AnnouncementsCarousel', () => {
     expect(screen.getByRole('link')).toHaveAttribute('href', '/resources/cms-10');
   });
 
+  it('links a breaking_change announcement to its resource when no cta_url exists', () => {
+    mockUseAnnouncements.mockReturnValue({
+      announcements: [
+        {
+          id: '1',
+          type: 'breaking_change',
+          title: 'API v1 Deprecation Notice',
+          description: 'Desc',
+          resource_id: 'cms-10',
+          created_at: new Date().toISOString(),
+          is_active: true,
+        },
+      ],
+      isLoading: false,
+      error: null,
+    });
+
+    renderWithProvider(<AnnouncementsCarousel />);
+    expect(screen.getByRole('link')).toHaveAttribute('href', '/resources/cms-10');
+  });
+
   it('renders Arabic banner strings by default', () => {
     mockUseAnnouncements.mockReturnValue({
       announcements: [
