@@ -78,6 +78,7 @@
   },
   "announcements": {
     "title": "Announcements",
+    "newLabel": "New:",
     "types": {
       "release": "New Release",
       "new_resource": "New Resource",
