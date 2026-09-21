@@ -81,7 +81,11 @@ function ResourceCtaBanners({ resource }: { resource: Resource }) {
               ? interpolate(t.resource.detail.useApiDescription, { endpoint: resource.api_endpoint })
               : undefined
           }
-          buttonLabel={t.resource.detail.useApiButton}
+          // Docs link wins when present; the endpoint itself is the fallback
+          // href. The label follows the destination (CodeRabbit review on #312).
+          buttonLabel={
+            resource.api_docs ? t.resource.detail.useApiButton : t.resource.detail.useApiEndpointButton
+          }
           ariaLabel={t.resource.detail.useApiTitle}
         />
       )}

@@ -145,9 +145,21 @@ export const Resources: CollectionConfig = {
     {
       // The resource's own website (publisher's product page), shown in the
       // visit-site CTA on the frontend - see issue #299. Optional/nullable,
-      // like the sibling URL fields.
+      // like the sibling URL fields. Must be a real http(s) URL when set -
+      // arbitrary text or other schemes (ftp:, javascript:, mailto:, ...) are
+      // rejected so the frontend CTA can never render a broken/unsafe link.
       name: 'website_url',
       type: 'text',
+      validate: (value: unknown) => {
+        if (!value) return true
+        try {
+          const url = new URL(String(value))
+          if (url.protocol === 'http:' || url.protocol === 'https:') return true
+        } catch {
+          // fall through to the error below
+        }
+        return 'Please enter a valid http:// or https:// URL.'
+      },
     },
     {
       name: 'license',

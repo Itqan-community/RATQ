@@ -141,6 +141,34 @@ describe('use-API CTA', () => {
     expect(screen.queryByRole('heading', { name: 'Use the API' })).not.toBeInTheDocument();
   });
 
+  it('prefers api_docs with the docs-oriented label when both fields exist', () => {
+    const resource = createResource({
+      type: 'api',
+      api_endpoint: 'https://api.example.com/v1/search',
+      api_docs: 'https://api.example.com/docs',
+    });
+    renderDetail(resource, 'en');
+
+    expect(screen.getByRole('link', { name: 'Open API docs' })).toHaveAttribute(
+      'href',
+      'https://api.example.com/docs',
+    );
+  });
+
+  it('falls back to the endpoint as href with the endpoint-oriented label when only api_endpoint exists', () => {
+    const resource = createResource({
+      type: 'api',
+      api_endpoint: 'https://api.example.com/v1/search',
+      api_docs: null,
+    });
+    renderDetail(resource, 'en');
+
+    const link = screen.getByRole('link', { name: 'Open API endpoint' });
+    expect(link).toHaveAttribute('href', 'https://api.example.com/v1/search');
+    expect(link).toHaveAttribute('target', '_blank');
+    expect(link).toHaveAttribute('rel', 'noopener noreferrer');
+  });
+
   it('renders Arabic strings for the API banner', () => {
     const resource = createResource({
       type: 'api',
@@ -151,6 +179,20 @@ describe('use-API CTA', () => {
 
     expect(screen.getByRole('heading', { name: 'استخدم الـ API' })).toBeInTheDocument();
     expect(screen.getByRole('link', { name: 'افتح توثيق الـ API' })).toBeInTheDocument();
+  });
+});
+
+describe('API CTA label translation keys (issue #312 review)', () => {
+  it('defines the docs and endpoint button labels in both Arabic and English', async () => {
+    const en = (await import('@/shared/ui/i18n/messages/en.json')).default;
+    const ar = (await import('@/shared/ui/i18n/messages/ar.json')).default;
+
+    for (const key of ['useApiButton', 'useApiEndpointButton'] as const) {
+      expect(typeof en.resource.detail[key]).toBe('string');
+      expect((en.resource.detail[key] as string).length).toBeGreaterThan(0);
+      expect(typeof ar.resource.detail[key]).toBe('string');
+      expect((ar.resource.detail[key] as string).length).toBeGreaterThan(0);
+    }
   });
 });
 

@@ -246,3 +246,38 @@ describe('Resources status field (draft protection & defaults)', () => {
     expect(statusField.options).toEqual(['draft', 'published', 'archived'])
   })
 })
+
+describe('Resources website_url validation (issue #299 review)', () => {
+  const websiteUrlField = Resources.fields.find(
+    (f) => 'name' in f && f.name === 'website_url',
+  ) as { validate: (value: unknown) => boolean | string }
+
+  const runValidate = (value: unknown) => websiteUrlField.validate(value)
+  const expectedError = 'Please enter a valid http:// or https:// URL.'
+
+  it('accepts null / undefined / empty string (field stays optional)', () => {
+    expect(runValidate(null)).toBe(true)
+    expect(runValidate(undefined)).toBe(true)
+    expect(runValidate('')).toBe(true)
+  })
+
+  it('accepts valid https URLs', () => {
+    expect(runValidate('https://tahbeer.net')).toBe(true)
+    expect(runValidate('https://www.tahbeer.net/recitations')).toBe(true)
+  })
+
+  it('accepts valid http URLs', () => {
+    expect(runValidate('http://example.org/page')).toBe(true)
+  })
+
+  it('rejects malformed URLs', () => {
+    expect(runValidate('not-a-url')).toBe(expectedError)
+    expect(runValidate('tahbeer.net')).toBe(expectedError)
+  })
+
+  it('rejects non-http(s) schemes such as ftp, javascript, and mailto', () => {
+    expect(runValidate('ftp://files.example.com/quran.zip')).toBe(expectedError)
+    expect(runValidate('javascript:alert(1)')).toBe(expectedError)
+    expect(runValidate('mailto:someone@example.com')).toBe(expectedError)
+  })
+})
