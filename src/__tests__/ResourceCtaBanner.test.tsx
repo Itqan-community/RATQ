@@ -5,6 +5,21 @@ import { getSiteNameFromUrl } from '@/shared/utils/utils';
 import { LanguageProvider } from '@/shared/ui/i18n/LanguageContext';
 import type { Resource } from '@/types/resource';
 
+// The payload-source block (ResourcePreview + RelatedResources + CommentSection)
+// mounts for `source: 'payload'` resources; keep its data hooks stubbed so the
+// placement tests below run without network access.
+const mockUseResources = vi.fn();
+const mockUseComments = vi.fn();
+
+vi.mock('@/hooks/useResources', () => ({
+  useResources: (...args: unknown[]) => mockUseResources(...args),
+  useComments: (...args: unknown[]) => mockUseComments(...args),
+}));
+
+vi.mock('@/hooks/useAuth', () => ({
+  useAuth: () => ({ user: null }),
+}));
+
 function createResource(overrides: Partial<Resource> = {}): Resource {
   return {
     id: 1,
@@ -207,5 +222,48 @@ describe('mock data propagation (ratq-native source)', () => {
     expect(
       screen.getByRole('link', { name: 'Visit quran-search.example.com' }),
     ).toHaveAttribute('href', 'https://quran-search.example.com');
+  });
+});
+
+describe('CTA banner placement (issue #312 review)', () => {
+  it('renders the banners after the ResourcePreview section in the DOM', () => {
+    mockUseResources.mockReturnValue({ data: { results: [] }, isLoading: false });
+    mockUseComments.mockReturnValue({ data: [], isLoading: false, mutate: vi.fn() });
+
+    // `type: 'api'` makes ResourcePreview render its no-data box (library
+    // types return null), giving the ordering test a concrete preview node.
+    const resource = createResource({
+      type: 'api',
+      source: 'payload',
+      website_url: 'https://tahbeer.net',
+    });
+    renderDetail(resource, 'en');
+
+    const bannerSection = screen
+      .getByRole('heading', { name: 'Visit the resource site' })
+      .closest('section') as HTMLElement;
+    const previewBox = screen
+      .getByText('Preview not available for this resource')
+      .closest('div') as HTMLElement;
+
+    // The preview block comes first and the CTA banner follows it.
+    expect(
+      previewBox.compareDocumentPosition(bannerSection) & Node.DOCUMENT_POSITION_FOLLOWING,
+    ).toBeTruthy();
+    expect(
+      bannerSection.compareDocumentPosition(previewBox) & Node.DOCUMENT_POSITION_PRECEDING,
+    ).toBeTruthy();
+  });
+
+  it('keeps CTA gating unchanged for payload resources when no banner data exists', () => {
+    mockUseResources.mockReturnValue({ data: { results: [] }, isLoading: false });
+    mockUseComments.mockReturnValue({ data: [], isLoading: false, mutate: vi.fn() });
+
+    renderDetail(createResource({ type: 'api', source: 'payload', website_url: null }), 'en');
+
+    expect(
+      screen.queryByRole('heading', { name: 'Visit the resource site' }),
+    ).not.toBeInTheDocument();
+    expect(screen.getByText('Preview not available for this resource')).toBeInTheDocument();
   });
 });

@@ -173,8 +173,6 @@ export function ResourceDetailClient({ resource, repoPreview }: ResourceDetailCl
                 <GithubRepoPreview repoPreview={repoPreview} />
               </section>
             )}
-
-            <ResourceCtaBanners resource={resource} />
           </div>
         </div>
 
@@ -198,6 +196,10 @@ export function ResourceDetailClient({ resource, repoPreview }: ResourceDetailCl
               </div>
 
             )}
+
+        {/* Visit-site / use-API banners render below the preview area (issue
+            #299), after the payload-source block above. */}
+        <ResourceCtaBanners resource={resource} />
     
         <section className="mt-24 overflow-hidden rounded-[24px] bg-[linear-gradient(112deg,#edf1f1_15%,#dbeaf6_100%)] px-7 sm:px-12">
           <div className="grid items-stretch md:min-h-[340px] gap-8 md:grid-cols-[330px_1fr]" dir="ltr">
