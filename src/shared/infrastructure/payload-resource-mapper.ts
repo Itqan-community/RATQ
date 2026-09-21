@@ -17,6 +17,7 @@ export interface PayloadResourceDoc {
   image?: { url: string } | number | string | null;
   documentation_url: string | null;
   github_url: string | null;
+  website_url?: string | null;
   license: string;
   itqan_badge: boolean;
   status: 'draft' | 'published' | 'archived';
@@ -45,6 +46,7 @@ export function toResource(doc: PayloadResourceDoc): Resource {
     image_url: typeof doc.image === 'object' && doc.image !== null ? doc.image.url : null,
     documentation_url: doc.documentation_url,
     github_url: doc.github_url,
+    website_url: doc.website_url ?? null,
     license: doc.license,
     itqan_badge: doc.itqan_badge,
     status: doc.status,

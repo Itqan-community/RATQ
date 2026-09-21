@@ -262,6 +262,13 @@
       "previewDatasetColumns": "Columns",
       "previewDatasetSize": "Size",
       "previewJsonFormat": "Formatted JSON",
+      "visitSiteTitle": "Visit the resource site",
+      "visitSiteDescription": "Opens {{name}} in a new tab",
+      "visitSiteButton": "Visit {{name}}",
+      "useApiTitle": "Use the API",
+      "useApiDescription": "Endpoint: {{endpoint}}",
+      "useApiButton": "Open API docs",
+      "useApiEndpointButton": "Open API endpoint",
       "githubPreview": {
         "title": "Repository preview",
         "topics": "Topics",

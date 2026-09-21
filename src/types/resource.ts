@@ -25,6 +25,10 @@ export interface Resource {
   image_url?: string | null;
   documentation_url: string | null;
   github_url: string | null;
+  // The resource's own website (publisher's product page), distinct from
+  // documentation_url (docs/repo) and source_url (where the record came from).
+  // Optional: the CMS source has no website field to pull from today.
+  website_url?: string | null;
   license: string;
   itqan_badge: boolean;
   status: ResourceStatus;

@@ -7,12 +7,15 @@ import { GithubRepoPreview } from '@/modules/resources/components/GithubRepoPrev
 import { GithubStatsCard } from '@/modules/resources/components/GithubStatsCard';
 import { TrustedBySection } from '@/modules/resources/components/TrustedBySection';
 import { useLanguage } from '@/shared/ui/i18n';
+import { parseGithubRepoUrl } from '@/modules/resources/infrastructure/github/parseGithubRepoUrl';
 import type { GithubRepoPreview as GithubRepoPreviewData, Resource } from '@/types/resource';
 import arabicDescriptions from '@/shared/ui/i18n/resource-descriptions.ar.json';
 import { ResourcePreview } from '@/modules/resources/components/ResourcePreview';
 import { RelatedResources } from '@/modules/resources/components/RelatedResources';
 import { CommentSection } from '@/modules/resources/components/CommentSection';
 import { usePreview } from '@/hooks/usePreview';
+import { ResourceCtaBanner } from '@/modules/resources/components/ResourceCtaBanner';
+import { getSiteNameFromUrl, interpolate } from '@/shared/utils/utils';
 import { ReportButton } from '@/modules/resources/components/ReportButton';
 import { RESOURCE_TYPE_COLORS } from '@/shared/constants/resource-type-colors';
 import { TypeIcon } from '@/shared/constants/resource-type-icon';
@@ -31,6 +34,65 @@ function InfoItem({ icon, label, value }: { icon: ReactNode; label: string; valu
 
 const smallIcon = (path: ReactNode) => <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8}>{path}</svg>;
 
+const globeIcon = (
+  <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8}>
+    <circle cx="12" cy="12" r="9" />
+    <path d="M3 12h18M12 3c2.5 2.6 3.8 5.7 3.8 9s-1.3 6.4-3.8 9c-2.5-2.6-3.8-5.7-3.8-9S9.5 5.6 12 3z" />
+  </svg>
+);
+
+const apiIcon = (
+  <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8}>
+    <path d="m8 8-4 4 4 4M16 8l4 4-4 4M13.5 5l-3 14" />
+  </svg>
+);
+
+// Visit-site and use-API banners (issue #299). Both are gated on real data:
+// the website banner needs the resource's own website_url (with a parseable
+// site name), and the API banner needs publisher-provided API details - it
+// stays invisible until a resource actually has that data.
+function ResourceCtaBanners({ resource }: { resource: Resource }) {
+  const { t } = useLanguage();
+
+  const websiteUrl = resource.website_url;
+  const siteName = websiteUrl ? getSiteNameFromUrl(websiteUrl) : null;
+
+  const apiHref = resource.api_docs || resource.api_endpoint;
+
+  return (
+    <>
+      {websiteUrl && siteName && (
+        <ResourceCtaBanner
+          href={websiteUrl}
+          icon={globeIcon}
+          title={t.resource.detail.visitSiteTitle}
+          description={interpolate(t.resource.detail.visitSiteDescription, { name: siteName })}
+          buttonLabel={interpolate(t.resource.detail.visitSiteButton, { name: siteName })}
+          ariaLabel={`${t.resource.detail.visitSiteTitle} - ${siteName}`}
+        />
+      )}
+      {apiHref && (
+        <ResourceCtaBanner
+          href={apiHref}
+          icon={apiIcon}
+          title={t.resource.detail.useApiTitle}
+          description={
+            resource.api_endpoint
+              ? interpolate(t.resource.detail.useApiDescription, { endpoint: resource.api_endpoint })
+              : undefined
+          }
+          // Docs link wins when present; the endpoint itself is the fallback
+          // href. The label follows the destination (CodeRabbit review on #312).
+          buttonLabel={
+            resource.api_docs ? t.resource.detail.useApiButton : t.resource.detail.useApiEndpointButton
+          }
+          ariaLabel={t.resource.detail.useApiTitle}
+        />
+      )}
+    </>
+  );
+}
+
 export function ResourceDetailClient({ resource, repoPreview }: ResourceDetailClientProps) {
   const { t, locale, direction } = useLanguage();
   const arabicCopy = arabicDescriptions[resource.slug as keyof typeof arabicDescriptions];
@@ -38,6 +100,10 @@ export function ResourceDetailClient({ resource, repoPreview }: ResourceDetailCl
 
   const dataPreview = usePreview(resource.slug, resource.type);
   const IsFromPayloadResource = resource.source === 'payload';
+  // Only resources genuinely hosted on GitHub get the GitHub stats box -
+  // gate on a real GitHub URL, not on a fallback like "#" or the docs URL
+  // (issue #299).
+  const githubRepo = parseGithubRepoUrl(resource.github_url);
   return (
     <div className="bg-white pb-10 pt-32 text-black sm:pt-36" dir={direction}>
       <main className="mx-auto max-w-[1050px] px-4 sm:px-6">
@@ -101,10 +167,12 @@ export function ResourceDetailClient({ resource, repoPreview }: ResourceDetailCl
               </div>
             </section>
 
-            <section className="mt-6">
-              <GithubStatsCard githubUrl={resource.github_url || resource.documentation_url || "#"} stats={resource.github_stats}/>
-              <GithubRepoPreview repoPreview={repoPreview} />
-            </section>
+            {githubRepo && (
+              <section className="mt-6">
+                <GithubStatsCard githubUrl={resource.github_url as string} stats={resource.github_stats}/>
+                <GithubRepoPreview repoPreview={repoPreview} />
+              </section>
+            )}
           </div>
         </div>
 
@@ -128,6 +196,10 @@ export function ResourceDetailClient({ resource, repoPreview }: ResourceDetailCl
               </div>
 
             )}
+
+        {/* Visit-site / use-API banners render below the preview area (issue
+            #299), after the payload-source block above. */}
+        <ResourceCtaBanners resource={resource} />
     
         <section className="mt-24 overflow-hidden rounded-[24px] bg-[linear-gradient(112deg,#edf1f1_15%,#dbeaf6_100%)] px-7 sm:px-12">
           <div className="grid items-stretch md:min-h-[340px] gap-8 md:grid-cols-[330px_1fr]" dir="ltr">

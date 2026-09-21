@@ -262,6 +262,13 @@
       "previewDatasetColumns": "أعمدة",
       "previewDatasetSize": "الحجم",
       "previewJsonFormat": "JSON منسق",
+      "visitSiteTitle": "زيارة موقع المورد",
+      "visitSiteDescription": "يفتح {{name}} في تبويب جديد",
+      "visitSiteButton": "زيارة {{name}}",
+      "useApiTitle": "استخدم الـ API",
+      "useApiDescription": "نقطة النهاية: {{endpoint}}",
+      "useApiButton": "افتح توثيق الـ API",
+      "useApiEndpointButton": "افتح نقطة النهاية",
       "githubPreview": {
         "title": "معاينة المستودع",
         "topics": "المواضيع",
