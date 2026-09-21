@@ -143,6 +143,13 @@ export const Resources: CollectionConfig = {
       type: 'text',
     },
     {
+      // The resource's own website (publisher's product page), shown in the
+      // visit-site CTA on the frontend - see issue #299. Optional/nullable,
+      // like the sibling URL fields.
+      name: 'website_url',
+      type: 'text',
+    },
+    {
       name: 'license',
       type: 'text',
       required: true,
