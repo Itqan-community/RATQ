@@ -51,3 +51,17 @@ export function interpolate(
 
   return result;
 }
+
+/**
+ * Derive a displayable site name from a URL's hostname (issue #299 visit-site
+ * CTA). Strips the leading "www." so "https://www.tahbeer.net" becomes
+ * "tahbeer.net". Returns null for anything unparseable or empty.
+ */
+export function getSiteNameFromUrl(url: string): string | null {
+  try {
+    const hostname = new URL(url).hostname.replace(/^www\./, '');
+    return hostname || null;
+  } catch {
+    return null;
+  }
+}
