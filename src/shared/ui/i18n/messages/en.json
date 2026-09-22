@@ -269,6 +269,12 @@
       "useApiDescription": "Endpoint: {{endpoint}}",
       "useApiButton": "Open API docs",
       "useApiEndpointButton": "Open API endpoint",
+      "photoCarousel": "Photo gallery",
+      "photoPrev": "Previous photo",
+      "photoNext": "Next photo",
+      "photoGoTo": "Go to photo {{number}}",
+      "photoCounter": "{{current}} / {{total}}",
+      "photoAlt": "Photo {{number}} of {{total}}",
       "githubPreview": {
         "title": "Repository preview",
         "topics": "Topics",
