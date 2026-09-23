@@ -174,7 +174,7 @@ export function AudioPreview({ data }: AudioPreviewProps) {
             </span>
 
             <span aria-label={t.resource.detail.audioRemaining}>
-              -{formatAudioTime(remainingTime)}
+              {remainingTime > 0 ? '-' : ''}{formatAudioTime(remainingTime)}
             </span>
           </div>
         </div>
