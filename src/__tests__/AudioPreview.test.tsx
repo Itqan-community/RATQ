@@ -146,8 +146,75 @@ describe('AudioPreview', () => {
     audio.currentTime = 45;
     fireEvent.timeUpdate(audio);
 
-    expect(screen.getByLabelText('Played time')).toHaveTextContent('0:45');
-    expect(screen.getByLabelText('Remaining time')).toHaveTextContent('-1:15');
+    const playedLabel = screen.getByText('Played time:');
+    const remainingLabel = screen.getByText('Remaining time:');
+
+    expect(playedLabel).toHaveClass('sr-only');
+    expect(remainingLabel).toHaveClass('sr-only');
+
+    expect(playedLabel.parentElement).toHaveTextContent('Played time: 0:45');
+    expect(remainingLabel.parentElement).toHaveTextContent(
+      'Remaining time: -1:15',
+    );
+  });
+
+  it('updates seeking when duration becomes finite later', () => {
+    const { container } = renderPlayer();
+    const audio = container.querySelector('audio') as HTMLAudioElement;
+
+    Object.defineProperty(audio, 'duration', {
+      configurable: true,
+      value: Number.NaN,
+    });
+
+    fireEvent.loadedMetadata(audio);
+
+    const slider = screen.getByRole('slider', { name: 'Audio progress' });
+
+    expect(slider).toBeDisabled();
+    expect(slider).toHaveAttribute('max', '0');
+
+    Object.defineProperty(audio, 'duration', {
+      configurable: true,
+      value: 90,
+    });
+
+    fireEvent.durationChange(audio);
+
+    expect(slider).not.toBeDisabled();
+    expect(slider).toHaveAttribute('max', '90');
+  });
+
+  it('shows an accessible error when the media element fails', () => {
+    const { container } = renderPlayer();
+    const audio = container.querySelector('audio') as HTMLAudioElement;
+
+    fireEvent.error(audio);
+
+    expect(screen.getByRole('alert')).toHaveTextContent(
+      'Audio playback failed. Please try again.',
+    );
+  });
+
+  it('shows an accessible error when play rejects', async () => {
+    const { container } = renderPlayer();
+    const audio = container.querySelector('audio') as HTMLAudioElement;
+
+    Object.defineProperty(audio, 'play', {
+      configurable: true,
+      value: vi.fn().mockRejectedValue(new Error('Playback failed')),
+    });
+
+    Object.defineProperty(audio, 'paused', {
+      configurable: true,
+      value: true,
+    });
+
+    fireEvent.click(screen.getByRole('button', { name: 'Play audio' }));
+
+    expect(await screen.findByRole('alert')).toHaveTextContent(
+      'Audio playback failed. Please try again.',
+    );
   });
 
   it('switches the button label when playback starts and pauses', () => {

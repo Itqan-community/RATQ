@@ -272,6 +272,7 @@
       "audioQuality": "الجودة",
       "audioFormat": "الصيغة",
       "audioThumbnailAlt": "صورة المقطع الصوتي",
+      "audioPlaybackError": "تعذر تشغيل الصوت. يرجى المحاولة مرة أخرى.",
       "visitSiteTitle": "زيارة موقع المورد",
       "visitSiteDescription": "يفتح {{name}} في تبويب جديد",
       "visitSiteButton": "زيارة {{name}}",
