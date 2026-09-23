@@ -212,6 +212,10 @@ export interface Resource {
   itqan_badge?: boolean | null;
   status: 'draft' | 'published' | 'archived';
   version?: string | null;
+  audio_url?: string | null;
+  audio_thumbnail?: string | null;
+  reciter_name?: string | null;
+  audio_quality?: string | null;
   owner: number | User;
   /**
    * Auto-populated by the periodic GitHub stats job. Do not edit manually.
@@ -514,6 +518,10 @@ export interface ResourcesSelect<T extends boolean = true> {
   itqan_badge?: T;
   status?: T;
   version?: T;
+  audio_url?: T;
+  audio_thumbnail?: T;
+  reciter_name?: T;
+  audio_quality?: T;
   owner?: T;
   github_stats?:
     | T
