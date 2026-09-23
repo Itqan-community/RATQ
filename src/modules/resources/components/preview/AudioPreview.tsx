@@ -55,6 +55,7 @@ export function AudioPreview({ data }: AudioPreviewProps) {
   const [isPlaying, setIsPlaying] = useState(false);
   const [duration, setDuration] = useState(0);
   const [currentTime, setCurrentTime] = useState(0);
+  const [playbackError, setPlaybackError] = useState(false);
 
   if (!audio_url) return null;
 
@@ -64,13 +65,27 @@ export function AudioPreview({ data }: AudioPreviewProps) {
   const safeCurrentTime = Math.min(currentTime, safeDuration || currentTime);
   const remainingTime = Math.max(safeDuration - safeCurrentTime, 0);
 
+  const updateDuration = () => {
+    const audio = audioRef.current;
+    if (!audio) return;
+
+    setDuration(
+      Number.isFinite(audio.duration) && audio.duration > 0
+        ? audio.duration
+        : 0,
+    );
+  };
+
   const togglePlayback = () => {
     const audio = audioRef.current;
     if (!audio) return;
 
     if (audio.paused) {
+      setPlaybackError(false);
+
       void audio.play().catch(() => {
         setIsPlaying(false);
+        setPlaybackError(true);
       });
     } else {
       audio.pause();
@@ -169,15 +184,31 @@ export function AudioPreview({ data }: AudioPreviewProps) {
             className="mt-2 flex items-center justify-between text-xs font-semibold text-[#777]"
             dir="ltr"
           >
-            <span aria-label={t.resource.detail.audioElapsed}>
+            <span>
+              <span className="sr-only">
+                {t.resource.detail.audioElapsed}:{' '}
+              </span>
               {formatAudioTime(safeCurrentTime)}
             </span>
 
-            <span aria-label={t.resource.detail.audioRemaining}>
-              {remainingTime > 0 ? '-' : ''}{formatAudioTime(remainingTime)}
+            <span>
+              <span className="sr-only">
+                {t.resource.detail.audioRemaining}:{' '}
+              </span>
+              {remainingTime > 0 ? '-' : ''}
+              {formatAudioTime(remainingTime)}
             </span>
           </div>
         </div>
+
+        {playbackError && (
+          <p
+            role="alert"
+            className="mt-4 text-sm font-semibold text-red-700"
+          >
+            {t.resource.detail.audioPlaybackError}
+          </p>
+        )}
 
         {(audio_quality || audioFormat) && (
           <div className="mt-5 flex flex-wrap gap-2 border-t border-[#eeeeee] pt-4 text-xs font-bold text-[#555]">
@@ -199,23 +230,22 @@ export function AudioPreview({ data }: AudioPreviewProps) {
           ref={audioRef}
           src={audio_url}
           preload="metadata"
-          onLoadedMetadata={() => {
-            const audio = audioRef.current;
-            if (!audio) return;
-
-            setDuration(
-              Number.isFinite(audio.duration) && audio.duration > 0
-                ? audio.duration
-                : 0,
-            );
-          }}
+          onLoadedMetadata={updateDuration}
+          onDurationChange={updateDuration}
           onTimeUpdate={() => {
             const audio = audioRef.current;
             if (audio) setCurrentTime(audio.currentTime);
           }}
-          onPlay={() => setIsPlaying(true)}
+          onPlay={() => {
+            setPlaybackError(false);
+            setIsPlaying(true);
+          }}
           onPause={() => setIsPlaying(false)}
           onEnded={() => setIsPlaying(false)}
+          onError={() => {
+            setIsPlaying(false);
+            setPlaybackError(true);
+          }}
         />
       </div>
     </section>

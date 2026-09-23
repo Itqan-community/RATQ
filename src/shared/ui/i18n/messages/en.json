@@ -272,6 +272,7 @@
       "audioQuality": "Quality",
       "audioFormat": "Format",
       "audioThumbnailAlt": "Audio thumbnail",
+      "audioPlaybackError": "Audio playback failed. Please try again.",
       "visitSiteTitle": "Visit the resource site",
       "visitSiteDescription": "Opens {{name}} in a new tab",
       "visitSiteButton": "Visit {{name}}",
