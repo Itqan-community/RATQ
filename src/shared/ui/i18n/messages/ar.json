@@ -269,6 +269,12 @@
       "useApiDescription": "نقطة النهاية: {{endpoint}}",
       "useApiButton": "افتح توثيق الـ API",
       "useApiEndpointButton": "افتح نقطة النهاية",
+      "photoCarousel": "معرض الصور",
+      "photoPrev": "الصورة السابقة",
+      "photoNext": "الصورة التالية",
+      "photoGoTo": "الانتقال إلى الصورة {{number}}",
+      "photoCounter": "{{current}} / {{total}}",
+      "photoAlt": "الصورة {{number}} من {{total}}",
       "githubPreview": {
         "title": "معاينة المستودع",
         "topics": "المواضيع",
