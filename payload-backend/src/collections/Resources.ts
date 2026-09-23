@@ -187,6 +187,22 @@ export const Resources: CollectionConfig = {
       type: 'text',
     },
     {
+      name: 'audio_url',
+      type: 'text',
+    },
+    {
+      name: 'audio_thumbnail',
+      type: 'text',
+    },
+    {
+      name: 'reciter_name',
+      type: 'text',
+    },
+    {
+      name: 'audio_quality',
+      type: 'text',
+    },
+    {
       name: 'owner',
       type: 'relationship',
       relationTo: 'users',

@@ -48,6 +48,7 @@ export interface Resource {
   dataset_stats?: string | null;
   audio_url?: string | null;
   audio_thumbnail?: string | null;
+  audio_quality?: string | null;
   pdf_url?: string | null;
   pdf_excerpt?: string | null;
   json_content?: string | null;
