@@ -15,6 +15,7 @@ import { RelatedResources } from '@/modules/resources/components/RelatedResource
 import { CommentSection } from '@/modules/resources/components/CommentSection';
 import { usePreview } from '@/hooks/usePreview';
 import { ResourceCtaBanner } from '@/modules/resources/components/ResourceCtaBanner';
+import { ResourcePhotoCarousel } from '@/modules/resources/components/ResourcePhotoCarousel';
 import { getSiteNameFromUrl, interpolate } from '@/shared/utils/utils';
 import { ReportButton } from '@/modules/resources/components/ReportButton';
 import { RESOURCE_TYPE_COLORS } from '@/shared/constants/resource-type-colors';
@@ -107,11 +108,10 @@ export function ResourceDetailClient({ resource, repoPreview }: ResourceDetailCl
   return (
     <div className="bg-white pb-10 pt-32 text-black sm:pt-36" dir={direction}>
       <main className="mx-auto max-w-[1050px] px-4 sm:px-6">
-        {resource.image_url && (
-          <div className="mx-auto mb-8 max-w-[760px] overflow-hidden rounded-2xl lg:ms-auto lg:me-0">
-            <img src={resource.image_url} alt="" className="h-[220px] w-full object-cover sm:h-[300px]" />
-          </div>
-        )}
+        {/* Photo carousel (issue #295): uses preview_images when present,
+            falls back to the single image_url photo, renders nothing when
+            there are no usable photos. */}
+        <ResourcePhotoCarousel resource={resource} />
 
         <header className="mx-auto max-w-[760px] text-start lg:ms-auto lg:me-0">
           <div className="flex flex-wrap items-center gap-2">
