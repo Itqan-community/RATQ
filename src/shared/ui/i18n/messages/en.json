@@ -151,6 +151,7 @@
       },
       "publishers": "Publishers",
       "publishersDefaultText": "Select publisher(s)",
+      "noPublisher": "No publisher",
       "publishersSelected": "{{count}} publishers selected"
     },
     "types": {

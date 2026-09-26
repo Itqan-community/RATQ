@@ -2,6 +2,7 @@ import type { PaginatedResponse, Publisher, Resource, ResourceListParams, Resour
 import type { ResourceSource } from './types';
 import { normalizeArabic } from '@/shared/utils/utils';
 import { matchesLicenseFilter } from '@/shared/utils/license-filter';
+import { matchesPublisherFilter } from '@/shared/utils/publisher-filter';
 
 const API_BASE = process.env.NEXT_PUBLIC_CMS_API_URL || 'https://api.cms.itqan.dev/cms-api';
 const CMS_GALLERY_BASE = process.env.NEXT_PUBLIC_CMS_GALLERY_URL || 'https://cms.itqan.dev/gallery/asset';
@@ -93,7 +94,7 @@ async function list(params: ResourceListParams): Promise<PaginatedResponse<Resou
   const filtered = resources.filter((r) => {
     if (params.type && r.type !== params.type) return false;
     if (!matchesLicenseFilter(r.license, params.license)) return false;
-    if (params.publisherNames && params.publisherNames.length > 0 && ( !r.publisher?.name || !params.publisherNames.includes(r.publisher?.name))) return false;
+    if (!matchesPublisherFilter(r.publisher?.name, params.publisherNames)) return false;
     if (params.itqan_badge === 'true') return false; // CMS assets never carry the itqan badge
     if (params.search) {
       const q = normalizeArabic(params.search);

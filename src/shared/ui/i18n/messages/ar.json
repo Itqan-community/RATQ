@@ -151,6 +151,7 @@
       },
       "publishers": "النواشر",
       "publishersDefaultText": "اختر ناشرا",
+      "noPublisher": "بدون ناشر",
       "publishersSelected": "{{count}} ناشرين محددين"
     },
     "types": {

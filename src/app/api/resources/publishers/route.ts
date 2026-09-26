@@ -16,7 +16,7 @@ export async function GET(request: Request) {
 
     results.forEach((resource) => {
       if (!resource.publisher) return;
-      const key = String(resource.publisher.id );
+      const key = String(resource.publisher.name );
       if (!publishers.has(key)) {
         publishers.set(key, {
           id: resource.publisher.id,

@@ -9,6 +9,7 @@ import { CC_LICENSE_ROWS, type CcLicenseRow } from '@/shared/utils/license-filte
 import { usePublishers } from '@/hooks/usePublishers';
 import { Dropdown } from '@/shared/ui/Dropdown';
 import { interpolate } from '@/shared/utils/utils';
+import { NO_PUBLISHER_VALUE } from '@/shared/utils/publisher-filter';
 
 // Re-exported so existing imports (and tests) that pull CC_LICENSE_ROWS from
 // this component path keep working — the shared license-filter module is now
@@ -47,9 +48,16 @@ export function FilterPanel() {
 
   const activeType = searchParams.get('type') ?? '';
   const activePublishers = searchParams.getAll('publisher');
-  const visiblePublisherNames = new Set(publishers.slice(0, 8).map((publisher) => publisher.name)); // show the first 8 options 
+  const visiblePublisherNames = new Set(publishers.slice(0, 8).map((publisher) => publisher.name)); // show the first 8 options
   activePublishers.forEach((name) => visiblePublisherNames.add(name));
   const visiblePublishers = publishers.filter((publisher) => visiblePublisherNames.has(publisher.name));
+  const publisherOptions = [
+    { value: NO_PUBLISHER_VALUE, label: t.catalog.filters.noPublisher },
+    ...visiblePublishers.map((publisher) => ({
+      value: publisher.name,
+      label: publisher.name,
+    })),
+  ];
   // Multi-value license: ?license=a&license=b
   const activeLicenses = searchParams.getAll('license');
 
@@ -210,10 +218,7 @@ export function FilterPanel() {
           <div className="mt-3">
             <Dropdown
               label={t.catalog.filters.publishersDefaultText}
-              options={visiblePublishers.map((publisher) => ({
-                value: publisher.name,
-                label: publisher.name,
-              }))}
+              options={publisherOptions}
               value={activePublishers}
               direction={direction}
               multiple

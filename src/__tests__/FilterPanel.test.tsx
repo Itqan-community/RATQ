@@ -2,6 +2,7 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, act, fireEvent } from '@testing-library/react';
 import { FilterPanel, CC_LICENSE_ROWS } from '@/modules/resources/components/FilterPanel';
 import { LanguageProvider } from '@/shared/ui/i18n/LanguageContext';
+import { NO_PUBLISHER_VALUE } from '@/shared/utils/publisher-filter';
 
 let mockSearchParams = new URLSearchParams();
 const mockPush = vi.fn();
@@ -84,6 +85,18 @@ describe('FilterPanel', () => {
     renderWithArabicProvider(<FilterPanel />);
 
     expect(screen.getByRole('button', { name: 'اختر ناشرا' })).toHaveTextContent('2 ناشرين محددين');
+  });
+
+  it('includes a no-publisher option and sends its reserved value', () => {
+    renderWithProvider(<FilterPanel />);
+
+    fireEvent.click(screen.getByRole('button', { name: 'Select publisher(s)' }));
+    fireEvent.click(screen.getByRole('option', { name: 'No publisher' }));
+
+    expect(mockPush).toHaveBeenCalledWith(
+      `/resources?publisher=${encodeURIComponent(NO_PUBLISHER_VALUE)}`,
+      { scroll: false },
+    );
   });
 
   // ── Type filter ────────────────────────────────────────────────────────────
