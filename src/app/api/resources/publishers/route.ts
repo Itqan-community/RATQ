@@ -12,10 +12,10 @@ export async function GET(request: Request) {
 
     results.forEach((resource) => {
       if (!resource.publisher) return;
-      const key = String(resource.publisher.id ?? resource.publisher.name);
+      const key = String(resource.publisher.id );
       if (!publishers.has(key)) {
         publishers.set(key, {
-          id: resource.publisher.id ?? key,
+          id: resource.publisher.id,
           name: resource.publisher.name,
         });
       }

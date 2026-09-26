@@ -8,9 +8,9 @@ export type ResourceType =
 export type ResourceStatus = 'draft' | 'published' | 'archived';
 
 export interface Publisher {
-  id: number | string;
+  id: number;
   name: string;
-  description?: string;
+  description?: string | null;
 }
 
 // ─── Data Source Types ────────────────────────────────────────────────────

@@ -18,8 +18,7 @@ export function CatalogContent() {
   const searchParams = useSearchParams();
   const page = parsePageParam(searchParams.get('page'));
   const type = searchParams.get('type') ?? undefined;
-  const publisherParams = searchParams.getAll('publisher');
-  const publisherNames = publisherParams.length > 0 ? publisherParams : undefined;
+  const publisherNames = searchParams.getAll('publisher');
   const sort = (searchParams.get('sort') as SortOption) ?? undefined;
   // license is a multi-value param (?license=a&license=b); pass as string[] or
   // undefined so the aggregator uses OR logic across selected values.

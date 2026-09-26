@@ -35,46 +35,13 @@ export function Dropdown({
 }: DropdownProps) {
   const [open, setOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
-  const orderRef = useRef<Map<string, number>>(new Map());
+  const orderedOptions = [...options].sort((a, b) =>
+    a.label.localeCompare(b.label),
+  );
   const selectedValues = Array.isArray(value) ? value : value ? [value] : [];
 
-  // Remember the first position each option was ever rendered at, and always
-  // sort by that. This way, if the parent ever rebuilds `options` in a
-  // different order (e.g. moving selected items to the front), the visible
-  // list order stays exactly as the user first saw it.
-  const orderMap = orderRef.current;
-  for (const option of options) {
-    if (!orderMap.has(option.value)) {
-      orderMap.set(option.value, orderMap.size);
-    }
-  }
-  const orderedOptions = [...options].sort(
-    (a, b) => (orderMap.get(a.value) ?? 0) - (orderMap.get(b.value) ?? 0),
-  );
-
-  // Filtering the locked order (rather than mapping over `selectedValues`)
-  // keeps selected-label display in that same stable order too.
   const selectedOptions = orderedOptions.filter((option) => selectedValues.includes(option.value));
-
-  useEffect(() => {
-    function handlePointerDown(event: PointerEvent) {
-      if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
-        setOpen(false);
-      }
-    }
-
-    function handleKeyDown(event: KeyboardEvent) {
-      if (event.key === 'Escape') setOpen(false);
-    }
-
-    document.addEventListener('pointerdown', handlePointerDown);
-    document.addEventListener('keydown', handleKeyDown);
-    return () => {
-      document.removeEventListener('pointerdown', handlePointerDown);
-      document.removeEventListener('keydown', handleKeyDown);
-    };
-  }, []);
-
+  
   function toggleOption(optionValue: string) {
     if (!multiple) {
       onChange(optionValue);
