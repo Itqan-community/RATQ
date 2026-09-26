@@ -8,6 +8,7 @@ import { TypeIcon } from '@/shared/constants/resource-type-icon';
 import { CC_LICENSE_ROWS, type CcLicenseRow } from '@/shared/utils/license-filter';
 import { usePublishers } from '@/hooks/usePublishers';
 import { Dropdown } from '@/shared/ui/Dropdown';
+import { interpolate } from '@/shared/utils/utils';
 
 // Re-exported so existing imports (and tests) that pull CC_LICENSE_ROWS from
 // this component path keep working — the shared license-filter module is now
@@ -216,6 +217,9 @@ export function FilterPanel() {
               value={activePublishers}
               direction={direction}
               multiple
+              selectionCountLabel={(count) =>
+                interpolate(t.catalog.filters.publishersSelected, { count })
+              }
               onChange={setSelectedPublishers}
             />
           </div>

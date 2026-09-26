@@ -150,7 +150,8 @@
         "cc_by_nc_nd":  "إسناد غير تجاري بلا اشتقاق"
       },
       "publishers": "النواشر",
-      "publishersDefaultText": "اختر ناشرا"
+      "publishersDefaultText": "اختر ناشرا",
+      "publishersSelected": "{{count}} ناشرين محددين"
     },
     "types": {
       "library": "مكتبة",

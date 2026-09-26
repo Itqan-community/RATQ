@@ -150,7 +150,8 @@
         "cc_by_nc_nd":  "Attribution, non-commercial, no derivatives"
       },
       "publishers": "Publishers",
-      "publishersDefaultText": "Select publisher(s)"
+      "publishersDefaultText": "Select publisher(s)",
+      "publishersSelected": "{{count}} publishers selected"
     },
     "types": {
       "library": "Library",

@@ -12,8 +12,24 @@ vi.mock('next/navigation', () => ({
   useRouter: () => ({ push: mockPush }),
 }));
 
+vi.mock('@/hooks/usePublishers', () => ({
+  usePublishers: () => ({
+    data: [
+      { id: 1, name: 'ناشر طويل جدا للاختبار' },
+      { id: 2, name: 'ناشر آخر طويل جدا للاختبار' },
+    ],
+  }),
+}));
+
 function renderWithProvider(ui: React.ReactElement) {
   localStorage.setItem('ratq_locale', 'en');
+  const result = render(<LanguageProvider>{ui}</LanguageProvider>);
+  act(() => {});
+  return result;
+}
+
+function renderWithArabicProvider(ui: React.ReactElement) {
+  localStorage.setItem('ratq_locale', 'ar');
   const result = render(<LanguageProvider>{ui}</LanguageProvider>);
   act(() => {});
   return result;
@@ -61,6 +77,13 @@ describe('FilterPanel', () => {
     expect(allValues).not.toContain('CC-BY-NC-4.0');
     // No two rows should share a stored value
     expect(allValues.length).toBe(new Set(allValues).size);
+  });
+
+  it('uses the Arabic publisher count label for multiple long selections', () => {
+    mockSearchParams = new URLSearchParams('publisher=ناشر%20طويل%20جدا%20للاختبار&publisher=ناشر%20آخر%20طويل%20جدا%20للاختبار');
+    renderWithArabicProvider(<FilterPanel />);
+
+    expect(screen.getByRole('button', { name: 'اختر ناشرا' })).toHaveTextContent('2 ناشرين محددين');
   });
 
   // ── Type filter ────────────────────────────────────────────────────────────

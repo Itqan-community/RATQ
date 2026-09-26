@@ -57,7 +57,7 @@ export interface Resource {
   downloads: number;
 
   // CMS-sourced detail fields (no honest existing home)
-  publisher: Publisher | null;
+  publisher?: Publisher | null;
   reciter_name?: string | null;
   preview_images?: string[];
 }

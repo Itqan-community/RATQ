@@ -1,11 +1,13 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
+import {
+  MAX_INLINE_LABEL_LENGTH,
+  truncateLabel,
+  type DropdownOption,
+} from './dropdown-helpers';
 
-export interface DropdownOption {
-  value: string;
-  label: string;
-}
+export type { DropdownOption } from './dropdown-helpers';
 
 interface DropdownProps {
   label: string;
@@ -15,13 +17,6 @@ interface DropdownProps {
   multiple?: boolean;
   selectionCountLabel?: (count: number) => string;
   onChange: (value: string | string[]) => void;
-}
-
-// Above this many characters, the trigger switches from listing labels to a plain count.
-const MAX_INLINE_LABEL_LENGTH = 40;
-
-function truncateLabel(text: string, maxLength: number) {
-  return text.length > maxLength ? `${text.slice(0, maxLength - 1)}…` : text;
 }
 
 export function Dropdown({
