@@ -4,10 +4,14 @@ import { withEdgeCache } from '@/shared/infrastructure/edge-cache';
 import type { Publisher } from '@/types/resource';
 
 export const runtime = 'edge';
+const PUBLISHERS_RESOURCE_PAGE_SIZE = 10_000;
 
 export async function GET(request: Request) {
   return withEdgeCache(request, async () => {
-    const { results } = await resourceAggregator.list({ page: 1, page_size: 10_000 });
+    const { results } = await resourceAggregator.list({
+      page: 1,
+      page_size: PUBLISHERS_RESOURCE_PAGE_SIZE,
+    });
     const publishers = new Map<string, Publisher>();
 
     results.forEach((resource) => {
