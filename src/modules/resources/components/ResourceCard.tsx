@@ -99,20 +99,20 @@ export function ResourceCard({ resource, rank, downloadCount }: ResourceCardProp
             {isArabic ? sourceInfo.ar : sourceInfo.en}
           </span>
         )}
-        {resource.publisher && (
-          <span
-            className="inline-flex min-w-0 flex-1 items-center justify-end gap-1 text-end"
-            title={resource.publisher.name}
-            dir="auto"
-          >
+        
+        <span
+          className="inline-flex min-w-0 flex-1 items-center justify-end gap-1 text-end"
+          title={resource?.publisher?.name}
+          dir="auto"
+        >
             <svg className="h-3.5 w-3.5 flex-none" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} aria-hidden="true">
               <path d="M4 21h16" />
               <path d="M6 21V4h12v17" />
               <path d="M9 8h1M14 8h1M9 12h1M14 12h1M9 16h1M14 16h1" />
             </svg>
-            <span className="min-w-0 truncate">{resource.publisher.name}</span>
+            <span className="min-w-0 truncate">{resource?.publisher?.name || '—'}</span>
           </span>
-        )}
+
         {resource.github_url && (
           <a
             href={resource.github_url}

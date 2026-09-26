@@ -11,5 +11,5 @@ export function matchesPublisherFilter(
     ? selectedPublishers.includes(publisherName)
     : false;
 
-  return (wantsNoPublisher && !publisherName) || matchesPublisherName;
+  return (wantsNoPublisher && publisherName == null) || matchesPublisherName;
 }
