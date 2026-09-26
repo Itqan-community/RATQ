@@ -148,7 +148,9 @@
         "cc_by_nd":     "Attribution, no derivatives",
         "cc_by_nc_sa":  "Attribution, non-commercial + share-alike",
         "cc_by_nc_nd":  "Attribution, non-commercial, no derivatives"
-      }
+      },
+      "publishers": "Publishers",
+      "publishersDefaultText": "Select publisher(s)"
     },
     "types": {
       "library": "Library",
@@ -207,6 +209,7 @@
       "quickSummary": "Quick Summary",
       "status": "Status",
       "published": "Published",
+      "publisher": "Publisher",
       "itqanCertified": "Itqan Certified",
       "yes": "Yes",
       "no": "No",

@@ -12,6 +12,7 @@ async function list(params: ResourceListParams): Promise<PaginatedResponse<Resou
   const filtered = resources.filter((r) => {
     if (params.type && r.type !== params.type) return false;
     if (!matchesLicenseFilter(r.license, params.license)) return false;
+    if (params.publisherNames && params.publisherNames.length > 0 && !params.publisherNames.includes(r.publisher?.name || '')) return false;
     if (params.itqan_badge === 'true' && !r.itqan_badge) return false;
     if (params.itqan_badge === 'false' && r.itqan_badge) return false;
     if (params.search) {

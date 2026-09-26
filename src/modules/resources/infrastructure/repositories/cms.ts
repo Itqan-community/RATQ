@@ -74,6 +74,7 @@ function toResource(asset: CmsAsset): Resource {
     documentation_url: null,
     github_url: null,
     license: asset.license,
+    publisher: asset.publisher,
     itqan_badge: false,
     status: 'published',
     created_at: '',
@@ -92,6 +93,7 @@ async function list(params: ResourceListParams): Promise<PaginatedResponse<Resou
   const filtered = resources.filter((r) => {
     if (params.type && r.type !== params.type) return false;
     if (!matchesLicenseFilter(r.license, params.license)) return false;
+    if (params.publisher && params.publisher.length > 0 && !params.publisher.includes(r.publisher?.name ?? '')) return false;
     if (params.itqan_badge === 'true') return false; // CMS assets never carry the itqan badge
     if (params.search) {
       const q = normalizeArabic(params.search);

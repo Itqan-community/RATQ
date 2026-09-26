@@ -7,6 +7,12 @@ export type ResourceType =
 
 export type ResourceStatus = 'draft' | 'published' | 'archived';
 
+export interface Publisher {
+  id: number | string;
+  name: string;
+  description?: string;
+}
+
 // ─── Data Source Types ────────────────────────────────────────────────────
 // Every resource is tagged with the source that produced it, so the UI can
 // show which content is backed by live third-party data vs RATQ's own.
@@ -51,8 +57,7 @@ export interface Resource {
   downloads: number;
 
   // CMS-sourced detail fields (no honest existing home)
-  publisher_name?: string | null;
-  publisher_description?: string | null;
+  publisher: Publisher | null;
   reciter_name?: string | null;
   preview_images?: string[];
 }
@@ -178,6 +183,8 @@ export interface ResourceListParams {
   /** One or more license values to filter by (OR logic). Replaces the former
    *  single-string param — URL shape: ?license=a&license=b */
   license?: string[];
+  /** One or more publisher names to filter by (OR logic). */
+  publisherNames?: string[];
   itqan_badge?: string;
   search?: string;
   sort?: SortOption;

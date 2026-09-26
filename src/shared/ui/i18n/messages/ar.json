@@ -148,7 +148,9 @@
         "cc_by_nd":     "إسناد بلا اشتقاق",
         "cc_by_nc_sa":  "إسناد غير تجاري ومشاركة بالمثل",
         "cc_by_nc_nd":  "إسناد غير تجاري بلا اشتقاق"
-      }
+      },
+      "publishers": "النواشر",
+      "publishersDefaultText": "اختر ناشرا"
     },
     "types": {
       "library": "مكتبة",
@@ -207,6 +209,7 @@
       "quickSummary": "ملخص سريع",
       "status": "الحالة",
       "published": "منشور",
+      "publisher": "الناشر",
       "itqanCertified": "موثق بإتقان",
       "yes": "نعم",
       "no": "لا",
