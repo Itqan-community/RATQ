@@ -22,6 +22,10 @@ export interface PayloadResourceDoc {
   itqan_badge: boolean;
   status: 'draft' | 'published' | 'archived';
   version: string | null;
+  audio_url?: string | null;
+  audio_thumbnail?: string | null;
+  reciter_name?: string | null;
+  audio_quality?: string | null;
   createdAt: string;
   updatedAt: string;
 }
@@ -53,6 +57,10 @@ export function toResource(doc: PayloadResourceDoc): Resource {
     created_at: doc.createdAt,
     updated_at: doc.updatedAt,
     version: doc.version,
+    audio_url: doc.audio_url ?? null,
+    audio_thumbnail: doc.audio_thumbnail ?? null,
+    reciter_name: doc.reciter_name ?? null,
+    audio_quality: doc.audio_quality ?? null,
     github_stats: null,
     total_downloads: 0,
     downloads: 0,
