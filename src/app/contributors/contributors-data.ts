@@ -148,9 +148,9 @@ export const contributors: Contributor[] = [
     githubUrl: 'https://github.com/Walid-Khalfa',
     avatarUrl: 'https://github.com/Walid-Khalfa.png',
     contribution:
-      'Built the real Payload backend for Announcements, replacing the mock data it had been running on - a proper collection with admin-only writes, public reads scoped to active/non-expired announcements, and resource links that resolve through the real catalog instead of pointing at fake resource IDs. Later added Edge Cache for GitHub repository previews, caching successful responses per-repository while explicitly excluding failed, invalid, or missing-token results from the cache.',
-    issueUrl: 'https://github.com/Itqan-community/RATQ/issues/222',
-    prUrl: 'https://github.com/Itqan-community/RATQ/pull/256',
+      'Built the real Payload backend for Announcements, replacing the mock data it had been running on - a proper collection with admin-only writes, public reads scoped to active/non-expired announcements, and resource links that resolve through the real catalog instead of pointing at fake resource IDs. Later added Edge Cache for GitHub repository previews, caching successful responses per-repository while explicitly excluding failed, invalid, or missing-token results from the cache. Later added the website CTA banners - an optional website_url field plus "Visit site" and "Use API" banners, gated on real data and hidden otherwise, along with a fix so the GitHub stats card only shows for genuinely GitHub-hosted resources. Then added a resource-detail photo carousel with previous/next controls, a slide counter, and dot navigation, falling back to the single resource image when no photo list is available.',
+    issueUrl: 'https://github.com/Itqan-community/RATQ/issues/295',
+    prUrl: 'https://github.com/Itqan-community/RATQ/pull/313',
   },
   {
     name: 'Zyad-Eltayabi',
@@ -158,9 +158,39 @@ export const contributors: Contributor[] = [
     githubUrl: 'https://github.com/Zyad-Eltayabi',
     avatarUrl: 'https://github.com/Zyad-Eltayabi.png',
     contribution:
-      "Added accessible names to the catalog search input and the consumer avatar links, so screen reader users get a real label instead of relying on placeholder text or nothing at all.",
-    issueUrl: 'https://github.com/Itqan-community/RATQ/issues/232',
-    prUrl: 'https://github.com/Itqan-community/RATQ/pull/243',
+      "Added accessible names to the catalog search input and the consumer avatar links, so screen reader users get a real label instead of relying on placeholder text or nothing at all. Later rebuilt the homepage announcement banner to match the new single-bar design, dropping the old dots/arrows while keeping auto-rotation, pause on hover/focus, and scoped keyboard navigation.",
+    issueUrl: 'https://github.com/Itqan-community/RATQ/issues/304',
+    prUrl: 'https://github.com/Itqan-community/RATQ/pull/311',
+  },
+  {
+    name: 'motantawi',
+    githubUsername: 'motantawi',
+    githubUrl: 'https://github.com/motantawi',
+    avatarUrl: 'https://github.com/motantawi.png',
+    contribution:
+      "Added a real GitHub repo preview on resource detail pages - recent commits and topics fetched server-side for resources with a valid GitHub URL, cached for 5 minutes, using a server-only token so it never reaches the client.",
+    issueUrl: 'https://github.com/Itqan-community/RATQ/issues/189',
+    prUrl: 'https://github.com/Itqan-community/RATQ/pull/221',
+  },
+  {
+    name: 'husamemadH',
+    githubUsername: 'husamemadH',
+    githubUrl: 'https://github.com/husamemadH',
+    avatarUrl: 'https://github.com/husamemadH.png',
+    contribution:
+      "Fixed a security gap in the GitHub OAuth callback that put a live, multi-day session token straight into the redirect URL - exposed to browser history, proxy access logs, and any Referer header. Split the handoff into two steps so the token never touches the URL.",
+    issueUrl: 'https://github.com/Itqan-community/RATQ/issues/229',
+    prUrl: 'https://github.com/Itqan-community/RATQ/pull/264',
+  },
+  {
+    name: 'Jawad18750',
+    githubUsername: 'Jawad18750',
+    githubUrl: 'https://github.com/Jawad18750',
+    avatarUrl: 'https://github.com/Jawad18750.png',
+    contribution:
+      "Let publishers view who holds access to a resource and revoke it - cascades to the holder's existing API keys, notifies the applicant, and requires two clicks since revoking can't be undone.",
+    issueUrl: 'https://github.com/Itqan-community/RATQ/issues/234',
+    prUrl: 'https://github.com/Itqan-community/RATQ/pull/272',
   },
   {
     name: 'Ramahadam',
@@ -231,5 +261,25 @@ export const contributors: Contributor[] = [
       'Hid the resource access-request button on the resource detail page, while keeping the report button, preview, related resources, and comments working exactly as before.',
     issueUrl: 'https://github.com/Itqan-community/RATQ/issues/300',
     prUrl: 'https://github.com/Itqan-community/RATQ/pull/310',
+  },
+  {
+    name: 'omraccodesapps-mobile',
+    githubUsername: 'omraccodesapps-mobile',
+    githubUrl: 'https://github.com/omraccodesapps-mobile',
+    avatarUrl: 'https://github.com/omraccodesapps-mobile.png',
+    contribution:
+      "Fixed the audio preview stub that always returned nothing, added the missing Payload fields it needed (audio URL, thumbnail, reciter name, audio quality), and replaced the plain browser audio bar with a custom accessible player - play/pause, a seekable progress bar, elapsed/remaining time, and a file-extension-derived format, with optional fields simply hidden when absent.",
+    issueUrl: 'https://github.com/Itqan-community/RATQ/issues/297',
+    prUrl: 'https://github.com/Itqan-community/RATQ/pull/314',
+  },
+  {
+    name: 'Aymen568',
+    githubUsername: 'Aymen568',
+    githubUrl: 'https://github.com/Aymen568',
+    avatarUrl: 'https://github.com/Aymen568.png',
+    contribution:
+      "Added a publisher filter to the resources catalog - a reusable multi-select dropdown, a new publishers endpoint, and publisher names shown on resource cards and the resource detail page, with a dedicated 'No publisher' option.",
+    issueUrl: 'https://github.com/Itqan-community/RATQ/issues/301',
+    prUrl: 'https://github.com/Itqan-community/RATQ/pull/315',
   },
 ];
