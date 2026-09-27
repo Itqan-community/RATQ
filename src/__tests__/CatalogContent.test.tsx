@@ -70,7 +70,9 @@ describe('CatalogContent pagination', () => {
       page_size: 12,
       type: undefined,
       license: undefined,
+      publisherNames: [],
       search: '',
+      sort: undefined,
     });
   });
 
@@ -83,7 +85,9 @@ describe('CatalogContent pagination', () => {
       page_size: 12,
       type: undefined,
       license: undefined,
+      publisherNames: [],
       search: '',
+      sort: undefined,
     });
   });
 
@@ -96,7 +100,9 @@ describe('CatalogContent pagination', () => {
       page_size: 12,
       type: undefined,
       license: undefined,
+      publisherNames: [],
       search: '',
+      sort: undefined,
     });
   });
 
@@ -116,7 +122,9 @@ describe('CatalogContent pagination', () => {
       page_size: 12,
       type: undefined,
       license: undefined,
+      publisherNames: [],
       search: 'quran',
+      sort: undefined,
     });
   });
 

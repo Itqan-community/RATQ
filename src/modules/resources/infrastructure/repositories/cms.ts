@@ -1,7 +1,8 @@
-import type { PaginatedResponse, Resource, ResourceListParams, ResourceType } from '@/types/resource';
+import type { PaginatedResponse, Publisher, Resource, ResourceListParams, ResourceType } from '@/types/resource';
 import type { ResourceSource } from './types';
 import { normalizeArabic } from '@/shared/utils/utils';
 import { matchesLicenseFilter } from '@/shared/utils/license-filter';
+import { matchesPublisherFilter } from '@/shared/utils/publisher-filter';
 
 const API_BASE = process.env.NEXT_PUBLIC_CMS_API_URL || 'https://api.cms.itqan.dev/cms-api';
 const CMS_GALLERY_BASE = process.env.NEXT_PUBLIC_CMS_GALLERY_URL || 'https://cms.itqan.dev/gallery/asset';
@@ -17,7 +18,7 @@ interface CmsAsset {
   category: string;
   name: string;
   description: string;
-  publisher: { id: number; name: string } | null;
+  publisher: { id: number; name: string,  } | null;
   reciter: { id: number; name: string } | null;
   license: string;
   is_open_access: boolean;
@@ -33,7 +34,7 @@ interface CmsAssetDetail extends CmsAsset {
   thumbnail_url: string | null;
   snapshots: { image_url: string; title: string; description: string }[];
   access_status: string | null;
-  publisher: { id: number; name: string; description?: string | null } | null;
+  publisher: Publisher
 }
 
 async function fetchPage(page: number): Promise<CmsListResponse | null> {
@@ -78,6 +79,7 @@ function toResource(asset: CmsAsset): Resource {
     // visit-site CTA - see issue #299.
     website_url: null,
     license: asset.license,
+    publisher: asset.publisher,
     itqan_badge: false,
     status: 'published',
     created_at: '',
@@ -96,6 +98,7 @@ async function list(params: ResourceListParams): Promise<PaginatedResponse<Resou
   const filtered = resources.filter((r) => {
     if (params.type && r.type !== params.type) return false;
     if (!matchesLicenseFilter(r.license, params.license)) return false;
+    if (!matchesPublisherFilter(r.publisher?.name, params.publisherNames)) return false;
     if (params.itqan_badge === 'true') return false; // CMS assets never carry the itqan badge
     if (params.search) {
       const q = normalizeArabic(params.search);
@@ -121,8 +124,7 @@ async function getDetail(resource: Resource): Promise<Partial<Resource> | null> 
   return {
     description: detail.long_description || resource.description,
     preview_images: detail.snapshots?.map((s) => s.image_url) ?? [],
-    publisher_name: detail.publisher?.name ?? null,
-    publisher_description: detail.publisher?.description ?? null,
+    publisher: detail.publisher,
     reciter_name: detail.reciter?.name ?? null,
   };
 }
