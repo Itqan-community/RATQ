@@ -3,6 +3,7 @@ import { mockResources } from '../mock-data';
 import type { ResourceSource } from './types';
 import { normalizeArabic } from '@/shared/utils/utils';
 import { matchesLicenseFilter } from '@/shared/utils/license-filter';
+import { matchesPublisherFilter } from '@/shared/utils/publisher-filter';
 
 const resources: Resource[] = mockResources.map((r) => ({ ...r, source: 'ratq', source_url: null }));
 
@@ -12,6 +13,7 @@ async function list(params: ResourceListParams): Promise<PaginatedResponse<Resou
   const filtered = resources.filter((r) => {
     if (params.type && r.type !== params.type) return false;
     if (!matchesLicenseFilter(r.license, params.license)) return false;
+    if (!matchesPublisherFilter(r.publisher?.name, params.publisherNames)) return false;
     if (params.itqan_badge === 'true' && !r.itqan_badge) return false;
     if (params.itqan_badge === 'false' && r.itqan_badge) return false;
     if (params.search) {

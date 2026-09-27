@@ -2,6 +2,7 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, act, fireEvent } from '@testing-library/react';
 import { FilterPanel, CC_LICENSE_ROWS } from '@/modules/resources/components/FilterPanel';
 import { LanguageProvider } from '@/shared/ui/i18n/LanguageContext';
+import { NO_PUBLISHER_VALUE } from '@/shared/utils/publisher-filter';
 
 let mockSearchParams = new URLSearchParams();
 const mockPush = vi.fn();
@@ -12,8 +13,24 @@ vi.mock('next/navigation', () => ({
   useRouter: () => ({ push: mockPush }),
 }));
 
+vi.mock('@/hooks/usePublishers', () => ({
+  usePublishers: () => ({
+    data: [
+      { id: 1, name: 'ناشر طويل جدا للاختبار' },
+      { id: 2, name: 'ناشر آخر طويل جدا للاختبار' },
+    ],
+  }),
+}));
+
 function renderWithProvider(ui: React.ReactElement) {
   localStorage.setItem('ratq_locale', 'en');
+  const result = render(<LanguageProvider>{ui}</LanguageProvider>);
+  act(() => {});
+  return result;
+}
+
+function renderWithArabicProvider(ui: React.ReactElement) {
+  localStorage.setItem('ratq_locale', 'ar');
   const result = render(<LanguageProvider>{ui}</LanguageProvider>);
   act(() => {});
   return result;
@@ -61,6 +78,25 @@ describe('FilterPanel', () => {
     expect(allValues).not.toContain('CC-BY-NC-4.0');
     // No two rows should share a stored value
     expect(allValues.length).toBe(new Set(allValues).size);
+  });
+
+  it('uses the Arabic publisher count label for multiple long selections', () => {
+    mockSearchParams = new URLSearchParams('publisher=ناشر%20طويل%20جدا%20للاختبار&publisher=ناشر%20آخر%20طويل%20جدا%20للاختبار');
+    renderWithArabicProvider(<FilterPanel />);
+
+    expect(screen.getByRole('button', { name: 'اختر ناشرا' })).toHaveTextContent('2 ناشرين محددين');
+  });
+
+  it('includes a no-publisher option and sends its reserved value', () => {
+    renderWithProvider(<FilterPanel />);
+
+    fireEvent.click(screen.getByRole('button', { name: 'Select publisher(s)' }));
+    fireEvent.click(screen.getByRole('option', { name: 'No publisher' }));
+
+    expect(mockPush).toHaveBeenCalledWith(
+      `/resources?publisher=${encodeURIComponent(NO_PUBLISHER_VALUE)}`,
+      { scroll: false },
+    );
   });
 
   // ── Type filter ────────────────────────────────────────────────────────────
