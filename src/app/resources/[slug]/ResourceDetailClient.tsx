@@ -9,7 +9,6 @@ import { TrustedBySection } from '@/modules/resources/components/TrustedBySectio
 import { useLanguage } from '@/shared/ui/i18n';
 import { parseGithubRepoUrl } from '@/modules/resources/infrastructure/github/parseGithubRepoUrl';
 import type { GithubRepoPreview as GithubRepoPreviewData, Resource } from '@/types/resource';
-import arabicDescriptions from '@/shared/ui/i18n/resource-descriptions.ar.json';
 import { ResourcePreview } from '@/modules/resources/components/ResourcePreview';
 import { RelatedResources } from '@/modules/resources/components/RelatedResources';
 import { CommentSection } from '@/modules/resources/components/CommentSection';
@@ -96,8 +95,18 @@ function ResourceCtaBanners({ resource }: { resource: Resource }) {
 
 export function ResourceDetailClient({ resource, repoPreview }: ResourceDetailClientProps) {
   const { t, locale, direction } = useLanguage();
-  const arabicCopy = arabicDescriptions[resource.slug as keyof typeof arabicDescriptions];
-  const localizedDescription = locale === 'ar' && arabicCopy ? arabicCopy.description : resource.description;
+  // Reading direction of the resource's own content (issue #303): driven by
+  // the explicit content_language field only - never inferred from the text.
+  // Resources without the field (CMS/Payload today) keep the site direction.
+  const contentDirection =
+    resource.content_language === 'ar' ? 'rtl' : resource.content_language === 'en' ? 'ltr' : direction;
+
+  // Title direction (PR #316 review): a resource's canonical name can be in a
+  // different language than its description (e.g. ratq-native keeps English
+  // names on Arabic-content resources), so the title reads from its own
+  // explicit field, falling back to the content direction - then the site.
+  const titleDirection =
+    resource.title_language === 'ar' ? 'rtl' : resource.title_language === 'en' ? 'ltr' : contentDirection;
 
   const dataPreview = usePreview(resource);
   const IsFromPayloadResource = resource.source === 'payload';
@@ -118,14 +127,19 @@ export function ResourceDetailClient({ resource, repoPreview }: ResourceDetailCl
             <span className={`inline-flex items-center gap-2 rounded-full px-4 py-2 text-xs font-black ${typeColors[resource.type]}`}><TypeIcon type={resource.type}/>{t.catalog.types[resource.type]}</span>
             {resource.itqan_badge && <span className="inline-flex h-9 items-center rounded-full bg-[#171717] px-4 text-xs font-black text-white">إتقان</span>}
           </div>
-          <h1 className="mt-5 text-3xl font-black leading-[1.4] sm:text-4xl">{resource.name}</h1>
-          <div className="mt-4 flex flex-wrap items-center gap-4 text-xs font-semibold text-[#aaa]" dir="ltr">
+          <h1 className="mt-5 text-3xl font-black leading-[1.4] sm:text-4xl" dir={titleDirection}>{resource.name}</h1>
+          {/* Meta-info row follows the resource's content language (issue
+              #303) instead of the old hardcoded dir="ltr". Kept minimal -
+              issue #294 rewrites this row's content separately. */}
+          <div className="mt-4 flex flex-wrap items-center gap-4 text-xs font-semibold text-[#aaa]" dir={contentDirection}>
             <span>{resource.license}</span><span>{resource.version || '—'}</span>
             <span className="inline-flex items-center gap-1">{smallIcon(<><path d="M12 3v12m0 0 4-4m-4 4-4-4"/><path d="M5 19h14"/></>)} {resource.total_downloads}</span>
           </div>
         </header>
 
-        <div className="mt-7 grid items-start gap-8 lg:grid-cols-[270px_minmax(0,1fr)]" dir="ltr">
+        {/* Sidebar side follows the SITE language (no hardcoded dir, issue
+            #303) - the resource's content_language never affects layout. */}
+        <div className="mt-7 grid items-start gap-8 lg:grid-cols-[270px_minmax(0,1fr)]">
           <aside className="space-y-4" dir={direction}>
             {resource.consumers && resource.consumers.length > 0 && <TrustedBySection consumers={resource.consumers}/>}
             <section className="rounded-xl border border-[#e6e6e6] bg-white p-5">
@@ -153,7 +167,7 @@ export function ResourceDetailClient({ resource, repoPreview }: ResourceDetailCl
           <div className="min-w-0" dir={direction}>
             <section className="mt-6">
               <h2 className="text-xl font-black">{t.resource.detail.description}</h2>
-              <p className="mt-3 whitespace-pre-line text-sm leading-8 text-[#808080]">{localizedDescription}</p>
+              <p className="mt-3 whitespace-pre-line text-sm leading-8 text-[#808080]" dir={contentDirection}>{resource.description}</p>
             </section>
 
             <section className="mt-7 rounded-xl border border-[#e5e5e5] bg-white p-6">
