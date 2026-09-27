@@ -101,6 +101,13 @@ export function ResourceDetailClient({ resource, repoPreview }: ResourceDetailCl
   const contentDirection =
     resource.content_language === 'ar' ? 'rtl' : resource.content_language === 'en' ? 'ltr' : direction;
 
+  // Title direction (PR #316 review): a resource's canonical name can be in a
+  // different language than its description (e.g. ratq-native keeps English
+  // names on Arabic-content resources), so the title reads from its own
+  // explicit field, falling back to the content direction - then the site.
+  const titleDirection =
+    resource.title_language === 'ar' ? 'rtl' : resource.title_language === 'en' ? 'ltr' : contentDirection;
+
   const dataPreview = usePreview(resource);
   const IsFromPayloadResource = resource.source === 'payload';
   // Only resources genuinely hosted on GitHub get the GitHub stats box -
@@ -120,7 +127,7 @@ export function ResourceDetailClient({ resource, repoPreview }: ResourceDetailCl
             <span className={`inline-flex items-center gap-2 rounded-full px-4 py-2 text-xs font-black ${typeColors[resource.type]}`}><TypeIcon type={resource.type}/>{t.catalog.types[resource.type]}</span>
             {resource.itqan_badge && <span className="inline-flex h-9 items-center rounded-full bg-[#171717] px-4 text-xs font-black text-white">إتقان</span>}
           </div>
-          <h1 className="mt-5 text-3xl font-black leading-[1.4] sm:text-4xl" dir={contentDirection}>{resource.name}</h1>
+          <h1 className="mt-5 text-3xl font-black leading-[1.4] sm:text-4xl" dir={titleDirection}>{resource.name}</h1>
           {/* Meta-info row follows the resource's content language (issue
               #303) instead of the old hardcoded dir="ltr". Kept minimal -
               issue #294 rewrites this row's content separately. */}
