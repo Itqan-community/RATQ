@@ -99,7 +99,7 @@ export function ResourceDetailClient({ resource, repoPreview }: ResourceDetailCl
   const arabicCopy = arabicDescriptions[resource.slug as keyof typeof arabicDescriptions];
   const localizedDescription = locale === 'ar' && arabicCopy ? arabicCopy.description : resource.description;
 
-  const dataPreview = usePreview(resource.slug, resource.type);
+  const dataPreview = usePreview(resource);
   const IsFromPayloadResource = resource.source === 'payload';
   // Only resources genuinely hosted on GitHub get the GitHub stats box -
   // gate on a real GitHub URL, not on a fallback like "#" or the docs URL
