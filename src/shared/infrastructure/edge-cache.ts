@@ -8,7 +8,10 @@ export async function withEdgeCache(request: Request, compute: () => Promise<Res
   const cache: Cache | undefined = (globalThis as { caches?: { default?: Cache } }).caches?.default;
   if (!cache) return compute(); // local dev / non-Cloudflare runtime - no Cache API available
 
-  const cacheKey = new Request(request.url, request);
+  const cacheKey = new Request(request.url, {
+    method: request.method,
+    headers: request.headers,
+  });
   const cached = await cache.match(cacheKey);
   if (cached) return cached;
 

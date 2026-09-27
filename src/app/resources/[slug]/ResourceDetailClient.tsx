@@ -160,6 +160,7 @@ export function ResourceDetailClient({ resource, repoPreview }: ResourceDetailCl
               <h2 className="text-xl font-black">{t.resource.detail.quickSummary}</h2>
               <div className="mt-5 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
                 <InfoItem icon={smallIcon(<path d="M5 4h14v16H5zM9 8h6M9 12h6"/>)} label={t.resource.detail.license} value={resource.license}/>
+                <InfoItem icon={smallIcon(<><path d="M4 21h16"/><path d="M6 21V4h12v17"/><path d="M9 8h1M14 8h1M9 12h1M14 12h1M9 16h1M14 16h1"/></>)} label={t.resource.detail.publisher} value={resource.publisher?.name || '—'}/>
                 <InfoItem icon={smallIcon(<><circle cx="12" cy="12" r="9"/><path d="m9 12 2 2 4-5"/></>)} label={t.resource.detail.version} value={resource.version || '—'}/>
                 <InfoItem icon={smallIcon(<><rect x="4" y="4" width="6" height="6"/><rect x="14" y="4" width="6" height="6"/><rect x="4" y="14" width="6" height="6"/><rect x="14" y="14" width="6" height="6"/></>)} label={t.resource.detail.type} value={t.catalog.types[resource.type]}/>
                 <InfoItem icon={smallIcon(<><rect x="4" y="5" width="16" height="15" rx="2"/><path d="M8 3v4M16 3v4M4 10h16"/></>)} label={t.resource.detail.created} value={formatDate(resource.created_at, locale)}/>
