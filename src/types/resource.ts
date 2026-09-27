@@ -61,6 +61,12 @@ export interface Resource {
   total_downloads: number;
   downloads: number;
 
+  // Language of the resource's own content (title/description), set directly
+  // by the publisher or CMS - never inferred from the text (issue #303).
+  // Drives the reading direction of that content on the detail page; when
+  // absent (CMS/Payload today), content falls back to the site direction.
+  content_language?: 'ar' | 'en';
+
   // CMS-sourced detail fields (no honest existing home)
   publisher?: Publisher | null;
   reciter_name?: string | null;
