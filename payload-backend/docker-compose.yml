@@ -4,7 +4,7 @@ services:
     restart: unless-stopped
     environment:
       POSTGRES_USER: payload
-      POSTGRES_PASSWORD: payload
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-payload}
       POSTGRES_DB: payload
     ports:
       - '5433:5432'
