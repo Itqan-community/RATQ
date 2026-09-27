@@ -120,6 +120,43 @@ describe('ResourceDetailClient content-language direction (issue #303)', () => {
   });
 });
 
+describe('title direction vs content direction (PR #316 review)', () => {
+  it('English title + Arabic content: h1 is ltr while description/meta row stay rtl', () => {
+    renderDetail(
+      createResource({ title_language: 'en', content_language: 'ar', description: 'وصف المورد بالعربية' }),
+      'en',
+    );
+
+    expect(getTitle()).toHaveAttribute('dir', 'ltr');
+    expect(getDescription()).toHaveAttribute('dir', 'rtl');
+    expect(getMetaRow()).toHaveAttribute('dir', 'rtl');
+  });
+
+  it('English title + English content: h1 is ltr', () => {
+    renderDetail(createResource({ title_language: 'en', content_language: 'en' }), 'en');
+
+    expect(getTitle()).toHaveAttribute('dir', 'ltr');
+  });
+
+  it('title_language absent: h1 falls back to the content direction (rtl for Arabic content)', () => {
+    renderDetail(createResource({ title_language: undefined, content_language: 'ar' }), 'en');
+
+    expect(getTitle()).toHaveAttribute('dir', 'rtl');
+  });
+
+  it('title_language absent and content_language absent: h1 falls back to the site direction', () => {
+    renderDetail(createResource({ title_language: undefined, content_language: undefined }), 'ar');
+
+    expect(getTitle()).toHaveAttribute('dir', 'rtl');
+  });
+
+  it('title_language is actually consulted (Arabic title on English content renders rtl)', () => {
+    renderDetail(createResource({ title_language: 'ar', content_language: 'en' }), 'en');
+
+    expect(getTitle()).toHaveAttribute('dir', 'rtl');
+  });
+});
+
 describe('sidebar grid direction (issue #303)', () => {
   it('has no hardcoded dir on the English site and inherits ltr', () => {
     renderDetail(createResource({ content_language: 'en' }), 'en');
@@ -161,6 +198,14 @@ describe('ratq-native content_language seed data (issue #303)', () => {
       .map((r) => r.slug)
       .sort();
     expect(arabic).toEqual([...ARABIC_SLUGS].sort());
+  });
+
+  it('keeps English canonical names on the Arabic-content resources (title_language: "en")', () => {
+    for (const slug of ARABIC_SLUGS) {
+      const resource = mockResources.find((r) => r.slug === slug);
+      expect(resource!.title_language).toBe('en');
+      expect(resource!.name).toMatch(/^[\x00-\x7F]+$/); // Latin-script name
+    }
   });
 
   it('Arabic records carry the migrated Arabic description AND short_description canonically', () => {
