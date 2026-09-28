@@ -150,10 +150,10 @@
         "cc_by_nc_sa":  "إسناد غير تجاري ومشاركة بالمثل",
         "cc_by_nc_nd":  "إسناد غير تجاري بلا اشتقاق"
       },
-      "publishers": "النواشر",
+      "publishers": "الناشرون",
       "publishersDefaultText": "اختر ناشرا",
       "noPublisher": "بدون ناشر",
-      "publishersSelected": "{{count}} ناشرين محددين"
+      "publishersSelected": "تم تحديد {{count}} ناشر"
     },
     "types": {
       "library": "مكتبة",
@@ -281,6 +281,9 @@
       "visitSiteTitle": "زيارة موقع المورد",
       "visitSiteDescription": "يفتح {{name}} في تبويب جديد",
       "visitSiteButton": "زيارة {{name}}",
+      "viewOnCmsTitle": "عرض المورد في إتقان CMS",
+      "viewOnCmsDescription": "يفتح صفحة المورد في معرض إتقان CMS، وقد يتطلب التنزيل حساب إتقان",
+      "viewOnCmsButton": "افتح في إتقان CMS",
       "useApiTitle": "استخدم الـ API",
       "useApiDescription": "نقطة النهاية: {{endpoint}}",
       "useApiButton": "افتح توثيق الـ API",
