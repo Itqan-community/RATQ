@@ -48,13 +48,13 @@ export function FilterPanel() {
 
   const activeType = searchParams.get('type') ?? '';
   const activePublishers = searchParams.getAll('publisher');
-  const visiblePublisherIds = new Set(publishers.slice(0, 8).map((publisher) => String(publisher.id))); // show the first 8 options
-  activePublishers.forEach((id) => visiblePublisherIds.add(id));
-  const visiblePublishers = publishers.filter((publisher) => visiblePublisherIds.has(String(publisher.id)));
+  const visiblePublisherKeys = new Set(publishers.slice(0, 8).map((publisher) => publisher.key)); // show the first 8 options
+  activePublishers.forEach((key) => visiblePublisherKeys.add(key));
+  const visiblePublishers = publishers.filter((publisher) => visiblePublisherKeys.has(publisher.key));
   const publisherOptions = [
     { value: NO_PUBLISHER_VALUE, label: t.catalog.filters.noPublisher },
     ...visiblePublishers.map((publisher) => ({
-      value: String(publisher.id),
+      value: publisher.key,
       label: (locale === 'ar' && publisher.name_ar) || publisher.name,
     })),
   ];
