@@ -124,6 +124,67 @@ describe('website visit-site CTA', () => {
   });
 });
 
+describe('source-link fallback CTA', () => {
+  it('falls back to documentation_url with the visit-site banner when website_url is absent', () => {
+    const resource = createResource({
+      website_url: null,
+      documentation_url: 'https://docs.example.com/guide',
+    });
+    renderDetail(resource, 'en');
+
+    expect(screen.getByRole('link', { name: 'Visit docs.example.com' })).toHaveAttribute(
+      'href',
+      'https://docs.example.com/guide',
+    );
+  });
+
+  it('prefers website_url over documentation_url', () => {
+    const resource = createResource({
+      website_url: 'https://tahbeer.net',
+      documentation_url: 'https://docs.example.com/guide',
+    });
+    renderDetail(resource, 'en');
+
+    expect(screen.getByRole('link', { name: 'Visit tahbeer.net' })).toBeInTheDocument();
+    expect(screen.queryByRole('link', { name: 'Visit docs.example.com' })).not.toBeInTheDocument();
+  });
+
+  it('links CMS resources to their CMS gallery page when they have no other link', () => {
+    const resource = createResource({
+      source: 'cms',
+      source_url: 'https://cms.itqan.dev/gallery/asset/27',
+    });
+    renderDetail(resource, 'en');
+
+    expect(screen.getByRole('heading', { name: 'View on the Itqan CMS' })).toBeInTheDocument();
+    const link = screen.getByRole('link', { name: 'Open in Itqan CMS' });
+    expect(link).toHaveAttribute('href', 'https://cms.itqan.dev/gallery/asset/27');
+    expect(link).toHaveAttribute('target', '_blank');
+    expect(link).toHaveAttribute('rel', 'noopener noreferrer');
+  });
+
+  it('renders Arabic strings for the CMS banner', () => {
+    const resource = createResource({
+      source: 'cms',
+      source_url: 'https://cms.itqan.dev/gallery/asset/27',
+    });
+    renderDetail(resource, 'ar');
+
+    expect(screen.getByRole('heading', { name: 'عرض المورد في إتقان CMS' })).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: 'افتح في إتقان CMS' })).toBeInTheDocument();
+  });
+
+  it('does not show the CMS banner for non-CMS sources or when source_url is missing', () => {
+    renderDetail(createResource({ source: 'ratq', source_url: 'https://example.com/x' }), 'en');
+    expect(screen.queryByRole('heading', { name: 'View on the Itqan CMS' })).not.toBeInTheDocument();
+  });
+
+  it('does not show the CMS banner when a CMS resource has no source_url', () => {
+    renderDetail(createResource({ source: 'cms', source_url: null }), 'en');
+    expect(screen.queryByRole('heading', { name: 'View on the Itqan CMS' })).not.toBeInTheDocument();
+  });
+});
+
 describe('use-API CTA', () => {
   it('renders with endpoint description when api_endpoint and api_docs exist', () => {
     const resource = createResource({
