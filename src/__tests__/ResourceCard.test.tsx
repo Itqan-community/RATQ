@@ -112,6 +112,51 @@ describe('ResourceCard', () => {
     expect(screen.queryByText('Demo')).not.toBeInTheDocument();
   });
 
+  it('shows Arabic name, description and publisher on the Arabic site, each marked rtl', () => {
+    localStorage.setItem('ratq_locale', 'ar');
+    render(
+      <LanguageProvider>
+        <ResourceCard
+          resource={createResource({
+            name_ar: 'المصحف المرتل',
+            description_ar: 'وصف عربي',
+            content_language: 'en',
+            title_language: 'en',
+            publisher: { id: 3, name: 'Tahbeer Center', name_ar: 'مركز تحبير' },
+          })}
+        />
+      </LanguageProvider>,
+    );
+    act(() => {});
+
+    expect(screen.getByRole('heading', { name: 'المصحف المرتل' })).toHaveAttribute('dir', 'rtl');
+    expect(screen.getByText('وصف عربي')).toHaveAttribute('dir', 'rtl');
+    expect(screen.getByText('مركز تحبير')).toBeInTheDocument();
+    expect(screen.queryByText('Tahbeer Center')).not.toBeInTheDocument();
+  });
+
+  it('shows English name and description ltr on the English site even when Arabic exists', () => {
+    renderWithProvider(
+      <ResourceCard
+        resource={createResource({
+          name_ar: 'المصحف المرتل',
+          description_ar: 'وصف عربي',
+          content_language: 'en',
+          title_language: 'en',
+        })}
+      />,
+    );
+
+    expect(screen.getByRole('heading', { name: 'Test Resource' })).toHaveAttribute('dir', 'ltr');
+    expect(screen.getByText('Test resource summary')).toHaveAttribute('dir', 'ltr');
+  });
+
+  it('leaves direction to the page when the resource declares no language', () => {
+    renderWithProvider(<ResourceCard resource={createResource()} />);
+
+    expect(screen.getByRole('heading', { name: 'Test Resource' })).not.toHaveAttribute('dir');
+  });
+
   it('clamps short description to 3 lines', () => {
     renderWithProvider(
       <ResourceCard resource={createResource({

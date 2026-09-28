@@ -4,7 +4,8 @@ import Link from 'next/link';
 import { useResources } from '@/hooks/useResources';
 import type { Resource } from '@/types/resource';
 import { ResourceBadge } from '@/shared/ui/Badge';
-import { useTranslations } from '@/shared/ui/i18n';
+import { useLanguage } from '@/shared/ui/i18n';
+import { languageDir, localizeResource } from '@/shared/utils/localize-resource';
 
 interface RelatedResourcesProps {
   currentResourceId: number;
@@ -12,7 +13,7 @@ interface RelatedResourcesProps {
 }
 
 export function RelatedResources({ currentResourceId, currentResourceType }: RelatedResourcesProps) {
-  const t = useTranslations();
+  const { t } = useLanguage();
   // Fetch only resources of the same type — server-side filter, fewer results
   const { data: paginated, isLoading } = useResources({
     type: currentResourceType,
@@ -54,6 +55,9 @@ export function RelatedResources({ currentResourceId, currentResourceType }: Rel
 }
 
 function RelatedResourceCard({ resource }: { resource: Resource }) {
+  const { locale } = useLanguage();
+  const localized = localizeResource(resource, locale);
+
   return (
     <Link
       href={`/resources/${resource.slug}`}
@@ -67,11 +71,17 @@ function RelatedResourceCard({ resource }: { resource: Resource }) {
           </span>
         )}
       </div>
-      <h3 className="font-heading font-semibold text-sm leading-snug text-[var(--text-primary)]">
-        {resource.name}
+      <h3
+        className="font-heading font-semibold text-sm leading-snug text-[var(--text-primary)]"
+        dir={languageDir(localized.titleLanguage ?? localized.contentLanguage)}
+      >
+        {localized.name}
       </h3>
-      <p className="text-xs text-[var(--text-secondary)] leading-relaxed line-clamp-2">
-        {resource.short_description || resource.description}
+      <p
+        className="text-xs text-[var(--text-secondary)] leading-relaxed line-clamp-2"
+        dir={languageDir(localized.contentLanguage)}
+      >
+        {localized.shortDescription}
       </p>
     </Link>
   );
