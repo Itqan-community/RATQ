@@ -53,7 +53,9 @@ const apiIcon = (
 // publisher-provided API details - it stays invisible until a resource
 // actually has that data. CMS resources have neither link, so they fall back
 // to their CMS gallery page (source_url) so every catalog entry has a way out.
-const isWebUrl = (url?: string | null): url is string => !!url && /^https?:\/\//i.test(url);
+// Usable = a real http(s) link with a site name to show, so a malformed website_url can't shadow a good docs link.
+const isWebUrl = (url?: string | null): url is string =>
+  !!url && /^https?:\/\//i.test(url) && getSiteNameFromUrl(url) !== null;
 
 function ResourceCtaBanners({ resource }: { resource: Resource }) {
   const { t } = useLanguage();

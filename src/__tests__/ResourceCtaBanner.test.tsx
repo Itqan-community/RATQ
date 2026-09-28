@@ -147,6 +147,29 @@ describe('source-link fallback CTA', () => {
     expect(screen.queryByRole('heading', { name: 'Visit the resource site' })).not.toBeInTheDocument();
   });
 
+  it('skips an unusable website_url and falls back to a valid documentation_url', () => {
+    renderDetail(
+      createResource({ website_url: 'https://', documentation_url: 'https://docs.example.com/guide' }),
+      'en',
+    );
+
+    expect(screen.getByRole('link', { name: 'Visit docs.example.com' })).toBeInTheDocument();
+  });
+
+  it('falls back to the CMS gallery link when both website and docs urls are unusable', () => {
+    renderDetail(
+      createResource({
+        source: 'cms',
+        source_url: 'https://cms.itqan.dev/gallery/asset/27',
+        website_url: 'https://',
+        documentation_url: 'not-a-url',
+      }),
+      'en',
+    );
+
+    expect(screen.getByRole('heading', { name: 'View on the Itqan CMS' })).toBeInTheDocument();
+  });
+
   it('prefers website_url over documentation_url', () => {
     const resource = createResource({
       website_url: 'https://tahbeer.net',
