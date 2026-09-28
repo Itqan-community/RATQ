@@ -40,7 +40,7 @@ function TrashIcon() {
 // ─── FilterPanel ───────────────────────────────────────────────────────────
 
 export function FilterPanel() {
-  const { direction, t } = useLanguage();
+  const { direction, locale, t } = useLanguage();
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -48,14 +48,14 @@ export function FilterPanel() {
 
   const activeType = searchParams.get('type') ?? '';
   const activePublishers = searchParams.getAll('publisher');
-  const visiblePublisherNames = new Set(publishers.slice(0, 8).map((publisher) => publisher.name)); // show the first 8 options
-  activePublishers.forEach((name) => visiblePublisherNames.add(name));
-  const visiblePublishers = publishers.filter((publisher) => visiblePublisherNames.has(publisher.name));
+  const visiblePublisherIds = new Set(publishers.slice(0, 8).map((publisher) => String(publisher.id))); // show the first 8 options
+  activePublishers.forEach((id) => visiblePublisherIds.add(id));
+  const visiblePublishers = publishers.filter((publisher) => visiblePublisherIds.has(String(publisher.id)));
   const publisherOptions = [
     { value: NO_PUBLISHER_VALUE, label: t.catalog.filters.noPublisher },
     ...visiblePublishers.map((publisher) => ({
-      value: publisher.name,
-      label: publisher.name,
+      value: String(publisher.id),
+      label: (locale === 'ar' && publisher.name_ar) || publisher.name,
     })),
   ];
   // Multi-value license: ?license=a&license=b

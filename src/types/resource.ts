@@ -211,7 +211,7 @@ export interface ResourceListParams {
    *  single-string param — URL shape: ?license=a&license=b */
   license?: string[];
   /** One or more publisher names to filter by (OR logic). */
-  publisherNames?: string[];
+  publisherIds?: string[];
   itqan_badge?: string;
   search?: string;
   sort?: SortOption;

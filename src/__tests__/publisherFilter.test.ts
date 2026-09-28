@@ -7,20 +7,21 @@ describe('matchesPublisherFilter', () => {
     expect(matchesPublisherFilter(undefined, [NO_PUBLISHER_VALUE])).toBe(true);
   });
 
-  it('matches named publishers when their name is selected', () => {
-    expect(matchesPublisherFilter('Alpha Studio', ['Alpha Studio'])).toBe(true);
+  it('matches named publishers when their id is selected', () => {
+    expect(matchesPublisherFilter(3, ['3'])).toBe(true);
+    expect(matchesPublisherFilter(3, ['4'])).toBe(false);
   });
 
   it('uses OR semantics for named and no-publisher selections', () => {
-    const selected = ['Alpha Studio', NO_PUBLISHER_VALUE];
+    const selected = ['3', NO_PUBLISHER_VALUE];
 
-    expect(matchesPublisherFilter('Alpha Studio', selected)).toBe(true);
+    expect(matchesPublisherFilter(3, selected)).toBe(true);
     expect(matchesPublisherFilter(null, selected)).toBe(true);
-    expect(matchesPublisherFilter('Other Studio', selected)).toBe(false);
+    expect(matchesPublisherFilter(9, selected)).toBe(false);
   });
 
   it('matches every resource when no publisher filter is selected', () => {
     expect(matchesPublisherFilter(null, undefined)).toBe(true);
-    expect(matchesPublisherFilter('Alpha Studio', [])).toBe(true);
+    expect(matchesPublisherFilter(3, [])).toBe(true);
   });
 });
