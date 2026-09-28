@@ -44,8 +44,11 @@ type Lang = 'ar' | 'en';
 const langHeaders = (lang: Lang): HeadersInit | undefined =>
   lang === 'ar' ? { 'Accept-Language': 'ar' } : undefined;
 
+// The extra ?lang= param is ignored by the CMS (the header decides); it only
+// gives each language its own URL, because some runtimes key the fetch cache
+// on the URL alone and would otherwise serve one language's response to both.
 async function fetchPage(page: number, lang: Lang): Promise<CmsListResponse | null> {
-  const res = await fetch(`${API_BASE}/assets/?is_open_access=true&page=${page}`, {
+  const res = await fetch(`${API_BASE}/assets/?is_open_access=true&page=${page}&lang=${lang}`, {
     headers: langHeaders(lang),
     next: { revalidate: 300 },
   });
@@ -144,7 +147,7 @@ async function getDetail(resource: Resource): Promise<Partial<Resource> | null> 
   if (!Number.isFinite(id)) return null;
 
   const fetchDetail = (lang: Lang) =>
-    fetch(`${API_BASE}/assets/${id}/`, { headers: langHeaders(lang), next: { revalidate: 300 } });
+    fetch(`${API_BASE}/assets/${id}/?lang=${lang}`, { headers: langHeaders(lang), next: { revalidate: 300 } });
   const [res, arRes] = await Promise.all([fetchDetail('en'), fetchDetail('ar').catch(() => null)]);
   if (!res.ok) return null;
   const detail: CmsAssetDetail = await res.json();
