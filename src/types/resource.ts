@@ -7,6 +7,11 @@ export type ResourceType =
 
 export type ResourceStatus = 'draft' | 'published' | 'archived';
 
+// A publisher as listed in the filter: key is the source-namespaced filter value.
+export interface PublisherOption extends Publisher {
+  key: string;
+}
+
 export interface Publisher {
   id: number;
   name: string;
@@ -210,8 +215,8 @@ export interface ResourceListParams {
   /** One or more license values to filter by (OR logic). Replaces the former
    *  single-string param — URL shape: ?license=a&license=b */
   license?: string[];
-  /** One or more publisher names to filter by (OR logic). */
-  publisherIds?: string[];
+  /** One or more publisher keys (see publisherKey) to filter by (OR logic). */
+  publisherKeys?: string[];
   itqan_badge?: string;
   search?: string;
   sort?: SortOption;
