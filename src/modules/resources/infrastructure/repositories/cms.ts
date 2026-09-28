@@ -148,7 +148,7 @@ async function getDetail(resource: Resource): Promise<Partial<Resource> | null> 
   const [res, arRes] = await Promise.all([fetchDetail('en'), fetchDetail('ar').catch(() => null)]);
   if (!res.ok) return null;
   const detail: CmsAssetDetail = await res.json();
-  const arDetail: CmsAssetDetail | null = arRes?.ok ? await arRes.json() : null;
+  const arDetail: CmsAssetDetail | null = arRes?.ok ? await arRes.json().catch(() => null) : null;
 
   return {
     description: detail.long_description || resource.description,
