@@ -16,8 +16,8 @@ vi.mock('next/navigation', () => ({
 vi.mock('@/hooks/usePublishers', () => ({
   usePublishers: () => ({
     data: [
-      { id: 1, name: 'ناشر طويل جدا للاختبار' },
-      { id: 2, name: 'ناشر آخر طويل جدا للاختبار' },
+      { key: 'cms:1', id: 1, name: 'Long Publisher One', name_ar: 'ناشر طويل جدا للاختبار' },
+      { key: 'cms:2', id: 2, name: 'Long Publisher Two', name_ar: 'ناشر آخر طويل جدا للاختبار' },
     ],
   }),
 }));
@@ -81,7 +81,7 @@ describe('FilterPanel', () => {
   });
 
   it('uses the Arabic publisher count label for multiple long selections', () => {
-    mockSearchParams = new URLSearchParams('publisher=ناشر%20طويل%20جدا%20للاختبار&publisher=ناشر%20آخر%20طويل%20جدا%20للاختبار');
+    mockSearchParams = new URLSearchParams('publisher=cms:1&publisher=cms:2');
     renderWithArabicProvider(<FilterPanel />);
 
     expect(screen.getByRole('button', { name: 'اختر ناشرا' })).toHaveTextContent('تم تحديد 2 ناشر');
@@ -91,6 +91,25 @@ describe('FilterPanel', () => {
     renderWithArabicProvider(<FilterPanel />);
 
     expect(screen.getByText('الناشرون')).toBeInTheDocument();
+  });
+
+  it('lists publishers by their Arabic name on the Arabic site and sends the id', () => {
+    renderWithArabicProvider(<FilterPanel />);
+
+    fireEvent.click(screen.getByRole('button', { name: 'اختر ناشرا' }));
+    expect(screen.queryByRole('option', { name: 'Long Publisher One' })).not.toBeInTheDocument();
+    fireEvent.click(screen.getByRole('option', { name: 'ناشر طويل جدا للاختبار' }));
+
+    expect(mockPush).toHaveBeenCalledWith('/resources?publisher=cms%3A1', { scroll: false });
+  });
+
+  it('lists publishers by their English name on the English site and sends the same id', () => {
+    renderWithProvider(<FilterPanel />);
+
+    fireEvent.click(screen.getByRole('button', { name: 'Select publisher(s)' }));
+    fireEvent.click(screen.getByRole('option', { name: 'Long Publisher One' }));
+
+    expect(mockPush).toHaveBeenCalledWith('/resources?publisher=cms%3A1', { scroll: false });
   });
 
   it('includes a no-publisher option and sends its reserved value', () => {

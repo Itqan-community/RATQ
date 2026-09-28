@@ -12,8 +12,8 @@ export function buildResourcesUrl(params: ResourceListParams = {}): string {
   if (params.license && params.license.length > 0) {
     params.license.forEach((l) => qs.append('license', l));
   }
-  if (params.publisherNames && params.publisherNames.length > 0) {
-    params.publisherNames.forEach((publisher) => qs.append('publisher', publisher));
+  if (params.publisherKeys && params.publisherKeys.length > 0) {
+    params.publisherKeys.forEach((publisher) => qs.append('publisher', publisher));
   }
   if (params.itqan_badge !== undefined) qs.set('itqan_badge', params.itqan_badge);
   if (params.search) qs.set('search', params.search);
