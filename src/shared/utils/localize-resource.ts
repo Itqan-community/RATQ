@@ -2,6 +2,8 @@ import type { Resource } from '@/types/resource';
 
 type Language = 'ar' | 'en';
 
+export const languageDir = (lang?: Language) => (lang === 'ar' ? 'rtl' : lang === 'en' ? 'ltr' : undefined);
+
 // Picks the Arabic or base text of a resource for the site locale and reports
 // which language ended up on screen, so callers set the reading direction from
 // the text actually shown - never from sniffing it (issue #303). Resources with
