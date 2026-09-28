@@ -83,6 +83,41 @@ describe('cms source list', () => {
   });
 });
 
+describe('cms source cache keys', () => {
+  // Some deployed runtimes key the fetch cache on the URL alone and ignore
+  // headers, which would let the English and Arabic responses overwrite each
+  // other. Each language therefore has to request its own URL.
+  const urlsByLanguage = (calls: [string, RequestInit | undefined][]) => {
+    const urls = { ar: new Set<string>(), en: new Set<string>() };
+    calls.forEach(([url, init]) => urls[langOf(init) === 'ar' ? 'ar' : 'en'].add(url));
+    return urls;
+  };
+
+  it('never requests the same list URL for both languages', async () => {
+    fetchMock.mockImplementation((_url: string, init?: RequestInit) =>
+      json({ count: 1, results: [langOf(init) === 'ar' ? arAsset : enAsset] }),
+    );
+
+    await cmsSource.list({});
+    const urls = urlsByLanguage(fetchMock.mock.calls as [string, RequestInit | undefined][]);
+
+    expect(urls.ar.size).toBeGreaterThan(0);
+    expect(urls.en.size).toBeGreaterThan(0);
+    expect([...urls.ar].filter((u) => urls.en.has(u))).toEqual([]);
+  });
+
+  it('never requests the same detail URL for both languages', async () => {
+    fetchMock.mockImplementation(() => json({ ...enAsset, long_description: 'x', snapshots: [] }));
+
+    await cmsSource.getDetail!({ slug: 'cms-27', description: 'x' } as never);
+    const urls = urlsByLanguage(fetchMock.mock.calls as [string, RequestInit | undefined][]);
+
+    expect([...urls.ar].filter((u) => urls.en.has(u))).toEqual([]);
+    expect(urls.ar.size).toBe(1);
+    expect(urls.en.size).toBe(1);
+  });
+});
+
 describe('cms source detail', () => {
   it('adds the Arabic long description and publisher from the Arabic detail response', async () => {
     fetchMock.mockImplementation((_url: string, init?: RequestInit) =>
