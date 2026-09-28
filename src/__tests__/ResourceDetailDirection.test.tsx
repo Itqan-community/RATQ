@@ -120,6 +120,46 @@ describe('ResourceDetailClient content-language direction (issue #303)', () => {
   });
 });
 
+describe('bilingual (CMS) resources follow the site language', () => {
+  const cmsResource = () =>
+    createResource({
+      source: 'cms',
+      name: 'Ad-Douri Mushaf',
+      description: 'English description',
+      name_ar: 'المصحف المرتل برواية الدوري',
+      description_ar: 'وصف عربي',
+      content_language: 'en',
+      title_language: 'en',
+      publisher: { id: 3, name: 'Tahbeer Center', name_ar: 'مركز تحبير' },
+    });
+
+  it('Arabic site: shows Arabic title, description and publisher, all rtl', () => {
+    renderDetail(cmsResource(), 'ar');
+
+    expect(getTitle()).toHaveTextContent('المصحف المرتل برواية الدوري');
+    expect(getTitle()).toHaveAttribute('dir', 'rtl');
+    expect(getDescription()).toHaveTextContent('وصف عربي');
+    expect(getDescription()).toHaveAttribute('dir', 'rtl');
+    expect(screen.getAllByText('مركز تحبير').length).toBeGreaterThan(0);
+  });
+
+  it('English site: shows the English text, ltr', () => {
+    renderDetail(cmsResource(), 'en');
+
+    expect(getTitle()).toHaveTextContent('Ad-Douri Mushaf');
+    expect(getTitle()).toHaveAttribute('dir', 'ltr');
+    expect(getDescription()).toHaveTextContent('English description');
+    expect(getDescription()).toHaveAttribute('dir', 'ltr');
+  });
+
+  it('Arabic site with no Arabic text: English content stays ltr instead of rendering RTL', () => {
+    renderDetail({ ...cmsResource(), name_ar: undefined, description_ar: undefined }, 'ar');
+
+    expect(getTitle()).toHaveAttribute('dir', 'ltr');
+    expect(getDescription()).toHaveAttribute('dir', 'ltr');
+  });
+});
+
 describe('title direction vs content direction (PR #316 review)', () => {
   it('English title + Arabic content: h1 is ltr while description/meta row stay rtl', () => {
     renderDetail(
