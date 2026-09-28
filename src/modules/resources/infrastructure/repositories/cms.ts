@@ -75,8 +75,8 @@ function toResource(asset: CmsAsset): Resource {
     documentation_url: null,
     github_url: null,
     // CMS has no publisher-website field today (source_url is the CMS gallery
-    // page, not the publisher's site), so CMS resources stay without a
-    // visit-site CTA - see issue #299.
+    // page, not the publisher's site), so the detail page links CMS resources
+    // to source_url through its own CMS banner instead - see issue #299.
     website_url: null,
     license: asset.license,
     publisher: asset.publisher,

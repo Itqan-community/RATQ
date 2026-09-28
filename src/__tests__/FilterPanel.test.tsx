@@ -84,7 +84,13 @@ describe('FilterPanel', () => {
     mockSearchParams = new URLSearchParams('publisher=ناشر%20طويل%20جدا%20للاختبار&publisher=ناشر%20آخر%20طويل%20جدا%20للاختبار');
     renderWithArabicProvider(<FilterPanel />);
 
-    expect(screen.getByRole('button', { name: 'اختر ناشرا' })).toHaveTextContent('2 ناشرين محددين');
+    expect(screen.getByRole('button', { name: 'اختر ناشرا' })).toHaveTextContent('تم تحديد 2 ناشر');
+  });
+
+  it('labels the Arabic publisher group "الناشرون"', () => {
+    renderWithArabicProvider(<FilterPanel />);
+
+    expect(screen.getByText('الناشرون')).toBeInTheDocument();
   });
 
   it('includes a no-publisher option and sends its reserved value', () => {

@@ -48,14 +48,17 @@ const apiIcon = (
 );
 
 // Visit-site and use-API banners (issue #299). Both are gated on real data:
-// the website banner needs the resource's own website_url (with a parseable
-// site name), and the API banner needs publisher-provided API details - it
-// stays invisible until a resource actually has that data.
+// the website banner needs the resource's own website_url or, failing that,
+// its documentation_url (with a parseable site name), and the API banner needs
+// publisher-provided API details - it stays invisible until a resource
+// actually has that data. CMS resources have neither link, so they fall back
+// to their CMS gallery page (source_url) so every catalog entry has a way out.
 function ResourceCtaBanners({ resource }: { resource: Resource }) {
   const { t } = useLanguage();
 
-  const websiteUrl = resource.website_url;
+  const websiteUrl = resource.website_url || resource.documentation_url;
   const siteName = websiteUrl ? getSiteNameFromUrl(websiteUrl) : null;
+  const cmsUrl = !websiteUrl && resource.source === 'cms' ? resource.source_url : null;
 
   const apiHref = resource.api_docs || resource.api_endpoint;
 
@@ -69,6 +72,16 @@ function ResourceCtaBanners({ resource }: { resource: Resource }) {
           description={interpolate(t.resource.detail.visitSiteDescription, { name: siteName })}
           buttonLabel={interpolate(t.resource.detail.visitSiteButton, { name: siteName })}
           ariaLabel={`${t.resource.detail.visitSiteTitle} - ${siteName}`}
+        />
+      )}
+      {cmsUrl && (
+        <ResourceCtaBanner
+          href={cmsUrl}
+          icon={globeIcon}
+          title={t.resource.detail.viewOnCmsTitle}
+          description={t.resource.detail.viewOnCmsDescription}
+          buttonLabel={t.resource.detail.viewOnCmsButton}
+          ariaLabel={t.resource.detail.viewOnCmsTitle}
         />
       )}
       {apiHref && (
