@@ -5,6 +5,9 @@ import type { Resource } from '@/types/resource';
 import { useLanguage } from '@/shared/ui/i18n';
 import { RESOURCE_TYPE_COLORS } from '@/shared/constants/resource-type-colors';
 import { TypeIcon } from '@/shared/constants/resource-type-icon';
+import { localizeResource } from '@/shared/utils/localize-resource';
+
+const dirOf = (lang?: 'ar' | 'en') => (lang === 'ar' ? 'rtl' : lang === 'en' ? 'ltr' : undefined);
 
 interface ResourceCardProps {
   resource: Resource;
@@ -34,7 +37,7 @@ export function ResourceCard({ resource, rank, downloadCount }: ResourceCardProp
   const { locale, t } = useLanguage();
   const isArabic = locale === 'ar';
   const downloads = downloadCount ?? resource.total_downloads ?? resource.downloads ?? 0;
-  const description = resource.short_description || resource.description;
+  const localized = localizeResource(resource, locale);
   // undefined for TrendingResource callers, which don't carry a source
   // (TrendingResources.tsx force-casts to Resource) - show nothing rather
   // than a confidently wrong label.
@@ -48,7 +51,7 @@ export function ResourceCard({ resource, rank, downloadCount }: ResourceCardProp
           this <a> would be invalid HTML. */}
       <Link
         href={`/resources/${resource.slug}`}
-        aria-label={resource.name}
+        aria-label={localized.name}
         className="absolute inset-0 z-10 rounded-[13px]"
       />
 
@@ -78,11 +81,11 @@ export function ResourceCard({ resource, rank, downloadCount }: ResourceCardProp
         </span>
       </div>
 
-      <h3 className="mt-5 line-clamp-2 text-xl font-black leading-8 text-black">
-        {resource.name}
+      <h3 className="mt-5 line-clamp-2 text-xl font-black leading-8 text-black" dir={dirOf(localized.titleLanguage ?? localized.contentLanguage)}>
+        {localized.name}
       </h3>
-      <p className="mt-3 line-clamp-3 flex-1 text-sm leading-7 text-[#8b8b8b]">
-        {description}
+      <p className="mt-3 line-clamp-3 flex-1 text-sm leading-7 text-[#8b8b8b]" dir={dirOf(localized.contentLanguage)}>
+        {localized.shortDescription}
       </p>
 
       <div className="mt-4 flex min-w-0 items-center gap-x-3 overflow-hidden text-[11px] font-semibold text-[#b5b5b5]" dir="ltr">
@@ -102,7 +105,7 @@ export function ResourceCard({ resource, rank, downloadCount }: ResourceCardProp
         
         <span
           className="inline-flex min-w-0 flex-1 items-center justify-end gap-1 text-end"
-          title={resource?.publisher?.name}
+          title={localized.publisherName}
           dir="auto"
         >
             <svg className="h-3.5 w-3.5 flex-none" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} aria-hidden="true">
@@ -110,7 +113,7 @@ export function ResourceCard({ resource, rank, downloadCount }: ResourceCardProp
               <path d="M6 21V4h12v17" />
               <path d="M9 8h1M14 8h1M9 12h1M14 12h1M9 16h1M14 16h1" />
             </svg>
-            <span className="min-w-0 truncate">{resource?.publisher?.name || '—'}</span>
+            <span className="min-w-0 truncate">{localized.publisherName || '—'}</span>
           </span>
 
         {resource.github_url && (
