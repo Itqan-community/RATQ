@@ -138,6 +138,15 @@ describe('source-link fallback CTA', () => {
     );
   });
 
+  it('ignores a documentation_url that is not an http(s) link', () => {
+    renderDetail(
+      createResource({ website_url: null, documentation_url: 'javascript://docs.example.com/%0Aalert(1)' }),
+      'en',
+    );
+
+    expect(screen.queryByRole('heading', { name: 'Visit the resource site' })).not.toBeInTheDocument();
+  });
+
   it('prefers website_url over documentation_url', () => {
     const resource = createResource({
       website_url: 'https://tahbeer.net',
