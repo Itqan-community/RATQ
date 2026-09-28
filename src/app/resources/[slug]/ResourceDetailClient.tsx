@@ -19,6 +19,7 @@ import { getSiteNameFromUrl, interpolate } from '@/shared/utils/utils';
 import { ReportButton } from '@/modules/resources/components/ReportButton';
 import { RESOURCE_TYPE_COLORS } from '@/shared/constants/resource-type-colors';
 import { TypeIcon } from '@/shared/constants/resource-type-icon';
+import { localizeResource } from '@/shared/utils/localize-resource';
 
 interface ResourceDetailClientProps {
   resource: Resource;
@@ -116,15 +117,18 @@ export function ResourceDetailClient({ resource, repoPreview }: ResourceDetailCl
   // Reading direction of the resource's own content (issue #303): driven by
   // the explicit content_language field only - never inferred from the text.
   // Resources without the field (CMS/Payload today) keep the site direction.
+  // Bilingual sources (CMS) carry both languages, so the language is that of
+  // the text actually shown (localizeResource), still explicit and not sniffed.
+  const localized = localizeResource(resource, locale);
   const contentDirection =
-    resource.content_language === 'ar' ? 'rtl' : resource.content_language === 'en' ? 'ltr' : direction;
+    localized.contentLanguage === 'ar' ? 'rtl' : localized.contentLanguage === 'en' ? 'ltr' : direction;
 
   // Title direction (PR #316 review): a resource's canonical name can be in a
   // different language than its description (e.g. ratq-native keeps English
   // names on Arabic-content resources), so the title reads from its own
   // explicit field, falling back to the content direction - then the site.
   const titleDirection =
-    resource.title_language === 'ar' ? 'rtl' : resource.title_language === 'en' ? 'ltr' : contentDirection;
+    localized.titleLanguage === 'ar' ? 'rtl' : localized.titleLanguage === 'en' ? 'ltr' : contentDirection;
 
   const dataPreview = usePreview(resource);
   const IsFromPayloadResource = resource.source === 'payload';
@@ -145,7 +149,7 @@ export function ResourceDetailClient({ resource, repoPreview }: ResourceDetailCl
             <span className={`inline-flex items-center gap-2 rounded-full px-4 py-2 text-xs font-black ${typeColors[resource.type]}`}><TypeIcon type={resource.type}/>{t.catalog.types[resource.type]}</span>
             {resource.itqan_badge && <span className="inline-flex h-9 items-center rounded-full bg-[#171717] px-4 text-xs font-black text-white">إتقان</span>}
           </div>
-          <h1 className="mt-5 text-3xl font-black leading-[1.4] sm:text-4xl" dir={titleDirection}>{resource.name}</h1>
+          <h1 className="mt-5 text-3xl font-black leading-[1.4] sm:text-4xl" dir={titleDirection}>{localized.name}</h1>
           {/* Meta-info row follows the resource's content language (issue
               #303) instead of the old hardcoded dir="ltr". Kept minimal -
               issue #294 rewrites this row's content separately. */}
@@ -185,14 +189,14 @@ export function ResourceDetailClient({ resource, repoPreview }: ResourceDetailCl
           <div className="min-w-0" dir={direction}>
             <section className="mt-6">
               <h2 className="text-xl font-black">{t.resource.detail.description}</h2>
-              <p className="mt-3 whitespace-pre-line text-sm leading-8 text-[#808080]" dir={contentDirection}>{resource.description}</p>
+              <p className="mt-3 whitespace-pre-line text-sm leading-8 text-[#808080]" dir={contentDirection}>{localized.description}</p>
             </section>
 
             <section className="mt-7 rounded-xl border border-[#e5e5e5] bg-white p-6">
               <h2 className="text-xl font-black">{t.resource.detail.quickSummary}</h2>
               <div className="mt-5 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
                 <InfoItem icon={smallIcon(<path d="M5 4h14v16H5zM9 8h6M9 12h6"/>)} label={t.resource.detail.license} value={resource.license}/>
-                <InfoItem icon={smallIcon(<><path d="M4 21h16"/><path d="M6 21V4h12v17"/><path d="M9 8h1M14 8h1M9 12h1M14 12h1M9 16h1M14 16h1"/></>)} label={t.resource.detail.publisher} value={resource.publisher?.name || '—'}/>
+                <InfoItem icon={smallIcon(<><path d="M4 21h16"/><path d="M6 21V4h12v17"/><path d="M9 8h1M14 8h1M9 12h1M14 12h1M9 16h1M14 16h1"/></>)} label={t.resource.detail.publisher} value={localized.publisherName || '—'}/>
                 <InfoItem icon={smallIcon(<><circle cx="12" cy="12" r="9"/><path d="m9 12 2 2 4-5"/></>)} label={t.resource.detail.version} value={resource.version || '—'}/>
                 <InfoItem icon={smallIcon(<><rect x="4" y="4" width="6" height="6"/><rect x="14" y="4" width="6" height="6"/><rect x="4" y="14" width="6" height="6"/><rect x="14" y="14" width="6" height="6"/></>)} label={t.resource.detail.type} value={t.catalog.types[resource.type]}/>
                 <InfoItem icon={smallIcon(<><rect x="4" y="5" width="16" height="15" rx="2"/><path d="M8 3v4M16 3v4M4 10h16"/></>)} label={t.resource.detail.created} value={formatDate(resource.created_at, locale)}/>
