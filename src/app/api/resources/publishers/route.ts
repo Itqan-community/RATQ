@@ -12,17 +12,12 @@ export async function GET(request: Request) {
       page: 1,
       page_size: PUBLISHERS_RESOURCE_PAGE_SIZE,
     });
-    const publishers = new Map<string, Publisher>();
+    const publishers = new Map<number, Publisher>();
 
     results.forEach((resource) => {
       if (!resource.publisher) return;
-      const key = String(resource.publisher.name );
-      if (!publishers.has(key)) {
-        publishers.set(key, {
-          id: resource.publisher.id,
-          name: resource.publisher.name,
-        });
-      }
+      const { id, name, name_ar } = resource.publisher;
+      if (!publishers.has(id)) publishers.set(id, { id, name, name_ar });
     });
 
     return NextResponse.json([...publishers.values()].sort((a, b) => a.name.localeCompare(b.name)), {

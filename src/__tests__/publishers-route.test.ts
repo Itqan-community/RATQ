@@ -43,6 +43,33 @@ describe('GET /api/resources/publishers', () => {
     ]);
   });
 
+  it('returns the Arabic name alongside the English one', async () => {
+    mockList.mockResolvedValue({
+      results: [{ publisher: { id: 1, name: 'Tahbeer Center', name_ar: 'مركز تحبير' } }],
+    });
+
+    const response = await GET(new Request('https://ratq.test/api/resources/publishers'));
+
+    await expect(response.json()).resolves.toEqual([
+      { id: 1, name: 'Tahbeer Center', name_ar: 'مركز تحبير' },
+    ]);
+  });
+
+  it('keys publishers by id, so one publisher with two spellings is listed once', async () => {
+    mockList.mockResolvedValue({
+      results: [
+        { publisher: { id: 1, name: 'Tahbeer' } },
+        { publisher: { id: 1, name: 'Tahbeer Center', name_ar: 'مركز تحبير' } },
+      ],
+    });
+
+    const response = await GET(new Request('https://ratq.test/api/resources/publishers'));
+    const body = await response.json();
+
+    expect(body).toHaveLength(1);
+    expect(body[0].id).toBe(1);
+  });
+
   it('ignores resources without a publisher', async () => {
     mockList.mockResolvedValue({
       results: [{ publisher: null }, {}],

@@ -15,7 +15,7 @@ export async function GET(request: NextRequest) {
       type: sp.get('type') || undefined,
       // license is a repeated param: ?license=a&license=b → string[]
       license: sp.getAll('license').length > 0 ? sp.getAll('license') : undefined,
-      publisherNames: sp.getAll('publisher').length > 0 ? sp.getAll('publisher') : undefined,
+      publisherIds: sp.getAll('publisher').length > 0 ? sp.getAll('publisher') : undefined,
       itqan_badge: sp.get('itqan_badge') || undefined,
       search: sp.get('search') || undefined,
       sort: (sp.get('sort') as SortOption) || undefined,
