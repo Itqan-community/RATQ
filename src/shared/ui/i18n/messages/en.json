@@ -210,6 +210,8 @@
       "accessRequest": "Request Access",
       "accessRequestDescription": "Submit a request and it will be reviewed.",
       "quickSummary": "Quick Summary",
+      "technicalDetails": "Technical Resource Details",
+      "publishDate": "Publish Date",
       "status": "Status",
       "published": "Published",
       "publisher": "Publisher",
