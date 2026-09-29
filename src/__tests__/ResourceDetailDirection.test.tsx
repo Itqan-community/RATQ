@@ -321,6 +321,26 @@ function getSectionForHeading(heading: HTMLElement) {
   return heading.closest('section') as HTMLElement;
 }
 
+describe('downloads badge (issue #294)', () => {
+  it('renders the download count honestly labeled as downloads', () => {
+    renderDetail(createResource({ total_downloads: 1000 }));
+
+    expect(getMetaRow()).toHaveTextContent('1000 downloads');
+  });
+
+  it('renders the Arabic downloads label on the Arabic site', () => {
+    renderDetail(createResource({ total_downloads: 1000 }), 'ar');
+
+    expect(getMetaRow()).toHaveTextContent('1000 تحميل');
+  });
+
+  it('never presents the download count as visitors', () => {
+    renderDetail(createResource({ total_downloads: 1000 }));
+
+    expect(getMetaRow()).not.toHaveTextContent(/visitor/i);
+  });
+});
+
 describe('website badge (issue #294)', () => {
   it('renders the website badge derived from website_url', () => {
     const url = 'https://www.example.com/docs';
