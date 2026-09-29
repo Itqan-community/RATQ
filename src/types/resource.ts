@@ -7,10 +7,17 @@ export type ResourceType =
 
 export type ResourceStatus = 'draft' | 'published' | 'archived';
 
+// A publisher as listed in the filter: key is the source-namespaced filter value.
+export interface PublisherOption extends Publisher {
+  key: string;
+}
+
 export interface Publisher {
   id: number;
   name: string;
   description?: string | null;
+  // Arabic name, when the source returns one (CMS does, via Accept-Language).
+  name_ar?: string;
 }
 
 // ─── Data Source Types ────────────────────────────────────────────────────
@@ -60,6 +67,26 @@ export interface Resource {
   json_content?: string | null;
   total_downloads: number;
   downloads: number;
+
+  // Language of the resource's own content (description/meta info), set
+  // directly by the publisher or CMS - never inferred from the text (issue
+  // #303). Drives the reading direction of that content on the detail page;
+  // when absent (CMS/Payload today), content falls back to the site direction.
+  content_language?: 'ar' | 'en';
+
+  // Language of the resource's canonical name, for when it differs from the
+  // content language (e.g. ratq-native keeps English names on Arabic-content
+  // resources - PR #316 review). Falls back to the content direction, then
+  // the site direction; never inferred from the text.
+  title_language?: 'ar' | 'en';
+
+  // Arabic counterparts of name/description, filled by sources that serve both
+  // languages (CMS). The locale lives only in the browser while fetches and
+  // edge caches are server-side, so both languages travel with the resource
+  // and the client picks one - see localizeResource. content_language and
+  // title_language describe the base (name/description) fields.
+  name_ar?: string;
+  description_ar?: string;
 
   // CMS-sourced detail fields (no honest existing home)
   publisher?: Publisher | null;
@@ -188,8 +215,8 @@ export interface ResourceListParams {
   /** One or more license values to filter by (OR logic). Replaces the former
    *  single-string param — URL shape: ?license=a&license=b */
   license?: string[];
-  /** One or more publisher names to filter by (OR logic). */
-  publisherNames?: string[];
+  /** One or more publisher keys (see publisherKey) to filter by (OR logic). */
+  publisherKeys?: string[];
   itqan_badge?: string;
   search?: string;
   sort?: SortOption;

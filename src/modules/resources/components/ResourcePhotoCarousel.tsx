@@ -89,7 +89,7 @@ export function ResourcePhotoCarousel({ resource }: ResourcePhotoCarouselProps) 
   const current = photos[safeIndex];
 
   return (
-    <div className="mx-auto mb-8 max-w-[760px] lg:ms-auto lg:me-0">
+    <div className="mb-8">
       <div
         role="region"
         aria-roledescription="carousel"

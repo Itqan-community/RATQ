@@ -9,7 +9,6 @@ import { TrustedBySection } from '@/modules/resources/components/TrustedBySectio
 import { useLanguage } from '@/shared/ui/i18n';
 import { parseGithubRepoUrl } from '@/modules/resources/infrastructure/github/parseGithubRepoUrl';
 import type { GithubRepoPreview as GithubRepoPreviewData, Resource } from '@/types/resource';
-import arabicDescriptions from '@/shared/ui/i18n/resource-descriptions.ar.json';
 import { ResourcePreview } from '@/modules/resources/components/ResourcePreview';
 import { RelatedResources } from '@/modules/resources/components/RelatedResources';
 import { CommentSection } from '@/modules/resources/components/CommentSection';
@@ -20,6 +19,7 @@ import { getSiteNameFromUrl, interpolate } from '@/shared/utils/utils';
 import { ReportButton } from '@/modules/resources/components/ReportButton';
 import { RESOURCE_TYPE_COLORS } from '@/shared/constants/resource-type-colors';
 import { TypeIcon } from '@/shared/constants/resource-type-icon';
+import { localizeResource } from '@/shared/utils/localize-resource';
 
 interface ResourceDetailClientProps {
   resource: Resource;
@@ -49,14 +49,22 @@ const apiIcon = (
 );
 
 // Visit-site and use-API banners (issue #299). Both are gated on real data:
-// the website banner needs the resource's own website_url (with a parseable
-// site name), and the API banner needs publisher-provided API details - it
-// stays invisible until a resource actually has that data.
+// the website banner needs the resource's own website_url or, failing that,
+// its documentation_url (with a parseable site name), and the API banner needs
+// publisher-provided API details - it stays invisible until a resource
+// actually has that data. CMS resources have neither link, so they fall back
+// to their CMS gallery page (source_url) so every catalog entry has a way out.
+// Usable = a real http(s) link with a site name to show, so a malformed website_url can't shadow a good docs link.
+const isWebUrl = (url?: string | null): url is string =>
+  !!url && /^https?:\/\//i.test(url) && getSiteNameFromUrl(url) !== null;
+
 function ResourceCtaBanners({ resource }: { resource: Resource }) {
   const { t } = useLanguage();
 
-  const websiteUrl = resource.website_url;
+  // documentation_url is free text from the dashboard, so only real http(s) links become a href.
+  const websiteUrl = [resource.website_url, resource.documentation_url].find(isWebUrl) ?? null;
   const siteName = websiteUrl ? getSiteNameFromUrl(websiteUrl) : null;
+  const cmsUrl = !websiteUrl && resource.source === 'cms' ? resource.source_url : null;
 
   const apiHref = resource.api_docs || resource.api_endpoint;
 
@@ -70,6 +78,16 @@ function ResourceCtaBanners({ resource }: { resource: Resource }) {
           description={interpolate(t.resource.detail.visitSiteDescription, { name: siteName })}
           buttonLabel={interpolate(t.resource.detail.visitSiteButton, { name: siteName })}
           ariaLabel={`${t.resource.detail.visitSiteTitle} - ${siteName}`}
+        />
+      )}
+      {cmsUrl && (
+        <ResourceCtaBanner
+          href={cmsUrl}
+          icon={globeIcon}
+          title={t.resource.detail.viewOnCmsTitle}
+          description={t.resource.detail.viewOnCmsDescription}
+          buttonLabel={t.resource.detail.viewOnCmsButton}
+          ariaLabel={t.resource.detail.viewOnCmsTitle}
         />
       )}
       {apiHref && (
@@ -96,11 +114,31 @@ function ResourceCtaBanners({ resource }: { resource: Resource }) {
 
 export function ResourceDetailClient({ resource, repoPreview }: ResourceDetailClientProps) {
   const { t, locale, direction } = useLanguage();
-  const arabicCopy = arabicDescriptions[resource.slug as keyof typeof arabicDescriptions];
-  const localizedDescription = locale === 'ar' && arabicCopy ? arabicCopy.description : resource.description;
+  // Reading direction of the resource's own content (issue #303): driven by
+  // the explicit content_language field only - never inferred from the text.
+  // Resources without the field (CMS/Payload today) keep the site direction.
+  // Bilingual sources (CMS) carry both languages, so the language is that of
+  // the text actually shown (localizeResource), still explicit and not sniffed.
+  const localized = localizeResource(resource, locale);
+  const contentDirection =
+    localized.contentLanguage === 'ar' ? 'rtl' : localized.contentLanguage === 'en' ? 'ltr' : direction;
+
+  // Title direction (PR #316 review): a resource's canonical name can be in a
+  // different language than its description (e.g. ratq-native keeps English
+  // names on Arabic-content resources), so the title reads from its own
+  // explicit field, falling back to the content direction - then the site.
+  const titleDirection =
+    localized.titleLanguage === 'ar' ? 'rtl' : localized.titleLanguage === 'en' ? 'ltr' : contentDirection;
 
   const dataPreview = usePreview(resource);
   const IsFromPayloadResource = resource.source === 'payload';
+  const heroWebsiteUrl = isWebUrl(resource.website_url) ? resource.website_url : null;
+  const heroSiteName = heroWebsiteUrl ? getSiteNameFromUrl(heroWebsiteUrl) : null;
+  // Seed data already stores versions with the "v" prefix (e.g. "v2.4.1"),
+  // so only add it when missing - never render "vv...".
+  const heroVersionLabel = resource.version
+    ? (resource.version.startsWith('v') ? resource.version : `v${resource.version}`)
+    : null;
   // Only resources genuinely hosted on GitHub get the GitHub stats box -
   // gate on a real GitHub URL, not on a fallback like "#" or the docs URL
   // (issue #299).
@@ -113,19 +151,45 @@ export function ResourceDetailClient({ resource, repoPreview }: ResourceDetailCl
             there are no usable photos. */}
         <ResourcePhotoCarousel resource={resource} />
 
-        <header className="mx-auto max-w-[760px] text-start lg:ms-auto lg:me-0">
+        <header className="text-start">
           <div className="flex flex-wrap items-center gap-2">
             <span className={`inline-flex items-center gap-2 rounded-full px-4 py-2 text-xs font-black ${typeColors[resource.type]}`}><TypeIcon type={resource.type}/>{t.catalog.types[resource.type]}</span>
-            {resource.itqan_badge && <span className="inline-flex h-9 items-center rounded-full bg-[#171717] px-4 text-xs font-black text-white">إتقان</span>}
+            {(resource.itqan_badge) && <span className="inline-flex h-9 items-center rounded-full bg-[#171717] px-4 text-xs font-black text-white">{t.resource.itqanBadge}</span>}
           </div>
-          <h1 className="mt-5 text-3xl font-black leading-[1.4] sm:text-4xl">{resource.name}</h1>
-          <div className="mt-4 flex flex-wrap items-center gap-4 text-xs font-semibold text-[#aaa]" dir="ltr">
-            <span>{resource.license}</span><span>{resource.version || '—'}</span>
-            <span className="inline-flex items-center gap-1">{smallIcon(<><path d="M12 3v12m0 0 4-4m-4 4-4-4"/><path d="M5 19h14"/></>)} {resource.total_downloads}</span>
+          <h1 className="mt-5 text-3xl font-black leading-[1.4] sm:text-4xl" dir={titleDirection}>{localized.name}</h1>
+          {/* Meta-info row follows the resource's content language (issue
+              #303) instead of the old hardcoded dir="ltr". Pill chips show
+              the download count (honestly labeled as downloads, never as
+              visitors), the version, and the website name from website_url
+              (issue #294) - the website pill is hidden when no usable
+              website_url exists. DOM order is downloads, version, website so
+              the RTL visual matches the Figma from the right. */}
+          <div className="mt-4 flex flex-wrap items-center gap-3 text-xs font-semibold text-[#555]" dir={contentDirection}>
+            <span className="inline-flex items-center gap-1.5 rounded-full bg-[#f1f1f1] px-4 py-2">{smallIcon(<><path d="M12 3v12m0 0 4-4m-4 4-4-4"/><path d="M5 19h14"/></>)} {interpolate(t.trending.downloads, { count: resource.total_downloads })}</span>
+            {(heroVersionLabel) && (
+              <>
+              <span aria-hidden="true" className="text-[#d4d4d4]">|</span>
+              <span className="inline-flex items-center rounded-full bg-[#f1f1f1] px-4 py-2">{heroVersionLabel}</span>
+              </>
+            )}
+            {heroSiteName && (
+              <>
+              <span aria-hidden="true" className="text-[#d4d4d4]">|</span>
+              <a href={resource.website_url ?? "#"}  className="inline-flex items-center rounded-full bg-[#f1f1f1] px-4 py-2">{heroSiteName}</a>
+              </>
+            )}
           </div>
+          
         </header>
 
-        <div className="mt-7 grid items-start gap-8 lg:grid-cols-[270px_minmax(0,1fr)]" dir="ltr">
+        <div className="mt-7 grid items-start gap-8 lg:grid-cols-[minmax(0,1fr)_270px]">
+          <div className="min-w-0" dir={direction}>
+            <section>
+              <h2 className="text-xl font-black">{t.resource.detail.description}</h2>
+              <p className="mt-3 whitespace-pre-line text-sm leading-8 text-[#808080]" dir={contentDirection}>{localized.description}</p>
+            </section>
+          </div>
+
           <aside className="space-y-4" dir={direction}>
             {resource.consumers && resource.consumers.length > 0 && <TrustedBySection consumers={resource.consumers}/>}
             <section className="rounded-xl border border-[#e6e6e6] bg-white p-5">
@@ -136,10 +200,10 @@ export function ResourceDetailClient({ resource, repoPreview }: ResourceDetailCl
                 <li className="flex items-center justify-between"><span>{t.resource.detail.itqanCertified}</span><strong>{resource.itqan_badge ? t.resource.detail.yes : t.resource.detail.no}</strong></li>
               </ul>
             </section>
-          
+
             {IsFromPayloadResource && (
               <>
-               {/* Access requests button temporarily hidden */}
+                {/* Access requests button temporarily hidden */}
 
                 <ReportButton
                   resourceId={resource.id}
@@ -149,33 +213,34 @@ export function ResourceDetailClient({ resource, repoPreview }: ResourceDetailCl
               </>
             )}
           </aside>
-
-          <div className="min-w-0" dir={direction}>
-            <section className="mt-6">
-              <h2 className="text-xl font-black">{t.resource.detail.description}</h2>
-              <p className="mt-3 whitespace-pre-line text-sm leading-8 text-[#808080]">{localizedDescription}</p>
-            </section>
-
-            <section className="mt-7 rounded-xl border border-[#e5e5e5] bg-white p-6">
-              <h2 className="text-xl font-black">{t.resource.detail.quickSummary}</h2>
-              <div className="mt-5 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-                <InfoItem icon={smallIcon(<path d="M5 4h14v16H5zM9 8h6M9 12h6"/>)} label={t.resource.detail.license} value={resource.license}/>
-                <InfoItem icon={smallIcon(<><path d="M4 21h16"/><path d="M6 21V4h12v17"/><path d="M9 8h1M14 8h1M9 12h1M14 12h1M9 16h1M14 16h1"/></>)} label={t.resource.detail.publisher} value={resource.publisher?.name || '—'}/>
-                <InfoItem icon={smallIcon(<><circle cx="12" cy="12" r="9"/><path d="m9 12 2 2 4-5"/></>)} label={t.resource.detail.version} value={resource.version || '—'}/>
-                <InfoItem icon={smallIcon(<><rect x="4" y="4" width="6" height="6"/><rect x="14" y="4" width="6" height="6"/><rect x="4" y="14" width="6" height="6"/><rect x="14" y="14" width="6" height="6"/></>)} label={t.resource.detail.type} value={t.catalog.types[resource.type]}/>
-                <InfoItem icon={smallIcon(<><rect x="4" y="5" width="16" height="15" rx="2"/><path d="M8 3v4M16 3v4M4 10h16"/></>)} label={t.resource.detail.created} value={formatDate(resource.created_at, locale)}/>
-                <InfoItem icon={smallIcon(<><rect x="4" y="5" width="16" height="15" rx="2"/><path d="M8 3v4M16 3v4M4 10h16"/></>)} label={t.resource.detail.updated} value={formatDate(resource.updated_at, locale)}/>
-              </div>
-            </section>
-
-            {githubRepo && (
-              <section className="mt-6">
-                <GithubStatsCard githubUrl={resource.github_url as string} stats={resource.github_stats}/>
-                <GithubRepoPreview repoPreview={repoPreview} />
-              </section>
-            )}
-          </div>
         </div>
+        <section className="mt-8 rounded-xl border border-[#e5e5e5] bg-white p-6">
+          <h2 className="text-xl font-black">{t.resource.detail.technicalDetails}</h2>
+          <div className="mt-5 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+            {localized.publisherName && (
+              <InfoItem
+                icon={smallIcon(
+                  <>
+                    <path d="M3 21h18" />
+                    <path d="M6 21V4a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v17" />
+                    <path d="M9 6h1M14 6h1M9 10h1M14 10h1M9 14h1M14 14h1" />
+                  </>
+                )}
+                label={t.resource.detail.publisher}
+                value={localized.publisherName}
+              />
+            )}
+            <InfoItem icon={smallIcon(<><rect x="4" y="4" width="6" height="6"/><rect x="14" y="4" width="6" height="6"/><rect x="4" y="14" width="6" height="6"/><rect x="14" y="14" width="6" height="6"/></>)} label={t.resource.detail.type} value={t.catalog.types[resource.type]}/>
+            <InfoItem icon={smallIcon(<><rect x="4" y="5" width="16" height="15" rx="2"/><path d="M8 3v4M16 3v4M4 10h16"/></>)} label={t.resource.detail.publishDate} value={formatDate(resource.created_at, locale)}/>
+          </div>
+        </section>
+
+        {githubRepo && (
+          <section className="mt-6">
+            <GithubStatsCard githubUrl={resource.github_url as string} stats={resource.github_stats}/>
+            <GithubRepoPreview repoPreview={repoPreview} />
+          </section>
+        )}
 
             {IsFromPayloadResource && (
               <div className="mt-12">
