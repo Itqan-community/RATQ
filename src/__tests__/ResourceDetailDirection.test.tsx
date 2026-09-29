@@ -4,6 +4,7 @@ import { join } from 'node:path';
 import { render, screen, act } from '@testing-library/react';
 import { ResourceDetailClient } from '@/app/resources/[slug]/ResourceDetailClient';
 import { LanguageProvider } from '@/shared/ui/i18n/LanguageContext';
+import { formatDate, getSiteNameFromUrl } from '@/shared/utils/utils';
 import { mockResources } from '@/modules/resources/infrastructure/mock-data';
 import type { Resource } from '@/types/resource';
 
@@ -313,5 +314,249 @@ describe('scope guards: #299 CTA banner and #295 photo carousel keep site direct
     );
 
     expect(screen.getByRole('region', { name: 'Photo gallery' })).toHaveAttribute('dir', 'ltr');
+  });
+});
+
+function getSectionForHeading(heading: HTMLElement) {
+  return heading.closest('section') as HTMLElement;
+}
+
+describe('downloads badge (issue #294)', () => {
+  it('renders the download count honestly labeled as downloads', () => {
+    renderDetail(createResource({ total_downloads: 1000 }));
+
+    expect(getMetaRow()).toHaveTextContent('1000 downloads');
+  });
+
+  it('renders the Arabic downloads label on the Arabic site', () => {
+    renderDetail(createResource({ total_downloads: 1000 }), 'ar');
+
+    expect(getMetaRow()).toHaveTextContent('1000 تحميل');
+  });
+
+  it('never presents the download count as visitors', () => {
+    renderDetail(createResource({ total_downloads: 1000 }));
+
+    expect(getMetaRow()).not.toHaveTextContent(/visitor/i);
+  });
+});
+
+describe('website badge (issue #294)', () => {
+  it('renders the website badge derived from website_url', () => {
+    const url = 'https://www.example.com/docs';
+    renderDetail(createResource({ website_url: url }));
+
+    expect(getSiteNameFromUrl(url)).toBe('example.com');
+    expect(getMetaRow()).toHaveTextContent('example.com');
+  });
+
+  it('renders a bare domain without stripping anything else', () => {
+    const url = 'https://example.com';
+    renderDetail(createResource({ website_url: url }));
+
+    expect(getMetaRow()).toHaveTextContent(getSiteNameFromUrl(url) as string);
+    expect(getMetaRow()).toHaveTextContent('example.com');
+  });
+
+  it('links the website badge to the resource website', () => {
+    const url = 'https://www.example.com/docs';
+    renderDetail(createResource({ website_url: url }));
+
+    expect(screen.getByRole('link', { name: 'example.com' })).toHaveAttribute('href', url);
+  });
+
+  it('does not render the website badge when website_url is null', () => {
+    renderDetail(createResource({ website_url: null }));
+
+    expect(getMetaRow()).not.toHaveTextContent('example.com');
+    // The version badge stays - only the website chip is conditional.
+    expect(getMetaRow()).toHaveTextContent('v1.0.0');
+  });
+
+  it('does not render the website badge when website_url is an empty string', () => {
+    renderDetail(createResource({ website_url: '' }));
+
+    expect(screen.queryByText('example.com')).not.toBeInTheDocument();
+    expect(getMetaRow()).toHaveTextContent('v1.0.0');
+  });
+
+  it('does not fall back to documentation_url for the header badge', () => {
+    renderDetail(
+      createResource({ website_url: null, documentation_url: 'https://docs.example.com/guide' }),
+    );
+
+    // The docs domain must not leak into the header meta row, even though a
+    // documentation URL exists (the CTA banner may still use it elsewhere).
+    expect(getMetaRow()).not.toHaveTextContent('docs.example.com');
+  });
+});
+
+describe('version badge (issue #294)', () => {
+  it('renders the version badge with a single v prefix', () => {
+    renderDetail(createResource({ version: '1.0.0' }));
+
+    expect(getMetaRow()).toHaveTextContent('v1.0.0');
+  });
+
+  it('does not double the v prefix when the version already has one', () => {
+    renderDetail(createResource({ version: 'v2.4.1' }));
+
+    expect(getMetaRow()).toHaveTextContent('v2.4.1');
+    expect(getMetaRow()).not.toHaveTextContent('vv2.4.1');
+  });
+
+  it('does not render the version badge when version is missing', () => {
+    renderDetail(createResource({ version: null }));
+
+    expect(getMetaRow()).not.toHaveTextContent('v1.0.0');
+  });
+});
+
+describe('publisher row (issue #294)', () => {
+  it('renders the publisher row with the exact localized publisher name', () => {
+    renderDetail(createResource({ publisher: { id: 3, name: 'Tahbeer Center' } }));
+
+    expect(screen.getByText('Publisher:')).toBeInTheDocument();
+    expect(screen.getByText('Tahbeer Center')).toBeInTheDocument();
+  });
+
+  it('renders the Arabic publisher name on the Arabic site', () => {
+    renderDetail(
+      createResource({ publisher: { id: 3, name: 'Tahbeer Center', name_ar: 'مركز تحبير' } }),
+      'ar',
+    );
+
+    expect(screen.getByText('مركز تحبير')).toBeInTheDocument();
+  });
+
+  it('does not render the publisher row when publisher is missing', () => {
+    renderDetail(createResource({ publisher: null }));
+
+    expect(screen.queryByText('Publisher:')).not.toBeInTheDocument();
+  });
+
+  it('does not render the publisher row when the publisher name is empty', () => {
+    renderDetail(createResource({ publisher: { id: 3, name: '' } }));
+
+    expect(screen.queryByText('Publisher:')).not.toBeInTheDocument();
+  });
+});
+
+describe('publish date (issue #294)', () => {
+  it('renders the publish date generated from created_at', () => {
+    renderDetail(createResource({ updated_at: '2024-06-15T00:00:00Z' }));
+
+    expect(screen.getByText('Publish Date:')).toBeInTheDocument();
+    expect(screen.getByText(formatDate('2024-01-01T00:00:00Z', 'en'))).toBeInTheDocument();
+  });
+
+  it('does not use updated_at for the publish date', () => {
+    renderDetail(createResource({ updated_at: '2024-06-15T00:00:00Z' }));
+
+    // created_at and updated_at differ here, so the updated value must not
+    // appear anywhere and the old labels must be gone.
+    expect(screen.queryByText(formatDate('2024-06-15T00:00:00Z', 'en'))).not.toBeInTheDocument();
+    expect(screen.queryByText('Created:')).not.toBeInTheDocument();
+    expect(screen.queryByText('Last Updated:')).not.toBeInTheDocument();
+  });
+});
+
+describe('resource type in Technical Resource Details (issue #294)', () => {
+  it('renders the localized type label inside the technical section', () => {
+    renderDetail(createResource({ type: 'library' }));
+
+    const techSection = getSectionForHeading(
+      screen.getByRole('heading', { name: 'Technical Resource Details' }),
+    );
+    expect(techSection).toHaveTextContent('Type:');
+    expect(techSection).toHaveTextContent('Library');
+  });
+
+  it('renders the Arabic type label on the Arabic site', () => {
+    renderDetail(createResource({ type: 'library' }), 'ar');
+
+    const techSection = getSectionForHeading(
+      screen.getByRole('heading', { name: 'تفاصيل المورد التقني' }),
+    );
+    expect(techSection).toHaveTextContent('مكتبة');
+  });
+});
+
+describe('Technical Resource Details section (issue #294)', () => {
+  it('renders the renamed section with publish date, type, and publisher', () => {
+    renderDetail(createResource({ publisher: { id: 3, name: 'Tahbeer Center' } }));
+
+    const techSection = getSectionForHeading(
+      screen.getByRole('heading', { name: 'Technical Resource Details' }),
+    );
+    expect(techSection).toHaveTextContent('Publish Date:');
+    expect(techSection).toHaveTextContent('Type:');
+    expect(techSection).toHaveTextContent('Publisher:');
+    expect(techSection).toHaveTextContent('Tahbeer Center');
+  });
+
+  it('omits the publisher row but keeps the other rows when unavailable', () => {
+    renderDetail(createResource({ publisher: null }));
+
+    const techSection = getSectionForHeading(
+      screen.getByRole('heading', { name: 'Technical Resource Details' }),
+    );
+    expect(techSection).toHaveTextContent('Publish Date:');
+    expect(techSection).toHaveTextContent('Type:');
+    expect(techSection).not.toHaveTextContent('Publisher:');
+  });
+});
+
+describe('Quick Summary vs Technical Resource Details (issue #294)', () => {
+  it('keeps a single distinct Quick Summary section alongside the technical one', () => {
+    renderDetail(createResource());
+
+    // Exactly one Quick Summary heading remains (the sidebar box) - the
+    // main-content duplicate is gone, replaced by the technical section.
+    expect(screen.getAllByRole('heading', { name: 'Quick Summary' })).toHaveLength(1);
+    expect(
+      screen.getByRole('heading', { name: 'Technical Resource Details' }),
+    ).toBeInTheDocument();
+  });
+
+  it('does not drop previously shown information', () => {
+    renderDetail(createResource({ publisher: { id: 3, name: 'Tahbeer Center' } }));
+
+    // License stays in the sidebar summary, version stays in the hero row,
+    // type and publisher stay in the technical section (the type label also
+    // appears on the header badge, so scope it to the technical section).
+    const quickSection = getSectionForHeading(
+      screen.getByRole('heading', { name: 'Quick Summary' }),
+    );
+    const techSection = getSectionForHeading(
+      screen.getByRole('heading', { name: 'Technical Resource Details' }),
+    );
+    expect(quickSection).toHaveTextContent('MIT');
+    expect(getMetaRow()).toHaveTextContent('v1.0.0');
+    expect(techSection).toHaveTextContent('Library');
+    expect(techSection).toHaveTextContent('Tahbeer Center');
+  });
+});
+
+describe('Description + Quick Summary layout (issue #294)', () => {
+  it('places Description and Quick Summary side by side with Technical below', () => {
+    renderDetail(createResource());
+
+    // getGrid() is the row container following the header: it holds the
+    // Description and Quick Summary sections, while the technical section
+    // follows it - asserted via DOM order, not CSS class strings.
+    const row = getGrid();
+    const descHeading = screen.getByRole('heading', { name: 'Description' });
+    const quickHeading = screen.getByRole('heading', { name: 'Quick Summary' });
+    const techSection = getSectionForHeading(
+      screen.getByRole('heading', { name: 'Technical Resource Details' }),
+    );
+
+    expect(row.contains(descHeading)).toBe(true);
+    expect(row.contains(quickHeading)).toBe(true);
+    expect(row.contains(techSection)).toBe(false);
+    expect(
+      (row.compareDocumentPosition(techSection) & Node.DOCUMENT_POSITION_FOLLOWING) !== 0,
+    ).toBe(true);
   });
 });

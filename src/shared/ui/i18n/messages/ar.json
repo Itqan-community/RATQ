@@ -210,6 +210,8 @@
       "accessRequest": "طلب الوصول",
       "accessRequestDescription": "أرسل طلبا وسيتم مراجعته.",
       "quickSummary": "ملخص سريع",
+      "technicalDetails": "تفاصيل المورد التقني",
+      "publishDate": "تاريخ النشر",
       "status": "الحالة",
       "published": "منشور",
       "publisher": "الناشر",
