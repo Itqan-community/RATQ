@@ -159,15 +159,13 @@ export function ResourceDetailClient({ resource, repoPreview }: ResourceDetailCl
           <h1 className="mt-5 text-3xl font-black leading-[1.4] sm:text-4xl" dir={titleDirection}>{localized.name}</h1>
           {/* Meta-info row follows the resource's content language (issue
               #303) instead of the old hardcoded dir="ltr". Pill chips show
-              visitors, the version, and the website name from website_url
+              the download count (honestly labeled as downloads, never as
+              visitors), the version, and the website name from website_url
               (issue #294) - the website pill is hidden when no usable
-              website_url exists. DOM order is visitors, version, website so
-              the RTL visual matches the Figma from the right.
-              WARNING: the visitors count is a hardcoded 0 - no tracking
-              exists yet, so this is a placeholder, not real data. Call it out
-              in the PR until real visitor tracking lands. */}
+              website_url exists. DOM order is downloads, version, website so
+              the RTL visual matches the Figma from the right. */}
           <div className="mt-4 flex flex-wrap items-center gap-3 text-xs font-semibold text-[#555]" dir={contentDirection}>
-            <span className="inline-flex items-center gap-1.5 rounded-full bg-[#f1f1f1] px-4 py-2">{smallIcon(<><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.6-6 8-6s8 2 8 6"/></>)} {interpolate(t.resource.detail.visitors, { count: 0 })}</span>
+            <span className="inline-flex items-center gap-1.5 rounded-full bg-[#f1f1f1] px-4 py-2">{smallIcon(<><path d="M12 3v12m0 0 4-4m-4 4-4-4"/><path d="M5 19h14"/></>)} {interpolate(t.trending.downloads, { count: resource.total_downloads })}</span>
             {(heroVersionLabel) && (
               <>
               <span aria-hidden="true" className="text-[#d4d4d4]">|</span>
