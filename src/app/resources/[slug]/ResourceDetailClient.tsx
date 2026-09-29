@@ -134,11 +134,15 @@ export function ResourceDetailClient({ resource, repoPreview }: ResourceDetailCl
   const IsFromPayloadResource = resource.source === 'payload';
   const heroWebsiteUrl = isWebUrl(resource.website_url) ? resource.website_url : null;
   const heroSiteName = heroWebsiteUrl ? getSiteNameFromUrl(heroWebsiteUrl) : null;
+  // Seed data already stores versions with the "v" prefix (e.g. "v2.4.1"),
+  // so only add it when missing - never render "vv...".
+  const heroVersionLabel = resource.version
+    ? (resource.version.startsWith('v') ? resource.version : `v${resource.version}`)
+    : null;
   // Only resources genuinely hosted on GitHub get the GitHub stats box -
   // gate on a real GitHub URL, not on a fallback like "#" or the docs URL
   // (issue #299).
   const githubRepo = parseGithubRepoUrl(resource.github_url);
-  console.log('ResourceDetailClient: resource', resource);
   return (
     <div className="bg-white pb-10 pt-32 text-black sm:pt-36" dir={direction}>
       <main className="mx-auto max-w-[1050px] px-4 sm:px-6">
@@ -164,10 +168,10 @@ export function ResourceDetailClient({ resource, repoPreview }: ResourceDetailCl
               in the PR until real visitor tracking lands. */}
           <div className="mt-4 flex flex-wrap items-center gap-3 text-xs font-semibold text-[#555]" dir={contentDirection}>
             <span className="inline-flex items-center gap-1.5 rounded-full bg-[#f1f1f1] px-4 py-2">{smallIcon(<><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.6-6 8-6s8 2 8 6"/></>)} {interpolate(t.resource.detail.visitors, { count: 0 })}</span>
-            {(resource.version) && (
+            {(heroVersionLabel) && (
               <>
               <span aria-hidden="true" className="text-[#d4d4d4]">|</span>
-              <span className="inline-flex items-center rounded-full bg-[#f1f1f1] px-4 py-2">v{resource.version}</span>
+              <span className="inline-flex items-center rounded-full bg-[#f1f1f1] px-4 py-2">{heroVersionLabel}</span>
               </>
             )}
             {heroSiteName && (
