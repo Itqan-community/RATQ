@@ -158,9 +158,9 @@ export const contributors: Contributor[] = [
     githubUrl: 'https://github.com/Zyad-Eltayabi',
     avatarUrl: 'https://github.com/Zyad-Eltayabi.png',
     contribution:
-      "Added accessible names to the catalog search input and the consumer avatar links, so screen reader users get a real label instead of relying on placeholder text or nothing at all. Later rebuilt the homepage announcement banner to match the new single-bar design, dropping the old dots/arrows while keeping auto-rotation, pause on hover/focus, and scoped keyboard navigation.",
-    issueUrl: 'https://github.com/Itqan-community/RATQ/issues/304',
-    prUrl: 'https://github.com/Itqan-community/RATQ/pull/311',
+      "Added accessible names to the catalog search input and the consumer avatar links, so screen reader users get a real label instead of relying on placeholder text or nothing at all. Later rebuilt the homepage announcement banner to match the new single-bar design, dropping the old dots/arrows while keeping auto-rotation, pause on hover/focus, and scoped keyboard navigation. Later rebuilt the resource detail header and technical-details section to match the Figma - separated a Quick Summary from Technical Resource Details, added publisher, type and publish date rows and a website badge shown only for real website URLs, and deliberately left out a visitor count rather than faking one before real tracking exists.",
+    issueUrl: 'https://github.com/Itqan-community/RATQ/issues/294',
+    prUrl: 'https://github.com/Itqan-community/RATQ/pull/324',
   },
   {
     name: 'motantawi',
