@@ -1,5 +1,6 @@
 'use client';
 
+import { useEffect } from 'react';
 import Link from 'next/link';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { useLanguage } from '@/shared/ui/i18n';
@@ -28,6 +29,18 @@ export function CatalogContent() {
   const { data, error, isLoading } = useResources({ page, page_size: PAGE_SIZE, type, license, publisherKeys, search, sort });
   const resources = data?.results ?? [];
   const router = useRouter();
+
+  // A page past the end (e.g. ?page=999) shows nothing and no pager, so send
+  // the visitor to the last real page instead.
+  useEffect(() => {
+    if (isLoading || !data || data.results.length > 0 || page <= 1) return;
+    const lastPage = Math.max(1, Math.ceil(data.count / PAGE_SIZE));
+    if (page <= lastPage) return;
+    const params = new URLSearchParams(searchParams.toString());
+    if (lastPage > 1) params.set('page', String(lastPage));
+    else params.delete('page');
+    router.replace(`/resources?${params.toString()}`);
+  }, [isLoading, data, page, searchParams, router]);
 
   const resourcesCount = data?.count || 0
   const pageResourcesCount = resources.length
