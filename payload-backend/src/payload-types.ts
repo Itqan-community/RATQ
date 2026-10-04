@@ -208,6 +208,8 @@ export interface Resource {
   documentation_url?: string | null;
   github_url?: string | null;
   website_url?: string | null;
+  content_language?: ('ar' | 'en') | null;
+  title_language?: ('ar' | 'en') | null;
   license: string;
   itqan_badge?: boolean | null;
   status: 'draft' | 'published' | 'archived';
@@ -523,6 +525,8 @@ export interface ResourcesSelect<T extends boolean = true> {
   documentation_url?: T;
   github_url?: T;
   website_url?: T;
+  content_language?: T;
+  title_language?: T;
   license?: T;
   itqan_badge?: T;
   status?: T;

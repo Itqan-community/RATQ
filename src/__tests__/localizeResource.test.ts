@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { localizeResource } from '@/shared/utils/localize-resource';
+import { localizeResource, detectLanguage } from '@/shared/utils/localize-resource';
 import type { Resource } from '@/types/resource';
 
 function createResource(overrides: Partial<Resource> = {}): Resource {
@@ -84,5 +84,41 @@ describe('localizeResource', () => {
     expect(l.publisherName).toBeUndefined();
     expect(l.contentLanguage).toBeUndefined();
     expect(l.titleLanguage).toBeUndefined();
+  });
+});
+
+describe('detectLanguage', () => {
+  it('returns ar for predominantly Arabic text', () => {
+    expect(detectLanguage('اعتمد الطبري في تفسيره')).toBe('ar');
+  });
+
+  it('returns en for predominantly Latin text', () => {
+    expect(detectLanguage('Tanzil is a Quranic project')).toBe('en');
+  });
+
+  it('goes by the majority in mixed text', () => {
+    expect(detectLanguage('Mushaf بروايتي الدوري عن أبي عمرو بالتوسط')).toBe('ar');
+    expect(detectLanguage('Quran Corpus (القرآن) annotated project')).toBe('en');
+  });
+
+  it('returns undefined when there are no letters', () => {
+    expect(detectLanguage('')).toBeUndefined();
+    expect(detectLanguage('123 - 456')).toBeUndefined();
+    expect(detectLanguage(undefined)).toBeUndefined();
+  });
+});
+
+describe('localizeResource language of shown text', () => {
+  it('leaves the language unset when the resource has none and no Arabic text is shown', () => {
+    const l = localizeResource(
+      createResource({ description: 'اعتمد الطبري في تفسيره', content_language: undefined, name_ar: undefined, description_ar: undefined }),
+      'en',
+    );
+    expect(l.contentLanguage).toBeUndefined();
+  });
+
+  it('marks the Arabic fetch as English when it is actually English text', () => {
+    const l = localizeResource(createResource({ description_ar: 'Plain English text' }), 'ar');
+    expect(l.contentLanguage).toBe('en');
   });
 });
