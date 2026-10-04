@@ -26,6 +26,8 @@ export interface PayloadResourceDoc {
   audio_thumbnail?: string | null;
   reciter_name?: string | null;
   audio_quality?: string | null;
+  // Owner's id + display name; the users collection itself isn't public.
+  publisher?: { id: number; name: string } | null;
   createdAt: string;
   updatedAt: string;
 }
@@ -61,6 +63,7 @@ export function toResource(doc: PayloadResourceDoc): Resource {
     audio_thumbnail: doc.audio_thumbnail ?? null,
     reciter_name: doc.reciter_name ?? null,
     audio_quality: doc.audio_quality ?? null,
+    publisher: doc.publisher ?? undefined,
     github_stats: null,
     total_downloads: 0,
     downloads: 0,

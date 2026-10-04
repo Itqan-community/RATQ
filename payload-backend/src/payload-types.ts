@@ -217,6 +217,15 @@ export interface Resource {
   reciter_name?: string | null;
   audio_quality?: string | null;
   owner: number | User;
+  publisher?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
   /**
    * Auto-populated by the periodic GitHub stats job. Do not edit manually.
    */
