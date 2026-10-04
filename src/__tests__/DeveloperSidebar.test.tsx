@@ -67,6 +67,17 @@ describe('DeveloperSidebar', () => {
     expect(resourcesLink).toHaveClass('text-white');
   });
 
+  it('offsets the mobile drawer below the floating navbar', () => {
+    const { container } = render(
+      <DeveloperSidebar mobileOpen={true} onMobileClose={() => {}} />
+    );
+    const aside = container.querySelector('aside')!;
+    expect(aside).toHaveClass('top-32');
+    expect(aside).not.toHaveClass('top-0');
+    expect(aside).toHaveClass('lg:bottom-auto');
+    expect(aside).toHaveClass('lg:h-[calc(100vh-8rem)]');
+  });
+
   it('calls onMobileClose when close button is clicked', () => {
     const onMobileClose = vi.fn();
     render(
