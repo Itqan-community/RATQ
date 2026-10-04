@@ -6,6 +6,7 @@ import { LanguageProvider } from '@/shared/ui/i18n/LanguageContext';
 const mockUseResources = vi.fn();
 let mockSearchParams = new URLSearchParams();
 const mockPush = vi.fn();
+const mockReplace = vi.fn();
 
 vi.mock('@/hooks/useResources', () => ({
   useResources: (...args: unknown[]) => mockUseResources(...args),
@@ -14,7 +15,7 @@ vi.mock('@/hooks/useResources', () => ({
 vi.mock('next/navigation', () => ({
   useSearchParams: () => mockSearchParams,
   usePathname: () => '/resources',
-  useRouter: () => ({ push: mockPush }),
+  useRouter: () => ({ push: mockPush, replace: mockReplace }),
 }));
 
 vi.mock('next/link', () => ({
@@ -152,6 +153,41 @@ describe('CatalogContent pagination', () => {
     mockUseResources.mockReturnValue({ data: { count: 0, next: null, previous: null, results: [] }, error: undefined, isLoading: false });
     renderWithProvider(<CatalogContent />);
     expect(screen.queryByRole('navigation', { name: /pagination/i })).not.toBeInTheDocument();
+  });
+});
+
+describe('CatalogContent out of range page', () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+    mockSearchParams = new URLSearchParams();
+  });
+
+  it('moves to the last page when the page param is past the end', () => {
+    mockSearchParams = new URLSearchParams('page=999&type=dataset');
+    mockUseResources.mockReturnValue({ data: { count: 30, next: null, previous: null, results: [] }, error: undefined, isLoading: false });
+    renderWithProvider(<CatalogContent />);
+    expect(mockReplace).toHaveBeenCalledWith('/resources?page=3&type=dataset');
+  });
+
+  it('drops the page param when there are no results at all', () => {
+    mockSearchParams = new URLSearchParams('page=4&search=zzzz');
+    mockUseResources.mockReturnValue({ data: { count: 0, next: null, previous: null, results: [] }, error: undefined, isLoading: false });
+    renderWithProvider(<CatalogContent />);
+    expect(mockReplace).toHaveBeenCalledWith('/resources?search=zzzz');
+  });
+
+  it('leaves a valid page alone', () => {
+    mockSearchParams = new URLSearchParams('page=3');
+    mockUseResources.mockReturnValue({ data: { count: 30, next: null, previous: null, results: [makeResource(1)] }, error: undefined, isLoading: false });
+    renderWithProvider(<CatalogContent />);
+    expect(mockReplace).not.toHaveBeenCalled();
+  });
+
+  it('does not redirect while loading', () => {
+    mockSearchParams = new URLSearchParams('page=999');
+    mockUseResources.mockReturnValue({ data: undefined, error: undefined, isLoading: true });
+    renderWithProvider(<CatalogContent />);
+    expect(mockReplace).not.toHaveBeenCalled();
   });
 });
 

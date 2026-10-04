@@ -1,6 +1,10 @@
 import { Suspense } from 'react';
 import { CatalogContent } from './CatalogContent';
 
+// next-on-pages needs non-static routes to opt into the edge runtime
+export const runtime = 'edge';
+export const dynamic = 'force-dynamic';
+
 export default function CatalogPage() {
   return (
     <Suspense fallback={<CatalogLoading />}>
