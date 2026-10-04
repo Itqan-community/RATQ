@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'vitest'
+import { describe, expect, it, vi } from 'vitest'
 import { Resources } from './Resources'
 
 type ReqUser = { id: number | string; role?: string } | null
@@ -244,6 +244,65 @@ describe('Resources status field (draft protection & defaults)', () => {
 
   it('supports valid resource lifecycle statuses (draft, published, archived)', () => {
     expect(statusField.options).toEqual(['draft', 'published', 'archived'])
+  })
+})
+
+describe('Resources publisher field (issue #301)', () => {
+  const publisherField = Resources.fields.find(
+    (f) => 'name' in f && f.name === 'publisher',
+  ) as {
+    virtual?: boolean
+    access: { create: () => boolean; update: () => boolean }
+    hooks: { afterRead: Array<(args: unknown) => Promise<unknown>> }
+  }
+
+  const run = (owner: unknown, user: { display_name?: string | null } | null, context = {}) => {
+    const findByID = vi.fn(async () => {
+      if (!user) throw new Error('Not Found')
+      return user
+    })
+    const result = publisherField.hooks.afterRead[0]({
+      siblingData: { owner },
+      req: { payload: { findByID }, context },
+    })
+    return { result, findByID }
+  }
+
+  it('is a virtual, read-only field so it needs no column and cannot be spoofed', () => {
+    expect(publisherField.virtual).toBe(true)
+    expect(publisherField.access.create()).toBe(false)
+    expect(publisherField.access.update()).toBe(false)
+  })
+
+  it('exposes only the owner id and display name, bypassing the users read rule', async () => {
+    const { result, findByID } = run(88, { display_name: 'Tahbeer Center' })
+    await expect(result).resolves.toEqual({ id: 88, name: 'Tahbeer Center' })
+    expect(findByID).toHaveBeenCalledWith(
+      expect.objectContaining({ collection: 'users', id: 88, overrideAccess: true, depth: 0 }),
+    )
+  })
+
+  it('handles a populated owner object', async () => {
+    const { result } = run({ id: 88 }, { display_name: 'Tahbeer Center' })
+    await expect(result).resolves.toEqual({ id: 88, name: 'Tahbeer Center' })
+  })
+
+  it('returns null when the owner has no display name', async () => {
+    await expect(run(88, { display_name: '  ' }).result).resolves.toBeNull()
+    await expect(run(88, { display_name: null }).result).resolves.toBeNull()
+  })
+
+  it('returns null when there is no owner or the owner cannot be found', async () => {
+    await expect(run(null, { display_name: 'x' }).result).resolves.toBeNull()
+    await expect(run(88, null).result).resolves.toBeNull()
+  })
+
+  it('looks each owner up once per request', async () => {
+    const context = {}
+    await run(88, { display_name: 'A' }, context).result
+    const second = run(88, { display_name: 'A' }, context)
+    await second.result
+    expect(second.findByID).not.toHaveBeenCalled()
   })
 })
 

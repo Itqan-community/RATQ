@@ -209,6 +209,34 @@ export const Resources: CollectionConfig = {
       required: true,
     },
     {
+      // Public-safe view of the owner: users read is signed-in only (it holds
+      // emails), so anonymous callers only ever got a bare owner id. This
+      // exposes just id + display_name, for the catalog publisher filter.
+      name: 'publisher',
+      type: 'json',
+      virtual: true,
+      access: { create: () => false, update: () => false },
+      hooks: {
+        afterRead: [
+          async ({ siblingData, req }) => {
+            const owner = siblingData?.owner
+            const id = typeof owner === 'object' && owner !== null ? owner.id : owner
+            if (id == null) return null
+
+            const cache = (req.context.publishers ??= {}) as Record<string, Promise<unknown>>
+            cache[id] ??= req.payload
+              .findByID({ collection: 'users', id, depth: 0, overrideAccess: true })
+              .then((user) => {
+                const name = user.display_name?.trim()
+                return name ? { id, name } : null
+              })
+              .catch(() => null)
+            return cache[id]
+          },
+        ],
+      },
+    },
+    {
       name: 'github_stats',
       type: 'group',
       access: { create: () => false, update: () => false },
