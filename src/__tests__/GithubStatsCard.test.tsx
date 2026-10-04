@@ -62,13 +62,18 @@ describe('GithubStatsCard (unit)', () => {
     expect(link).toHaveAttribute('rel', 'noopener noreferrer');
   });
 
-  it('renders the not-connected note when stats are null but the URL is real', () => {
+  it('shows no zero counts or not-connected note when stats are null', () => {
     renderWithProvider(<GithubStatsCard githubUrl="https://github.com/example/repo" stats={null} />);
 
-    expect(screen.getByRole('heading', { name: /github statistics/i })).toBeInTheDocument();
-    expect(
-      screen.getByText('GitHub statistics have not been connected for this resource yet.'),
-    ).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: 'GitHub repository' })).toBeInTheDocument();
+    expect(screen.queryByRole('heading', { name: /github statistics/i })).not.toBeInTheDocument();
+    expect(screen.getByRole('region', { name: 'GitHub repository' }).className).not.toContain('min-h-');
+    expect(screen.getByRole('link', { name: 'View GitHub' })).toHaveAttribute(
+      'href',
+      'https://github.com/example/repo',
+    );
+    expect(screen.queryByText(/stars/i)).not.toBeInTheDocument();
+    expect(screen.queryByText(/have not been connected/i)).not.toBeInTheDocument();
   });
 });
 
