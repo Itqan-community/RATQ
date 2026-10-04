@@ -162,6 +162,18 @@ export const Resources: CollectionConfig = {
       },
     },
     {
+      // Language of the description, set in the admin (name has title_language).
+      // Optional: the frontend guesses from the text when unset (issue #303).
+      name: 'content_language',
+      type: 'select',
+      options: ['ar', 'en'],
+    },
+    {
+      name: 'title_language',
+      type: 'select',
+      options: ['ar', 'en'],
+    },
+    {
       name: 'license',
       type: 'text',
       required: true,

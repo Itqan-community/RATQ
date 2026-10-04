@@ -68,16 +68,18 @@ export interface Resource {
   total_downloads: number;
   downloads: number;
 
-  // Language of the resource's own content (description/meta info), set
-  // directly by the publisher or CMS - never inferred from the text (issue
-  // #303). Drives the reading direction of that content on the detail page;
-  // when absent (CMS/Payload today), content falls back to the site direction.
+  // Language of the resource's own content (description/meta info). Set in
+  // the Payload admin (content_language); otherwise guessed from the text by detectLanguage
+  // (CMS, and Payload when unset) - a heuristic, issue #303. Drives the
+  // reading direction of that content on the detail page; when absent, content
+  // falls back to the site direction.
   content_language?: 'ar' | 'en';
 
   // Language of the resource's canonical name, for when it differs from the
   // content language (e.g. ratq-native keeps English names on Arabic-content
-  // resources - PR #316 review). Falls back to the content direction, then
-  // the site direction; never inferred from the text.
+  // resources - PR #316 review). Same sources as content_language (Payload
+  // title_language, else guessed from the name). Falls back to the content
+  // direction, then the site direction.
   title_language?: 'ar' | 'en';
 
   // Arabic counterparts of name/description, filled by sources that serve both

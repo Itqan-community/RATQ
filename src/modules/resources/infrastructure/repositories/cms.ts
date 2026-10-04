@@ -1,6 +1,7 @@
 import type { PaginatedResponse, Publisher, Resource, ResourceListParams, ResourceType } from '@/types/resource';
 import type { ResourceSource } from './types';
 import { normalizeArabic } from '@/shared/utils/utils';
+import { detectLanguage } from '@/shared/utils/localize-resource';
 import { matchesLicenseFilter } from '@/shared/utils/license-filter';
 import { matchesPublisherFilter, publisherKey } from '@/shared/utils/publisher-filter';
 
@@ -104,8 +105,8 @@ function toResource(asset: CmsAsset, arAsset?: CmsAsset): Resource {
     publisher: withArabicPublisher(asset.publisher as Publisher | null, arAsset?.publisher),
     // name/description are the English fetch; the Arabic fetch rides along in
     // name_ar/description_ar and the client picks by locale (localizeResource).
-    content_language: 'en',
-    title_language: 'en',
+    content_language: detectLanguage(asset.description) ?? 'en',
+    title_language: detectLanguage(asset.name) ?? 'en',
     name_ar: arAsset?.name || undefined,
     description_ar: arAsset?.description || undefined,
     itqan_badge: false,
@@ -155,6 +156,8 @@ async function getDetail(resource: Resource): Promise<Partial<Resource> | null> 
 
   return {
     description: detail.long_description || resource.description,
+    // The long description replaces the list's short one, so its language can differ.
+    content_language: detectLanguage(detail.long_description) ?? resource.content_language,
     description_ar: arDetail?.long_description || arDetail?.description || resource.description_ar,
     name_ar: arDetail?.name || resource.name_ar,
     preview_images: detail.snapshots?.map((s) => s.image_url) ?? [],

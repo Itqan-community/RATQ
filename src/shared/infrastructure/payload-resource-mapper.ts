@@ -1,4 +1,5 @@
 import type { Resource, ResourceType } from '@/types/resource';
+import { detectLanguage } from '@/shared/utils/localize-resource';
 
 // Shared between the resources module's Payload repository (repositories/payload.ts)
 // and the developer module's Payload resource CRUD (developer/infrastructure/resources-api.ts) -
@@ -18,6 +19,8 @@ export interface PayloadResourceDoc {
   documentation_url: string | null;
   github_url: string | null;
   website_url?: string | null;
+  content_language?: 'ar' | 'en' | null;
+  title_language?: 'ar' | 'en' | null;
   license: string;
   itqan_badge: boolean;
   status: 'draft' | 'published' | 'archived';
@@ -54,6 +57,8 @@ export function toResource(doc: PayloadResourceDoc): Resource {
     github_url: doc.github_url,
     website_url: doc.website_url ?? null,
     license: doc.license,
+    content_language: doc.content_language ?? detectLanguage(doc.description),
+    title_language: doc.title_language ?? detectLanguage(doc.name),
     itqan_badge: doc.itqan_badge,
     status: doc.status,
     created_at: doc.createdAt,

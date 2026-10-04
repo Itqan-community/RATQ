@@ -58,6 +58,18 @@ describe('cms source list', () => {
     expect(results[0].publisher).toEqual({ id: 3, name: 'Tahbeer Center', name_ar: 'مركز تحبير' });
   });
 
+  it('detects the language of each resource from its text instead of assuming English', async () => {
+    const arabicEn = { ...enAsset, name: 'French Translation', description: 'اعتمد الطبري في تفسيره' };
+    fetchMock.mockImplementation((_url: string, init?: RequestInit) =>
+      json({ count: 1, results: [langOf(init) === 'ar' ? arAsset : arabicEn] }),
+    );
+
+    const { results } = await cmsSource.list({});
+
+    expect(results[0].content_language).toBe('ar');
+    expect(results[0].title_language).toBe('en');
+  });
+
   it('falls back to English-only resources when the Arabic request fails', async () => {
     fetchMock.mockImplementation((_url: string, init?: RequestInit) =>
       langOf(init) === 'ar' ? json(null, false) : json({ count: 1, results: [enAsset] }),
@@ -136,5 +148,33 @@ describe('cms source detail', () => {
       name_ar: 'المصحف المرتل برواية الدوري',
     });
     expect(detail?.publisher).toEqual({ id: 3, name: 'Tahbeer Center', name_ar: 'مركز تحبير' });
+  });
+
+  it('getDetail_arabicLongDescriptionOverEnglishShortOne_reportsArabicContentLanguage', async () => {
+    fetchMock.mockImplementation(() =>
+      json({ ...enAsset, long_description: 'اعتمد الطبري في تفسيره', snapshots: [] }),
+    );
+
+    const detail = await cmsSource.getDetail!({
+      slug: 'cms-27',
+      description: 'English description',
+      content_language: 'en',
+      title_language: 'en',
+    } as never);
+
+    expect(detail?.content_language).toBe('ar');
+    expect(detail).not.toHaveProperty('title_language');
+  });
+
+  it('getDetail_blankLongDescription_keepsListContentLanguage', async () => {
+    fetchMock.mockImplementation(() => json({ ...enAsset, long_description: ' ', snapshots: [] }));
+
+    const detail = await cmsSource.getDetail!({
+      slug: 'cms-27',
+      description: 'English description',
+      content_language: 'en',
+    } as never);
+
+    expect(detail?.content_language).toBe('en');
   });
 });
