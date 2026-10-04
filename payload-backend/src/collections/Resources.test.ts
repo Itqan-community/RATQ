@@ -281,3 +281,16 @@ describe('Resources website_url validation (issue #299 review)', () => {
     expect(runValidate('mailto:someone@example.com')).toBe(expectedError)
   })
 })
+
+describe('Resources content language fields (issue #303)', () => {
+  it.each(['content_language', 'title_language'])('%s is an optional ar/en select', (name) => {
+    const field = Resources.fields.find((f) => 'name' in f && f.name === name) as {
+      type: string
+      required?: boolean
+      options: string[]
+    }
+    expect(field.type).toBe('select')
+    expect(field.required).toBeFalsy()
+    expect(field.options).toEqual(['ar', 'en'])
+  })
+})

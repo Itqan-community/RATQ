@@ -115,10 +115,9 @@ function ResourceCtaBanners({ resource }: { resource: Resource }) {
 export function ResourceDetailClient({ resource, repoPreview }: ResourceDetailClientProps) {
   const { t, locale, direction } = useLanguage();
   // Reading direction of the resource's own content (issue #303): driven by
-  // the explicit content_language field only - never inferred from the text.
-  // Resources without the field (CMS/Payload today) keep the site direction.
-  // Bilingual sources (CMS) carry both languages, so the language is that of
-  // the text actually shown (localizeResource), still explicit and not sniffed.
+  // the language of the text actually shown (localizeResource). ratq-native
+  // sets it explicitly, CMS and Payload detect it from the text in their
+  // mappers. With no value the site direction is kept.
   const localized = localizeResource(resource, locale);
   const contentDirection =
     localized.contentLanguage === 'ar' ? 'rtl' : localized.contentLanguage === 'en' ? 'ltr' : direction;
