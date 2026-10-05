@@ -1,7 +1,7 @@
 import type { Resource } from '@/types/resource';
 import type { TrendingResource } from '@/types/announcement';
 
-// The ranking rule behind the mock-mode branch of trending-api.ts: only
+// The ranking rule behind trending-api.ts: only
 // resources with at least one download in the period, ranked by that
 // period's download count, top 3. Kept separate from the fetch so the rule
 // itself (not the HTTP/mock plumbing around it) is what a future change to
