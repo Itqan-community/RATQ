@@ -1,6 +1,5 @@
 import type { Announcement } from '@/types/announcement';
-import { DATA_MODE, API_BASE } from '@/shared/infrastructure/data-mode';
-import { mockAnnouncements } from './mock-data';
+import { PAYLOAD_API_BASE } from '@/shared/infrastructure/payload-config';
 
 // Payload REST returns a paginated envelope ({ docs, hasNextPage, ... }), not a
 // bare array, so this unwraps docs and normalizes each doc to the frontend
@@ -54,22 +53,13 @@ function toAnnouncement(doc: PayloadAnnouncementDoc): Announcement {
 // (newest first, no truncation at Payload's default limit of 10).
 async function fetchAnnouncementPage(page: number): Promise<PayloadAnnouncementsResponse> {
   const res = await fetch(
-    `${API_BASE}/api/announcements/?depth=1&limit=100&sort=-createdAt&page=${page}`,
+    `${PAYLOAD_API_BASE}/announcements?depth=1&limit=100&sort=-createdAt&page=${page}`,
   );
   if (!res.ok) throw new Error('Failed to fetch announcements');
   return res.json();
 }
 
 export async function fetchAnnouncements(): Promise<Announcement[]> {
-  if (DATA_MODE === 'mock') {
-    const now = new Date();
-    return mockAnnouncements.filter((a) => {
-      if (!a.is_active) return false;
-      if (a.expires_at && new Date(a.expires_at) < now) return false;
-      return true;
-    });
-  }
-
   // Payload pages the REST list (default limit 10); walk page 1 onwards and
   // concatenate docs, preserving the server-side sort order. Loop is guarded
   // against malformed metadata: stop when hasNextPage is false, when the

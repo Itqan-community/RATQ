@@ -1,11 +1,9 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { mockAnnouncements } from '@/modules/resources/infrastructure/mock-data';
-import type { Announcement } from '@/types/announcement';
 
 type FetchAnnouncements = typeof import('@/modules/resources/infrastructure/announcements-api').fetchAnnouncements;
 
 const pageUrl = (page: number) =>
-  `https://api.test/api/announcements/?depth=1&limit=100&sort=-createdAt&page=${page}`;
+  `https://api.test/api/announcements?depth=1&limit=100&sort=-createdAt&page=${page}`;
 
 function jsonResponse(body: unknown, ok = true): Response {
   return { ok, json: async () => body } as Response;
@@ -29,7 +27,7 @@ describe('fetchAnnouncements (live mode)', () => {
   beforeEach(async () => {
     vi.resetModules();
     vi.stubEnv('NEXT_PUBLIC_DATA_MODE', 'live');
-    vi.stubEnv('NEXT_PUBLIC_API_URL', 'https://api.test');
+    vi.stubEnv('NEXT_PUBLIC_PAYLOAD_API_URL', 'https://api.test/api');
     vi.stubGlobal('fetch', vi.fn());
     fetchAnnouncements = (await import('@/modules/resources/infrastructure/announcements-api'))
       .fetchAnnouncements;
@@ -169,13 +167,13 @@ describe('fetchAnnouncements (live mode)', () => {
   });
 });
 
-describe('fetchAnnouncements (mock mode)', () => {
+describe('fetchAnnouncements (DATA_MODE unset or mock)', () => {
   let fetchAnnouncements: FetchAnnouncements;
 
   beforeEach(async () => {
     vi.resetModules();
     vi.stubEnv('NEXT_PUBLIC_DATA_MODE', 'mock');
-    vi.stubEnv('NEXT_PUBLIC_API_URL', 'https://api.test');
+    vi.stubEnv('NEXT_PUBLIC_PAYLOAD_API_URL', 'https://api.test/api');
     vi.stubGlobal('fetch', vi.fn());
     fetchAnnouncements = (await import('@/modules/resources/infrastructure/announcements-api'))
       .fetchAnnouncements;
@@ -187,17 +185,12 @@ describe('fetchAnnouncements (mock mode)', () => {
     vi.restoreAllMocks();
   });
 
-  it('does not call the network and returns only active, non-expired mock announcements', async () => {
-    const now = new Date();
-    const expected: Announcement[] = mockAnnouncements.filter((a) => {
-      if (!a.is_active) return false;
-      if (a.expires_at && new Date(a.expires_at) < now) return false;
-      return true;
-    });
+  it('reads Payload and never returns the hardcoded mock announcements', async () => {
+    vi.mocked(fetch).mockResolvedValue(jsonResponse({ docs: [], hasNextPage: false, page: 1 }));
 
     const result = await fetchAnnouncements();
 
-    expect(fetch).not.toHaveBeenCalled();
-    expect(result).toEqual(expected);
+    expect(fetch).toHaveBeenCalledWith(pageUrl(1));
+    expect(result).toEqual([]);
   });
 });
