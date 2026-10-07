@@ -130,8 +130,7 @@ describe('cms source cache keys', () => {
   });
 });
 
-describe('cms source detail', () => {
-  it('adds the Arabic long description and publisher from the Arabic detail response', async () => {
+describe('cms source detail', () => {  it('adds the Arabic long description and publisher from the Arabic detail response', async () => {
     fetchMock.mockImplementation((_url: string, init?: RequestInit) =>
       json(
         langOf(init) === 'ar'
@@ -176,5 +175,43 @@ describe('cms source detail', () => {
     } as never);
 
     expect(detail?.content_language).toBe('en');
+  });
+});
+
+describe('cms source getBySlug', () => {
+  it('resolves the detail endpoint directly and maps the full resource in one request per language', async () => {
+    fetchMock.mockImplementation((_url: string, init?: RequestInit) =>
+      json(
+        langOf(init) === 'ar'
+          ? { ...arAsset, long_description: 'وصف عربي مفصل', snapshots: [{ image_url: 'ar.png' }], reciter: null }
+          : {
+              ...enAsset,
+              long_description: 'Long English',
+              reciter: { id: 4, name: 'Reciter One' },
+              snapshots: [{ image_url: 'a.png' }, { image_url: 'b.png' }],
+            },
+      ),
+    );
+
+    const resource = await cmsSource.getBySlug!('cms-27');
+
+    expect(fetchMock).toHaveBeenCalledTimes(2);
+    expect(resource).toMatchObject({
+      id: 100_027,
+      slug: 'cms-27',
+      source: 'cms',
+      description: 'Long English',
+      name_ar: 'المصحف المرتل برواية الدوري',
+      description_ar: 'وصف عربي مفصل',
+      preview_images: ['a.png', 'b.png'],
+      reciter_name: 'Reciter One',
+    });
+    expect(resource?.publisher).toEqual({ id: 3, name: 'Tahbeer Center', name_ar: 'مركز تحبير' });
+  });
+
+  it('returns null for an unknown slug instead of throwing', async () => {
+    fetchMock.mockImplementation(() => json(null, false));
+
+    expect(await cmsSource.getBySlug!('cms-999')).toBeNull();
   });
 });

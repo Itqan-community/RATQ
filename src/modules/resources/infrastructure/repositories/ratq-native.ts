@@ -26,4 +26,9 @@ async function list(params: ResourceListParams): Promise<PaginatedResponse<Resou
   return { count: filtered.length, next: null, previous: null, results: filtered };
 }
 
-export const ratqNativeSource: ResourceSource = { id: 'ratq', label: 'RATQ', list };
+// Slugs are unprefixed for this source; the aggregator falls back to it.
+async function getBySlug(slug: string): Promise<Resource | null> {
+  return resources.find((r) => r.slug === slug) ?? null;
+}
+
+export const ratqNativeSource: ResourceSource = { id: 'ratq', label: 'RATQ', list, getBySlug };
