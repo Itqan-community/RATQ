@@ -116,4 +116,101 @@ describe('Dropdown', () => {
       '3 publishers selected',
     );
   });
+
+  // ── Dismissal (regression: the open listbox used to stay on screen, visually
+  // detached from its trigger, when the page scrolled — Publishers filter) ──
+  describe('dismissal', () => {
+    function openDropdown() {
+      const trigger = screen.getByRole('button', { name: 'Publishers' });
+      fireEvent.click(trigger);
+      expect(screen.getByRole('listbox')).toBeInTheDocument();
+      return trigger;
+    }
+
+    it('closes when the page scrolls while open', () => {
+      renderDropdown();
+      const trigger = openDropdown();
+
+      fireEvent.scroll(window);
+
+      expect(screen.queryByRole('listbox')).not.toBeInTheDocument();
+      expect(trigger).toHaveAttribute('aria-expanded', 'false');
+    });
+
+    it('stays open when the listbox itself scrolls (internal scroll guard)', () => {
+      renderDropdown();
+      openDropdown();
+
+      fireEvent.scroll(screen.getByRole('listbox'));
+
+      expect(screen.getByRole('listbox')).toBeInTheDocument();
+    });
+
+    it('stays open on pointer press inside the dropdown', () => {
+      renderDropdown();
+      openDropdown();
+
+      fireEvent.pointerDown(screen.getByRole('listbox'));
+
+      expect(screen.getByRole('listbox')).toBeInTheDocument();
+    });
+
+    it('closes when pressing outside the dropdown', () => {
+      renderDropdown();
+      openDropdown();
+
+      fireEvent.pointerDown(document.body);
+
+      expect(screen.queryByRole('listbox')).not.toBeInTheDocument();
+    });
+
+    it('closes on Escape', () => {
+      renderDropdown();
+      const trigger = openDropdown();
+
+      fireEvent.keyDown(document, { key: 'Escape' });
+
+      expect(screen.queryByRole('listbox')).not.toBeInTheDocument();
+      expect(trigger).toHaveAttribute('aria-expanded', 'false');
+    });
+
+    it('does not clear the selection when closing on scroll in multi-select mode', () => {
+      const onChange = vi.fn();
+      render(
+        <Dropdown
+          label="Publishers"
+          options={options}
+          value={['alpha']}
+          direction="ltr"
+          multiple
+          selectionCountLabel={(count) => `${count} publishers selected`}
+          onChange={onChange}
+        />,
+      );
+      openDropdown();
+
+      fireEvent.scroll(window);
+
+      expect(screen.queryByRole('listbox')).not.toBeInTheDocument();
+      expect(onChange).not.toHaveBeenCalled();
+      expect(screen.getByRole('button', { name: 'Publishers' })).toHaveTextContent('Alpha');
+    });
+
+    it('re-attaches its dismissal listeners when reopened after closing', () => {
+      renderDropdown();
+      const trigger = screen.getByRole('button', { name: 'Publishers' });
+
+      // Close via Escape, reopen, then scroll — the second open cycle must
+      // still dismiss on scroll (proves listeners are cleaned up per cycle).
+      fireEvent.click(trigger);
+      fireEvent.keyDown(document, { key: 'Escape' });
+      expect(screen.queryByRole('listbox')).not.toBeInTheDocument();
+
+      fireEvent.click(trigger);
+      expect(screen.getByRole('listbox')).toBeInTheDocument();
+
+      fireEvent.scroll(window);
+      expect(screen.queryByRole('listbox')).not.toBeInTheDocument();
+    });
+  });
 });

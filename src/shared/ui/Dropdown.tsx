@@ -36,7 +36,44 @@ export function Dropdown({
   const selectedValues = Array.isArray(value) ? value : value ? [value] : [];
 
   const selectedOptions = orderedOptions.filter((option) => selectedValues.includes(option.value));
-  
+
+  // Dismiss the open listbox on outside press, Escape, or scroll outside the
+  // dropdown. The listbox itself is overflow-y-auto, so scrolling *inside* it
+  // must not close the dropdown — events whose target stays within the
+  // container are ignored. Listeners are attached only while open and removed
+  // on close/unmount, so no global listener leaks.
+  useEffect(() => {
+    if (!open) return;
+
+    function isInsideContainer(target: EventTarget | null) {
+      return target instanceof Node && containerRef.current?.contains(target);
+    }
+
+    function handlePointerDown(event: PointerEvent) {
+      if (!isInsideContainer(event.target)) setOpen(false);
+    }
+
+    function handleKeyDown(event: KeyboardEvent) {
+      if (event.key === 'Escape') setOpen(false);
+    }
+
+    // Page/ancestor scroll bubbles to window; the listbox's internal scroll
+    // bubbles too but its target is inside the container, so it is guarded.
+    function handleScroll(event: Event) {
+      if (!isInsideContainer(event.target)) setOpen(false);
+    }
+
+    document.addEventListener('pointerdown', handlePointerDown);
+    document.addEventListener('keydown', handleKeyDown);
+    window.addEventListener('scroll', handleScroll);
+
+    return () => {
+      document.removeEventListener('pointerdown', handlePointerDown);
+      document.removeEventListener('keydown', handleKeyDown);
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, [open]);
+
   function toggleOption(optionValue: string) {
     if (!multiple) {
       onChange(optionValue);
