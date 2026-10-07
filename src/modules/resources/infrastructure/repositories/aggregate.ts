@@ -1,6 +1,19 @@
 import type { PaginatedResponse, Resource, ResourceListParams } from '@/types/resource';
 import { SOURCES } from './registry';
 
+// Date sorts compare parsed timestamps. The CMS API exposes no creation-date
+// fields, so CMS resources are mapped with created_at: '' — and Date.parse('')
+// is NaN, which made the old raw comparator return NaN for every CMS
+// comparison. sort() treats NaN as 0, so all CMS items silently kept their
+// source order under both 'newest' and 'oldest'. Undated/invalid values are
+// treated as time 0 for ordering only — no dates are invented: they sink
+// below every dated resource under 'newest', while 'oldest' output stays
+// exactly as it was before this guard.
+function sortTime(dateString: string): number {
+  const time = Date.parse(dateString);
+  return Number.isNaN(time) ? 0 : time;
+}
+
 // Each source returns its full filtered set (see ratq-native.ts /
 // cms.ts) and pagination happens once here, over the merged list. Fine at the
 // current scale (dozens to low hundreds of resources per source); upgrade to
@@ -20,10 +33,10 @@ async function listAllResources(params: ResourceListParams): Promise<PaginatedRe
         sorted.sort((a, b) => b.total_downloads - a.total_downloads);
         break;
       case 'newest':
-        sorted.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
+        sorted.sort((a, b) => sortTime(b.created_at) - sortTime(a.created_at));
         break;
       case 'oldest':
-        sorted.sort((a, b) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime());
+        sorted.sort((a, b) => sortTime(a.created_at) - sortTime(b.created_at));
         break;
       case 'name_asc':
         sorted.sort((a, b) => a.name.localeCompare(b.name));

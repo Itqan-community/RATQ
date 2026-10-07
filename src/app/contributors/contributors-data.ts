@@ -148,9 +148,9 @@ export const contributors: Contributor[] = [
     githubUrl: 'https://github.com/Walid-Khalfa',
     avatarUrl: 'https://github.com/Walid-Khalfa.png',
     contribution:
-      'Built the real Payload backend for Announcements, replacing the mock data it had been running on - a proper collection with admin-only writes, public reads scoped to active/non-expired announcements, and resource links that resolve through the real catalog instead of pointing at fake resource IDs. Later added Edge Cache for GitHub repository previews, caching successful responses per-repository while explicitly excluding failed, invalid, or missing-token results from the cache. Later added the website CTA banners - an optional website_url field plus "Visit site" and "Use API" banners, gated on real data and hidden otherwise, along with a fix so the GitHub stats card only shows for genuinely GitHub-hosted resources. Then added a resource-detail photo carousel with previous/next controls, a slide counter, and dot navigation, falling back to the single resource image when no photo list is available.',
-    issueUrl: 'https://github.com/Itqan-community/RATQ/issues/295',
-    prUrl: 'https://github.com/Itqan-community/RATQ/pull/313',
+      'Built the real Payload backend for Announcements, replacing the mock data it had been running on - a proper collection with admin-only writes, public reads scoped to active/non-expired announcements, and resource links that resolve through the real catalog instead of pointing at fake resource IDs. Later added Edge Cache for GitHub repository previews, caching successful responses per-repository while explicitly excluding failed, invalid, or missing-token results from the cache. Later added the website CTA banners - an optional website_url field plus "Visit site" and "Use API" banners, gated on real data and hidden otherwise, along with a fix so the GitHub stats card only shows for genuinely GitHub-hosted resources. Then added a resource-detail photo carousel with previous/next controls, a slide counter, and dot navigation, falling back to the single resource image when no photo list is available. Most recently fixed the Publishers filter dropdown so it closes on an outside click, Escape, or page scroll while staying open when scrolling inside the list, with regression tests.',
+    issueUrl: 'https://github.com/Itqan-community/RATQ/issues/332',
+    prUrl: 'https://github.com/Itqan-community/RATQ/pull/333',
   },
   {
     name: 'Zyad-Eltayabi',
