@@ -76,4 +76,26 @@ async function getDetail(resource: Resource): Promise<Partial<Resource> | null> 
   return { description: doc.description, updated_at: doc.updatedAt };
 }
 
-export const payloadSource: ResourceSource = { id: 'payload', label: 'Payload', list, getDetail };
+// Single-resource lookup for the detail route: Payload has no id in the slug
+// (payload-${slug}), so resolve by slug in one request instead of paging the
+// whole collection.
+async function getBySlug(slug: string): Promise<Resource | null> {
+  const payloadSlug = slug.replace(/^payload-/, '');
+  const res = await fetch(
+    `${API_BASE}/resources?where[slug][equals]=${encodeURIComponent(payloadSlug)}&where[status][equals]=published&limit=1`,
+    { next: { revalidate: 300 } },
+  );
+  if (!res.ok) return null;
+  const data: { docs: PayloadResourceDoc[] } = await res.json();
+  const doc = data.docs?.[0];
+  return doc ? toResource(doc) : null;
+}
+
+export const payloadSource: ResourceSource = {
+  id: 'payload',
+  label: 'Payload',
+  slugPrefix: 'payload-',
+  list,
+  getBySlug,
+  getDetail,
+};

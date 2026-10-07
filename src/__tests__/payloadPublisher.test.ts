@@ -49,3 +49,30 @@ describe('payloadSource.list publisher filter', () => {
     expect(res.results.map((r) => r.name)).toEqual(['Resource 1']);
   });
 });
+
+describe('payloadSource.getBySlug', () => {
+  afterEach(() => vi.unstubAllGlobals());
+
+  it('resolves by slug in a single request without paging the catalog', async () => {
+    const fetchMock = vi.fn(async (_url: string) => ({
+      ok: true,
+      json: async () => ({ docs: [doc(1, { id: 88, name: 'A' })], totalDocs: 1, hasNextPage: false }),
+    }));
+    vi.stubGlobal('fetch', fetchMock);
+
+    const resource = await payloadSource.getBySlug!('payload-r-1');
+
+    expect(fetchMock).toHaveBeenCalledTimes(1);
+    expect(fetchMock.mock.calls[0][0]).toContain('where[slug][equals]=r-1');
+    expect(resource).toMatchObject({ slug: 'payload-r-1', source: 'payload', name: 'Resource 1' });
+  });
+
+  it('returns null when the payload query has no match', async () => {
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(async () => ({ ok: true, json: async () => ({ docs: [], totalDocs: 0, hasNextPage: false }) })),
+    );
+
+    expect(await payloadSource.getBySlug!('payload-missing')).toBeNull();
+  });
+});
