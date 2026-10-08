@@ -24,18 +24,18 @@ function StatCard({ label, value, detail, tone, icon }: StatCardProps) {
 }
 
 export default function DashboardPage() {
-  const { user, logout } = useAuth();
+  const { user, loading, logout } = useAuth();
   const router = useRouter();
   const { t, direction } = useLanguage();
   const [isClient, setIsClient] = useState(false);
   const copy = t.dashboard.overview;
-  useEffect(() => { setIsClient(true); if (!user) router.push('/login'); }, [user, router]);
+  useEffect(() => { setIsClient(true); if (!loading && !user) router.push('/login'); }, [user, loading, router]);
 
   const requestsResponse = useDeveloperRequests()
   const filteredRequests = requestsResponse.data?.filter((request) => request.status === 'pending');
 
 
-  if (!isClient || !user) return <div className="flex min-h-[60vh] items-center justify-center bg-white"><div className="h-6 w-32 animate-pulse rounded bg-[#ededed]" /></div>;
+  if (!isClient || loading || !user) return <div className="flex min-h-[60vh] items-center justify-center bg-white"><div className="h-6 w-32 animate-pulse rounded bg-[#ededed]" /></div>;
   return (
     <div className="min-h-screen bg-white text-black lg:flex" dir={direction}>
       <Sidebar />

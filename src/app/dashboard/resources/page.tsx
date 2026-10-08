@@ -15,7 +15,7 @@ import { useLanguage } from '@/shared/ui/i18n';
 import type { Resource, ResourceType } from '@/types/resource';
 
 export default function DashboardResourcesPage() {
-  const { user } = useAuth();
+  const { user, loading } = useAuth();
   const router = useRouter();
   const { t, direction } = useLanguage();
   const copy = t.dashboard.resources;
@@ -26,7 +26,7 @@ export default function DashboardResourcesPage() {
   const [createError, setCreateError] = useState<string | null>(null);
   const [loadError, setLoadError] = useState(false);
   const [creating, setCreating] = useState(false);
-  useEffect(() => { setIsClient(true); if (!user) router.push('/login'); }, [user, router]);
+  useEffect(() => { setIsClient(true); if (!loading && !user) router.push('/login'); }, [user, loading, router]);
   useEffect(() => { if (user) listDeveloperResources(user.id).then(setResources).catch(() => setLoadError(true)); }, [user]);
   const handleCreate = async (data: { name: string; type: ResourceType; short_description: string; image?: number | null; description: string; license: string; github_url: string; documentation_url: string; }) => {
     setCreating(true);
@@ -64,7 +64,7 @@ export default function DashboardResourcesPage() {
       setResources(previous);
     }
   };
-  if (!isClient || !user) return <div className="flex min-h-[60vh] items-center justify-center bg-white"><div className="h-6 w-32 animate-pulse rounded bg-[#ededed]" /></div>;
+  if (!isClient || loading || !user) return <div className="flex min-h-[60vh] items-center justify-center bg-white"><div className="h-6 w-32 animate-pulse rounded bg-[#ededed]" /></div>;
   const isFormOpen = showForm || Boolean(editingResource);
   return (
     <div className="min-h-screen bg-white text-black lg:flex" dir={direction}>
