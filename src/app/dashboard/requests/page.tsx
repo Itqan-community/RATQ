@@ -11,7 +11,7 @@ import { useDeveloperRequests } from "@/hooks/useDeveloperRequests";
 
 
 export default function DashboardRequestsPage() {
-  const { user } = useAuth();
+  const { user, loading } = useAuth();
   const router = useRouter();
   const { t, direction } = useLanguage();
   const copy = t.dashboard.requests;
@@ -23,10 +23,10 @@ export default function DashboardRequestsPage() {
 
   useEffect(() => {
     setIsClient(true);
-    if (!user) router.push("/login");
-  }, [user, router]);
+    if (!loading && !user) router.push("/login");
+  }, [user, loading, router]);
 
-  if (!isClient || !user)
+  if (!isClient || loading || !user)
     return (
       <div className="flex min-h-[60vh] items-center justify-center bg-white">
         <div className="h-6 w-32 animate-pulse rounded bg-[#ededed]" />
