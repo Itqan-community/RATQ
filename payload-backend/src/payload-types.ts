@@ -536,6 +536,7 @@ export interface ResourcesSelect<T extends boolean = true> {
   reciter_name?: T;
   audio_quality?: T;
   owner?: T;
+  publisher?: T;
   github_stats?:
     | T
     | {

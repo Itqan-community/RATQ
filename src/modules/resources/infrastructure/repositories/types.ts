@@ -7,9 +7,17 @@ import type { PaginatedResponse, Resource, ResourceListParams, ResourceSourceId 
 export interface ResourceSource {
   id: ResourceSourceId;
   label: string;
+  // Prefix that namespaces this source's slugs (e.g. 'cms-', 'payload-'). The
+  // aggregator routes a detail slug to the source whose prefix it carries.
+  // Sources with no prefix (ratq-native) omit it and act as the fallback.
+  slugPrefix?: string;
   list(params: ResourceListParams): Promise<PaginatedResponse<Resource>>;
+  // Single-resource lookup used by the detail route so the aggregator never has
+  // to fetch the full catalog to resolve one slug. Receives the full namespaced
+  // slug and returns a complete Resource, or null when the source has no match.
+  getBySlug?(slug: string): Promise<Resource | null>;
   // Optional per-resource enrichment fetched lazily on the detail page only
   // (e.g. CMS's richer /assets/{id}/ endpoint). Sources that have nothing
-  // extra to add omit this.
+  // extra to add omit this. Kept as the aggregator's fallback path.
   getDetail?(resource: Resource): Promise<Partial<Resource> | null>;
 }

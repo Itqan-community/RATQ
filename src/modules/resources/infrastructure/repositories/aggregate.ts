@@ -75,4 +75,30 @@ async function getResource(slug: string): Promise<Resource | undefined> {
   return detail ? { ...resource, ...detail } : resource;
 }
 
-export const resourceAggregator = { list: listAllResources, get: getResource };
+// Routes a detail slug to the source that owns its prefix (falling back to the
+// first unprefixed source, e.g. ratq-native) so only that source is queried.
+function sourceForSlug(slug: string) {
+  return (
+    SOURCES.find((s) => s.slugPrefix && slug.startsWith(s.slugPrefix)) ??
+    SOURCES.find((s) => !s.slugPrefix)
+  );
+}
+
+// Detail lookup that avoids the full-catalog scan: asks the matching source for
+// just this slug. The scan in getResource is kept only as a fallback for
+// sources that don't implement getBySlug (or when it throws). A null result
+// means "not found" and must NOT trigger the scan, or every bad slug would
+// re-fetch the whole catalog.
+async function getResourceBySlug(slug: string): Promise<Resource | undefined> {
+  const source = sourceForSlug(slug);
+  if (source?.getBySlug) {
+    try {
+      return (await source.getBySlug(slug)) ?? undefined;
+    } catch (e) {
+      console.error(`Source "${source.id}" getBySlug failed:`, e);
+    }
+  }
+  return getResource(slug);
+}
+
+export const resourceAggregator = { list: listAllResources, get: getResourceBySlug };

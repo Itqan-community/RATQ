@@ -166,4 +166,40 @@ async function getDetail(resource: Resource): Promise<Partial<Resource> | null> 
   };
 }
 
-export const cmsSource: ResourceSource = { id: 'cms', label: 'CMS', list, getDetail };
+// Single-resource lookup for the detail route. Unlike getDetail (which
+// enriches an already-listed resource), this resolves the slug straight to the
+// CMS detail endpoint, so no full-catalog fetch is needed.
+async function getBySlug(slug: string): Promise<Resource | null> {
+  const match = slug.match(/^cms-([1-9]\d*)$/)
+  if(!match) return null;
+
+  const id = Number(match[1]);
+  
+  const fetchDetail = (lang: Lang) =>
+    fetch(`${API_BASE}/assets/${id}/?lang=${lang}`, { headers: langHeaders(lang), next: { revalidate: 300 } });
+  const [res, arRes] = await Promise.all([fetchDetail('en'), fetchDetail('ar').catch(() => null)]);
+  if (!res.ok) return null;
+  const detail: CmsAssetDetail = await res.json();
+  const arDetail: CmsAssetDetail | null = arRes?.ok ? await arRes.json().catch(() => null) : null;
+
+  const base = toResource(detail, arDetail ?? undefined);
+  return {
+    ...base,
+    description: detail.long_description || base.description,
+    content_language: detectLanguage(detail.long_description) ?? base.content_language,
+    description_ar: arDetail?.long_description || arDetail?.description || base.description_ar,
+    name_ar: arDetail?.name || base.name_ar,
+    preview_images: detail.snapshots?.map((s) => s.image_url) ?? [],
+    publisher: withArabicPublisher(detail.publisher, arDetail?.publisher),
+    reciter_name: detail.reciter?.name ?? null,
+  };
+}
+
+export const cmsSource: ResourceSource = {
+  id: 'cms',
+  label: 'CMS',
+  slugPrefix: 'cms-',
+  list,
+  getBySlug,
+  getDetail,
+};
