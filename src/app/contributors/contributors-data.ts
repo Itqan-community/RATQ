@@ -248,9 +248,9 @@ export const contributors: Contributor[] = [
     githubUrl: 'https://github.com/MahmoudSheemy127',
     avatarUrl: 'https://github.com/MahmoudSheemy127.png',
     contribution:
-      "Migrated authentication from a JWT stored in localStorage to a secure HttpOnly cookie, closing an XSS exposure - reconfigured Payload's auth settings, updated the GitHub OAuth flow to match, and moved every frontend request over to session-based auth.",
-    issueUrl: 'https://github.com/Itqan-community/RATQ/issues/269',
-    prUrl: 'https://github.com/Itqan-community/RATQ/pull/281',
+      "Migrated authentication from a JWT stored in localStorage to a secure HttpOnly cookie, closing an XSS exposure - reconfigured Payload's auth settings, updated the GitHub OAuth flow to match, and moved every frontend request over to session-based auth. Later stopped the resource detail page from scanning the whole catalog to find one slug - each source now exposes a direct single-resource lookup (CMS, Payload and the native source), the aggregator routes a slug to the source that owns its prefix, and the old full scan stays only as a fallback, with tests asserting the list call is skipped.",
+    issueUrl: 'https://github.com/Itqan-community/RATQ/issues/329',
+    prUrl: 'https://github.com/Itqan-community/RATQ/pull/336',
   },
   {
     name: 'Salmaameer',
