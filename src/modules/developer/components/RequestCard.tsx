@@ -74,7 +74,6 @@ export function RequestCard({ request }: RequestCardProps) {
     } finally {
       setPendingAction(null);
     }
-
   };
 
   const handleDeny = async (id: number) => {
@@ -92,7 +91,6 @@ export function RequestCard({ request }: RequestCardProps) {
     } finally {
       setPendingAction(null);
     }
-    
   };
 
   return (

@@ -170,9 +170,11 @@ async function getDetail(resource: Resource): Promise<Partial<Resource> | null> 
 // enriches an already-listed resource), this resolves the slug straight to the
 // CMS detail endpoint, so no full-catalog fetch is needed.
 async function getBySlug(slug: string): Promise<Resource | null> {
-  const id = Number(slug.replace(/^cms-/, ''));
-  if (!Number.isFinite(id)) return null;
+  const match = slug.match(/^cms-([1-9]\d*)$/)
+  if(!match) return null;
 
+  const id = Number(match[1]);
+  
   const fetchDetail = (lang: Lang) =>
     fetch(`${API_BASE}/assets/${id}/?lang=${lang}`, { headers: langHeaders(lang), next: { revalidate: 300 } });
   const [res, arRes] = await Promise.all([fetchDetail('en'), fetchDetail('ar').catch(() => null)]);

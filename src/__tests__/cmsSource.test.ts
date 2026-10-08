@@ -130,7 +130,8 @@ describe('cms source cache keys', () => {
   });
 });
 
-describe('cms source detail', () => {  it('adds the Arabic long description and publisher from the Arabic detail response', async () => {
+describe('cms source detail', () => {  
+  it('adds the Arabic long description and publisher from the Arabic detail response', async () => {
     fetchMock.mockImplementation((_url: string, init?: RequestInit) =>
       json(
         langOf(init) === 'ar'
