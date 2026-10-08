@@ -93,7 +93,6 @@ async function getResourceBySlug(slug: string): Promise<Resource | undefined> {
   const source = sourceForSlug(slug);
   if (source?.getBySlug) {
     try {
-      console.log("Fetching by Slug ");
       return (await source.getBySlug(slug)) ?? undefined;
     } catch (e) {
       console.error(`Source "${source.id}" getBySlug failed:`, e);
