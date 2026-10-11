@@ -97,9 +97,13 @@ export const Resources: CollectionConfig = {
       },
     ],
     beforeChange: [
-      ({ req, data }) => {
-        if (req.user) {
-          data.owner = req.user.id
+      ({ req, data, operation }) => {
+        // Only stamp ownership on create. On update the owner must stay put, otherwise
+        // an admin moderating someone's resource would silently take it over.
+        if (operation === 'create') {
+          if (req.user) data.owner = req.user.id
+        } else {
+          delete data.owner
         }
         return data
       },

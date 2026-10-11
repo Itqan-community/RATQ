@@ -176,6 +176,26 @@ describe('Resources beforeChange hook (owner-spoofing prevention)', () => {
 
     expect(result.owner).toBe(10)
   })
+
+  it('beforeChangeHook_adminUpdatesOthersResource_doesNotTakeOwnership', () => {
+    const result = beforeChangeHook({
+      req: { user: { id: 1, role: 'admin' } },
+      data: { status: 'draft' },
+      operation: 'update',
+    })
+
+    expect(result).not.toHaveProperty('owner')
+  })
+
+  it('beforeChangeHook_updateWithSpoofedOwner_dropsClientSuppliedOwner', () => {
+    const result = beforeChangeHook({
+      req: { user: { id: 42, role: 'developer' } },
+      data: { name: 'Renamed', owner: 999 },
+      operation: 'update',
+    })
+
+    expect(result).not.toHaveProperty('owner')
+  })
 })
 
 interface CountSlugArgs {
