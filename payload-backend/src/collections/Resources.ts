@@ -24,6 +24,10 @@ const isOwner: Access = ({ req }) => {
   return { owner: { equals: req.user.id } }
 }
 
+// Admins moderate the whole catalog (e.g. pulling leftover test data), so they
+// bypass the owner scope for update/delete. Everyone else stays owner-only.
+const isOwnerOrAdmin: Access = (args) => (args.req.user?.role === 'admin' ? true : isOwner(args))
+
 // The "Itqan Standard" badge is a platform-curated trust signal, not
 // self-declared metadata - only an admin can set or change it. Plain boolean
 // check (not owner-scoped) since this is about who awards the badge, not who
@@ -66,8 +70,8 @@ export const Resources: CollectionConfig = {
   access: {
     read: canReadResource,
     create: ({ req }) => Boolean(req.user),
-    update: isOwner,
-    delete: isOwner,
+    update: isOwnerOrAdmin,
+    delete: isOwnerOrAdmin,
   },
   admin: {
     useAsTitle: 'name',

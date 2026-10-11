@@ -74,6 +74,16 @@ describe('Resources collection access', () => {
         owner: { equals: 'user-1' },
       })
     })
+
+    it('scopes a non-admin developer to their own resources', () => {
+      expect(updateAccess(makeReq({ id: 'user-1', role: 'developer' }))).toEqual({
+        owner: { equals: 'user-1' },
+      })
+    })
+
+    it('lets an admin update any resource so they can moderate the catalog', () => {
+      expect(updateAccess(makeReq({ id: 'admin-1', role: 'admin' }))).toBe(true)
+    })
   })
 
   describe('delete access (isOwner)', () => {
@@ -87,6 +97,16 @@ describe('Resources collection access', () => {
       expect(deleteAccess(makeReq({ id: 'user-42' }))).toEqual({
         owner: { equals: 'user-42' },
       })
+    })
+
+    it('scopes a non-admin developer to their own resources', () => {
+      expect(deleteAccess(makeReq({ id: 'user-42', role: 'developer' }))).toEqual({
+        owner: { equals: 'user-42' },
+      })
+    })
+
+    it('lets an admin delete any resource so they can moderate the catalog', () => {
+      expect(deleteAccess(makeReq({ id: 'admin-1', role: 'admin' }))).toBe(true)
     })
   })
 })
