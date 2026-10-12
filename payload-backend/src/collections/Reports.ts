@@ -1,5 +1,6 @@
 import { APIError } from 'payload'
 import type { Access, CollectionConfig, Where } from 'payload'
+import { userNameAfterRead } from './hooks/user-display-name'
 
 const isAdmin: Access = ({ req }) => req.user?.role === 'admin'
 
@@ -122,6 +123,19 @@ export const Reports: CollectionConfig = {
       relationTo: 'users',
       required: true,
       index: true,
+    },
+    {
+      // Display name only, never the email (see hooks/user-display-name.ts).
+      name: 'reporter_name',
+      type: 'text',
+      virtual: true,
+      access: {
+        create: () => false,
+        update: () => false,
+      },
+      hooks: {
+        afterRead: [userNameAfterRead('reporter')],
+      },
     },
     {
       name: 'reason',

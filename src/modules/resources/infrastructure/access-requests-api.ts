@@ -15,15 +15,20 @@ interface PayloadAccessRequestDoc {
   updatedAt: string;
   applicant:
     | number
-    | { id: number; display_name?: string | null; email: string };
+    | { id: number; display_name?: string | null; email?: string };
+  // Resolved by the backend (display_name, else email local part). The
+  // applicant relationship itself is a bare id for anyone but the applicant.
+  applicant_name?: string | null;
   resource: number | { id: number; slug: string; name: string; owner: number };
 }
 
 function toAccessRequest(doc: PayloadAccessRequestDoc): AccessRequest {
   const applicantName =
-    typeof doc.applicant === "object"
-      ? doc.applicant.display_name || doc.applicant.email
-      : "Unknown";
+    doc.applicant_name ||
+    (typeof doc.applicant === "object"
+      ? doc.applicant.display_name || doc.applicant.email?.split("@")[0]
+      : null) ||
+    "Unknown";
   const resourceSlug =
     typeof doc.resource === "object"
       ? `payload-${doc.resource.slug}`

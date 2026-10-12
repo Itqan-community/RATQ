@@ -1,5 +1,6 @@
 import { APIError } from 'payload'
 import type { Access, CollectionConfig, FieldAccess, Where } from 'payload'
+import { userNameAfterRead } from './hooks/user-display-name'
 
 const isAdmin: Access = ({ req }) => req.user?.role === 'admin'
 
@@ -220,6 +221,20 @@ export const AccessRequests: CollectionConfig = {
       index: true,
       access: {
         update: () => false,
+      },
+    },
+    {
+      // Display name only (see hooks/user-display-name.ts): Users.read is
+      // self-or-admin, so the publisher's view of an applicant is a bare id.
+      name: 'applicant_name',
+      type: 'text',
+      virtual: true,
+      access: {
+        create: () => false,
+        update: () => false,
+      },
+      hooks: {
+        afterRead: [userNameAfterRead('applicant')],
       },
     },
     {

@@ -19,10 +19,22 @@ describe('Users collection access', () => {
   })
 
   describe('read access', () => {
-    const readAccess = access.read as (args: any) => boolean
+    const readAccess = access.read as (args: any) => unknown
 
-    it('allows authenticated users to read users', () => {
-      expect(readAccess(makeReq({ id: 1, role: 'developer' }))).toBe(true)
+    it('scopes a developer to their own user record only', () => {
+      expect(readAccess(makeReq({ id: 1, role: 'developer' }))).toEqual({
+        id: { equals: 1 },
+      })
+    })
+
+    it('scopes a publisher to their own user record only', () => {
+      expect(readAccess(makeReq({ id: 7, role: 'publisher' }))).toEqual({
+        id: { equals: 7 },
+      })
+    })
+
+    it('lets an admin read every user', () => {
+      expect(readAccess(makeReq({ id: 99, role: 'admin' }))).toBe(true)
     })
 
     it('denies unauthenticated users from reading users', () => {
