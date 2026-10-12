@@ -289,6 +289,7 @@ export interface Report {
   id: number;
   resource: number | Resource;
   reporter: number | User;
+  reporter_name?: string | null;
   reason: 'inaccurate' | 'inappropriate' | 'infringing' | 'spam' | 'outdated' | 'broken-link';
   details?: string | null;
   status: 'open' | 'resolved' | 'closed';
@@ -303,6 +304,7 @@ export interface AccessRequest {
   id: number;
   resource: number | Resource;
   applicant: number | User;
+  applicant_name?: string | null;
   status: 'pending' | 'approved' | 'denied' | 'revoked';
   message: string;
   publisher_notes?: string | null;
@@ -570,6 +572,7 @@ export interface CommentsSelect<T extends boolean = true> {
 export interface ReportsSelect<T extends boolean = true> {
   resource?: T;
   reporter?: T;
+  reporter_name?: T;
   reason?: T;
   details?: T;
   status?: T;
@@ -583,6 +586,7 @@ export interface ReportsSelect<T extends boolean = true> {
 export interface AccessRequestsSelect<T extends boolean = true> {
   resource?: T;
   applicant?: T;
+  applicant_name?: T;
   status?: T;
   message?: T;
   publisher_notes?: T;

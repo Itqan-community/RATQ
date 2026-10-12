@@ -12,13 +12,20 @@ interface PayloadReportDoc {
   details: string;
   status: ReportStatus;
   createdAt: string;
-  reporter: number | { id: number; display_name?: string | null; email: string };
+  reporter: number | { id: number; display_name?: string | null; email?: string };
+  // Resolved by the backend (display_name, else email local part); the
+  // reporter relationship is a bare id for anyone but the reporter.
+  reporter_name?: string | null;
   resource: number | { id: number; slug: string };
 }
 
 function toReport(doc: PayloadReportDoc): Report {
   const reporterName =
-    typeof doc.reporter === 'object' ? doc.reporter.display_name || doc.reporter.email : 'Unknown';
+    doc.reporter_name ||
+    (typeof doc.reporter === 'object'
+      ? doc.reporter.display_name || doc.reporter.email?.split('@')[0]
+      : null) ||
+    'Unknown';
   const resourceSlug = typeof doc.resource === 'object' ? `payload-${doc.resource.slug}` : String(doc.resource);
   return {
     id: doc.id,

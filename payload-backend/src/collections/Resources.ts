@@ -229,9 +229,10 @@ export const Resources: CollectionConfig = {
       required: true,
     },
     {
-      // Public-safe view of the owner: users read is signed-in only (it holds
-      // emails), so anonymous callers only ever got a bare owner id. This
-      // exposes just id + display_name, for the catalog publisher filter.
+      // Public-safe view of the owner: users read is self-or-admin (it holds
+      // emails), so everyone but the owner and admins only ever gets a bare
+      // owner id. This exposes just id + display_name, for the catalog
+      // publisher filter.
       name: 'publisher',
       type: 'json',
       virtual: true,
