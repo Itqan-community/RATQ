@@ -31,6 +31,12 @@ vi.mock('@/shared/ui/i18n', () => ({
 describe('safeRedirectPath', () => {
   it('keeps internal absolute paths', () => {
     expect(safeRedirectPath('/resources/some-slug')).toBe('/resources/some-slug');
+    expect(safeRedirectPath('/resources/كتاب')).toBe(
+      `/resources/${encodeURIComponent('كتاب')}`,
+    );
+    expect(safeRedirectPath('/resources/x?tab=comments#main')).toBe(
+      '/resources/x?tab=comments#main',
+    );
   });
 
   it('falls back to the dashboard otherwise', () => {
@@ -39,6 +45,22 @@ describe('safeRedirectPath', () => {
     expect(safeRedirectPath('https://evil.example/phish')).toBe('/dashboard');
     expect(safeRedirectPath('//evil.example/phish')).toBe('/dashboard');
     expect(safeRedirectPath('dashboard')).toBe('/dashboard');
+  });
+
+  it('rejects backslash and control-character bypasses', () => {
+    // WHATWG strips these, turning the value protocol-relative.
+    expect(safeRedirectPath('/\\evil.example/phish')).toBe('/dashboard');
+    expect(safeRedirectPath('/\t/evil.example/phish')).toBe('/dashboard');
+    expect(safeRedirectPath('/\n/evil.example/phish')).toBe('/dashboard');
+  });
+
+  it('keeps percent-encoded separators on-site (inert, no off-site hop)', () => {
+    expect(safeRedirectPath('/%09/evil.example/phish')).toBe(
+      '/%09/evil.example/phish',
+    );
+    expect(safeRedirectPath('/%5cevil.example/phish')).toBe(
+      '/%5cevil.example/phish',
+    );
   });
 });
 
