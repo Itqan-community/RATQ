@@ -27,7 +27,13 @@ export function safeRedirectPath(value: string | null): string {
   if (url.origin !== 'http://local') {
     return '/dashboard';
   }
-  return url.pathname + url.search + url.hash;
+  const out = url.pathname + url.search + url.hash;
+  // Dot-segment collapse can turn a same-origin parse back into a
+  // protocol-relative target (e.g. `/.//evil.example/x`).
+  if (out.startsWith('//')) {
+    return '/dashboard';
+  }
+  return out;
 }
 
 export function LoginForm() {

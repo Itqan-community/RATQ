@@ -54,6 +54,12 @@ describe('safeRedirectPath', () => {
     expect(safeRedirectPath('/\n/evil.example/phish')).toBe('/dashboard');
   });
 
+  it('rejects dot-segment collapses back to protocol-relative', () => {
+    expect(safeRedirectPath('/.//evil.example/x')).toBe('/dashboard');
+    expect(safeRedirectPath('/a/..//evil.example/x')).toBe('/dashboard');
+    expect(safeRedirectPath('/%2e//evil.example')).toBe('/dashboard');
+  });
+
   it('keeps percent-encoded separators on-site (inert, no off-site hop)', () => {
     expect(safeRedirectPath('/%09/evil.example/phish')).toBe(
       '/%09/evil.example/phish',
