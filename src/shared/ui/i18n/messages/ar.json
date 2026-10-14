@@ -411,6 +411,7 @@
       "publishedResources": "الموارد المنشورة",
       "publishedResourcesDetail": "الموارد التي يديرها حسابك حاليا.",
       "pendingRequests": "طلبات معلقة",
+      "ownPendingRequests": "طلباتك المعلقة",
       "pendingRequestsDetail": "طلبات تنتظر المراجعة أو القرار.",
       "apiKeys": "مفاتيح API",
       "apiKeysDetail": "مفاتيح التكامل المرتبطة بحسابك.",
