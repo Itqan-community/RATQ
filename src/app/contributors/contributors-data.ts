@@ -282,4 +282,14 @@ export const contributors: Contributor[] = [
     issueUrl: 'https://github.com/Itqan-community/RATQ/issues/301',
     prUrl: 'https://github.com/Itqan-community/RATQ/pull/315',
   },
+  {
+    name: 'CRYPTONIKAV',
+    githubUsername: 'CRYPTONIKAV',
+    githubUrl: 'https://github.com/CRYPTONIKAV',
+    avatarUrl: 'https://github.com/CRYPTONIKAV.png',
+    contribution:
+      "Made the login and register flows honor the ?redirect= parameter, so visitors who click 'Log in to comment' or 'Report this resource' land back on the resource instead of the dashboard - with a same-origin-only redirect check hardened over two review rounds against protocol-relative, backslash, control-character and dot-segment bypasses, and tests covering each.",
+    issueUrl: 'https://github.com/Itqan-community/RATQ/issues/345',
+    prUrl: 'https://github.com/Itqan-community/RATQ/pull/354',
+  },
 ];
