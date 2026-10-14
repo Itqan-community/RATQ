@@ -128,6 +128,7 @@ export interface Consumer {
 export interface Comment {
   id: number;
   author_name: string;
+  author_id?: number | null;
   content: string;
   created_at: string;
 }

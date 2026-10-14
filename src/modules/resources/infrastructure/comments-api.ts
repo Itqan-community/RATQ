@@ -13,11 +13,19 @@ interface PayloadCommentDoc {
   content: string;
   createdAt: string;
   author_name: string;
+  author?: number | { id: number };
   resource?: number | { id: number; name: string };
 }
 
 function toComment(doc: PayloadCommentDoc): Comment {
-  return { id: doc.id, author_name: doc.author_name, content: doc.content, created_at: doc.createdAt };
+  const author = doc.author;
+  return {
+    id: doc.id,
+    author_name: doc.author_name,
+    author_id: typeof author === 'object' ? author?.id ?? null : (author ?? null),
+    content: doc.content,
+    created_at: doc.createdAt,
+  };
 }
 
 function toCommentWithResource(doc: PayloadCommentDoc): CommentWithResource {
@@ -51,6 +59,18 @@ export async function postComment(resourceId: number, content: string): Promise<
   }
   const result: { doc: PayloadCommentDoc } = await res.json();
   return toComment(result.doc);
+}
+
+export async function deleteComment(commentId: number): Promise<void> {
+  const res = await fetch(`${PAYLOAD_API_BASE}/comments/${commentId}`, {
+    method: 'DELETE',
+    credentials: 'include',
+  });
+  if (!res.ok) {
+    throw new Error(
+      await payloadErrorMessage(res, 'Failed to delete comment', { authenticated: true })
+    );
+  }
 }
 
 export async function fetchMyComments(): Promise<CommentWithResource[]> {
