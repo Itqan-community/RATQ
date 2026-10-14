@@ -116,7 +116,8 @@
     "search": {
         "placeholder": "Search resources...",
         "button": "Search",
-        "label": "Search resources"
+        "label": "Search resources",
+        "clear": "Clear search"
     },
     "sort": {
       "by": "Sort by",

@@ -283,3 +283,58 @@ describe('CatalogContent result count message', () => {
     expect(screen.getByText('0 results for "zzzz"')).toBeInTheDocument();
   });
 });
+describe('CatalogContent search box (#344)', () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+    mockSearchParams = new URLSearchParams();
+    mockUseResources.mockReturnValue({
+      data: { count: 0, next: null, previous: null, results: [] },
+      error: undefined,
+      isLoading: false,
+    });
+  });
+
+  it('keeps the box in sync when the search URL parameter changes', () => {
+    mockSearchParams = new URLSearchParams('search=quran');
+    const rendered = renderWithProvider(<CatalogContent />);
+    expect(screen.getByLabelText('Search resources')).toHaveValue('quran');
+
+    // Browser Back lands on a URL without the term: the box follows it.
+    mockSearchParams = new URLSearchParams();
+    rendered.rerender(
+      <LanguageProvider>
+        <CatalogContent />
+      </LanguageProvider>
+    );
+    expect(screen.getByLabelText('Search resources')).toHaveValue('');
+  });
+
+  it('shows a clear button while the box has text and clears search and page', async () => {
+    mockSearchParams = new URLSearchParams('search=quran&page=2');
+    renderWithProvider(<CatalogContent />);
+    const { fireEvent } = await import('@testing-library/react');
+
+    const clear = screen.getByRole('button', { name: 'Clear search' });
+    fireEvent.click(clear);
+
+    expect(mockPush).toHaveBeenCalledWith('/resources?');
+    expect(screen.getByLabelText('Search resources')).toHaveValue('');
+  });
+
+  it('shows no clear button when the box is empty', () => {
+    renderWithProvider(<CatalogContent />);
+    expect(screen.queryByRole('button', { name: 'Clear search' })).not.toBeInTheDocument();
+  });
+
+  it('labels the clear button in Arabic on the Arabic site', () => {
+    localStorage.setItem('ratq_locale', 'ar');
+    mockSearchParams = new URLSearchParams('search=quran');
+    render(
+      <LanguageProvider>
+        <CatalogContent />
+      </LanguageProvider>
+    );
+    act(() => {});
+    expect(screen.getByRole('button', { name: 'مسح البحث' })).toBeInTheDocument();
+  });
+});
