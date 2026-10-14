@@ -1,12 +1,40 @@
 'use client';
 
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useAuth } from '@/hooks/useAuth';
 import { githubOAuthUrl } from '@/modules/auth/application/use-cases/get-github-oauth-url';
 import { SESSION_EXPIRED_REASON } from '@/shared/infrastructure/session-expiry';
 import { useLanguage } from '@/shared/ui/i18n';
 import Link from 'next/link';
+
+/**
+ * Post-login destination from `?redirect=`: only same-origin paths.
+ * Anything else (missing, external, protocol-relative, backslash/tab
+ * tricks) falls back to the dashboard so a crafted link cannot bounce
+ * users off-site (#345).
+ */
+export function safeRedirectPath(value: string | null): string {
+  if (!value || !value.startsWith('/')) {
+    return '/dashboard';
+  }
+  let url: URL;
+  try {
+    url = new URL(value, 'http://local');
+  } catch {
+    return '/dashboard';
+  }
+  if (url.origin !== 'http://local') {
+    return '/dashboard';
+  }
+  const out = url.pathname + url.search + url.hash;
+  // Dot-segment collapse can turn a same-origin parse back into a
+  // protocol-relative target (e.g. `/.//evil.example/x`).
+  if (out.startsWith('//')) {
+    return '/dashboard';
+  }
+  return out;
+}
 
 export function LoginForm() {
   const { t, direction, locale } = useLanguage();
@@ -14,13 +42,14 @@ export function LoginForm() {
   const [password, setPassword] = useState('');
   const { login, loading, error } = useAuth();
   const router = useRouter();
+  const searchParams = useSearchParams();
   const displayedError = error === SESSION_EXPIRED_REASON ? t.auth.sessionExpired : error;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const result = await login(email, password);
     if (result.success) {
-      router.push('/dashboard');
+      router.push(safeRedirectPath(searchParams.get('redirect')));
       router.refresh();
     }
   };

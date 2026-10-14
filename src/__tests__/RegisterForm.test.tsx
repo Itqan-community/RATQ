@@ -3,8 +3,10 @@ import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { RegisterForm } from '@/modules/auth/components/RegisterForm';
 import { useAuth } from '@/hooks/useAuth';
 
+const navState = vi.hoisted(() => ({ search: '', push: vi.fn() }));
 vi.mock('next/navigation', () => ({
-  useRouter: () => ({ push: vi.fn(), refresh: vi.fn() }),
+  useRouter: () => ({ push: navState.push, refresh: vi.fn() }),
+  useSearchParams: () => new URLSearchParams(navState.search),
 }));
 
 vi.mock('@/hooks/useAuth', () => ({
@@ -85,5 +87,36 @@ describe('RegisterForm', () => {
     await waitFor(() => {
       expect(register).toHaveBeenCalledWith('dev@example.com', 'validpass', 'Test Dev', 'developer');
     });
+  });
+});
+
+describe('RegisterForm redirect (#345 follow-up)', () => {
+  beforeEach(() => {
+    navState.search = '';
+    navState.push.mockClear();
+  });
+
+  it('returns to the redirect target after a successful registration', async () => {
+    navState.search = 'redirect=/resources/some-slug';
+    const register = vi.fn().mockResolvedValue({ success: true });
+    vi.mocked(useAuth).mockReturnValue({
+      user: null,
+      loading: false,
+      error: null,
+      clearError: vi.fn(),
+      login: vi.fn(),
+      loginWithCode: vi.fn(),
+      register,
+      forgotPassword: vi.fn(),
+      resetPassword: vi.fn(),
+      verifyEmail: vi.fn(),
+      logout: vi.fn(),
+    });
+    render(<RegisterForm />);
+    fillRegisterForm('validpass');
+    fireEvent.click(screen.getByRole('button', { name: 'Create account' }));
+
+    await waitFor(() => expect(register).toHaveBeenCalled());
+    expect(navState.push).toHaveBeenCalledWith('/resources/some-slug');
   });
 });

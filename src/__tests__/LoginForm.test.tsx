@@ -6,6 +6,7 @@ import { LanguageProvider } from '@/shared/ui/i18n';
 
 vi.mock('next/navigation', () => ({
   useRouter: () => ({ push: vi.fn(), refresh: vi.fn() }),
+  useSearchParams: () => new URLSearchParams(),
 }));
 
 vi.mock('@/hooks/useAuth', () => ({

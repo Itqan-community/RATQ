@@ -47,6 +47,7 @@ vi.mock('next/navigation', () => ({
     replace: mockReplace,
     refresh: mockRefresh,
   }),
+  useSearchParams: () => new URLSearchParams(),
 }));
 
 vi.mock('@/shared/ui/i18n', () => ({
