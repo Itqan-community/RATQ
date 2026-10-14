@@ -2,18 +2,18 @@ import type { Resource, ResourceType } from '@/types/resource';
 import { payloadErrorMessage } from '@/shared/infrastructure/payload-error';
 import { toResource, type PayloadResourceDoc } from '@/shared/infrastructure/payload-resource-mapper';
 import { PAYLOAD_API_BASE } from '@/shared/infrastructure/payload-config';
+import { fetchAllPages } from './payload-paging';
 
 // list/create always hit the real Payload backend (like auth) - these back
 // the dashboard's "my resources" + publish flow, independent of DATA_MODE.
 
 export async function fetchDeveloperResources(userId: number): Promise<Resource[]> {
-  const res = await fetch(
-    `${PAYLOAD_API_BASE}/resources?where[owner][equals]=${userId}&limit=100`,
-    { credentials: 'include' }
+  const docs = await fetchAllPages<PayloadResourceDoc>(
+    (page) =>
+      `${PAYLOAD_API_BASE}/resources?where[owner][equals]=${userId}&limit=100&page=${page}`,
+    () => new Error('Failed to fetch developer resources')
   );
-  if (!res.ok) throw new Error('Failed to fetch developer resources');
-  const data: { docs: PayloadResourceDoc[] } = await res.json();
-  return data.docs.map(toResource);
+  return docs.map(toResource);
 }
 
 // Uploads a new file to Payload's media collection and returns the created

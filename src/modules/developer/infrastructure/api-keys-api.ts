@@ -2,6 +2,7 @@ import type { APIKey } from '@/types/resource';
 import { payloadErrorMessage } from '@/shared/infrastructure/payload-error';
 import {  getCurrentUserId } from '@/shared/infrastructure/token-storage';
 import { PAYLOAD_API_BASE } from '@/shared/infrastructure/payload-config';
+import { fetchAllPages } from './payload-paging';
 
 // resourceId is the aggregator-facing id, undone the same way comments-api.ts
 // does. keyId is a real Payload api-keys doc id (not offset - these records
@@ -38,13 +39,12 @@ export async function fetchDeveloperAPIKeys(): Promise<APIKey[]> {
   const userId = getCurrentUserId();
   if (!userId) return [];
 
-  const res = await fetch(
-    `${PAYLOAD_API_BASE}/api-keys?where[owner][equals]=${userId}&depth=1&limit=100`,
-    { credentials: 'include'}
+  const docs = await fetchAllPages<PayloadApiKeyDoc>(
+    (page) =>
+      `${PAYLOAD_API_BASE}/api-keys?where[owner][equals]=${userId}&depth=1&limit=100&page=${page}`,
+    () => new Error('Failed to fetch API keys')
   );
-  if (!res.ok) throw new Error('Failed to fetch API keys');
-  const data: { docs: PayloadApiKeyDoc[] } = await res.json();
-  return data.docs.map(toApiKey);
+  return docs.map(toApiKey);
 }
 
 export async function createDeveloperApiKey(resourceId: number, scope: string, name?: string): Promise<APIKey> {
