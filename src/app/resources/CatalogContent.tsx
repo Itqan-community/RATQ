@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { useLanguage } from '@/shared/ui/i18n';
@@ -29,6 +29,29 @@ export function CatalogContent() {
   const { data, error, isLoading } = useResources({ page, page_size: PAGE_SIZE, type, license, publisherKeys, search, sort });
   const resources = data?.results ?? [];
   const router = useRouter();
+  // Controlled draft synced to the URL: Back/Forward (or any link changing `search`) updates
+  // the box, which `defaultValue` never did after first mount (#344).
+  const [draft, setDraft] = useState(search);
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- The URL is external state (Back/Forward changes it without remounting); the draft mirrors it the way subscribed data does.
+    setDraft(search);
+  }, [search]);
+
+  const pushSearch = (value: string) => {
+    const params = new URLSearchParams(searchParams.toString());
+    if (value) {
+      params.set('search', value);
+    } else {
+      params.delete('search');
+    }
+    params.delete('page');
+    router.push(`/resources?${params.toString()}`);
+  };
+
+  const clearSearch = () => {
+    setDraft('');
+    pushSearch('');
+  };
 
   // A page past the end (e.g. ?page=999) shows nothing and no pager, so send
   // the visitor to the last real page instead.
@@ -72,32 +95,31 @@ export function CatalogContent() {
             <form
               onSubmit={(event) => {
                 event.preventDefault();
-
-                const formData = new FormData(event.currentTarget);
-                const value = String(formData.get('search') ?? '').trim();
-
-                const params = new URLSearchParams(searchParams.toString());
-
-                if (value) {
-                  params.set('search', value);
-                } else {
-                  params.delete('search');
-                }
-
-                params.delete('page');
-
-                router.push(`/resources?${params.toString()}`);
+                pushSearch(draft.trim());
               }}
               className="mb-6 flex gap-3"
             >
-              <input
-                name="search"
-                defaultValue={search}
-                placeholder={t.catalog.search.placeholder}
-                className="h-12 flex-1 rounded-full border border-[#e7e7e7] px-5 outline-none focus:ring-2 focus:ring-black/10"
-                dir={direction}
-                aria-label={t.catalog.search.label}
-              />
+              <div className="relative h-12 flex-1">
+                <input
+                  name="search"
+                  value={draft}
+                  onChange={(event) => setDraft(event.target.value)}
+                  placeholder={t.catalog.search.placeholder}
+                  className="h-12 w-full rounded-full border border-[#e7e7e7] px-5 outline-none focus:ring-2 focus:ring-black/10"
+                  dir={direction}
+                  aria-label={t.catalog.search.label}
+                />
+                {draft && (
+                  <button
+                    type="button"
+                    onClick={clearSearch}
+                    aria-label={t.catalog.search.clear}
+                    className="absolute end-3 top-1/2 flex h-7 w-7 -translate-y-1/2 items-center justify-center rounded-full text-lg font-black leading-none text-[#9aa4ad] transition hover:bg-[#f0f0f0] hover:text-black"
+                  >
+                    ×
+                  </button>
+                )}
+              </div>
 
               <button
                 type="submit"
