@@ -5,14 +5,14 @@ import Link from 'next/link';
 import { RegisterForm } from '@/modules/auth/components/RegisterForm';
 import { useLanguage } from '@/shared/ui/i18n';
 import { useAuth } from '@/hooks/useAuth';
-import { useEffect } from 'react';
+import { Suspense, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 
 function CheckIcon() {
   return <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="m5 12 4 4L19 6" /></svg>;
 }
 
-export default function RegisterPage() {
+function RegisterContent() {
   const { t, direction } = useLanguage();
   const { user, loading, clearError } = useAuth();
   const router = useRouter();
@@ -86,5 +86,14 @@ export default function RegisterPage() {
         </div>
       </section>
     </main>
+  );
+}
+
+// useSearchParams() in the form needs a Suspense boundary or the static prerender fails.
+export default function RegisterPage() {
+  return (
+    <Suspense>
+      <RegisterContent />
+    </Suspense>
   );
 }
