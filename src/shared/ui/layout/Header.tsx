@@ -107,14 +107,14 @@ export function Header() {
               {mounted && user ? (
                 <button
                   onClick={handleLogout}
-                  className="hidden rounded-full bg-black px-6 py-3 text-sm font-black text-white transition hover:bg-[#171717] lg:inline-flex"
+                  className="hidden rounded-full bg-black px-4 py-3 text-sm font-black text-white transition hover:bg-[#171717] md:inline-flex lg:px-6"
                 >
                   {t.header.auth.logout}
                 </button>
               ) : (
                 <Link
                   href="/login"
-                  className="hidden rounded-full bg-black px-6 py-3 text-sm font-black text-white transition hover:bg-[#171717] lg:inline-flex"
+                  className="hidden rounded-full bg-black px-4 py-3 text-sm font-black text-white transition hover:bg-[#171717] md:inline-flex lg:px-6"
                 >
                   {t.header.auth.login}
                 </Link>
@@ -122,7 +122,7 @@ export function Header() {
             </div>
 
             <div
-              className="order-2 hidden items-center gap-9 text-base md:flex"
+              className="order-2 hidden items-center gap-5 text-base md:flex lg:gap-9"
               dir={direction}
             >
               <Link href="/" className={navLinkClass("/")} aria-current={isActive("/") ? "page" : undefined}>
