@@ -8,6 +8,7 @@ import { createMockAuthContext } from './test-utils/mockAuth';
 
 vi.mock('next/navigation', () => ({
   useRouter: vi.fn(),
+  useSearchParams: () => new URLSearchParams(),
 }));
 
 vi.mock('next/link', () => ({

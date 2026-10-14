@@ -1,10 +1,11 @@
 'use client';
 
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useAuth } from '@/hooks/useAuth';
 import { useLanguage } from '@/shared/ui/i18n';
 import { validatePassword } from '@/shared/utils/utils';
+import { safeRedirectPath } from './LoginForm';
 
 export function RegisterForm() {
   const [email, setEmail] = useState('');
@@ -16,6 +17,7 @@ export function RegisterForm() {
   const [formError, setFormError] = useState<string | null>(null);
   const { t } = useLanguage();
   const router = useRouter();
+  const searchParams = useSearchParams();
   const copy = t.auth;
 
   const handleSubmit = async (event: React.FormEvent) => {
@@ -31,7 +33,7 @@ export function RegisterForm() {
     try {
       const result = await register(email, password, displayName, role);
       if (result.success) {
-        router.push('/dashboard');
+        router.push(safeRedirectPath(searchParams.get('redirect')));
         router.refresh();
       } else {
         setFormError(result.error ?? null);
