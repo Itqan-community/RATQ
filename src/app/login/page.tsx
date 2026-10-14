@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect } from 'react';
+import { Suspense, useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -10,7 +10,7 @@ import { useAuth } from '@/hooks/useAuth';
 
 function CheckIcon() { return <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="m5 12 4 4L19 6" /></svg>; }
 
-export default function LoginPage() {
+function LoginContent() {
   const { t, direction } = useLanguage();
   const { user, loading, clearError } = useAuth();
   const router = useRouter();
@@ -46,5 +46,14 @@ export default function LoginPage() {
         </div>
       </section>
     </main>
+  );
+}
+
+// useSearchParams() in the form needs a Suspense boundary or the static prerender fails.
+export default function LoginPage() {
+  return (
+    <Suspense>
+      <LoginContent />
+    </Suspense>
   );
 }
