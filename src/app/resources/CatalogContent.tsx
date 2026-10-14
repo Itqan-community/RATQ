@@ -147,7 +147,7 @@ export function CatalogContent() {
             >
               {t.catalog.filters.title} ({activeFilterCount})
             </button>
-            <div id="catalog-filters" className={filtersOpen ? '' : 'hidden sm:block'}>
+            <div id="catalog-filters" className={filtersOpen ? 'sm:block' : 'hidden sm:block'}>
               <FilterPanel />
             </div>
           </div>
