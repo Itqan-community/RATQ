@@ -21,7 +21,19 @@ vi.mock('@/shared/ui/i18n', () => ({
   useLanguage: () => ({
     t: {
       header: { auth: {} },
-      auth: { sessionExpired: 'Session expired', forgotPassword: 'Forgot password?' },
+      auth: {
+        sessionExpired: 'Session expired',
+        forgotPassword: 'Forgot password?',
+        email: 'Email',
+        password: 'Password',
+        loginTitle: 'Log in',
+        loggingIn: 'Logging in...',
+        or: 'or',
+        continueWithGitHub: 'Continue with GitHub',
+        invalidCredentials: 'Incorrect email or password.',
+        accountLocked: 'Your account is locked. Contact support.',
+        loginBenefits: 'Login benefits',
+      },
     },
     direction: 'ltr',
     locale: 'en',
