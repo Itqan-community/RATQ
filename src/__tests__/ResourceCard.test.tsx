@@ -37,6 +37,17 @@ function renderWithProvider(ui: React.ReactElement) {
 }
 
 describe('ResourceCard', () => {
+  it.each(['ratq', 'cms', 'payload'] as const)(
+    'shows no internal source label for %s resources (#343)',
+    (source) => {
+      const { container } = renderWithProvider(
+        <ResourceCard resource={createResource({ source })} />
+      );
+      const footer = container.querySelector('article')?.textContent ?? '';
+      expect(footer).not.toMatch(/Live CMS|Live Payload|CMS مباشر|Payload مباشر|Demo|تجريبي/);
+    }
+  );
+
   beforeEach(() => {
     vi.clearAllMocks();
   });

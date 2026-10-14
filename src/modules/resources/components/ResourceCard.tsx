@@ -17,12 +17,6 @@ interface ResourceCardProps {
 // and filter panel.
 const typeStyles = RESOURCE_TYPE_COLORS;
 
-const sourceLabel: Record<Resource['source'], { ar: string; en: string }> = {
-  ratq: { ar: 'تجريبي', en: 'Demo' },
-  cms: { ar: 'CMS مباشر', en: 'Live CMS' },
-  payload: { ar: 'Payload مباشر', en: 'Live Payload' },
-};
-
 function formatDownloads(count: number, arabic: boolean) {
   if (count >= 1000) {
     const value = Math.round(count / 100) / 10;
@@ -36,10 +30,6 @@ export function ResourceCard({ resource, rank, downloadCount }: ResourceCardProp
   const isArabic = locale === 'ar';
   const downloads = downloadCount ?? resource.total_downloads ?? resource.downloads ?? 0;
   const localized = localizeResource(resource, locale);
-  // undefined for TrendingResource callers, which don't carry a source
-  // (TrendingResources.tsx force-casts to Resource) - show nothing rather
-  // than a confidently wrong label.
-  const sourceInfo = sourceLabel[resource.source];
 
   return (
     <article className="group relative flex min-h-[305px] flex-col rounded-[13px] border border-[#e7e7e7] bg-white p-5 text-start transition duration-200 hover:-translate-y-1 hover:shadow-[0_16px_36px_rgba(15,23,42,0.08)]">
@@ -95,12 +85,7 @@ export function ResourceCard({ resource, rank, downloadCount }: ResourceCardProp
           </svg>
           {formatDownloads(downloads, isArabic)}
         </span>
-        {sourceInfo && (
-          <span className={resource.source === 'cms' ? 'text-emerald-600' : 'text-[#b5b5b5]'}>
-            {isArabic ? sourceInfo.ar : sourceInfo.en}
-          </span>
-        )}
-        
+
         <span
           className="inline-flex min-w-0 flex-1 items-center justify-end gap-1 text-end"
           title={localized.publisherName}
