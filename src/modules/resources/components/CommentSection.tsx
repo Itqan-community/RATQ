@@ -12,6 +12,17 @@ import { useToast } from '@/shared/ui/Toast';
 
 const MAX_COMMENT_LENGTH = 2000;
 
+function useOptionalToast(): (message: string, type?: 'success' | 'error' | 'info') => void {
+  // CommentSection also renders in harnesses without a ToastProvider (e.g. some suites);
+  // production always provides one (src/app/layout.tsx). Without it, toast degrades to a no-op
+  // instead of throwing (RATQ#347 review).
+  try {
+    return useToast().toast;
+  } catch {
+    return () => {};
+  }
+}
+
 interface CommentSectionProps {
   resourceId: number;
   resourceSlug: string;
@@ -20,7 +31,7 @@ interface CommentSectionProps {
 export function CommentSection({ resourceId, resourceSlug }: CommentSectionProps) {
   const { data: comments, isLoading, mutate } = useComments(resourceId);
   const { user } = useAuth();
-  const { toast } = useToast();
+  const toast = useOptionalToast();
   const [newComment, setNewComment] = useState('');
   const [posting, setPosting] = useState(false);
   const [deletingId, setDeletingId] = useState<number | null>(null);
