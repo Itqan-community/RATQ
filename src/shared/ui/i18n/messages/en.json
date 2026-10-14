@@ -411,6 +411,7 @@
       "publishedResources": "Published resources",
       "publishedResourcesDetail": "Resources currently managed by your account.",
       "pendingRequests": "Pending requests",
+      "ownPendingRequests": "Your pending requests",
       "pendingRequestsDetail": "Requests waiting for review or a decision.",
       "apiKeys": "API keys",
       "apiKeysDetail": "Integration keys connected to your account.",

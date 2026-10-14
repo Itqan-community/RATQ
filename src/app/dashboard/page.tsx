@@ -8,6 +8,20 @@ import { useLanguage } from '@/shared/ui/i18n';
 import { Sidebar } from '@/shared/ui/layout/Sidebar';
 import { RequestCard, RequestCardSkeleton } from '@/modules/developer/components/RequestCard';
 import { useDeveloperRequests } from '@/hooks/useDeveloperRequests';
+import { useDeveloperResources } from '@/hooks/useDeveloperResources';
+import { useDeveloperAPIKeys } from '@/hooks/useDeveloperAPIKeys';
+
+function StatNumber({ loading, value }: { loading: boolean | undefined; value: number }) {
+  if (loading) {
+    return (
+      <span
+        className="mx-auto block h-9 w-16 animate-pulse rounded bg-[#ededed]"
+        aria-hidden="true"
+      />
+    );
+  }
+  return <>{value}</>;
+}
 
 
 type StatCardProps = { label: string; value: ReactNode; detail: string; tone: 'green' | 'gold' | 'blue' | 'neutral'; icon: ReactNode; };
@@ -33,6 +47,10 @@ export default function DashboardPage() {
 
   const requestsResponse = useDeveloperRequests()
   const filteredRequests = requestsResponse.data?.filter((request) => request.status === 'pending');
+  const resourcesResponse = useDeveloperResources();
+  const apiKeysResponse = useDeveloperAPIKeys();
+  const publishedCount = resourcesResponse.data?.filter((resource) => resource.status === 'published').length ?? 0;
+  const apiKeysCount = apiKeysResponse.data?.length ?? 0;
 
 
   if (!isClient || loading || !user) return <div className="flex min-h-[60vh] items-center justify-center bg-white"><div className="h-6 w-32 animate-pulse rounded bg-[#ededed]" /></div>;
@@ -43,7 +61,7 @@ export default function DashboardPage() {
         <header className="border-b border-[#ededed] bg-white px-4 py-4 sm:px-6 lg:px-8"><div className="mx-auto flex max-w-[1180px] items-center justify-between gap-4"><div className="min-w-0"><p className="text-xs font-black text-[#8b949e]">RATQ</p><h1 className="truncate text-xl font-black text-black">{copy.title}</h1></div><div className="flex shrink-0 items-center gap-3"><span className="hidden max-w-[220px] truncate text-sm font-bold text-[#59636d] sm:inline">{t.dashboard.common.welcome}, {user.display_name}</span><button type="button" onClick={logout} className="rounded-full border border-[#ededed] bg-white px-4 py-2 text-xs font-black text-[#6f7780] transition hover:border-red-200 hover:bg-red-50 hover:text-red-700">{t.dashboard.common.logout}</button></div></div></header>
         <main className="mx-auto max-w-[1180px] px-4 py-8 text-center sm:px-6 lg:px-8">
           <section className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_320px]"><div className="rounded-2xl bg-[linear-gradient(122.15deg,#EBEFF0_30.7%,#D8E8F5_86.27%)] p-6 sm:p-8"><span className="inline-flex rounded-full bg-[#e8ef3d] px-4 py-2 text-sm font-black text-black">{copy.activitySummary}</span><h2 className="mx-auto mt-5 max-w-3xl text-3xl font-black leading-[1.25] text-black sm:text-4xl">{format(copy.welcomeBack, { name: user.display_name })}</h2><p className="mx-auto mt-4 max-w-2xl text-base leading-8 text-[#59636d]">{copy.summary}</p></div><aside className="rounded-lg bg-[#171717] p-6 text-white"><p className="text-sm font-black text-[#e8ef3d]">{copy.nextAction}</p><h3 className="mx-auto mt-4 max-w-sm text-2xl font-black leading-9">{copy.nextActionTitle}</h3><Link href="/dashboard/resources" className="mt-6 inline-flex h-11 items-center justify-center gap-2 rounded-full bg-white px-5 text-sm font-black text-black transition hover:bg-[#e8ef3d]"><PlusIcon />{copy.addResource}</Link></aside></section>
-          <section className="mt-7 grid gap-4 sm:grid-cols-2 xl:grid-cols-4"><StatCard label={copy.publishedResources} value="0" detail={copy.publishedResourcesDetail} tone="green" icon={<BoxIcon />} /><StatCard label={copy.pendingRequests} value={requestsResponse.data?.length} detail={copy.pendingRequestsDetail} tone="gold" icon={<ClockIcon />} /><StatCard label={copy.apiKeys} value="0" detail={copy.apiKeysDetail} tone="blue" icon={<KeyIcon />} /><StatCard label={copy.role} value={<span className="text-xl capitalize">{user.role}</span>} detail={copy.roleDetail} tone="neutral" icon={<UserIcon />} /></section>
+          <section className="mt-7 grid gap-4 sm:grid-cols-2 xl:grid-cols-4"><StatCard label={copy.publishedResources} value={<StatNumber loading={resourcesResponse.isLoading} value={publishedCount} />} detail={copy.publishedResourcesDetail} tone="green" icon={<BoxIcon />} /><StatCard label={copy.ownPendingRequests} value={<StatNumber loading={requestsResponse.isLoading} value={filteredRequests?.length ?? 0} />} detail={copy.pendingRequestsDetail} tone="gold" icon={<ClockIcon />} /><StatCard label={copy.apiKeys} value={<StatNumber loading={apiKeysResponse.isLoading} value={apiKeysCount} />} detail={copy.apiKeysDetail} tone="blue" icon={<KeyIcon />} /><StatCard label={copy.role} value={<span className="text-xl capitalize">{user.role}</span>} detail={copy.roleDetail} tone="neutral" icon={<UserIcon />} /></section>
           <section className="mt-10 grid gap-7 lg:grid-cols-[minmax(0,1fr)_320px]">
             <div>
               <div className="mb-5 flex flex-col items-center gap-3">
