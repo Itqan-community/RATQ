@@ -57,6 +57,9 @@ vi.mock('@/shared/ui/i18n', () => ({
 
     t: {
       auth: {
+        sessionExpired: 'Your session has expired. Please log in again.',
+        invalidCredentials: 'Incorrect email or password.',
+        accountLocked: 'Your account is locked. Contact support.',
         displayName: 'Display name',
         displayNamePlaceholder: 'Your name',
         email: 'Email',
@@ -98,7 +101,6 @@ vi.mock('@/shared/ui/i18n', () => ({
           'Password must be between 8 and 64 characters.',
 
         forgotPassword: 'Forgot password?',
-        sessionExpired: 'Your session has expired.',
 
         forgotPasswordTitle: 'Forgot password',
         forgotPasswordSubtitle:
@@ -327,7 +329,7 @@ describe('auth error navigation', () => {
     await waitFor(() => {
       expect(
         screen.getByText(
-          'The email or password provided is incorrect.'
+          'Incorrect email or password.'
         )
       ).toBeInTheDocument();
     });
@@ -340,7 +342,7 @@ describe('auth error navigation', () => {
 
     expect(
       screen.queryByText(
-        'The email or password provided is incorrect.'
+        'Incorrect email or password.'
       )
     ).not.toBeInTheDocument();
   });
@@ -374,7 +376,7 @@ describe('auth error navigation', () => {
 
     await waitFor(() => {
       expect(
-        screen.getByText('The email or password provided is incorrect.')
+        screen.getByText('Incorrect email or password.')
       ).toBeInTheDocument();
     });
   });
@@ -407,7 +409,7 @@ describe('auth error navigation', () => {
     await waitFor(() => {
       expect(
         screen.getByText(
-          'The email or password provided is incorrect.'
+          'Incorrect email or password.'
         )
       ).toBeInTheDocument();
     });
@@ -420,7 +422,7 @@ describe('auth error navigation', () => {
 
     expect(
       screen.queryByText(
-        'The email or password provided is incorrect.'
+        'Incorrect email or password.'
       )
     ).not.toBeInTheDocument();
 
@@ -433,7 +435,7 @@ describe('auth error navigation', () => {
 
     expect(
       screen.queryByText(
-        'The email or password provided is incorrect.'
+        'Incorrect email or password.'
       )
     ).not.toBeInTheDocument();
   });
@@ -460,7 +462,7 @@ describe('auth error navigation', () => {
 
     await waitFor(() => {
       expect(
-        screen.getByText('Your session has expired.')
+        screen.getByText('Your session has expired. Please log in again.')
       ).toBeInTheDocument();
     });
 
@@ -471,7 +473,7 @@ describe('auth error navigation', () => {
     );
 
     expect(
-      screen.queryByText('Your session has expired.')
+      screen.queryByText('Your session has expired. Please log in again.')
     ).not.toBeInTheDocument();
 
     expect(
