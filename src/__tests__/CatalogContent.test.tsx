@@ -338,3 +338,51 @@ describe('CatalogContent search box (#344)', () => {
     expect(screen.getByRole('button', { name: 'مسح البحث' })).toBeInTheDocument();
   });
 });
+
+describe('CatalogContent mobile filter toggle (#353)', () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+    mockSearchParams = new URLSearchParams();
+    mockUseResources.mockReturnValue({
+      data: { count: 0, next: null, previous: null, results: [] },
+      error: undefined,
+      isLoading: false,
+    });
+  });
+
+  it('shows a Filters toggle with the active count and collapsed panel by default', () => {
+    mockSearchParams = new URLSearchParams('type=library&license=mit&publisher=x');
+    const { container } = renderWithProvider(<CatalogContent />);
+
+    const toggle = screen.getByRole('button', { name: 'Filters (3)' });
+    expect(toggle.getAttribute('aria-expanded')).toBe('false');
+    expect(toggle.getAttribute('aria-controls')).toBe('catalog-filters');
+    const panel = container.querySelector('#catalog-filters');
+    expect(panel?.className).toContain('hidden');
+    expect(panel?.className).toContain('sm:block');
+  });
+
+  it('expands and collapses the panel on toggle', async () => {
+    const { container } = renderWithProvider(<CatalogContent />);
+    const { fireEvent } = await import('@testing-library/react');
+
+    const toggle = screen.getByRole('button', { name: 'Filters (0)' });
+    fireEvent.click(toggle);
+    expect(toggle.getAttribute('aria-expanded')).toBe('true');
+    expect(container.querySelector('#catalog-filters')?.className).not.toContain('hidden');
+    fireEvent.click(toggle);
+    expect(toggle.getAttribute('aria-expanded')).toBe('false');
+  });
+
+  it('labels the toggle in Arabic on the Arabic site', () => {
+    localStorage.setItem('ratq_locale', 'ar');
+    mockSearchParams = new URLSearchParams('type=library');
+    render(
+      <LanguageProvider>
+        <CatalogContent />
+      </LanguageProvider>
+    );
+    act(() => {});
+    expect(screen.getByRole('button', { name: 'الفلاتر (1)' })).toBeInTheDocument();
+  });
+});

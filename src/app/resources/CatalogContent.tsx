@@ -26,6 +26,10 @@ export function CatalogContent() {
   const licenseParams = searchParams.getAll('license');
   const license = licenseParams.length > 0 ? licenseParams : undefined;
   const search = searchParams.get('search') ?? '';
+  // Mobile filter toggle: collapsed by default below sm, always visible from sm up (#353).
+  const [filtersOpen, setFiltersOpen] = useState(false);
+  const activeFilterCount =
+    (type ? 1 : 0) + licenseParams.length + publisherKeys.length;
   const { data, error, isLoading } = useResources({ page, page_size: PAGE_SIZE, type, license, publisherKeys, search, sort });
   const resources = data?.results ?? [];
   const router = useRouter();
@@ -133,7 +137,20 @@ export function CatalogContent() {
 
         <div className="mt-7 flex flex-col gap-6 sm:flex-row sm:items-start">
 
-          <FilterPanel />
+          <div className="shrink-0 sm:w-64">
+            <button
+              type="button"
+              onClick={() => setFiltersOpen((open) => !open)}
+              aria-expanded={filtersOpen}
+              aria-controls="catalog-filters"
+              className="flex h-12 w-full items-center justify-center gap-2 rounded-full border border-[#e7e7e7] bg-white px-5 text-sm font-black text-black transition hover:bg-[#f7f7f7] sm:hidden"
+            >
+              {t.catalog.filters.title} ({activeFilterCount})
+            </button>
+            <div id="catalog-filters" className={filtersOpen ? 'sm:block' : 'hidden sm:block'}>
+              <FilterPanel />
+            </div>
+          </div>
 
           <div className="min-w-0 flex-1">
             <div className="flex items-center gap-8 mb-6">
