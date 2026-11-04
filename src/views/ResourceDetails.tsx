@@ -18,6 +18,8 @@ import { Textarea } from '@/components/ui/Textarea';
 import { Select } from '@/components/ui/Select';
 import { Report } from '@/types';
 import { formatDate } from '@/lib/format';
+import { isLive } from '@/lib/payloadAuth';
+import { submitReport } from '@/lib/payloadReports';
 import { getAppsUsingResource } from '@/lib/appEcosystem';
 import { ResourceAppBadges } from '@/components/resources/ResourceAppBadges';
 import {
@@ -50,6 +52,7 @@ export const ResourceDetails: React.FC = () => {
   const [reportDetails, setReportDetails] = useState('');
   const [reportEvidence, setReportEvidence] = useState('');
   const [reportSubmitted, setReportSubmitted] = useState(false);
+  const [reportError, setReportError] = useState<string | null>(null);
 
   // Share Modal state
   const [shareModalOpen, setShareModalOpen] = useState(false);
@@ -88,9 +91,20 @@ export const ResourceDetails: React.FC = () => {
     { id: 'reviews', label: 'التقييمات والمراجعات', count: reviews.length },
   ];
 
-  const handleReportSubmit = (e: React.FormEvent) => {
+  const handleReportSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!resource) return;
+
+    // Live: the server is the authority (auth, one open report per resource). Never fake success.
+    if (isLive()) {
+      const err = await submitReport(resource.id, reportReason, reportDetails, reportEvidence);
+      setReportError(err);
+      if (err) return;
+      setReportSubmitted(true);
+      setReportDetails('');
+      setReportEvidence('');
+      return;
+    }
 
     mockRepo.addReport({
       target_kind: 'resource',
@@ -600,6 +614,8 @@ export const ResourceDetails: React.FC = () => {
               onChange={(e) => setReportEvidence(e.target.value)}
               placeholder="https://example.com/issue-screenshot.png"
             />
+
+            {reportError && <p role="alert" className="text-xs text-red-600">{reportError}</p>}
 
             <div className="flex justify-end gap-2 pt-3 border-t border-border">
               <Button variant="ghost" type="button" onClick={() => setReportModalOpen(false)}>
