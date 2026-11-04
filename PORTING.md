@@ -21,7 +21,7 @@ Prod API (`api.ratq.itqan.dev`) is never called by this work; verify against a l
 | `/reset-password`, `/verify-email`, `/oauth/callback`, `/logout` | - | Users | HIGH | missing |
 | `/dashboard` | AppOverview | - | MED | todo |
 | `/dashboard/requests` | AppRequests | AccessRequests | HIGH | ported (`src/lib/payloadRequests.ts`, 12 tests; submit via dialog, list scoped to mine; verified e2e vs local Payload) |
-| `/dashboard/api-keys` | AppKeys | APIKeys | HIGH | todo |
+| `/dashboard/api-keys` | AppKeys | APIKeys | HIGH | ported (`src/lib/payloadKeys.ts`, 11 tests; server-generated key shown once, revoke = DELETE, rotate = create-then-delete; verified e2e incl. 403 path). Known gaps: design copy still says rotate "keeps old key 24h" and "SHA-256 + Pepper" (Payload: immediate delete, plain SHA-256); sidebar badge counts are static mock |
 | `/dashboard/settings` | AppSettings | Users | HIGH | todo |
 | `/dashboard/resources`, `/developer/resources(/[slug])` | PublisherResources, PublisherResourceNew | Resources | HIGH (delete) | todo |
 | `/developer/requests`, `/developer/access` | PublisherRequests | AccessRequests | HIGH | ported (inbox + approve/reject via PATCH, server enforces owner-only/terminal states; verified e2e) |
@@ -30,5 +30,7 @@ Prod API (`api.ratq.itqan.dev`) is never called by this work; verify against a l
 | `/developer/notifications` | AppNotifications | Notifications | MED | todo |
 | `/developer`, `/developer/settings` | PublisherDashboard, AppSettings | - | MED | todo |
 | `/api/resources*` | - | Resources | MED | out of scope (frontend proxy; design calls Payload directly) |
+
+Route guards (live mode only): `src/lib/portalAccess.ts` in `PortalLayout`: guest -> `/auth/sign-in`; non-admin on admin/review/moderation -> `/403`; app + publisher portals need login only (mirrors live `/developer`, ownership is server-side).
 
 Design-only pages: see MOCKED.md.

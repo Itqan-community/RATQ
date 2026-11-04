@@ -9,6 +9,9 @@ import { Select } from '@/components/ui/Select';
 import { Modal } from '@/components/ui/Modal';
 import { DEMO_API_KEYS, DEMO_RESOURCES } from '@/lib/mockData';
 import { ApiKey } from '@/types';
+import { mockRepo } from '@/lib/supabase';
+import { isLive } from '@/lib/payloadAuth';
+import { createKey, hydrateKeys, revokeKey, rotateKey } from '@/lib/payloadKeys';
 import { KeyTable } from '@/components/keys/KeyTable';
 import { ApiKeyRevealDialog } from '@/components/keys/ApiKeyRevealDialog';
 import { Plus, ShieldCheck, Lock } from 'lucide-react';
@@ -17,15 +20,40 @@ export const AppKeysPage: React.FC = () => {
   const { i18n } = useTranslation();
   const isAr = i18n.language === 'ar';
 
-  const [keys, setKeys] = useState<ApiKey[]>(DEMO_API_KEYS);
+  const live = isLive();
+  // Live: only real Payload keys/resources (the server already scopes keys to the signed-in owner).
+  const resources = live ? mockRepo.getResources().filter((r) => r.id.startsWith('payload_')) : DEMO_RESOURCES;
+  const [keys, setKeys] = useState<ApiKey[]>(() =>
+    live ? mockRepo.getKeys().filter((k) => k.id.startsWith('payload_key_')) : DEMO_API_KEYS
+  );
   const [isCreateOpen, setIsCreateOpen] = useState(false);
   const [newKeyName, setNewKeyName] = useState('');
-  const [selectedResourceId, setSelectedResourceId] = useState(DEMO_RESOURCES[2].id);
+  const [selectedResourceId, setSelectedResourceId] = useState((live ? resources[0] : DEMO_RESOURCES[2])?.id ?? '');
   const [revealedKey, setRevealedKey] = useState<string | null>(null);
+  const [keyError, setKeyError] = useState<string | null>(null);
 
-  const handleCreateKey = (e: React.FormEvent) => {
+  const reloadLiveKeys = async () => {
+    await hydrateKeys();
+    setKeys(mockRepo.getKeys().filter((k) => k.id.startsWith('payload_key_')));
+  };
+
+  const handleCreateKey = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!newKeyName.trim()) return;
+
+    if (live) {
+      const { key, error } = await createKey(selectedResourceId, newKeyName.trim());
+      if (!key) {
+        setKeyError(error);
+        return;
+      }
+      setKeyError(null);
+      setIsCreateOpen(false);
+      setNewKeyName('');
+      setRevealedKey(key); // shown once; the server keeps only a hash
+      await reloadLiveKeys();
+      return;
+    }
 
     const rawKey = `rtk_live_${Math.random().toString(36).substring(2, 10)}${Math.random().toString(36).substring(2, 10)}`;
     const prefix = rawKey.substring(9, 17);
@@ -54,7 +82,16 @@ export const AppKeysPage: React.FC = () => {
     setRevealedKey(rawKey);
   };
 
-  const handleRotate = (keyId: string) => {
+  const handleRotate = async (keyId: string) => {
+    if (live && keyId.startsWith('payload_key_')) {
+      const old = keys.find((k) => k.id === keyId);
+      if (!old) return;
+      const { key, error } = await rotateKey(keyId, old.resource_id, old.name_ar);
+      setKeyError(error);
+      if (key) setRevealedKey(key);
+      await reloadLiveKeys();
+      return;
+    }
     const rawKey = `rtk_live_rot_${Math.random().toString(36).substring(2, 10)}${Math.random().toString(36).substring(2, 10)}`;
     const prefix = rawKey.substring(13, 21);
 
@@ -73,7 +110,12 @@ export const AppKeysPage: React.FC = () => {
     setRevealedKey(rawKey);
   };
 
-  const handleRevoke = (keyId: string) => {
+  const handleRevoke = async (keyId: string) => {
+    if (live && keyId.startsWith('payload_key_')) {
+      setKeyError(await revokeKey(keyId));
+      await reloadLiveKeys();
+      return;
+    }
     setKeys((prev) =>
       prev.map((k) =>
         k.id === keyId ? { ...k, status: 'revoked', revoked_at: new Date().toISOString() } : k
@@ -171,13 +213,14 @@ export const AppKeysPage: React.FC = () => {
             <Select
               value={selectedResourceId}
               onChange={(e) => setSelectedResourceId(e.target.value)}
-              options={DEMO_RESOURCES.map((r) => ({
+              options={resources.map((r) => ({
                 value: r.id,
                 label: (isAr ? r.title_ar : r.title_en) || r.title_ar,
               }))}
             />
           </div>
 
+          {!live && (
           <div className="p-3 rounded-lg bg-canvas-subtle border border-border text-2xs text-fg-muted flex items-start gap-2">
             <ShieldCheck className="w-4 h-4 text-ratq-600 shrink-0 mt-0.5" />
             <span>
@@ -186,6 +229,8 @@ export const AppKeysPage: React.FC = () => {
                 : 'Default rate limit: 1,000 requests/hour and 10,000 requests/day.'}
             </span>
           </div>
+          )}
+          {keyError && <p role="alert" className="text-xs text-red-600">{keyError}</p>}
 
           <div className="flex justify-end gap-2 pt-2">
             <Button type="button" variant="ghost" onClick={() => setIsCreateOpen(false)}>

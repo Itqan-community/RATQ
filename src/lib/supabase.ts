@@ -174,6 +174,11 @@ class MockRepository {
     return req;
   }
 
+  // Replace hydrated live keys; demo keys are kept.
+  setLiveKeys(live: ApiKey[]) {
+    this.keys = [...live, ...this.keys.filter((k) => !k.id.startsWith('payload_key_'))];
+  }
+
   // API Keys
   getKeys() {
     return [...this.keys];
