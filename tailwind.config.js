@@ -2,7 +2,7 @@
 export default {
   darkMode: ['class', '[data-theme="dark"]'],
   content: [
-    './index.html',
+    './app/**/*.{ts,tsx}',
     './src/**/*.{js,ts,jsx,tsx}',
   ],
   theme: {

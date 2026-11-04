@@ -7,7 +7,7 @@ import { ItqanBadge } from '../components/ui/ItqanBadge';
 import { QuranQuote } from '../components/ui/QuranQuote';
 import { DirectionalIcon } from '../components/ui/DirectionalIcon';
 import { ResourceCard } from '../components/resources/ResourceCard';
-import { Home } from '../pages/Home';
+import { Home } from '../views/Home';
 import { MemoryRouter } from 'react-router-dom';
 import { mockRepo } from '../lib/supabase';
 import { ArrowLeft, ArrowRight } from 'lucide-react';

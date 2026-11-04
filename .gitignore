@@ -33,3 +33,10 @@ dist-ssr
 
 # Superpowers temporary workspace
 .superpowers/
+
+# Next / OpenNext / Wrangler
+.next
+.open-next
+.wrangler
+next-env.d.ts
+tsconfig.tsbuildinfo

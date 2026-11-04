@@ -2,7 +2,7 @@
 import { describe, it, expect } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
-import { QuranicRoadmapPage } from '@/pages/QuranicRoadmap';
+import { QuranicRoadmapPage } from '@/views/QuranicRoadmap';
 
 describe('QuranicRoadmapPage Component', () => {
   it('renders page header, total resources card, smart wizard button, and methodology guide', () => {

@@ -2,7 +2,7 @@
 import { describe, it, expect } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import { MemoryRouter, Routes, Route } from 'react-router-dom';
-import { ResourceDetails } from '@/pages/ResourceDetails';
+import { ResourceDetails } from '@/views/ResourceDetails';
 
 describe('ResourceDetails Page - Ecosystem Apps in Sidebar', () => {
   it('does NOT render the "التطبيقات المستفيدة" tab as per new specs', () => {

@@ -2,7 +2,7 @@
 import { describe, it, expect } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
-import { TechStacksPage } from '@/pages/TechStacks';
+import { TechStacksPage } from '@/views/TechStacks';
 import { SiteHeader } from '@/components/layout/SiteHeader';
 
 describe('TechStacksPage Component (Canonical Tech Spec Table)', () => {
@@ -79,7 +79,7 @@ describe('TechStacksPage Component (Canonical Tech Spec Table)', () => {
   });
 });
 
-import { Catalog } from '@/pages/Catalog';
+import { Catalog } from '@/views/Catalog';
 
 describe('SiteHeader App Stacks and Resources Direct Navigation', () => {
   it('renders direct link to /resources/stacks without dropdown', () => {

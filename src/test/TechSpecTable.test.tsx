@@ -2,8 +2,8 @@
 import { describe, it, expect } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
-import { TechSpecTablePreviewPage } from '@/pages/previews/TechSpecTablePreviewPage';
-import { TechStacksPage } from '@/pages/TechStacks';
+import { TechSpecTablePreviewPage } from '@/views/previews/TechSpecTablePreviewPage';
+import { TechStacksPage } from '@/views/TechStacks';
 
 describe('Idea 7: TechSpecTablePreviewPage Component', () => {
   it('renders breadcrumbs and page title without the return button or resources link', () => {

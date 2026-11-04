@@ -6,75 +6,75 @@ import { PortalLayout } from '@/components/layout/PortalLayout';
 import { Skeleton } from '@/components/ui/Skeleton';
 
 // Public Pages
-import { Home as HomePage } from '@/pages/Home';
-import { Catalog as CatalogPage } from '@/pages/Catalog';
-import { ResourceDetails as ResourceDetailsPage } from '@/pages/ResourceDetails';
-import { Categories as CategoriesPage } from '@/pages/Categories';
-import { Publishers as PublishersPage } from '@/pages/Publishers';
-import { PublisherDetails as PublisherDetailsPage } from '@/pages/PublisherDetails';
-import { Standards as StandardsPage } from '@/pages/Standards';
-import { StandardsChecklist as StandardsChecklistPage } from '@/pages/StandardsChecklist';
-import { StandardsRevocations as StandardsRevocationsPage } from '@/pages/StandardsRevocations';
-import { Licenses as LicensesPage } from '@/pages/Licenses';
-import { About as AboutPage } from '@/pages/About';
-import RoadmapPage from '@/pages/Roadmap';
-import FaqPage from '@/pages/Faq';
-import ChangelogPage from '@/pages/Changelog';
-import StatusPage from '@/pages/Status';
-import LegalPage from '@/pages/LegalPage';
-import ContactPage from '@/pages/Contact';
-import UxStudyPage from '@/pages/UxStudy';
+import { Home as HomePage } from '@/views/Home';
+import { Catalog as CatalogPage } from '@/views/Catalog';
+import { ResourceDetails as ResourceDetailsPage } from '@/views/ResourceDetails';
+import { Categories as CategoriesPage } from '@/views/Categories';
+import { Publishers as PublishersPage } from '@/views/Publishers';
+import { PublisherDetails as PublisherDetailsPage } from '@/views/PublisherDetails';
+import { Standards as StandardsPage } from '@/views/Standards';
+import { StandardsChecklist as StandardsChecklistPage } from '@/views/StandardsChecklist';
+import { StandardsRevocations as StandardsRevocationsPage } from '@/views/StandardsRevocations';
+import { Licenses as LicensesPage } from '@/views/Licenses';
+import { About as AboutPage } from '@/views/About';
+import RoadmapPage from '@/views/Roadmap';
+import FaqPage from '@/views/Faq';
+import ChangelogPage from '@/views/Changelog';
+import StatusPage from '@/views/Status';
+import LegalPage from '@/views/LegalPage';
+import ContactPage from '@/views/Contact';
+import UxStudyPage from '@/views/UxStudy';
 
 // Interactive Resources Exploration Views
-import QuranicRoadmapPage from '@/pages/QuranicRoadmap';
-import ProjectWizardPage from '@/pages/ProjectWizard';
-import TechStacksPage from '@/pages/TechStacks';
+import QuranicRoadmapPage from '@/views/QuranicRoadmap';
+import ProjectWizardPage from '@/views/ProjectWizard';
+import TechStacksPage from '@/views/TechStacks';
 
 // Resource Catalog Alternative Previews (Modular Showcase for CTO)
-import { SectionsPreviewPage } from '@/pages/previews/SectionsPreviewPage';
-import { TreeExplorerPreviewPage } from '@/pages/previews/TreeExplorerPreviewPage';
-import TechSpecTablePreviewPage from '@/pages/previews/TechSpecTablePreviewPage';
+import { SectionsPreviewPage } from '@/views/previews/SectionsPreviewPage';
+import { TreeExplorerPreviewPage } from '@/views/previews/TreeExplorerPreviewPage';
+import TechSpecTablePreviewPage from '@/views/previews/TechSpecTablePreviewPage';
 
 // Auth Pages
-import SignInPage from '@/pages/SignIn';
-import SignUpPage from '@/pages/SignUp';
-import ForgotPasswordPage from '@/pages/ForgotPassword';
+import SignInPage from '@/views/SignIn';
+import SignUpPage from '@/views/SignUp';
+import ForgotPasswordPage from '@/views/ForgotPassword';
 
 // Developer Portal
-import AppOverviewPage from '@/pages/AppOverview';
-import AppRequestsPage from '@/pages/AppRequests';
-import AppKeysPage from '@/pages/AppKeys';
-import AppSavedPage from '@/pages/AppSaved';
-import AppNotificationsPage from '@/pages/AppNotifications';
-import AppSettingsPage from '@/pages/AppSettings';
+import AppOverviewPage from '@/views/AppOverview';
+import AppRequestsPage from '@/views/AppRequests';
+import AppKeysPage from '@/views/AppKeys';
+import AppSavedPage from '@/views/AppSaved';
+import AppNotificationsPage from '@/views/AppNotifications';
+import AppSettingsPage from '@/views/AppSettings';
 
 // Publisher Portal
-import PublisherDashboardPage from '@/pages/PublisherDashboard';
-import PublisherResourcesPage from '@/pages/PublisherResources';
-import PublisherResourceNewPage from '@/pages/PublisherResourceNew';
-import PublisherRequestsPage from '@/pages/PublisherRequests';
-import PublisherAnalyticsPage from '@/pages/PublisherAnalytics';
-import PublisherClaimPage from '@/pages/PublisherClaim';
-import PublisherWebhooksPage from '@/pages/PublisherWebhooks';
+import PublisherDashboardPage from '@/views/PublisherDashboard';
+import PublisherResourcesPage from '@/views/PublisherResources';
+import PublisherResourceNewPage from '@/views/PublisherResourceNew';
+import PublisherRequestsPage from '@/views/PublisherRequests';
+import PublisherAnalyticsPage from '@/views/PublisherAnalytics';
+import PublisherClaimPage from '@/views/PublisherClaim';
+import PublisherWebhooksPage from '@/views/PublisherWebhooks';
 
 // Reviewer Portal
-import ReviewQueuePage from '@/pages/ReviewQueue';
-import ReviewDetailsPage from '@/pages/ReviewDetails';
+import ReviewQueuePage from '@/views/ReviewQueue';
+import ReviewDetailsPage from '@/views/ReviewDetails';
 
 // Moderation Portal
-import ModerationDashboardPage from '@/pages/ModerationDashboard';
+import ModerationDashboardPage from '@/views/ModerationDashboard';
 
 // Admin Portal
-import AdminDashboardPage from '@/pages/AdminDashboard';
-import AdminUsersPage from '@/pages/AdminUsers';
-import AdminResourcesPage from '@/pages/AdminResources';
-import AdminAuditPage from '@/pages/AdminAudit';
-import AdminFlagsPage from '@/pages/AdminFlags';
+import AdminDashboardPage from '@/views/AdminDashboard';
+import AdminUsersPage from '@/views/AdminUsers';
+import AdminResourcesPage from '@/views/AdminResources';
+import AdminAuditPage from '@/views/AdminAudit';
+import AdminFlagsPage from '@/views/AdminFlags';
 
 // Error Pages
-import NotFoundPage from '@/pages/NotFound';
-import ForbiddenPage from '@/pages/Forbidden';
-import ServerErrorPage from '@/pages/ServerError';
+import NotFoundPage from '@/views/NotFound';
+import ForbiddenPage from '@/views/Forbidden';
+import ServerErrorPage from '@/views/ServerError';
 
 const ScrollToTop: React.FC = () => {
   const { pathname } = useLocation();

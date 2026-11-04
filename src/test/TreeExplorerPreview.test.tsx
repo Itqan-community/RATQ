@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
-import { TreeExplorerPreviewPage } from '@/pages/previews/TreeExplorerPreviewPage';
+import { TreeExplorerPreviewPage } from '@/views/previews/TreeExplorerPreviewPage';
 
 describe('TreeExplorerPreviewPage Component', () => {
   it('renders tree explorer page with directory tree and details inspector', () => {
