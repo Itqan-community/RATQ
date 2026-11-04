@@ -60,6 +60,11 @@ class MockRepository {
     this.notifications = [...DEMO_NOTIFICATIONS];
   }
 
+  // Replace previously hydrated live (Payload) resources; mock/beta-snapshot entries are kept.
+  setLiveResources(live: Resource[]) {
+    this.resources = [...live, ...this.resources.filter((r) => !r.id.startsWith('payload_'))];
+  }
+
   // Resources
   getResources() {
     return [...this.resources];
