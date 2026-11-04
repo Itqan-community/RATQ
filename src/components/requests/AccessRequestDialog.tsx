@@ -43,7 +43,8 @@ export const AccessRequestDialog: React.FC<AccessRequestDialogProps> = ({
     }
 
     setLoading(true);
-    if (isLive() && resource.id.startsWith('payload_')) {
+    if (isLive()) {
+      // Live mode never fakes success: non-live (snapshot/mock) resources get submitRequest's refusal.
       const err = await submitRequest(resource.id, purpose.trim());
       if (err) {
         setError(err);

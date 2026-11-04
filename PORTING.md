@@ -15,8 +15,8 @@ Prod API (`api.ratq.itqan.dev`) is never called by this work; verify against a l
 | `/contact` | Contact | - | LOW | ported |
 | `/privacy` | LegalPage `/legal/:slug` | - | LOW | ported |
 | `/standards` | Standards | - | LOW | ported |
-| `/docs` | - | - | LOW | missing |
-| `/contributors` | - | - (static data) | LOW | missing |
+| `/docs` | `LivePages.tsx` DocsPage | - | LOW | ported (copy extracted from live messages into i18n ns `live`; verified RTL) |
+| `/contributors` | `LivePages.tsx` ContributorsPage | - (static data) | LOW | ported (data copied from live `contributors-data.ts`, hand-curated there too - keep in sync; verified LTR, 27 cards). No footer link added |
 | `/login`, `/register`, `/forgot-password` | SignIn, SignUp, ForgotPassword | Users | HIGH | ported (cookie session, `src/lib/payloadAuth.ts`, 10 tests, verified e2e vs local Payload; demo role switcher hidden in live mode) |
 | `/reset-password`, `/verify-email`, `/oauth/callback`, `/logout` | `src/views/AuthLinkPages.tsx` (+ header sign-out) | Users | HIGH | ported (9 tests). Reset verified e2e (new pw works, old rejected, token single-use). Verify-email: backend does not enable `auth.verify`, so the server returns 500 (same as live). OAuth: callback no-code path verified; the GitHub exchange needs real GitHub credentials, untested |
 | `/dashboard` | AppOverview | - | MED | ported (live-aware counts/notifications; see notifications row) |

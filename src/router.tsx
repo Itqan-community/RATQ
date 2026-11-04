@@ -40,6 +40,7 @@ import SignInPage from '@/views/SignIn';
 import SignUpPage from '@/views/SignUp';
 import ForgotPasswordPage from '@/views/ForgotPassword';
 import { ResetPasswordPage, VerifyEmailPage, OAuthCallbackPage } from '@/views/AuthLinkPages';
+import { DocsPage, ContributorsPage } from '@/views/LivePages';
 
 // Developer Portal
 import AppOverviewPage from '@/views/AppOverview';
@@ -139,6 +140,8 @@ export const AppRouter: React.FC = () => {
           <Route path="/auth/sign-in" element={<SignInPage />} />
           <Route path="/auth/sign-up" element={<SignUpPage />} />
           <Route path="/auth/forgot" element={<ForgotPasswordPage />} />
+          <Route path="/docs" element={<DocsPage />} />
+          <Route path="/contributors" element={<ContributorsPage />} />
           <Route path="/reset-password" element={<ResetPasswordPage />} />
           <Route path="/verify-email" element={<VerifyEmailPage />} />
           <Route path="/oauth/callback" element={<OAuthCallbackPage />} />

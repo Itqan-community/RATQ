@@ -14,6 +14,7 @@ import adminAr from './locales/ar/admin.json';
 import authAr from './locales/ar/auth.json';
 import legalAr from './locales/ar/legal.json';
 import errorsAr from './locales/ar/errors.json';
+import liveAr from './locales/ar/live.json'; // docs + contributors copy ported from live RATQ
 
 import commonEn from './locales/en/common.json';
 import navEn from './locales/en/nav.json';
@@ -27,6 +28,7 @@ import adminEn from './locales/en/admin.json';
 import authEn from './locales/en/auth.json';
 import legalEn from './locales/en/legal.json';
 import errorsEn from './locales/en/errors.json';
+import liveEn from './locales/en/live.json';
 
 export const resources = {
   ar: {
@@ -42,6 +44,7 @@ export const resources = {
     auth: authAr,
     legal: legalAr,
     errors: errorsAr,
+    live: liveAr,
   },
   en: {
     common: commonEn,
@@ -56,6 +59,7 @@ export const resources = {
     auth: authEn,
     legal: legalEn,
     errors: errorsEn,
+    live: liveEn,
   },
 };
 
