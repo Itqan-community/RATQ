@@ -1,0 +1,12 @@
+node_modules/
+.next/
+.open-next/
+.wrangler/
+*.tsbuildinfo
+.env*
+.DS_Store
+
+# Local-only: recorded captures (~205 MB) and screenshot baselines (~590 MB), regenerable by scripts/
+/data/
+/baseline/
+/.claude/

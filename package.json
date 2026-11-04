@@ -1,0 +1,40 @@
+{
+  "name": "ratq-v2",
+  "private": true,
+  "version": "0.1.0",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "typecheck": "tsc --noEmit",
+    "cf:build": "opennextjs-cloudflare build",
+    "cf:deploy": "opennextjs-cloudflare build && opennextjs-cloudflare deploy"
+  },
+  "dependencies": {
+    "lucide-react": "0.468.0",
+    "next": "15.1.6",
+    "react": "19.0.0",
+    "react-dom": "19.0.0"
+  },
+  "devDependencies": {
+    "@opennextjs/cloudflare": "1.9.2",
+    "@types/node": "22.10.5",
+    "@types/pngjs": "6.0.5",
+    "@types/react": "19.0.2",
+    "@types/react-dom": "19.0.2",
+    "autoprefixer": "10.4.20",
+    "pixelmatch": "6.0.0",
+    "playwright-core": "1.49.1",
+    "pngjs": "7.0.0",
+    "postcss": "8.4.49",
+    "sharp": "file:stubs/sharp",
+    "tailwindcss": "3.4.17",
+    "typescript": "5.7.2",
+    "wrangler": "4.152.0"
+  },
+  "pnpm": {
+    "overrides": {
+      "sharp": "file:./stubs/sharp"
+    }
+  }
+}
