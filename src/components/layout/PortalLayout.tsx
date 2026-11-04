@@ -1,6 +1,9 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
+import { Navigate } from 'react-router-dom';
 import { SidebarNav, SidebarNavItem } from './SidebarNav';
+import { useAuthStore } from '@/store/useAuthStore';
+import { portalAccess } from '@/lib/portalAccess';
 import {
   LayoutDashboard,
   Key,
@@ -27,6 +30,8 @@ interface PortalLayoutProps {
 export const PortalLayout: React.FC<PortalLayoutProps> = ({ children, portal }) => {
   const { i18n } = useTranslation();
   const isAr = i18n.language === 'ar';
+  const role = useAuthStore((s) => s.currentRole);
+  const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
 
   const configs: Record<
     string,
@@ -171,6 +176,10 @@ export const PortalLayout: React.FC<PortalLayoutProps> = ({ children, portal }) 
   };
 
   const currentConfig = configs[portal] || configs.app;
+
+  const access = portalAccess(portal, role, isAuthenticated);
+  if (access === 'sign-in') return <Navigate to="/auth/sign-in" replace />;
+  if (access === 'forbidden') return <Navigate to="/403" replace />;
 
   return (
     <div className="container mx-auto px-4 py-8 max-w-7xl">
