@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/Button';
 import { Alert } from '@/components/ui/Alert';
 import { Mail, ArrowLeft, ArrowRight, CheckCircle2 } from 'lucide-react';
 import { DirectionalIcon } from '@/components/ui/DirectionalIcon';
+import { forgotPassword, isLive } from '@/lib/payloadAuth';
 
 export const ForgotPasswordPage: React.FC = () => {
   const { i18n } = useTranslation();
@@ -18,7 +19,7 @@ export const ForgotPasswordPage: React.FC = () => {
   const [sent, setSent] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!email) {
       setError(isAr ? 'يرجى إدخال عنوان البريد الإلكتروني' : 'Please provide your email address');
@@ -27,6 +28,16 @@ export const ForgotPasswordPage: React.FC = () => {
 
     setLoading(true);
     setError(null);
+    if (isLive()) {
+      try {
+        await forgotPassword(email);
+        setSent(true);
+      } catch (err) {
+        setError(err instanceof Error ? err.message : String(err));
+      }
+      setLoading(false);
+      return;
+    }
     setTimeout(() => {
       setLoading(false);
       setSent(true);

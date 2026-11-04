@@ -8,20 +8,21 @@ import { Button } from '@/components/ui/Button';
 import { Alert } from '@/components/ui/Alert';
 import { useAuthStore } from '@/store/useAuthStore';
 import { UserRole } from '@/types';
+import { isLive } from '@/lib/payloadAuth';
 import { LogIn, Lock, Mail } from 'lucide-react';
 
 export const SignInPage: React.FC = () => {
   const { i18n } = useTranslation();
   const isAr = i18n.language === 'ar';
   const navigate = useNavigate();
-  const { signIn, switchRole } = useAuthStore();
+  const { signIn, signInLive, switchRole } = useAuthStore();
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!email || !password) {
       setError(isAr ? 'يرجى إدخال البريد الإلكتروني وكلمة المرور' : 'Please provide email and password');
@@ -30,6 +31,13 @@ export const SignInPage: React.FC = () => {
 
     setLoading(true);
     setError(null);
+    if (isLive()) {
+      const err = await signInLive(email, password);
+      setLoading(false);
+      if (err) setError(err);
+      else navigate('/app');
+      return;
+    }
     setTimeout(() => {
       setLoading(false);
       signIn(email);
@@ -112,6 +120,8 @@ export const SignInPage: React.FC = () => {
             </Button>
           </form>
 
+          {/* Demo role switcher bypasses auth: mock mode only, never alongside real sessions. */}
+          {!isLive() && (<>
           <div className="relative my-6 text-center">
             <div className="absolute inset-0 flex items-center">
               <div className="w-full border-t border-border" />
@@ -121,7 +131,6 @@ export const SignInPage: React.FC = () => {
             </span>
           </div>
 
-          {/* Demo Quick Role Switcher Buttons */}
           <div className="grid grid-cols-2 gap-2 text-xs">
             <Button
               type="button"
@@ -156,6 +165,7 @@ export const SignInPage: React.FC = () => {
               {isAr ? 'مدير (Admin)' : 'Admin'}
             </Button>
           </div>
+          </>)}
 
           <p className="text-center text-xs text-fg-muted mt-6">
             {isAr ? 'ليس لديك حساب بعد؟' : "Don't have an account?"}{' '}

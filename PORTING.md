@@ -9,15 +9,15 @@ Prod API (`api.ratq.itqan.dev`) is never called by this work; verify against a l
 | Live route | Design page | Payload collection | Tier | Status |
 |---|---|---|---|---|
 | `/` | Home | Resources, Announcements | LOW | todo (trending/announcements live data) |
-| `/resources` | Catalog | Resources | MED | todo |
-| `/resources/[slug]` | ResourceDetails | Resources, Comments | MED | todo |
+| `/resources` | Catalog | Resources | MED | ported (db8b63f; `src/lib/payloadResources.ts`, verified vs local Payload) |
+| `/resources/[slug]` | ResourceDetails | Resources, Comments | MED | ported for resource data; Comments todo |
 | `/about` | About | - | LOW | ported (design copy kept) |
 | `/contact` | Contact | - | LOW | ported |
 | `/privacy` | LegalPage `/legal/:slug` | - | LOW | ported |
 | `/standards` | Standards | - | LOW | ported |
 | `/docs` | - | - | LOW | missing |
 | `/contributors` | - | - (static data) | LOW | missing |
-| `/login`, `/register`, `/forgot-password` | SignIn, SignUp, ForgotPassword | Users | HIGH | todo |
+| `/login`, `/register`, `/forgot-password` | SignIn, SignUp, ForgotPassword | Users | HIGH | ported (cookie session, `src/lib/payloadAuth.ts`, 10 tests, verified e2e vs local Payload; demo role switcher hidden in live mode) |
 | `/reset-password`, `/verify-email`, `/oauth/callback`, `/logout` | - | Users | HIGH | missing |
 | `/dashboard` | AppOverview | - | MED | todo |
 | `/dashboard/requests` | AppRequests | AccessRequests | HIGH | todo |

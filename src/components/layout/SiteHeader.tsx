@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useAuthStore } from '@/store/useAuthStore';
+import { isLive } from '@/lib/payloadAuth';
 import { useThemeStore } from '@/store/useThemeStore';
 import { Button } from '@/components/ui/Button';
 import { UserRole } from '@/types';
@@ -28,7 +29,7 @@ export const SiteHeader: React.FC<SiteHeaderProps> = ({ onOpenCommandPalette }) 
   const { t } = useTranslation('common');
   const navigate = useNavigate();
   const location = useLocation();
-  const { isAuthenticated, currentRole, profile, switchRole, signOut } = useAuthStore();
+  const { isAuthenticated, currentRole, profile, switchRole, signOut, signOutLive } = useAuthStore();
   const { theme, toggleTheme, locale, setLocale } = useThemeStore();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [userMenuOpen, setUserMenuOpen] = useState(false);
@@ -254,7 +255,8 @@ export const SiteHeader: React.FC<SiteHeaderProps> = ({ onOpenCommandPalette }) 
 
                   <button
                     onClick={() => {
-                      signOut();
+                      if (isLive()) void signOutLive();
+                      else signOut();
                       navigate('/');
                     }}
                     className="w-full flex items-center gap-2.5 px-3 py-2 text-xs font-medium text-red-600 hover:bg-red-50 dark:hover:bg-red-950/40 rounded-md transition-colors"

@@ -8,13 +8,14 @@ import { Button } from '@/components/ui/Button';
 import { Alert } from '@/components/ui/Alert';
 import { Checkbox } from '@/components/ui/Checkbox';
 import { useAuthStore } from '@/store/useAuthStore';
+import { isLive } from '@/lib/payloadAuth';
 import { UserPlus, Mail, Lock, User } from 'lucide-react';
 
 export const SignUpPage: React.FC = () => {
   const { i18n } = useTranslation();
   const isAr = i18n.language === 'ar';
   const navigate = useNavigate();
-  const { signIn } = useAuthStore();
+  const { signIn, signUpLive } = useAuthStore();
 
   const [fullName, setFullName] = useState('');
   const [username, setUsername] = useState('');
@@ -24,7 +25,7 @@ export const SignUpPage: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!fullName || !username || !email || !password) {
       setError(isAr ? 'يرجى تعبئة جميع الحقول المطلوبة' : 'Please fill all required fields');
@@ -41,6 +42,13 @@ export const SignUpPage: React.FC = () => {
 
     setLoading(true);
     setError(null);
+    if (isLive()) {
+      const err = await signUpLive(email, password, fullName);
+      setLoading(false);
+      if (err) setError(err);
+      else navigate('/app');
+      return;
+    }
     setTimeout(() => {
       setLoading(false);
       signIn(email);
