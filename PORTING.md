@@ -10,7 +10,7 @@ Prod API (`api.ratq.itqan.dev`) is never called by this work; verify against a l
 |---|---|---|---|---|
 | `/` | Home | Resources, Announcements | LOW | todo (trending/announcements live data) |
 | `/resources` | Catalog | Resources | MED | ported (db8b63f; `src/lib/payloadResources.ts`, verified vs local Payload) |
-| `/resources/[slug]` | ResourceDetails | Resources, Comments | MED | ported for resource data; Comments todo |
+| `/resources/[slug]` | ResourceDetails | Resources, Comments | MED | ported: resource data + comments (`src/lib/payloadComments.ts`, 7 tests; post + delete own; ratings not in Payload so hidden in live mode; verified e2e) |
 | `/about` | About | - | LOW | ported (design copy kept) |
 | `/contact` | Contact | - | LOW | ported |
 | `/privacy` | LegalPage `/legal/:slug` | - | LOW | ported |
@@ -25,8 +25,8 @@ Prod API (`api.ratq.itqan.dev`) is never called by this work; verify against a l
 | `/dashboard/settings` | AppSettings | Users | HIGH | todo |
 | `/dashboard/resources`, `/developer/resources(/[slug])` | PublisherResources, PublisherResourceNew | Resources | HIGH (delete) | todo |
 | `/developer/requests`, `/developer/access` | PublisherRequests | AccessRequests | HIGH | ported (inbox + approve/reject via PATCH, server enforces owner-only/terminal states; verified e2e) |
-| `/developer/comments` | - | Comments | HIGH (delete) | missing |
-| `/developer/reports` | ModerationDashboard | Reports | HIGH | todo |
+| `/developer/comments` | ResourceDetails reviews tab | Comments | HIGH (delete) | ported (as above; no separate dashboard page) |
+| `/developer/reports` | ResourceDetails report modal; ModerationDashboard | Reports | HIGH | submit ported (`src/lib/payloadReports.ts`, 6 tests, verified e2e incl. duplicate refusal); moderation dashboard list/resolve todo |
 | `/developer/notifications` | AppNotifications | Notifications | MED | ported (`src/lib/payloadNotifications.ts`, 6 tests; list, mark one / all read; AppOverview + sidebar badges now live-aware; verified e2e) |
 | `/developer`, `/developer/settings` | PublisherDashboard, AppSettings | - | MED | todo |
 | `/api/resources*` | - | Resources | MED | out of scope (frontend proxy; design calls Payload directly) |

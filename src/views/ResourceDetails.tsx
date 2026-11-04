@@ -1,5 +1,5 @@
 // src/views/ResourceDetails.tsx
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { mockRepo } from '@/lib/supabase';
 import { Tabs, TabItem } from '@/components/ui/Tabs';
@@ -16,7 +16,9 @@ import { Modal } from '@/components/ui/Modal';
 import { Input } from '@/components/ui/Input';
 import { Textarea } from '@/components/ui/Textarea';
 import { Select } from '@/components/ui/Select';
-import { Report } from '@/types';
+import { Report, Review } from '@/types';
+import { useAuthStore } from '@/store/useAuthStore';
+import { deleteComment, fetchComments, postComment } from '@/lib/payloadComments';
 import { formatDate } from '@/lib/format';
 import { isLive } from '@/lib/payloadAuth';
 import { submitReport } from '@/lib/payloadReports';
@@ -64,7 +66,17 @@ export const ResourceDetails: React.FC = () => {
   const [reviewBody, setReviewBody] = useState('');
   const [reviewSubmitted, setReviewSubmitted] = useState(false);
 
+  // Live comments (Payload) for live resources; loaded after mount.
+  const myProfileId = useAuthStore((s) => s.profile.id);
+  const [liveReviews, setLiveReviews] = useState<Review[]>([]);
+  const [reviewError, setReviewError] = useState<string | null>(null);
   const resource = mockRepo.getResourceBySlug(slug || '');
+  const isLiveRes = isLive() && Boolean(resource?.id.startsWith('payload_'));
+  const reloadComments = () => (resource ? fetchComments(resource.id).then(setLiveReviews) : undefined);
+  useEffect(() => {
+    if (isLiveRes) void reloadComments();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [resource?.id, isLiveRes]);
 
   if (!resource) {
     return (
@@ -80,7 +92,7 @@ export const ResourceDetails: React.FC = () => {
     );
   }
 
-  const reviews = mockRepo.getReviews(resource.id);
+  const reviews = isLiveRes ? liveReviews : mockRepo.getReviews(resource.id);
   const ecosystemApps = getAppsUsingResource(resource.slug, resource.title_ar);
 
   const tabs: TabItem[] = [
@@ -121,9 +133,18 @@ export const ResourceDetails: React.FC = () => {
     setReportEvidence('');
   };
 
-  const handleAddReview = (e: React.FormEvent) => {
+  const handleAddReview = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!reviewBody.trim()) return;
+    if (isLiveRes) {
+      const err = await postComment(resource.id, reviewBody.trim());
+      setReviewError(err);
+      if (err) return;
+      setReviewSubmitted(true);
+      setReviewBody('');
+      await reloadComments();
+      return;
+    }
     mockRepo.addReview(resource.id, reviewRating, reviewBody);
     setReviewSubmitted(true);
     setReviewBody('');
@@ -359,6 +380,7 @@ export const ResourceDetails: React.FC = () => {
                 {/* Submit Review Box */}
                 <form onSubmit={handleAddReview} className="p-5 rounded-xl border border-border bg-canvas flex flex-col gap-3">
                   <h4 className="text-xs font-bold text-fg">أضف تقييمك وملاحظاتك الفنية</h4>
+                  {!isLiveRes && (
                   <div className="flex items-center gap-2">
                     <span className="text-2xs text-fg-subtle">التقييم:</span>
                     <RatingStars
@@ -368,6 +390,7 @@ export const ResourceDetails: React.FC = () => {
                       onRatingChange={setReviewRating}
                     />
                   </div>
+                  )}
                   <textarea
                     rows={3}
                     value={reviewBody}
@@ -380,6 +403,7 @@ export const ResourceDetails: React.FC = () => {
                       إرسال التقييم
                     </Button>
                   </div>
+                  {reviewError && <p role="alert" className="text-2xs text-red-600">{reviewError}</p>}
                   {reviewSubmitted && (
                     <p className="text-2xs text-emerald-600 font-semibold">
                       تمت إضافة تقييمك بنجاح! شكراً لمساهمتك.
@@ -394,9 +418,23 @@ export const ResourceDetails: React.FC = () => {
                       <div className="flex items-center justify-between mb-2">
                         <div className="flex items-center gap-2">
                           <span className="text-xs font-bold text-fg">{rev.profile?.display_name || 'مطور'}</span>
-                          <RatingStars rating={rev.rating} size={12} />
+                          {!isLiveRes && <RatingStars rating={rev.rating} size={12} />}
                         </div>
-                        <span className="text-2xs text-fg-subtle">{formatDate(rev.created_at)}</span>
+                        <span className="text-2xs text-fg-subtle flex items-center gap-3">
+                          {formatDate(rev.created_at)}
+                          {isLiveRes && rev.profile_id === myProfileId && (
+                            <button
+                              type="button"
+                              className="text-red-600 hover:underline"
+                              onClick={async () => {
+                                setReviewError(await deleteComment(rev.id));
+                                await reloadComments();
+                              }}
+                            >
+                              حذف
+                            </button>
+                          )}
+                        </span>
                       </div>
                       <p className="text-xs text-fg-muted leading-relaxed">{rev.body_ar}</p>
                     </div>
