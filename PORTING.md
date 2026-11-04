@@ -8,7 +8,7 @@ Prod API (`api.ratq.itqan.dev`) is never called by this work; verify against a l
 
 | Live route | Design page | Payload collection | Tier | Status |
 |---|---|---|---|---|
-| `/` | Home | Resources, Announcements | LOW | todo (trending/announcements live data) |
+| `/` | Home | Resources, Announcements | LOW | ported: announcements strip (`src/lib/payloadAnnouncements.ts`, 5 tests; CTA scheme-allowlisted; verified e2e incl. hostile `javascript:` link dropped). Hero/featured content stays on the design snapshot; live has no trending data source beyond resources |
 | `/resources` | Catalog | Resources | MED | ported (db8b63f; `src/lib/payloadResources.ts`, verified vs local Payload) |
 | `/resources/[slug]` | ResourceDetails | Resources, Comments | MED | ported: resource data + comments (`src/lib/payloadComments.ts`, 7 tests; post + delete own; ratings not in Payload so hidden in live mode; verified e2e) |
 | `/about` | About | - | LOW | ported (design copy kept) |
@@ -26,7 +26,7 @@ Prod API (`api.ratq.itqan.dev`) is never called by this work; verify against a l
 | `/dashboard/resources`, `/developer/resources(/[slug])` | PublisherResources, PublisherResourceNew | Resources | HIGH (delete) | ported (`src/lib/payloadOwnResources.ts`, 9 tests; wizard creates a DRAFT (Payload has no review step), owner list incl. drafts, delete own; verified e2e). No edit UI (design has none) |
 | `/developer/requests`, `/developer/access` | PublisherRequests | AccessRequests | HIGH | ported (inbox + approve/reject via PATCH, server enforces owner-only/terminal states; verified e2e) |
 | `/developer/comments` | ResourceDetails reviews tab | Comments | HIGH (delete) | ported (as above; no separate dashboard page) |
-| `/developer/reports` | ResourceDetails report modal; ModerationDashboard | Reports | HIGH | submit ported (`src/lib/payloadReports.ts`, 6 tests, verified e2e incl. duplicate refusal); moderation dashboard list/resolve todo |
+| `/developer/reports` | ResourceDetails report modal; ModerationDashboard | Reports | HIGH | ported (`src/lib/payloadReports.ts`, 12 tests): submit (verified e2e incl. duplicate refusal) + admin moderation list/resolve (verified e2e; design-only Suspend + demo audit log hidden in live) |
 | `/developer/notifications` | AppNotifications | Notifications | MED | ported (`src/lib/payloadNotifications.ts`, 6 tests; list, mark one / all read; AppOverview + sidebar badges now live-aware; verified e2e) |
 | `/developer`, `/developer/settings` | PublisherDashboard, AppSettings | - | MED | todo |
 | `/api/resources*` | - | Resources | MED | out of scope (frontend proxy; design calls Payload directly) |

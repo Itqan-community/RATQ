@@ -48,3 +48,80 @@ export async function submitReport(
     return 'Network error, please try again.';
   }
 }
+
+// ---- Admin moderation: list + resolve ----
+
+interface PayloadReportDoc {
+  id: number;
+  resource: number | { id: number; name?: string };
+  reporter: number | { id: number };
+  reason: string;
+  details?: string | null;
+  status: string;
+  createdAt: string;
+}
+
+const REVERSE_REASON: Record<string, Report['reason']> = {
+  inaccurate: 'inaccurate',
+  inappropriate: 'inappropriate',
+  infringing: 'copyright',
+  spam: 'abuse',
+  outdated: 'inaccurate',
+  'broken-link': 'broken',
+};
+
+const DESIGN_REASONS: Report['reason'][] = [
+  'inappropriate', 'inaccurate', 'copyright', 'misleading', 'abuse', 'broken', 'sacred_error', 'other',
+];
+
+const relId = (r: number | { id: number }) => (typeof r === 'object' ? r.id : r);
+
+export function toDesignReport(doc: PayloadReportDoc): Report {
+  // submitReport stores the original design reason as a "[reason] " prefix (the mapping to Payload is lossy).
+  const m = /^\[([a-z_]+)\] ?([\s\S]*)$/.exec(doc.details ?? '');
+  const tagged = m && (DESIGN_REASONS as string[]).includes(m[1]) ? (m[1] as Report['reason']) : null;
+  const reason = tagged ?? REVERSE_REASON[doc.reason] ?? 'other';
+  return {
+    id: `payload_report_${doc.id}`,
+    reporter_profile_id: `payload_user_${relId(doc.reporter)}`,
+    target_kind: 'resource',
+    target_id: `payload_${relId(doc.resource)}`,
+    reason,
+    details_ar: tagged ? m![2] : doc.details ?? '',
+    evidence_urls: [],
+    priority: reason === 'sacred_error' ? 'critical' : 'normal',
+    status: doc.status === 'resolved' ? 'resolved' : doc.status === 'closed' ? 'dismissed' : 'open',
+    sla_due_at: doc.createdAt,
+    created_at: doc.createdAt,
+    target_title: typeof doc.resource === 'object' ? doc.resource.name : undefined,
+  };
+}
+
+// Admin sees all reports; the server limits anyone else to their own / their resources'.
+export async function fetchReports(): Promise<Report[]> {
+  try {
+    const res = await fetch(`${payloadBase()}/reports?depth=1&limit=100&sort=-createdAt`, { credentials: 'include' });
+    if (!res.ok) return [];
+    const { docs } = (await res.json()) as { docs: PayloadReportDoc[] };
+    return docs.map(toDesignReport);
+  } catch {
+    return [];
+  }
+}
+
+// Admin-only on the server (update: isAdmin).
+export async function resolveReport(reportId: string): Promise<string | null> {
+  const n = reportId.startsWith('payload_report_') ? Number(reportId.slice('payload_report_'.length)) : NaN;
+  if (Number.isNaN(n)) return 'Only live reports can be resolved.';
+  try {
+    const res = await fetch(`${payloadBase()}/reports/${n}`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
+      body: JSON.stringify({ status: 'resolved' }),
+    });
+    return res.ok ? null : await errorMessage(res, 'Could not resolve report');
+  } catch {
+    return 'Network error, please try again.';
+  }
+}

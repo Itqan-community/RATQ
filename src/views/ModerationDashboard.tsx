@@ -1,5 +1,5 @@
 // src/views/ModerationDashboard.tsx
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
@@ -7,6 +7,8 @@ import { Badge } from '@/components/ui/Badge';
 import { Alert } from '@/components/ui/Alert';
 import { DEMO_REPORTS, DEMO_AUDIT_LOGS } from '@/lib/mockData';
 import { Report } from '@/types';
+import { isLive } from '@/lib/payloadAuth';
+import { fetchReports, resolveReport } from '@/lib/payloadReports';
 import {
   ShieldAlert,
   CheckCircle2,
@@ -18,11 +20,24 @@ export const ModerationDashboardPage: React.FC = () => {
   const { i18n } = useTranslation();
   const isAr = i18n.language === 'ar';
 
-  const [reports, setReports] = useState<Report[]>(DEMO_REPORTS);
+  const live = isLive();
+  const [reports, setReports] = useState<Report[]>(live ? [] : DEMO_REPORTS);
   const [filter, setFilter] = useState<'all' | 'open' | 'resolved'>('all');
   const [actionFeedback, setActionFeedback] = useState<string | null>(null);
+  const [actionError, setActionError] = useState<string | null>(null);
 
-  const handleResolve = (id: string) => {
+  useEffect(() => {
+    if (live) void fetchReports().then(setReports);
+  }, [live]);
+
+  const handleResolve = async (id: string) => {
+    if (live) {
+      const err = await resolveReport(id); // admin-only on the server
+      setActionError(err);
+      if (err) return;
+      setReports(await fetchReports());
+      return;
+    }
     setReports((prev) =>
       prev.map((r) => (r.id === id ? { ...r, status: 'resolved' } : r))
     );
@@ -145,6 +160,7 @@ export const ModerationDashboardPage: React.FC = () => {
                     >
                       {isAr ? 'إغلاق البلاغ' : 'Resolve'}
                     </Button>
+                    {!live && (
                     <Button
                       size="sm"
                       variant="ghost"
@@ -153,6 +169,7 @@ export const ModerationDashboardPage: React.FC = () => {
                     >
                       {isAr ? 'تعليق المورد' : 'Suspend'}
                     </Button>
+                    )}
                   </div>
                 )}
               </div>
@@ -161,7 +178,10 @@ export const ModerationDashboardPage: React.FC = () => {
         ))}
       </div>
 
-      {/* Recent Audit Trail Preview */}
+      {actionError && <p role="alert" className="text-xs text-red-600">{actionError}</p>}
+
+      {/* Recent Audit Trail Preview (demo data only: there is no audit log in Payload) */}
+      {!live && (
       <Card className="p-6">
         <h2 className="text-base font-bold text-fg mb-4 flex items-center gap-2">
           <Shield className="w-4 h-4 text-ratq-600" />
@@ -183,6 +203,7 @@ export const ModerationDashboardPage: React.FC = () => {
           ))}
         </div>
       </Card>
+      )}
     </div>
   );
 };

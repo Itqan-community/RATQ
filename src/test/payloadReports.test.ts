@@ -61,3 +61,68 @@ describe('submitReport', () => {
     expect(await submitReport('payload_7', 'broken', 'x', '')).toBeTruthy();
   });
 });
+
+import { toDesignReport, fetchReports, resolveReport } from '@/lib/payloadReports';
+
+const reportDoc = (over = {}) => ({
+  id: 4, resource: { id: 7, name: 'Tafsir API' }, reporter: 3, reason: 'inaccurate', details: '[sacred_error] wrong ayah',
+  status: 'open', createdAt: '2026-01-01T00:00:00.000Z', ...over,
+});
+
+describe('toDesignReport', () => {
+  it('maps ids/status and recovers the original design reason + priority from the details tag', () => {
+    expect(toDesignReport(reportDoc())).toMatchObject({
+      id: 'payload_report_4', target_kind: 'resource', target_id: 'payload_7', target_title: 'Tafsir API',
+      reason: 'sacred_error', details_ar: 'wrong ayah', priority: 'critical', status: 'open',
+    });
+  });
+
+  it('falls back to the reverse reason map for untagged details and maps closed -> dismissed', () => {
+    const r = toDesignReport(reportDoc({ reason: 'infringing', details: 'plain text', status: 'closed' }));
+    expect(r.reason).toBe('copyright');
+    expect(r.details_ar).toBe('plain text');
+    expect(r.status).toBe('dismissed');
+    expect(r.priority).toBe('normal');
+  });
+
+  it('accepts a bare resource id and missing details', () => {
+    const r = toDesignReport(reportDoc({ resource: 7, details: undefined }));
+    expect(r.target_id).toBe('payload_7');
+    expect(r.details_ar).toBe('');
+  });
+});
+
+describe('fetchReports / resolveReport', () => {
+  it('lists newest first with credentials and maps docs', async () => {
+    const f = vi.fn(() => ok({ docs: [reportDoc()] }));
+    vi.stubGlobal('fetch', f);
+    expect(await fetchReports()).toHaveLength(1);
+    const [url, init] = f.mock.calls[0] as unknown as [string, RequestInit];
+    expect(url).toContain(`${API}/reports?`);
+    expect(url).toContain('sort=-createdAt');
+    expect(init.credentials).toBe('include');
+  });
+
+  it('returns [] on a refused or failed request', async () => {
+    vi.stubGlobal('fetch', vi.fn(() => fail(403, 'no')));
+    expect(await fetchReports()).toEqual([]);
+    vi.stubGlobal('fetch', vi.fn(() => Promise.reject(new TypeError('network'))));
+    expect(await fetchReports()).toEqual([]);
+  });
+
+  it('PATCHes only { status: "resolved" } and surfaces non-admin refusal', async () => {
+    const f = vi.fn(() => ok());
+    vi.stubGlobal('fetch', f);
+    expect(await resolveReport('payload_report_4')).toBeNull();
+    const [url, init] = f.mock.calls[0] as unknown as [string, RequestInit];
+    expect(url).toBe(`${API}/reports/4`);
+    expect(init.method).toBe('PATCH');
+    expect(JSON.parse(init.body as string)).toEqual({ status: 'resolved' });
+    vi.stubGlobal('fetch', vi.fn(() => fail(403, 'You are not allowed to perform this action.')));
+    expect(await resolveReport('payload_report_4')).toBe('You are not allowed to perform this action.');
+    const g = vi.fn();
+    vi.stubGlobal('fetch', g);
+    expect(await resolveReport('rep_001')).toBeTruthy();
+    expect(g).not.toHaveBeenCalled();
+  });
+});
