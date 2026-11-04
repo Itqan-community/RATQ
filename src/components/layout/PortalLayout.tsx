@@ -4,6 +4,7 @@ import { Navigate } from 'react-router-dom';
 import { SidebarNav, SidebarNavItem } from './SidebarNav';
 import { useAuthStore } from '@/store/useAuthStore';
 import { portalAccess } from '@/lib/portalAccess';
+import { isLive } from '@/lib/payloadAuth';
 import {
   LayoutDashboard,
   Key,
@@ -186,7 +187,8 @@ export const PortalLayout: React.FC<PortalLayoutProps> = ({ children, portal }) 
       <div className="flex flex-col lg:flex-row gap-8 items-start">
         <SidebarNav
           title={isAr ? currentConfig.title_ar : currentConfig.title_en}
-          items={currentConfig.items}
+          // Badge counts are static demo numbers; don't show them next to real data.
+          items={isLive() ? currentConfig.items.map((i) => ({ ...i, badge: undefined })) : currentConfig.items}
         />
         <main className="flex-1 min-w-0 w-full">{children}</main>
       </div>

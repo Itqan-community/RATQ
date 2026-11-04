@@ -300,6 +300,11 @@ class MockRepository {
     return item;
   }
 
+  // Replace hydrated live notifications; demo ones are kept.
+  setLiveNotifications(live: NotificationItem[]) {
+    this.notifications = [...live, ...this.notifications.filter((n) => !n.id.startsWith('payload_notif_'))];
+  }
+
   // Notifications
   getNotifications() {
     return [...this.notifications];

@@ -27,7 +27,7 @@ Prod API (`api.ratq.itqan.dev`) is never called by this work; verify against a l
 | `/developer/requests`, `/developer/access` | PublisherRequests | AccessRequests | HIGH | ported (inbox + approve/reject via PATCH, server enforces owner-only/terminal states; verified e2e) |
 | `/developer/comments` | - | Comments | HIGH (delete) | missing |
 | `/developer/reports` | ModerationDashboard | Reports | HIGH | todo |
-| `/developer/notifications` | AppNotifications | Notifications | MED | todo |
+| `/developer/notifications` | AppNotifications | Notifications | MED | ported (`src/lib/payloadNotifications.ts`, 6 tests; list, mark one / all read; AppOverview + sidebar badges now live-aware; verified e2e) |
 | `/developer`, `/developer/settings` | PublisherDashboard, AppSettings | - | MED | todo |
 | `/api/resources*` | - | Resources | MED | out of scope (frontend proxy; design calls Payload directly) |
 

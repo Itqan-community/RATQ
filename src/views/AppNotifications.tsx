@@ -6,22 +6,40 @@ import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { DEMO_NOTIFICATIONS } from '@/lib/mockData';
 import { NotificationItem } from '@/types';
+import { mockRepo } from '@/lib/supabase';
+import { isLive } from '@/lib/payloadAuth';
+import { markAllNotificationsRead, markNotificationRead } from '@/lib/payloadNotifications';
 import { Bell, CheckCheck, ShieldCheck, Sparkles, AlertTriangle, ArrowUpRight } from 'lucide-react';
 
 export const AppNotificationsPage: React.FC = () => {
   const { i18n } = useTranslation();
   const isAr = i18n.language === 'ar';
 
-  const [notifications, setNotifications] = useState<NotificationItem[]>(DEMO_NOTIFICATIONS);
+  const live = isLive();
+  // Live: only real Payload notifications (server already limits them to the signed-in recipient).
+  const [notifications, setNotifications] = useState<NotificationItem[]>(() =>
+    live ? mockRepo.getNotifications().filter((n) => n.id.startsWith('payload_notif_')) : DEMO_NOTIFICATIONS
+  );
   const [filterUnread, setFilterUnread] = useState(false);
+  const [notifError, setNotifError] = useState<string | null>(null);
 
-  const markAllAsRead = () => {
+  const markAllAsRead = async () => {
+    if (live) {
+      const err = await markAllNotificationsRead();
+      setNotifError(err);
+      if (err) return;
+    }
     setNotifications((prev) =>
       prev.map((n) => ({ ...n, read_at: n.read_at || new Date().toISOString() }))
     );
   };
 
-  const markItemAsRead = (id: string) => {
+  const markItemAsRead = async (id: string) => {
+    if (live) {
+      const err = await markNotificationRead(id);
+      setNotifError(err);
+      if (err) return;
+    }
     setNotifications((prev) =>
       prev.map((n) => (n.id === id ? { ...n, read_at: new Date().toISOString() } : n))
     );
@@ -60,6 +78,8 @@ export const AppNotificationsPage: React.FC = () => {
           </Button>
         </div>
       </div>
+
+      {notifError && <p role="alert" className="text-xs text-red-600">{notifError}</p>}
 
       {/* Notifications List */}
       <div className="space-y-3">

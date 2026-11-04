@@ -7,6 +7,9 @@ import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { Badge } from '@/components/ui/Badge';
 import { DEMO_API_KEYS, DEMO_ACCESS_REQUESTS, DEMO_NOTIFICATIONS } from '@/lib/mockData';
+import { mockRepo } from '@/lib/supabase';
+import { isLive } from '@/lib/payloadAuth';
+import { requestsFor } from '@/lib/payloadRequests';
 import { Key, Send, Bell, ArrowUpRight, ShieldCheck, Zap, Layers } from 'lucide-react';
 
 export const AppOverviewPage: React.FC = () => {
@@ -14,9 +17,16 @@ export const AppOverviewPage: React.FC = () => {
   const isAr = i18n.language === 'ar';
   const { profile } = useAuthStore();
 
-  const activeKeysCount = DEMO_API_KEYS.filter((k) => k.status === 'active').length;
-  const pendingRequestsCount = DEMO_ACCESS_REQUESTS.filter((r) => r.status === 'under_review').length;
-  const approvedRequestsCount = DEMO_ACCESS_REQUESTS.filter((r) => r.status === 'approved').length;
+  // Live: real Payload data only (requests = mine); mock mode keeps the demo constants.
+  const live = isLive();
+  const keys = live ? mockRepo.getKeys().filter((k) => k.id.startsWith('payload_key_')) : DEMO_API_KEYS;
+  const requests = live ? requestsFor(mockRepo.getRequests(), 'mine', profile.id) : DEMO_ACCESS_REQUESTS;
+  const notifications = live
+    ? mockRepo.getNotifications().filter((n) => n.id.startsWith('payload_notif_')).slice(0, 3)
+    : DEMO_NOTIFICATIONS;
+  const activeKeysCount = keys.filter((k) => k.status === 'active').length;
+  const pendingRequestsCount = requests.filter((r) => r.status === 'under_review').length;
+  const approvedRequestsCount = requests.filter((r) => r.status === 'approved').length;
 
   return (
     <div className="space-y-8">
@@ -171,7 +181,7 @@ export const AppOverviewPage: React.FC = () => {
           </div>
 
           <div className="space-y-3">
-            {DEMO_NOTIFICATIONS.map((notif) => (
+            {notifications.map((notif) => (
               <Card key={notif.id} className="p-4">
                 <div className="flex items-start gap-3">
                   <div className="w-8 h-8 rounded-lg bg-ratq-500/10 text-ratq-600 flex items-center justify-center shrink-0 mt-0.5">
