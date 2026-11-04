@@ -30,6 +30,8 @@ import {
 } from 'lucide-react';
 import { CopyButton } from '@/components/ui/CopyButton';
 import { DirectionalIcon } from '@/components/ui/DirectionalIcon';
+import { isLive } from '@/lib/payloadAuth';
+import { createResource } from '@/lib/payloadOwnResources';
 
 export const PublisherResourceNewPage: React.FC = () => {
   const { i18n } = useTranslation();
@@ -195,8 +197,16 @@ export const PublisherResourceNewPage: React.FC = () => {
     }
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     setSubmitting(true);
+    if (isLive()) {
+      // Live: server is the authority; creates a draft owned by the signed-in user.
+      const err = await createResource(formData);
+      setSubmitting(false);
+      if (err) setError(err);
+      else setIsSuccess(true);
+      return;
+    }
     setTimeout(() => {
       setSubmitting(false);
       setIsSuccess(true);

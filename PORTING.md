@@ -19,11 +19,11 @@ Prod API (`api.ratq.itqan.dev`) is never called by this work; verify against a l
 | `/contributors` | - | - (static data) | LOW | missing |
 | `/login`, `/register`, `/forgot-password` | SignIn, SignUp, ForgotPassword | Users | HIGH | ported (cookie session, `src/lib/payloadAuth.ts`, 10 tests, verified e2e vs local Payload; demo role switcher hidden in live mode) |
 | `/reset-password`, `/verify-email`, `/oauth/callback`, `/logout` | - | Users | HIGH | missing |
-| `/dashboard` | AppOverview | - | MED | todo |
+| `/dashboard` | AppOverview | - | MED | ported (live-aware counts/notifications; see notifications row) |
 | `/dashboard/requests` | AppRequests | AccessRequests | HIGH | ported (`src/lib/payloadRequests.ts`, 12 tests; submit via dialog, list scoped to mine; verified e2e vs local Payload) |
 | `/dashboard/api-keys` | AppKeys | APIKeys | HIGH | ported (`src/lib/payloadKeys.ts`, 11 tests; server-generated key shown once, revoke = DELETE, rotate = create-then-delete; verified e2e incl. 403 path). Known gaps: design copy still says rotate "keeps old key 24h" and "SHA-256 + Pepper" (Payload: immediate delete, plain SHA-256); sidebar badge counts are static mock |
 | `/dashboard/settings` | AppSettings | Users | HIGH | todo |
-| `/dashboard/resources`, `/developer/resources(/[slug])` | PublisherResources, PublisherResourceNew | Resources | HIGH (delete) | todo |
+| `/dashboard/resources`, `/developer/resources(/[slug])` | PublisherResources, PublisherResourceNew | Resources | HIGH (delete) | ported (`src/lib/payloadOwnResources.ts`, 9 tests; wizard creates a DRAFT (Payload has no review step), owner list incl. drafts, delete own; verified e2e). No edit UI (design has none) |
 | `/developer/requests`, `/developer/access` | PublisherRequests | AccessRequests | HIGH | ported (inbox + approve/reject via PATCH, server enforces owner-only/terminal states; verified e2e) |
 | `/developer/comments` | ResourceDetails reviews tab | Comments | HIGH (delete) | ported (as above; no separate dashboard page) |
 | `/developer/reports` | ResourceDetails report modal; ModerationDashboard | Reports | HIGH | submit ported (`src/lib/payloadReports.ts`, 6 tests, verified e2e incl. duplicate refusal); moderation dashboard list/resolve todo |

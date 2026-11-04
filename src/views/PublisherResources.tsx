@@ -1,5 +1,5 @@
 // src/views/PublisherResources.tsx
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { Card } from '@/components/ui/Card';
@@ -10,16 +10,35 @@ import { ItqanBadge } from '@/components/ui/ItqanBadge';
 import { AccessBadge } from '@/components/ui/AccessBadge';
 import { LicenseBadge } from '@/components/ui/LicenseBadge';
 import { DEMO_RESOURCES, DEMO_PUBLISHERS } from '@/lib/mockData';
-import { Plus, Search, Eye } from 'lucide-react';
+import { Plus, Search, Eye, Trash2 } from 'lucide-react';
+import { Resource } from '@/types';
+import { useAuthStore } from '@/store/useAuthStore';
+import { isLive } from '@/lib/payloadAuth';
+import { deleteResource, fetchMyResources } from '@/lib/payloadOwnResources';
 
 export const PublisherResourcesPage: React.FC = () => {
   const { i18n } = useTranslation();
   const isAr = i18n.language === 'ar';
 
   const publisher = DEMO_PUBLISHERS[0];
-  const [resources] = useState(
-    DEMO_RESOURCES.filter((r) => r.publisher_id === publisher.id)
+  const live = isLive();
+  const myId = useAuthStore((s) => s.profile.id);
+  // Live: the signed-in owner's real resources (incl. drafts); mock mode keeps the demo publisher's list.
+  const [resources, setResources] = useState<Resource[]>(
+    live ? [] : DEMO_RESOURCES.filter((r) => r.publisher_id === publisher.id)
   );
+  const [listError, setListError] = useState<string | null>(null);
+  const reload = () => fetchMyResources(myId).then(setResources);
+  useEffect(() => {
+    if (live) void reload();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [live, myId]);
+
+  const handleDelete = async (r: Resource) => {
+    if (!window.confirm(isAr ? `حذف "${r.title_ar}" نهائياً؟` : `Permanently delete "${r.title_ar}"?`)) return;
+    setListError(await deleteResource(r.id));
+    await reload();
+  };
   const [search, setSearch] = useState('');
   const [typeFilter, setTypeFilter] = useState('all');
 
@@ -78,6 +97,8 @@ export const PublisherResourcesPage: React.FC = () => {
         </div>
       </Card>
 
+      {listError && <p role="alert" className="text-xs text-red-600">{listError}</p>}
+
       {/* Table */}
       <Card className="overflow-hidden">
         <div className="overflow-x-auto">
@@ -119,11 +140,25 @@ export const PublisherResourcesPage: React.FC = () => {
                   </td>
                   <td className="py-4 px-4 text-end">
                     <div className="flex items-center justify-end gap-1.5">
+                      {live && r.status === 'draft' && (
+                        <span className="text-2xs text-amber-600 font-semibold">{isAr ? 'مسودة' : 'Draft'}</span>
+                      )}
                       <Link to={`/resources/${r.slug}`} title={isAr ? 'عرض' : 'View'}>
                         <Button variant="ghost" size="sm" className="p-1.5 h-8 w-8">
                           <Eye className="w-4 h-4" />
                         </Button>
                       </Link>
+                      {live && (
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="p-1.5 h-8 w-8 text-red-600"
+                          title={isAr ? 'حذف' : 'Delete'}
+                          onClick={() => handleDelete(r)}
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </Button>
+                      )}
                     </div>
                   </td>
                 </tr>
