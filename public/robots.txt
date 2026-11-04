@@ -1,0 +1,21 @@
+User-agent: *
+Disallow: /app/
+Disallow: /publisher/
+Disallow: /review/
+Disallow: /moderation/
+Disallow: /admin/
+Disallow: /search
+Disallow: /auth/
+Disallow: /api/
+
+Allow: /
+Allow: /resources
+Allow: /categories
+Allow: /publishers
+Allow: /standards
+Allow: /licenses
+Allow: /about
+Allow: /roadmap
+Allow: /faq
+
+Sitemap: https://ratq.org/sitemap.xml

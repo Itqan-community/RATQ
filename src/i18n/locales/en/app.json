@@ -1,0 +1,59 @@
+{
+  "overview": {
+    "title": "Developer Overview",
+    "active_requests": "Active Access Requests",
+    "active_keys": "Active API Keys",
+    "saved_resources": "Saved Resources",
+    "recent_activity": "Recent Activity"
+  },
+  "requests": {
+    "title": "Access Requests",
+    "subtitle": "Track and manage your access permissions for restricted datasets and APIs.",
+    "new_request": "Submit New Request",
+    "table": {
+      "resource": "Resource",
+      "status": "Status",
+      "submitted_at": "Submitted At",
+      "sla_due": "Estimated SLA",
+      "actions": "Actions"
+    },
+    "statuses": {
+      "draft": "Draft",
+      "submitted": "Submitted",
+      "under_review": "Under Review",
+      "needs_info": "Needs Information",
+      "approved": "Approved",
+      "rejected": "Rejected",
+      "cancelled": "Cancelled",
+      "expired": "Expired",
+      "suspended": "Suspended"
+    },
+    "form": {
+      "purpose": "Purpose of Use & Project Description",
+      "purpose_help": "Explain your application, beneficiary entity, and expected usage scale.",
+      "intended_use": "Entity & Intended Use",
+      "requested_days": "Duration Requested (Days)",
+      "agree_terms": "I commit to respecting the stated license conditions and ethical usage guidelines."
+    }
+  },
+  "keys": {
+    "title": "API Keys Management",
+    "subtitle": "Manage secure API keys for approved restricted resources.",
+    "create_button": "Issue New Key",
+    "table": {
+      "name": "Key Name",
+      "resource": "Resource",
+      "prefix": "Prefix",
+      "scopes": "Granted Scopes",
+      "expires_at": "Expires At",
+      "last_used": "Last Used",
+      "status": "Status",
+      "actions": "Actions"
+    },
+    "reveal_dialog": {
+      "title": "API Key Created Successfully",
+      "warning": "Copy your key now and store it in a secure secrets manager. It will never be shown again.",
+      "button_copied": "Key Copied Safely"
+    }
+  }
+}

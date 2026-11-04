@@ -1,0 +1,22 @@
+{
+  "title": "Moderation & Reports Queue",
+  "subtitle": "Process community reports, resolve violations, and preserve ecosystem trust.",
+  "reports": {
+    "title": "Open Reports",
+    "table": {
+      "id": "Report ID",
+      "target": "Target",
+      "reason": "Report Reason",
+      "priority": "Priority",
+      "sla": "SLA Deadline",
+      "status": "Status",
+      "actions": "Actions"
+    },
+    "actions": {
+      "dismiss": "Dismiss Report",
+      "warn": "Warn Publisher",
+      "temp_hide": "Temporary Suspension (72h)",
+      "permanent_ban": "Permanent Ban"
+    }
+  }
+}

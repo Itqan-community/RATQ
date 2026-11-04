@@ -1,0 +1,32 @@
+{
+  "title": "Platform Administration Console",
+  "subtitle": "Manage users, access tiers, feature toggles, and view immutable audit trails.",
+  "users": {
+    "title": "User & Role Management",
+    "table": {
+      "name": "Name",
+      "handle": "Handle",
+      "role": "Current Role",
+      "status": "Status",
+      "actions": "Actions"
+    },
+    "change_role": "Change Role",
+    "role_reason": "Reason for Role Assignment (Mandatory)"
+  },
+  "audit": {
+    "title": "Immutable Audit Log (Append-Only)",
+    "subtitle": "Permanent cryptographic log of sensitive platform decisions and state transitions.",
+    "table": {
+      "timestamp": "Timestamp",
+      "actor": "Actor",
+      "role": "Role",
+      "action": "Action",
+      "target": "Target",
+      "reason": "Documented Reason"
+    }
+  },
+  "flags": {
+    "title": "Feature Flags",
+    "subtitle": "Dynamically enable or disable platform capabilities."
+  }
+}

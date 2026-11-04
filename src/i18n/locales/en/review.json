@@ -1,0 +1,27 @@
+{
+  "queue": {
+    "title": "Itqan Review Queue",
+    "subtitle": "Audit and verify resources against technical and scholarly criteria.",
+    "table": {
+      "resource": "Resource",
+      "publisher": "Publisher",
+      "target_level": "Target Level",
+      "priority_score": "Priority Score",
+      "wait_time": "Wait Time",
+      "actions": "Actions"
+    },
+    "action_take": "Assign & Review"
+  },
+  "checklist": {
+    "title": "Weighted Itqan Evaluation Rubric",
+    "section_tech": "Technical & Security Criteria (35%)",
+    "section_content": "Metadata & Documentation Criteria (25%)",
+    "section_sacred": "Scholarly & Sacred Integrity (30% — Mandatory)",
+    "section_legal": "Licensing & Legal Compliance (10%)",
+    "evidence_note": "Evidence & Audit Notes",
+    "decision_title": "Certification Decision",
+    "award_level": "Award Specified Badge",
+    "request_changes": "Request Revisions",
+    "reject_with_reasons": "Reject Certification with Notice"
+  }
+}

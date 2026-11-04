@@ -1,0 +1,58 @@
+{
+  "dashboard": {
+    "title": "Publisher Portal",
+    "subtitle": "Manage your open-source software, review developer requests, and monitor analytics.",
+    "stats": {
+      "total_resources": "Total Resources",
+      "pending_requests": "Pending Decisions",
+      "monthly_downloads": "Monthly Downloads",
+      "average_sla": "Average Decision Time"
+    }
+  },
+  "resources": {
+    "title": "Publisher Resources",
+    "add_button": "Add New Resource",
+    "table": {
+      "title": "Resource Title",
+      "type": "Type",
+      "status": "Status",
+      "itqan": "Itqan Badge",
+      "downloads": "Downloads",
+      "actions": "Actions"
+    }
+  },
+  "wizard": {
+    "title": "New Resource Wizard",
+    "step_basics": "Basic Information",
+    "step_links": "Links & Source",
+    "step_license": "License & Access",
+    "step_version": "Initial Version",
+    "step_sacred": "Sacred Content Declaration",
+    "step_review": "Review & Submit",
+    "fields": {
+      "title_ar": "Arabic Title",
+      "title_en": "English Title (Optional)",
+      "slug": "Permanent Slug",
+      "summary_ar": "Short Summary",
+      "description_ar": "Full Markdown Description",
+      "resource_type": "Resource Type",
+      "license": "Selected License",
+      "access_level": "Access Level",
+      "version": "Initial Version Tag",
+      "changelog": "Release Notes",
+      "contains_quran": "Does this resource include sacred Quranic texts or references?",
+      "quran_authority": "Source Authority",
+      "quran_url": "Documentation URL"
+    }
+  },
+  "requests": {
+    "title": "Developer Access Requests",
+    "decision_dialog": {
+      "title": "Decision on Request",
+      "approve_action": "Approve & Grant Key",
+      "reject_action": "Reject with Stated Reason",
+      "info_action": "Request Clarification",
+      "reason_placeholder": "Write decision rationale or special conditions..."
+    }
+  }
+}

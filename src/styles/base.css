@@ -1,0 +1,230 @@
+@import './tokens.css';
+@import './fonts.css';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * {
+    border-color: var(--border-default);
+  }
+
+  body {
+    background-color: var(--bg-canvas);
+    color: var(--fg-default);
+    font-family: var(--font-ui);
+    line-height: var(--lh-normal);
+  }
+
+  /* Quranic sacred text styling */
+  .font-quran {
+    font-family: var(--font-quran);
+    line-height: var(--lh-quran);
+  }
+
+  /* Prevent synthetic italics in Arabic text */
+  [lang="ar"], [dir="rtl"] {
+    font-style: normal !important;
+  }
+
+  /* Code snippet block LTR enforcement */
+  pre, code, kbd, samp {
+    font-family: var(--font-mono);
+    direction: ltr;
+    unicode-bidi: isolate;
+  }
+}
+
+/* Custom scrollbars */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: var(--bg-subtle);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--border-strong);
+  border-radius: var(--radius-full);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--ratq-primary-600);
+}
+
+/* Hero section custom gradient matching brand imagery & dynamic palettes */
+.hero-gradient-bg {
+  background: var(--hero-gradient);
+  transition: background var(--dur-base) var(--ease-standard);
+}
+
+
+/* Hero section title typography */
+.hero-title-typography {
+  font-family: var(--font-ui) !important;
+  font-feature-settings: "kern", "liga", "ss01";
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Concentric rings & orbit animations */
+@keyframes spin-slow {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes spin-reverse-slow {
+  from {
+    transform: rotate(360deg);
+  }
+  to {
+    transform: rotate(0deg);
+  }
+}
+
+@keyframes spin-slow-alt {
+  from {
+    transform: rotate(45deg);
+  }
+  to {
+    transform: rotate(405deg);
+  }
+}
+
+@keyframes spin-reverse-slow-alt {
+  from {
+    transform: rotate(180deg);
+  }
+  to {
+    transform: rotate(-180deg);
+  }
+}
+
+@keyframes pulse-subtle {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 0.85;
+  }
+  50% {
+    transform: scale(1.03);
+    opacity: 1;
+  }
+}
+
+.animate-spin-slow {
+  animation: spin-slow 35s linear infinite;
+}
+
+.animate-spin-reverse-slow {
+  animation: spin-reverse-slow 48s linear infinite;
+}
+
+.animate-spin-slow-alt {
+  animation: spin-slow-alt 60s linear infinite;
+}
+
+.animate-spin-reverse-slow-alt {
+  animation: spin-reverse-slow-alt 75s linear infinite;
+}
+
+.animate-pulse-subtle {
+  animation: pulse-subtle 8s ease-in-out infinite;
+}
+
+/* Subtle gentle floating animations for hero floating cards */
+@keyframes float-gentle-1 {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-6px);
+  }
+}
+
+@keyframes float-gentle-2 {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-5px);
+  }
+}
+
+@keyframes float-gentle-3 {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-6px);
+  }
+}
+
+.animate-float-1 {
+  animation: float-gentle-1 5s ease-in-out infinite;
+}
+
+.animate-float-2 {
+  animation: float-gentle-2 5.8s ease-in-out 1.2s infinite;
+}
+
+.animate-float-3 {
+  animation: float-gentle-3 5.2s ease-in-out 2.4s infinite;
+}
+
+.animate-float-4 {
+  animation: float-gentle-1 4.8s ease-in-out 0.6s infinite;
+}
+
+.animate-float-5 {
+  animation: float-gentle-2 6s ease-in-out 1.8s infinite;
+}
+
+/* Drawer animations */
+@keyframes slide-in-from-right {
+  from {
+    transform: translateX(100%);
+    opacity: 0.8;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes modal-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slide-in-from-left {
+  from {
+    transform: translateX(-100%);
+    opacity: 0.8;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+.animate-slide-in-right {
+  animation: slide-in-from-right 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.animate-slide-in-left {
+  animation: slide-in-from-left 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.animate-modal-fade-in {
+  animation: modal-fade-in 0.2s ease-out forwards;
+}
+

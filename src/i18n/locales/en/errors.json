@@ -1,0 +1,11 @@
+{
+  "ERR_GENERIC": "An unexpected error occurred. Please try again or contact support with reference: {{requestId}}",
+  "ERR_NETWORK": "Unable to connect to the network. Please check your connection and retry.",
+  "ERR_403": "You do not have permission to view this resource or perform this action.",
+  "ERR_404": "The requested page or resource could not be found.",
+  "ERR_409": "Record state conflict. Please refresh the page to view the latest data.",
+  "ERR_422": "Validation failed. Please verify the indicated fields.",
+  "ERR_429": "Rate limit exceeded. Please wait a moment before trying again.",
+  "ERR_500": "Temporary server error. Our engineering team has been notified.",
+  "ERR_MAINTENANCE": "The platform is undergoing scheduled maintenance and will return shortly."
+}
