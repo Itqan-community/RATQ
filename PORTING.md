@@ -1,0 +1,34 @@
+# Porting: live RATQ (main) -> new design
+
+Source of truth: live routes in `ratq/src/app` + Payload collections in `ratq/payload-backend/src/collections`.
+Design routes: `src/router.tsx`. Status: `ported` | `new-only` (mocked, see MOCKED.md) | `missing` (live only, to port) | `todo` (port queued).
+
+Data wiring rule: every ported feature reads `NEXT_PUBLIC_PAYLOAD_API_URL`. Unset = in-memory mock (what beta runs).
+Prod API (`api.ratq.itqan.dev`) is never called by this work; verify against a local Payload (`payload-backend/docker-compose.yml`, port 5433).
+
+| Live route | Design page | Payload collection | Tier | Status |
+|---|---|---|---|---|
+| `/` | Home | Resources, Announcements | LOW | todo (trending/announcements live data) |
+| `/resources` | Catalog | Resources | MED | todo |
+| `/resources/[slug]` | ResourceDetails | Resources, Comments | MED | todo |
+| `/about` | About | - | LOW | ported (design copy kept) |
+| `/contact` | Contact | - | LOW | ported |
+| `/privacy` | LegalPage `/legal/:slug` | - | LOW | ported |
+| `/standards` | Standards | - | LOW | ported |
+| `/docs` | - | - | LOW | missing |
+| `/contributors` | - | - (static data) | LOW | missing |
+| `/login`, `/register`, `/forgot-password` | SignIn, SignUp, ForgotPassword | Users | HIGH | todo |
+| `/reset-password`, `/verify-email`, `/oauth/callback`, `/logout` | - | Users | HIGH | missing |
+| `/dashboard` | AppOverview | - | MED | todo |
+| `/dashboard/requests` | AppRequests | AccessRequests | HIGH | todo |
+| `/dashboard/api-keys` | AppKeys | APIKeys | HIGH | todo |
+| `/dashboard/settings` | AppSettings | Users | HIGH | todo |
+| `/dashboard/resources`, `/developer/resources(/[slug])` | PublisherResources, PublisherResourceNew | Resources | HIGH (delete) | todo |
+| `/developer/requests`, `/developer/access` | PublisherRequests | AccessRequests | HIGH | todo |
+| `/developer/comments` | - | Comments | HIGH (delete) | missing |
+| `/developer/reports` | ModerationDashboard | Reports | HIGH | todo |
+| `/developer/notifications` | AppNotifications | Notifications | MED | todo |
+| `/developer`, `/developer/settings` | PublisherDashboard, AppSettings | - | MED | todo |
+| `/api/resources*` | - | Resources | MED | out of scope (frontend proxy; design calls Payload directly) |
+
+Design-only pages: see MOCKED.md.

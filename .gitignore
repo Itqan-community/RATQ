@@ -40,3 +40,4 @@ dist-ssr
 .wrangler
 next-env.d.ts
 tsconfig.tsbuildinfo
+.claude/memory.db
