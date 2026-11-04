@@ -28,7 +28,7 @@ Prod API (`api.ratq.itqan.dev`) is never called by this work; verify against a l
 | `/developer/comments` | ResourceDetails reviews tab | Comments | HIGH (delete) | ported (as above; no separate dashboard page) |
 | `/developer/reports` | ResourceDetails report modal; ModerationDashboard | Reports | HIGH | ported (`src/lib/payloadReports.ts`, 12 tests): submit (verified e2e incl. duplicate refusal) + admin moderation list/resolve (verified e2e; design-only Suspend + demo audit log hidden in live) |
 | `/developer/notifications` | AppNotifications | Notifications | MED | ported (`src/lib/payloadNotifications.ts`, 6 tests; list, mark one / all read; AppOverview + sidebar badges now live-aware; verified e2e) |
-| `/developer`, `/developer/settings` | PublisherDashboard, AppSettings | - | MED | todo |
+| `/developer`, `/developer/settings` | PublisherDashboard, AppSettings | - | MED | ported (dashboard shows the user's own resources + inbound requests, no borrowed "verified publisher" identity, rating stat blanked; settings: see above; verified in browser) |
 | `/api/resources*` | - | Resources | MED | out of scope (frontend proxy; design calls Payload directly) |
 
 Route guards (live mode only): `src/lib/portalAccess.ts` in `PortalLayout`: guest -> `/auth/sign-in`; non-admin on admin/review/moderation -> `/403`; app + publisher portals need login only (mirrors live `/developer`, ownership is server-side).

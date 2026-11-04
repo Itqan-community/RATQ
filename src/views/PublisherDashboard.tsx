@@ -1,5 +1,5 @@
 // src/views/PublisherDashboard.tsx
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { Card } from '@/components/ui/Card';
@@ -7,6 +7,12 @@ import { Button } from '@/components/ui/Button';
 import { Badge } from '@/components/ui/Badge';
 import { ItqanBadge } from '@/components/ui/ItqanBadge';
 import { DEMO_PUBLISHERS, DEMO_RESOURCES, DEMO_ACCESS_REQUESTS } from '@/lib/mockData';
+import { Publisher, Resource } from '@/types';
+import { mockRepo } from '@/lib/supabase';
+import { useAuthStore } from '@/store/useAuthStore';
+import { isLive } from '@/lib/payloadAuth';
+import { fetchMyResources } from '@/lib/payloadOwnResources';
+import { requestsFor } from '@/lib/payloadRequests';
 import {
   Package,
   Download,
@@ -21,9 +27,22 @@ export const PublisherDashboardPage: React.FC = () => {
   const { i18n } = useTranslation();
   const isAr = i18n.language === 'ar';
 
-  const publisher = DEMO_PUBLISHERS[0];
-  const publishedResources = DEMO_RESOURCES.filter((r) => r.publisher_id === publisher.id);
-  const pendingRequests = DEMO_ACCESS_REQUESTS.filter((r) => r.status === 'under_review');
+  const live = isLive();
+  const profile = useAuthStore((s) => s.profile);
+  const [liveResources, setLiveResources] = useState<Resource[]>([]);
+  useEffect(() => {
+    if (live) void fetchMyResources(profile.id).then(setLiveResources);
+  }, [live, profile.id]);
+
+  // Live: the signed-in user's own resources + inbound requests, and no borrowed "verified publisher" identity.
+  const publisher: Publisher = live
+    ? { ...DEMO_PUBLISHERS[0], name_ar: profile.display_name, name_en: profile.display_name, description_ar: '', bio_ar: '', bio_en: '', is_verified: false, verification_status: 'unverified' }
+    : DEMO_PUBLISHERS[0];
+  const publishedResources = live ? liveResources : DEMO_RESOURCES.filter((r) => r.publisher_id === publisher.id);
+  const pendingRequests = (live
+    ? requestsFor(mockRepo.getRequests(), 'inbound', profile.id)
+    : DEMO_ACCESS_REQUESTS
+  ).filter((r) => r.status === 'under_review');
 
   const totalDownloads = publishedResources.reduce((acc, r) => acc + r.downloads_count, 0);
 
@@ -47,7 +66,7 @@ export const PublisherDashboardPage: React.FC = () => {
             {/* Typographic Text Logo */}
             <div className="relative z-10 flex flex-col items-center justify-center leading-none">
               <span className="text-xl sm:text-2xl font-black font-ui text-white tracking-tight drop-shadow-xs">
-                {isAr ? 'ق·ت' : 'QTF'}
+                {live ? (publisher.name_en || '?').charAt(0).toUpperCase() : isAr ? 'ق·ت' : 'QTF'}
               </span>
               <span className="text-[8.5px] sm:text-[9.5px] font-bold text-ratq-300 font-ui tracking-wide mt-1 leading-tight whitespace-nowrap">
                 {isAr ? 'التقنيات القرآنية' : 'QuranTech'}
@@ -127,7 +146,7 @@ export const PublisherDashboardPage: React.FC = () => {
             <TrendingUp className="w-6 h-6" />
           </div>
           <div>
-            <div className="text-2xl font-bold font-mono text-fg">4.9 / 5</div>
+            <div className="text-2xl font-bold font-mono text-fg">{live ? '-' : '4.9 / 5'}</div>
             <div className="text-xs text-fg-muted font-medium">{isAr ? 'متوسط تقييم الأقران' : 'Avg Community Rating'}</div>
           </div>
         </Card>
