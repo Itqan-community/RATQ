@@ -34,7 +34,7 @@ export function toProfile(doc: PayloadUserDoc): Profile {
   };
 }
 
-async function errorMessage(res: Response, fallback: string): Promise<string> {
+export async function errorMessage(res: Response, fallback: string): Promise<string> {
   try {
     const body = await res.json();
     return body?.errors?.[0]?.message || fallback;

@@ -7,7 +7,9 @@ import { Badge } from '@/components/ui/Badge';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { Select } from '@/components/ui/Select';
-import { DEMO_ACCESS_REQUESTS } from '@/lib/mockData';
+import { mockRepo } from '@/lib/supabase';
+import { requestsFor } from '@/lib/payloadRequests';
+import { useAuthStore } from '@/store/useAuthStore';
 import { AccessRequest } from '@/types';
 import { Clock, CheckCircle2, XCircle, Search, Key, Plus, FileText } from 'lucide-react';
 import { ApiKeyRevealDialog } from '@/components/keys/ApiKeyRevealDialog';
@@ -20,7 +22,8 @@ export const AppRequestsPage: React.FC = () => {
   const [search, setSearch] = useState('');
   const [createdKey, setCreatedKey] = useState<string | null>(null);
 
-  const filtered = DEMO_ACCESS_REQUESTS.filter((req) => {
+  const myId = useAuthStore((s) => s.profile.id);
+  const filtered = requestsFor(mockRepo.getRequests(), 'mine', myId).filter((req) => {
     const matchesStatus = filterStatus === 'all' || req.status === filterStatus;
     const title = req.resource?.title_ar || '';
     const purpose = req.purpose_ar || '';

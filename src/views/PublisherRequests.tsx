@@ -10,7 +10,10 @@ import { Textarea } from '@/components/ui/Textarea';
 import { Select } from '@/components/ui/Select';
 import { Modal } from '@/components/ui/Modal';
 import { Tooltip } from '@/components/ui/Tooltip';
-import { DEMO_ACCESS_REQUESTS } from '@/lib/mockData';
+import { mockRepo } from '@/lib/supabase';
+import { isLive } from '@/lib/payloadAuth';
+import { decideRequest, hydrateRequests, requestsFor } from '@/lib/payloadRequests';
+import { useAuthStore } from '@/store/useAuthStore';
 import { AccessRequest } from '@/types';
 import {
   CheckCircle2,
@@ -28,7 +31,9 @@ export const PublisherRequestsPage: React.FC = () => {
   const { i18n } = useTranslation();
   const isAr = i18n.language === 'ar';
 
-  const [requests, setRequests] = useState<AccessRequest[]>(DEMO_ACCESS_REQUESTS);
+  const myId = useAuthStore((s) => s.profile.id);
+  const [requests, setRequests] = useState<AccessRequest[]>(() => requestsFor(mockRepo.getRequests(), 'inbound', myId));
+  const [decisionError, setDecisionError] = useState<string | null>(null);
   const [filter, setFilter] = useState('all');
   const [search, setSearch] = useState('');
 
@@ -88,8 +93,23 @@ export const PublisherRequestsPage: React.FC = () => {
     setPurposeRequest(null);
   };
 
-  const handleConfirmDecision = () => {
+  const handleConfirmDecision = async () => {
     if (!activeRequest) return;
+
+    // Live requests: the server is the authority (owner-only, terminal states); only reflect it on success.
+    if (isLive() && activeRequest.id.startsWith('payload_req_')) {
+      const err = await decideRequest(activeRequest.id, decisionType, decisionNote);
+      if (err) {
+        setDecisionError(err);
+        return;
+      }
+      setDecisionError(null);
+      await hydrateRequests();
+      setRequests(requestsFor(mockRepo.getRequests(), 'inbound', myId));
+      setPurposeRequest(null);
+      setActiveRequest(null);
+      return;
+    }
 
     const updated = requests.map((r) =>
       r.id === activeRequest.id
@@ -546,6 +566,7 @@ export const PublisherRequestsPage: React.FC = () => {
               }
             />
           </div>
+          {decisionError && <p role="alert" className="text-xs text-red-600">{decisionError}</p>}
 
           <div className="flex justify-end gap-2 pt-2">
             <Button variant="ghost" onClick={() => setActiveRequest(null)}>

@@ -121,6 +121,11 @@ class MockRepository {
     return newRes;
   }
 
+  // Replace hydrated live requests; demo requests are kept.
+  setLiveRequests(live: AccessRequest[]) {
+    this.requests = [...live, ...this.requests.filter((r) => !r.id.startsWith('payload_req_'))];
+  }
+
   // Access Requests
   getRequests() {
     return [...this.requests];

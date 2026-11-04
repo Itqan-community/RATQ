@@ -20,11 +20,11 @@ Prod API (`api.ratq.itqan.dev`) is never called by this work; verify against a l
 | `/login`, `/register`, `/forgot-password` | SignIn, SignUp, ForgotPassword | Users | HIGH | ported (cookie session, `src/lib/payloadAuth.ts`, 10 tests, verified e2e vs local Payload; demo role switcher hidden in live mode) |
 | `/reset-password`, `/verify-email`, `/oauth/callback`, `/logout` | - | Users | HIGH | missing |
 | `/dashboard` | AppOverview | - | MED | todo |
-| `/dashboard/requests` | AppRequests | AccessRequests | HIGH | todo |
+| `/dashboard/requests` | AppRequests | AccessRequests | HIGH | ported (`src/lib/payloadRequests.ts`, 12 tests; submit via dialog, list scoped to mine; verified e2e vs local Payload) |
 | `/dashboard/api-keys` | AppKeys | APIKeys | HIGH | todo |
 | `/dashboard/settings` | AppSettings | Users | HIGH | todo |
 | `/dashboard/resources`, `/developer/resources(/[slug])` | PublisherResources, PublisherResourceNew | Resources | HIGH (delete) | todo |
-| `/developer/requests`, `/developer/access` | PublisherRequests | AccessRequests | HIGH | todo |
+| `/developer/requests`, `/developer/access` | PublisherRequests | AccessRequests | HIGH | ported (inbox + approve/reject via PATCH, server enforces owner-only/terminal states; verified e2e) |
 | `/developer/comments` | - | Comments | HIGH (delete) | missing |
 | `/developer/reports` | ModerationDashboard | Reports | HIGH | todo |
 | `/developer/notifications` | AppNotifications | Notifications | MED | todo |

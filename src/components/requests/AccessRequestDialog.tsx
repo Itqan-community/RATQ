@@ -7,6 +7,8 @@ import { Select } from '@/components/ui/Select';
 import { Checkbox } from '@/components/ui/Checkbox';
 import { Resource } from '@/types';
 import { mockRepo } from '@/lib/supabase';
+import { isLive } from '@/lib/payloadAuth';
+import { hydrateRequests, submitRequest } from '@/lib/payloadRequests';
 import { Lock } from 'lucide-react';
 
 interface AccessRequestDialogProps {
@@ -29,7 +31,7 @@ export const AccessRequestDialog: React.FC<AccessRequestDialogProps> = ({
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!purpose || purpose.trim().length < 15) {
       setError('يرجى كتابة شرح وافٍ للغرض من الاستخدام (15 حرفاً على الأقل).');
@@ -41,6 +43,19 @@ export const AccessRequestDialog: React.FC<AccessRequestDialogProps> = ({
     }
 
     setLoading(true);
+    if (isLive() && resource.id.startsWith('payload_')) {
+      const err = await submitRequest(resource.id, purpose.trim());
+      if (err) {
+        setError(err);
+        setLoading(false);
+        return;
+      }
+      await hydrateRequests();
+      setLoading(false);
+      onSuccess();
+      onClose();
+      return;
+    }
     try {
       mockRepo.createRequest({
         resource_id: resource.id,
