@@ -9,12 +9,13 @@ import { Select } from '@/components/ui/Select';
 import { Alert } from '@/components/ui/Alert';
 import { ConfirmDialog } from '@/components/ui/ConfirmDialog';
 import { useAuthStore } from '@/store/useAuthStore';
+import { isLive } from '@/lib/payloadAuth';
 import { User, Globe, Shield, Download, Trash2, CheckCircle2 } from 'lucide-react';
 
 export const AppSettingsPage: React.FC = () => {
   const { i18n } = useTranslation();
   const isAr = i18n.language === 'ar';
-  const { profile } = useAuthStore();
+  const { profile, currentRole } = useAuthStore();
 
   const [displayName, setDisplayName] = useState(profile.display_name);
   const [bio, setBio] = useState(profile.bio || '');
@@ -41,6 +42,28 @@ export const AppSettingsPage: React.FC = () => {
     link.click();
     URL.revokeObjectURL(url);
   };
+
+  // Live mode mirrors live RATQ: account info is read-only. Editing, data export and account deletion have no
+  // Payload-backed flow yet, so they are hidden rather than pretending to succeed.
+  if (isLive()) {
+    return (
+      <div className="space-y-8 max-w-4xl">
+        <h1 className="text-2xl font-extrabold text-fg tracking-tight">
+          {isAr ? 'إعدادات الحساب' : 'Account Settings'}
+        </h1>
+        <Card className="p-6 space-y-4">
+          <div>
+            <label className="block text-xs font-semibold text-fg mb-1.5">{isAr ? 'الاسم الظاهر' : 'Display Name'}</label>
+            <Input value={profile.display_name} readOnly />
+          </div>
+          <div>
+            <label className="block text-xs font-semibold text-fg mb-1.5">{isAr ? 'الدور' : 'Role'}</label>
+            <Input value={currentRole} readOnly className="capitalize" />
+          </div>
+        </Card>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-8 max-w-4xl">

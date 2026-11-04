@@ -8,7 +8,7 @@ import { Button } from '@/components/ui/Button';
 import { Alert } from '@/components/ui/Alert';
 import { useAuthStore } from '@/store/useAuthStore';
 import { UserRole } from '@/types';
-import { isLive } from '@/lib/payloadAuth';
+import { githubOAuthUrl, isLive } from '@/lib/payloadAuth';
 import { LogIn, Lock, Mail } from 'lucide-react';
 
 export const SignInPage: React.FC = () => {
@@ -119,6 +119,14 @@ export const SignInPage: React.FC = () => {
               <span>{isAr ? 'تسجيل الدخول' : 'Sign In'}</span>
             </Button>
           </form>
+
+          {isLive() && (
+            <a href={githubOAuthUrl()} className="block mt-4">
+              <Button type="button" variant="outline" className="w-full">
+                {isAr ? 'المتابعة عبر GitHub' : 'Continue with GitHub'}
+              </Button>
+            </a>
+          )}
 
           {/* Demo role switcher bypasses auth: mock mode only, never alongside real sessions. */}
           {!isLive() && (<>

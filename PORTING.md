@@ -18,11 +18,11 @@ Prod API (`api.ratq.itqan.dev`) is never called by this work; verify against a l
 | `/docs` | - | - | LOW | missing |
 | `/contributors` | - | - (static data) | LOW | missing |
 | `/login`, `/register`, `/forgot-password` | SignIn, SignUp, ForgotPassword | Users | HIGH | ported (cookie session, `src/lib/payloadAuth.ts`, 10 tests, verified e2e vs local Payload; demo role switcher hidden in live mode) |
-| `/reset-password`, `/verify-email`, `/oauth/callback`, `/logout` | - | Users | HIGH | missing |
+| `/reset-password`, `/verify-email`, `/oauth/callback`, `/logout` | `src/views/AuthLinkPages.tsx` (+ header sign-out) | Users | HIGH | ported (9 tests). Reset verified e2e (new pw works, old rejected, token single-use). Verify-email: backend does not enable `auth.verify`, so the server returns 500 (same as live). OAuth: callback no-code path verified; the GitHub exchange needs real GitHub credentials, untested |
 | `/dashboard` | AppOverview | - | MED | ported (live-aware counts/notifications; see notifications row) |
 | `/dashboard/requests` | AppRequests | AccessRequests | HIGH | ported (`src/lib/payloadRequests.ts`, 12 tests; submit via dialog, list scoped to mine; verified e2e vs local Payload) |
 | `/dashboard/api-keys` | AppKeys | APIKeys | HIGH | ported (`src/lib/payloadKeys.ts`, 11 tests; server-generated key shown once, revoke = DELETE, rotate = create-then-delete; verified e2e incl. 403 path). Known gaps: design copy still says rotate "keeps old key 24h" and "SHA-256 + Pepper" (Payload: immediate delete, plain SHA-256); sidebar badge counts are static mock |
-| `/dashboard/settings` | AppSettings | Users | HIGH | todo |
+| `/dashboard/settings` | AppSettings | Users | HIGH | ported as live parity: real name + role read-only (live settings is read-only); design-only edit/export/delete hidden in live mode |
 | `/dashboard/resources`, `/developer/resources(/[slug])` | PublisherResources, PublisherResourceNew | Resources | HIGH (delete) | ported (`src/lib/payloadOwnResources.ts`, 9 tests; wizard creates a DRAFT (Payload has no review step), owner list incl. drafts, delete own; verified e2e). No edit UI (design has none) |
 | `/developer/requests`, `/developer/access` | PublisherRequests | AccessRequests | HIGH | ported (inbox + approve/reject via PATCH, server enforces owner-only/terminal states; verified e2e) |
 | `/developer/comments` | ResourceDetails reviews tab | Comments | HIGH (delete) | ported (as above; no separate dashboard page) |

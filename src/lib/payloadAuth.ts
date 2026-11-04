@@ -77,3 +77,42 @@ export async function forgotPassword(email: string): Promise<void> {
   const res = await post('/users/forgot-password', { email });
   if (!res.ok) throw new Error(await errorMessage(res, 'Request failed'));
 }
+
+const origin = () => payloadBase().replace(/\/api\/?$/, '');
+const NET_ERR = 'Network error, please try again.';
+
+async function submit(url: string, body: unknown, fallback: string): Promise<string | null> {
+  try {
+    const res = await fetch(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
+      body: JSON.stringify(body),
+    });
+    return res.ok ? null : await errorMessage(res, fallback);
+  } catch {
+    return NET_ERR;
+  }
+}
+
+export async function resetPassword(token: string, password: string): Promise<string | null> {
+  if (!token) return 'Missing reset token.';
+  return submit(`${payloadBase()}/users/reset-password`, { token, password }, 'Reset failed');
+}
+
+export async function verifyEmail(token: string): Promise<string | null> {
+  if (!token) return 'Missing verification token.';
+  return submit(`${payloadBase()}/users/verify/${encodeURIComponent(token)}`, {}, 'Verification failed');
+}
+
+// GitHub OAuth is a custom route on the Payload server, outside the /api prefix.
+export const githubOAuthUrl = (): string => `${origin()}/oauth/github`;
+
+// The one-time code arrives in the URL fragment so it never reaches server logs or Referer headers.
+export function parseOAuthCode(hash: string): string | null {
+  return hash.startsWith('#') ? new URLSearchParams(hash.slice(1)).get('code') : null;
+}
+
+export async function exchangeOAuthCode(code: string): Promise<string | null> {
+  return submit(`${origin()}/oauth/github/exchange`, { code }, 'Login failed');
+}
