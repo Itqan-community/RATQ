@@ -229,17 +229,22 @@ export const ResourceCard: React.FC<ResourceCardProps> = ({
           isList && 'sm:mt-0 sm:pt-0 sm:border-t-0 sm:flex-col sm:items-end sm:justify-center sm:gap-2 sm:shrink-0'
         )}
       >
-        <div className="flex items-center gap-3">
-          <div className="flex items-center gap-1">
-            <RatingStars rating={resource.rating_avg} size={12} />
-            <span className="font-semibold text-fg">({resource.rating_avg})</span>
-          </div>
+        {/* Payload has no ratings/downloads: live resources hide them instead of showing zeros. */}
+        {resource.id.startsWith('payload_') ? (
+          <div />
+        ) : (
+          <div className="flex items-center gap-3">
+            <div className="flex items-center gap-1">
+              <RatingStars rating={resource.rating_avg} size={12} />
+              <span className="font-semibold text-fg">({resource.rating_avg})</span>
+            </div>
 
-          <div className="flex items-center gap-1">
-            <Download className="w-3 h-3 text-fg-subtle" />
-            <span>{resource.downloads_count.toLocaleString()}</span>
+            <div className="flex items-center gap-1">
+              <Download className="w-3 h-3 text-fg-subtle" />
+              <span>{resource.downloads_count.toLocaleString()}</span>
+            </div>
           </div>
-        </div>
+        )}
 
         <Link
           to={`/resources/${resource.slug}`}

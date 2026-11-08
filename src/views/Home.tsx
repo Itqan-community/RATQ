@@ -62,11 +62,12 @@ export const Home: React.FC = () => {
   const featuredResources = resources.filter((r) => r.is_featured).slice(0, 6);
 
   // Live trust metrics from store/DB
+  // Publisher and key counts are mock-only (no Payload source), so live mode shows only API-backed counts.
   const trustMetrics = [
     { label: 'مورد برمجي منشور', value: resources.length },
-    { label: 'ناشر ومؤسسة موثقة', value: publishers.length },
+    ...(isLive() ? [] : [{ label: 'ناشر ومؤسسة موثقة', value: publishers.length }]),
     { label: 'شارة إتقان ممنوحة', value: resources.filter((r) => r.itqan_level !== 'none').length },
-    { label: 'مفتاح API نشط', value: keys.length },
+    ...(isLive() ? [] : [{ label: 'مفتاح API نشط', value: keys.length }]),
   ];
 
   const handleHeroSearch = (e: React.FormEvent) => {
@@ -357,7 +358,8 @@ export const Home: React.FC = () => {
       {/* 3c. Quran Tech Periodic Carousel (مخفي مؤقتاً ويمكن إظهاره لاحقاً) */}
       {/* <QuranTechPeriodicCarousel /> */}
 
-      {/* 4. Featured Resources */}
+      {/* 4. Featured Resources (Payload has no featured flag, so the rail is empty in live mode and hidden) */}
+      {featuredResources.length > 0 && (
       <section className="py-16 border-b border-border bg-subtle/20">
         <div className="max-w-container mx-auto px-4 sm:px-6">
           <div className="flex items-center justify-between mb-8 text-start">
@@ -386,6 +388,7 @@ export const Home: React.FC = () => {
           </div>
         </div>
       </section>
+      )}
 
       {/* 5. How It Works */}
       <section className="py-16 border-b border-border relative overflow-hidden bg-white dark:bg-[#080c14]">

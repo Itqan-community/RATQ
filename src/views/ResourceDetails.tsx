@@ -506,14 +506,18 @@ export const ResourceDetails: React.FC = () => {
             <span className="text-[11px] font-bold text-fg-subtle uppercase tracking-wider">
               إحصاءات المورد
             </span>
-            <div className="flex justify-between py-1.5 border-b border-border-subtle">
-              <span className="text-fg-subtle">إجمالي التنزيلات:</span>
-              <span className="font-bold font-mono text-fg">{resource.downloads_count.toLocaleString()}</span>
-            </div>
-            <div className="flex justify-between py-1.5 border-b border-border-subtle">
-              <span className="text-fg-subtle">المشاهدات:</span>
-              <span className="font-bold font-mono text-fg">{resource.views_count.toLocaleString()}</span>
-            </div>
+            {!resource.id.startsWith('payload_') && (
+              <>
+                <div className="flex justify-between py-1.5 border-b border-border-subtle">
+                  <span className="text-fg-subtle">إجمالي التنزيلات:</span>
+                  <span className="font-bold font-mono text-fg">{resource.downloads_count.toLocaleString()}</span>
+                </div>
+                <div className="flex justify-between py-1.5 border-b border-border-subtle">
+                  <span className="text-fg-subtle">المشاهدات:</span>
+                  <span className="font-bold font-mono text-fg">{resource.views_count.toLocaleString()}</span>
+                </div>
+              </>
+            )}
             <div className="flex justify-between py-1.5 border-b border-border-subtle">
               <span className="text-fg-subtle">آخر تحديث:</span>
               <span className="font-medium text-fg">{formatDate(resource.updated_at)}</span>

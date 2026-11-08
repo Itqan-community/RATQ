@@ -60,9 +60,9 @@ class MockRepository {
     this.notifications = [...DEMO_NOTIFICATIONS];
   }
 
-  // Replace previously hydrated live (Payload) resources; mock/beta-snapshot entries are kept.
+  // Live mode: the live (Payload) list replaces all demo/snapshot resources so public lists match prod.
   setLiveResources(live: Resource[]) {
-    this.resources = [...live, ...this.resources.filter((r) => !r.id.startsWith('payload_'))];
+    this.resources = [...live];
   }
 
   // Resources
@@ -70,8 +70,9 @@ class MockRepository {
     return [...this.resources];
   }
 
+  // Demo slugs stay reachable by direct URL (old bookmarks) even though they are not listed in live mode.
   getResourceBySlug(slug: string) {
-    return this.resources.find((r) => r.slug === slug);
+    return this.resources.find((r) => r.slug === slug) ?? DEMO_RESOURCES.find((r) => r.slug === slug);
   }
 
   addResource(res: Partial<Resource>): Resource {

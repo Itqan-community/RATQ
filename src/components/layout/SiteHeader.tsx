@@ -5,6 +5,7 @@ import { useAuthStore } from '@/store/useAuthStore';
 import { isLive } from '@/lib/payloadAuth';
 import { useThemeStore } from '@/store/useThemeStore';
 import { Button } from '@/components/ui/Button';
+import { DemoBadge } from '@/components/ui/DemoBadge';
 import { UserRole } from '@/types';
 import {
   Search,
@@ -121,6 +122,7 @@ export const SiteHeader: React.FC<SiteHeaderProps> = ({ onOpenCommandPalette }) 
               }`}
             >
               {isAr ? 'مسار المطور' : 'Dev Roadmap'}
+              <DemoBadge to="/resources/roadmap" isAr={isAr} />
             </Link>
 
             {/* App Stacks Nav Item */}
@@ -133,6 +135,7 @@ export const SiteHeader: React.FC<SiteHeaderProps> = ({ onOpenCommandPalette }) 
               }`}
             >
               {isAr ? 'حزم التطبيقات' : 'App Stacks'}
+              <DemoBadge to="/resources/stacks" isAr={isAr} />
             </Link>
 
             <Link
@@ -144,6 +147,7 @@ export const SiteHeader: React.FC<SiteHeaderProps> = ({ onOpenCommandPalette }) 
               }`}
             >
               {isAr ? 'التصنيفات' : 'Categories'}
+              <DemoBadge to="/categories" isAr={isAr} />
             </Link>
 
             <Link

@@ -81,7 +81,7 @@ export const KeyTable: React.FC<KeyTableProps> = ({ keys, onRotate, onRevoke }) 
                       variant="ghost"
                       size="sm"
                       onClick={() => onRotate(k.id)}
-                      title="تدوير المفتاح (إبقاء القديم نشطاً 24 ساعة)"
+                      title="تدوير المفتاح (يُحذف القديم فوراً)"
                       startIcon={<RotateCw className="w-3 h-3 text-fg-muted" />}
                     >
                       تدوير

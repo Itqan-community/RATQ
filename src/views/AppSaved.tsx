@@ -6,15 +6,15 @@ import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { ResourceCard } from '@/components/resources/ResourceCard';
-import { DEMO_RESOURCES } from '@/lib/mockData';
+import { mockRepo } from '@/lib/supabase';
 import { Bookmark, Search, Compass, Trash2 } from 'lucide-react';
 
 export const AppSavedPage: React.FC = () => {
   const { i18n } = useTranslation();
   const isAr = i18n.language === 'ar';
 
-  // Demo initially saved first 2 resources
-  const [savedResources, setSavedResources] = useState(DEMO_RESOURCES.slice(0, 2));
+  // Mock page: no persisted saves exist, so it shows the first 2 listed resources (none in live mode if API is empty).
+  const [savedResources, setSavedResources] = useState(() => mockRepo.getResources().slice(0, 2));
   const [search, setSearch] = useState('');
 
   const handleRemove = (id: string) => {

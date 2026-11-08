@@ -3,6 +3,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { ShieldCheck, Activity } from 'lucide-react';
+import { DemoBadge } from '@/components/ui/DemoBadge';
 
 export const SiteFooter: React.FC = () => {
   const { t } = useTranslation('common');
@@ -42,9 +43,9 @@ export const SiteFooter: React.FC = () => {
             <ul className="flex flex-col gap-2 text-xs text-fg-muted">
               <li><Link to="/about" className="hover:text-fg transition-colors font-semibold text-fg">عن رتق</Link></li>
               <li><Link to="/resources" className="hover:text-fg transition-colors">الكتالوج الشامل</Link></li>
-              <li><Link to="/resources/stacks" className="hover:text-fg transition-colors">حزم التطبيقات</Link></li>
-              <li><Link to="/categories" className="hover:text-fg transition-colors">التصنيفات</Link></li>
-              <li><Link to="/publishers" className="hover:text-fg transition-colors">دليل الناشرين</Link></li>
+              <li><Link to="/resources/stacks" className="hover:text-fg transition-colors">حزم التطبيقات<DemoBadge to="/resources/stacks" /></Link></li>
+              <li><Link to="/categories" className="hover:text-fg transition-colors">التصنيفات<DemoBadge to="/categories" /></Link></li>
+              <li><Link to="/publishers" className="hover:text-fg transition-colors">دليل الناشرين<DemoBadge to="/publishers" /></Link></li>
             </ul>
           </div>
 
@@ -53,10 +54,10 @@ export const SiteFooter: React.FC = () => {
             <h4 className="text-xs font-bold text-fg uppercase tracking-wider mb-3">معيار إتقان</h4>
             <ul className="flex flex-col gap-2 text-xs text-fg-muted">
               <li><Link to="/standards" className="hover:text-fg transition-colors">دليل المعيار</Link></li>
-              <li><Link to="/standards/checklist" className="hover:text-fg transition-colors">قائمة التحقق</Link></li>
-              <li><Link to="/standards/revocations" className="hover:text-fg transition-colors">سجل السحب والشفافية</Link></li>
-              <li><Link to="/licenses" className="hover:text-fg transition-colors">دليل التراخيص</Link></li>
-              <li><Link to="/changelog" className="hover:text-fg transition-colors">سجل التغييرات</Link></li>
+              <li><Link to="/standards/checklist" className="hover:text-fg transition-colors">قائمة التحقق<DemoBadge to="/standards/checklist" /></Link></li>
+              <li><Link to="/standards/revocations" className="hover:text-fg transition-colors">سجل السحب والشفافية<DemoBadge to="/standards/revocations" /></Link></li>
+              <li><Link to="/licenses" className="hover:text-fg transition-colors">دليل التراخيص<DemoBadge to="/licenses" /></Link></li>
+              <li><Link to="/changelog" className="hover:text-fg transition-colors">سجل التغييرات<DemoBadge to="/changelog" /></Link></li>
             </ul>
           </div>
 
@@ -72,6 +73,7 @@ export const SiteFooter: React.FC = () => {
                 <Link to="/status" className="flex items-center gap-1.5 text-emerald-600 dark:text-emerald-400 font-semibold hover:underline">
                   <Activity className="w-3.5 h-3.5" />
                   <span>حالة الخدمة: تعمل</span>
+                  <DemoBadge to="/status" />
                 </Link>
               </li>
             </ul>

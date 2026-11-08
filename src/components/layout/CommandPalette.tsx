@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Search, X, Layers, BookOpen, Shield, Code2, ArrowLeft } from 'lucide-react';
-import { DEMO_RESOURCES } from '@/lib/mockData';
+import { mockRepo } from '@/lib/supabase';
 
 interface CommandPaletteProps {
   isOpen: boolean;
@@ -29,7 +29,7 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({ isOpen, onClose 
 
   if (!isOpen) return null;
 
-  const filteredResources = DEMO_RESOURCES.filter(
+  const filteredResources = mockRepo.getResources().filter(
     (r) =>
       r.title_ar.includes(query) ||
       (r.title_en && r.title_en.toLowerCase().includes(query.toLowerCase())) ||

@@ -5,6 +5,7 @@ import { SidebarNav, SidebarNavItem } from './SidebarNav';
 import { useAuthStore } from '@/store/useAuthStore';
 import { portalAccess } from '@/lib/portalAccess';
 import { isLive } from '@/lib/payloadAuth';
+import { isMockRoute } from '@/lib/mockRoutes';
 import {
   LayoutDashboard,
   Key,
@@ -187,8 +188,15 @@ export const PortalLayout: React.FC<PortalLayoutProps> = ({ children, portal }) 
       <div className="flex flex-col lg:flex-row gap-8 items-start">
         <SidebarNav
           title={isAr ? currentConfig.title_ar : currentConfig.title_en}
-          // Badge counts are static demo numbers; don't show them next to real data.
-          items={isLive() ? currentConfig.items.map((i) => ({ ...i, badge: undefined })) : currentConfig.items}
+          // Badge counts are static demo numbers; in live mode replace them with a Demo tag on mock-only pages.
+          items={
+            isLive()
+              ? currentConfig.items.map((i) => ({
+                  ...i,
+                  badge: isMockRoute(i.href) ? (isAr ? 'تجريبي' : 'Demo') : undefined,
+                }))
+              : currentConfig.items
+          }
         />
         <main className="flex-1 min-w-0 w-full">{children}</main>
       </div>

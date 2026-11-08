@@ -152,7 +152,7 @@ export const AppKeysPage: React.FC = () => {
           <div className="space-y-1">
             <div className="flex items-center gap-2">
               <h3 className="font-bold text-white text-base">
-                {isAr ? 'حماية معمارية المفاتيح (ADR-004: SHA-256 + Pepper)' : 'Zero Raw Key Storage Guarantee'}
+                {isAr ? 'حماية معمارية المفاتيح (SHA-256)' : 'Zero Raw Key Storage Guarantee'}
               </h3>
               <Badge variant="primary" className="bg-ratq-500/30 text-ratq-300 border-ratq-500/40 text-[10px]">
                 {isAr ? 'مشفّر' : 'Encrypted'}
@@ -160,8 +160,8 @@ export const AppKeysPage: React.FC = () => {
             </div>
             <p className="text-white/80 text-xs leading-relaxed">
               {isAr
-                ? 'لا يتم تخزين المفاتيح الخام في قواعد البيانات إطلاقاً. تقتصر قاعدة البيانات على حفظ أول 8 خانات وبصمة SHA-256 مشفرة بفلفل خادم. لن تتمكن من رؤية المفتاح مرة أخرى بعد إغلاق نافذة العرض.'
-                : 'Raw keys are never stored in plain text. Only an 8-character prefix and salted SHA-256 hash exist in Postgres.'}
+                ? 'لا يتم تخزين المفاتيح الخام في قواعد البيانات إطلاقاً. تقتصر قاعدة البيانات على حفظ أول 8 خانات وبصمة SHA-256. لن تتمكن من رؤية المفتاح مرة أخرى بعد إغلاق نافذة العرض.'
+                : 'Raw keys are never stored in plain text. Only an 8-character prefix and a SHA-256 hash exist in Postgres.'}
             </p>
           </div>
         </div>

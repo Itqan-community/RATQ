@@ -1,5 +1,5 @@
 // Live Payload `resources` -> design Resource. Active only when NEXT_PUBLIC_PAYLOAD_API_URL is set;
-// unset = the in-memory mock (what deployed beta runs). Never point this at the prod API from this branch.
+// unset = the in-memory mock. Only the beta deploy build sets it (inline at build time, never committed).
 import { DEMO_LICENSES, DEMO_PUBLISHERS } from './mockData';
 import { mockRepo } from './supabase';
 import type { License, Resource } from '@/types';
@@ -96,15 +96,17 @@ export function toDesignResource(doc: PayloadResourceDoc): Resource {
   };
 }
 
-// Fetch published resources once at boot and merge them into the repo. Failure leaves the mock intact.
-export async function hydrateFromPayload(): Promise<void> {
-  if (!PAYLOAD_API_URL) return;
+// Fetch published resources once at boot and merge them into the repo.
+// Returns false when the live API is unreachable so the caller can show an error instead of silently serving mock data.
+export async function hydrateFromPayload(): Promise<boolean> {
+  if (!PAYLOAD_API_URL) return true;
   try {
     const res = await fetch(`${PAYLOAD_API_URL}/resources?limit=200&depth=1&where[status][equals]=published`);
-    if (!res.ok) return;
+    if (!res.ok) return false;
     const { docs } = (await res.json()) as { docs: PayloadResourceDoc[] };
     mockRepo.setLiveResources(docs.map(toDesignResource));
+    return true;
   } catch {
-    // network/CORS failure: keep mock data
+    return false; // network/CORS failure
   }
 }

@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/Button';
+import { mockRepo } from '@/lib/supabase';
 import { Wand2, ArrowLeft, X } from 'lucide-react';
 
 interface CatalogWizardHelperProps {
@@ -31,7 +32,7 @@ export const CatalogWizardHelper: React.FC<CatalogWizardHelperProps> = ({ classN
           <div>
             <div className="flex items-center gap-2 mb-1">
               <h2 className="text-xs sm:text-sm font-bold text-white">
-                محتار بين 124 مورداً ومكتبة قرآنية؟
+                محتار بين {mockRepo.getResources().length} مورداً ومكتبة قرآنية؟
               </h2>
               <span className="px-2 py-0.5 rounded-full bg-ratq-800/80 text-ratq-200 text-[10px] font-semibold border border-ratq-700/60">
                 توجيه ذكي
