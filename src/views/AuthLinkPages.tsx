@@ -7,7 +7,7 @@ import { Card } from '@/components/ui/Card';
 import { Input } from '@/components/ui/Input';
 import { Button } from '@/components/ui/Button';
 import { Alert } from '@/components/ui/Alert';
-import { exchangeOAuthCode, parseOAuthCode, resetPassword, verifyEmail } from '@/lib/payloadAuth';
+import { exchangeOAuthCode, isLive, parseOAuthCode, resetPassword, verifyEmail } from '@/lib/payloadAuth';
 import { useAuthStore } from '@/store/useAuthStore';
 
 const Shell: React.FC<{ title: string; children: React.ReactNode }> = ({ title, children }) => (
@@ -82,6 +82,21 @@ export const VerifyEmailPage: React.FC = () => {
       <Link to="/auth/sign-in"><Button variant="outline" className="w-full">{isAr ? 'تسجيل الدخول' : 'Sign In'}</Button></Link>
     </Shell>
   );
+};
+
+// Live RATQ's /logout: end the session, then go home.
+export const LogoutPage: React.FC = () => {
+  const navigate = useNavigate();
+  const ran = useRef(false);
+
+  useEffect(() => {
+    if (ran.current) return;
+    ran.current = true;
+    const { signOut, signOutLive } = useAuthStore.getState();
+    (isLive() ? signOutLive() : Promise.resolve(signOut())).finally(() => navigate('/', { replace: true }));
+  }, [navigate]);
+
+  return null;
 };
 
 export const OAuthCallbackPage: React.FC = () => {

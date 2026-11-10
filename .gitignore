@@ -41,3 +41,7 @@ dist-ssr
 next-env.d.ts
 tsconfig.tsbuildinfo
 .claude/memory.db
+
+# Playwright
+test-results
+playwright-report

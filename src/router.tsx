@@ -39,7 +39,8 @@ import TechSpecTablePreviewPage from '@/views/previews/TechSpecTablePreviewPage'
 import SignInPage from '@/views/SignIn';
 import SignUpPage from '@/views/SignUp';
 import ForgotPasswordPage from '@/views/ForgotPassword';
-import { ResetPasswordPage, VerifyEmailPage, OAuthCallbackPage } from '@/views/AuthLinkPages';
+import { ResetPasswordPage, VerifyEmailPage, OAuthCallbackPage, LogoutPage } from '@/views/AuthLinkPages';
+import { legacyRoutes } from '@/lib/legacyRoutes';
 import { DocsPage, ContributorsPage } from '@/views/LivePages';
 
 // Developer Portal
@@ -145,6 +146,10 @@ export const AppRouter: React.FC = () => {
           <Route path="/reset-password" element={<ResetPasswordPage />} />
           <Route path="/verify-email" element={<VerifyEmailPage />} />
           <Route path="/oauth/callback" element={<OAuthCallbackPage />} />
+          <Route path="/logout" element={<LogoutPage />} />
+
+          {/* Old live-RATQ paths -> new equivalents */}
+          {legacyRoutes}
 
           {/* Developer Portal */}
           <Route

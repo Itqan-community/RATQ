@@ -88,7 +88,7 @@ export const SiteHeader: React.FC<SiteHeaderProps> = ({ onOpenCommandPalette }) 
           </Link>
 
           {/* Desktop Nav */}
-          <nav className="hidden lg:flex items-center gap-1 text-xs font-semibold">
+          <nav className="hidden lg:flex items-center gap-1 text-xs font-semibold whitespace-nowrap">
             <Link
               to="/"
               className={`px-3 py-1.5 rounded-md transition-colors ${

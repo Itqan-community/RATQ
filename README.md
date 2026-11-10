@@ -1,81 +1,59 @@
-# منصة مجتمع RATQ (RATQ Community Platform)
+# RATQ Community Platform | منصة مجتمع رتق
 
-> **«اكتشف بثقة. ابنِ بإتقان. شارك بمسؤولية.»**  
-> المرجع الأول والبنية التحتية الحية لاكتشاف وتوزيع والتحقق من موارد تطوير البرمجيات القرآنية.
+> **اكتشف بثقة. ابنِ بإتقان. شارك بمسؤولية.**
+> The directory and distribution hub for Quranic software resources.
 
----
+Production: https://ratq.itqan.dev · Beta: https://beta.ratq.itqan.dev
 
-## 🚀 نظرة عامة
-منصة مجتمع **RATQ** ليست مجرد دليل ساكن، بل بنية حوكمة وتوزيع متكاملة تجمع المطورين والناشرين والمؤسسات القرآنية في بيئة آمنة:
-- **كتالوج شامل:** مكتبات، حزم SDK، مجموعات بيانات، واجهات برمجة تطبيقات، مراجع تفسير وترجمة، خطوط وأدوات.
-- **معيار إتقان للجودة:** 4 مستويات للشارات (`basic`, `verified`, `certified`, `gold`) بقوائم تحقق موزونة ومراجعة بشرية متخصصة.
-- **إدارة مسارات الوصول:** دورة حياة كاملة لطلبات الوصول الرقمية للموارد المقيّدة والمحمية.
-- **مفاتيح API آمنة:** كشف المفتاح لمرة واحدة فقط، تجزئة مشفرة بـ `SHA-256 + PEPPER`، تدوير وإلغاء فوري.
-- **بوابة الناشرين:** إضافة الموارد عبر معالج متقدم، إدارة الإصدارات مع بصمات SHA-256، تحليلات، وWebhooks.
-- **لوحات الحوكمة والإشراف:** قائمة انتظار مراجعي إتقان، إدارة البلاغات، وسجل تدقيق غير قابل للتعديل (Append-Only).
+## Stack
+- **App:** Next.js 15 serving a client-side `react-router-dom` app (`app/[[...slug]]` catch-all, routes in `src/router.tsx`), React 18, TypeScript, Tailwind CSS 3, RTL-first, `i18next` (Arabic default, English).
+- **State/data:** TanStack Query, Zustand.
+- **Backend:** the Payload CMS API in `payload-backend/` (Users, Resources, Comments, AccessRequests, APIKeys, Reports, Notifications, Announcements). The frontend only calls its REST API; no other backend.
+- **Hosting:** Cloudflare Worker via OpenNext (`wrangler.jsonc`). The API is deployed separately (see `.github/workflows/deploy-backend.yml`).
+- **Tests:** Vitest + Testing Library (unit), Playwright (`e2e/`).
 
----
+## Live data vs Demo
+`NEXT_PUBLIC_PAYLOAD_API_URL` is read **at build time**.
 
-## 🛠 البنية التقنية (Stack Lock — ADR-001)
-- **الواجهة الأمامية:** React 18 + TypeScript 5 + Vite 5 + Tailwind CSS 3 (RTL أصيل).
-- **الخط الرسمي الإلزامي:** IBM Plex Sans Arabic عبر Google Fonts، مع Amiri Quran للنص القرآني المقتبس.
-- **إدارة البيانات والحالة:** TanStack Query v5 + Zustand.
-- **قاعدة البيانات والخدمات:** Supabase (PostgreSQL + RLS + pgvector + Realtime + Storage + Auth).
-- **المنطق الخلفي والوظائف المجدولة:** Netlify Functions (Node 20 / TypeScript).
-- **التدويل:** i18next باللغتين العربية (أساسية) والإنجليزية (ثانوية كاملة).
-- **الاختبارات وضمان الجودة:** Vitest + Testing Library + Playwright.
+- **Set** (production, beta): live mode. Resources, auth, comments, access requests, API keys, reports and notifications use the real API. Pages with no backend yet are marked **Demo / تجريبي** in the nav and run on in-memory mock data.
+- **Unset** (default local build): everything runs on mock data, no backend needed.
 
----
+`PORTING.md` maps every live route to its page; `MOCKED.md` lists the Demo-only pages that still need a backend.
 
-## 📦 التثبيت والتشغيل المحلي (Quick Start)
+## Local development
+Requires Node 20+ and pnpm 10+.
 
-### المتطلبات
-- Node.js 20+
-- pnpm 10+
-
-### خطوات التشغيل
 ```bash
-# 1. استنساخ المستودع والانتقال لمجلده
-git clone <repo-url>
-cd retq
-
-# 2. تثبيت الحزم
 pnpm install
-
-# 3. إعداد متغيرات البيئة
-cp .env.example .env
-
-# 4. تشغيل خادم التطوير المحلي
-pnpm run dev
+pnpm dev                       # mock mode, http://localhost:3000
 ```
 
-يعمل خادم التطوير تلقائياً في وضع **العرض التجريبي التفاعلي (Interactive Demo Mode)** في حال عدم إدخال مفاتيح Supabase، مما يتيح استعراض واختبار كافة الميزات والشاشات والأدوار فوراً!
+To develop against a local Payload, start `payload-backend/` (see its README; its dev server also uses port 3000) and run the frontend on another port:
 
----
-
-## 🧪 الاختبارات وفحص الأنواع
 ```bash
-# فحص الأنواع الصارم (TypeScript Strict)
-pnpm run typecheck
-
-# تشغيل اختبارات الوحدة والتكامل (Vitest)
-pnpm run test
-
-# بناء حزمة الإنتاج
-pnpm run build
+NEXT_PUBLIC_PAYLOAD_API_URL=http://localhost:3000/api pnpm exec next dev -p 3100
 ```
 
----
+The production API only allows the `ratq.itqan.dev` and `beta.ratq.itqan.dev` origins, so localhost cannot call it.
 
-## ☁️ النشر على Netlify (Deploy to Netlify)
-المشروع مهيأ بالكامل للنشر بنقرة واحدة على Netlify:
-- ملف `netlify.toml` يضبط مسارات البناء وتوجيهات SPA والوظائف السحابية والترويسات الأمنية المتقدمة.
-- الدوال المساعدة في مجلد `netlify/functions/`.
-- الترويسات الأمنية في `public/_headers`.
-- قواعد التحويل في `public/_redirects`.
+## Checks
+```bash
+pnpm typecheck
+pnpm test                      # Vitest
+pnpm cf:build                  # OpenNext build (what CI and deploy run)
+pnpm test:e2e                  # Playwright against beta (BASE_URL overrides)
+```
 
----
+`pnpm test:e2e` runs read-only specs by default. The sign-in spec needs a throwaway account in `E2E_EMAIL` / `E2E_PASSWORD` and is skipped without them. Never use a real user.
 
-## 📜 التراخيص والحوكمة
-جميع حقوق المنصة محفوظة لمجتمع **RATQ**.  
-تخضع جميع الموارد المعروضة للتراخيص المصرح بها من ناشريها المعتمدين، وتلتزم المنصة التزاماً مطلقاً بـ [قواعد نزاهة القرآن الكريم وضبط المحتوى الديني](DECISIONS.md).
+## Deploy
+```bash
+NEXT_PUBLIC_PAYLOAD_API_URL=https://api.ratq.itqan.dev/api pnpm cf:deploy
+```
+Needs `wrangler` authenticated to the Cloudflare account in `wrangler.jsonc`.
+
+## Contributing
+See [CONTRIBUTING.md](CONTRIBUTING.md). Features marked Demo are the best places to start; each has a story in the project's Notion board.
+
+## Governance and integrity
+Content rules for Quranic text are in [DECISIONS.md](DECISIONS.md), [GOVERNANCE.md](GOVERNANCE.md) and [SECURITY.md](SECURITY.md).

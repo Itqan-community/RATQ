@@ -86,13 +86,13 @@ export const LegalPage: React.FC = () => {
           <section>
             <h3 className="text-lg font-bold text-fg mb-2">2. تخزين المفاتيح والتجزئة الأمنية</h3>
             <p className="text-fg-muted">
-              لا نقوم بتخزين مفاتيح API الخاصة بك في شكلها الخام أبدًا. يتم تشفير المفاتيح عبر تجزئة SHA-256 مع فلفل مشفر (Pepper) في خوادم قاعدة البيانات المحمية بسياسات RLS الصارمة.
+              لا نقوم بتخزين مفاتيح API الخاصة بك في شكلها الخام أبدًا. يتم حفظ تجزئة SHA-256 للمفتاح فقط، ويُعرض المفتاح الكامل مرة واحدة عند إنشائه.
             </p>
           </section>
           <section>
             <h3 className="text-lg font-bold text-fg mb-2">3. حقوق المستخدمين (GDPR)</h3>
             <p className="text-fg-muted">
-              يحق لكل مستخدم طلب تصدير كامل بياناته أو حذف حسابه نهائياً من إعدادات الحساب وفق لوائح حماية البيانات العامة.
+              يحق لكل مستخدم طلب تصدير بياناته أو حذف حسابه عبر التواصل معنا من صفحة «اتصل بنا».
             </p>
           </section>
         </div>
@@ -108,13 +108,13 @@ export const LegalPage: React.FC = () => {
           <section>
             <h3 className="text-lg font-bold text-fg mb-2">2. Key Security & Cryptographic Hashing</h3>
             <p className="text-fg-muted">
-              Raw API keys are never stored in databases. All keys are hashed using SHA-256 with a secure pepper and strictly isolated by Postgres Row Level Security (RLS).
+              Raw API keys are never stored in databases. Only a SHA-256 hash of each key is kept; the full key is shown once, when it is created.
             </p>
           </section>
           <section>
             <h3 className="text-lg font-bold text-fg mb-2">3. User Rights & Data Portability</h3>
             <p className="text-fg-muted">
-              Users retain full rights to request complete export or deletion of their personal profile and metadata in compliance with privacy regulations.
+              Users may request an export or deletion of their personal data by contacting us through the Contact page.
             </p>
           </section>
         </div>

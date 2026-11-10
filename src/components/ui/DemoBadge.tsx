@@ -7,7 +7,7 @@ import { isMockRoute } from '@/lib/mockRoutes';
 export const DemoBadge: React.FC<{ to: string; isAr?: boolean }> = ({ to, isAr = true }) =>
   isLive() && isMockRoute(to) ? (
     // Superscript: sits at the top corner of the label text.
-    <Badge variant="outline" size="sm" className="ms-0.5 px-1 py-0 text-[8px] leading-tight align-super">
+    <Badge variant="outline" size="sm" className="relative -top-1.5 ms-0.5 px-1 py-0 text-[8px] leading-tight">
       {isAr ? 'تجريبي' : 'Demo'}
     </Badge>
   ) : null;
