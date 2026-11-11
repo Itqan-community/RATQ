@@ -10,7 +10,8 @@ export default defineConfig({
   retries: 1,
   use: {
     baseURL,
-    channel: 'chrome', // system Chrome: no browser download needed
+    // Local: system Chrome (no download). CI: bundled Chromium (`npx playwright install chromium`).
+    channel: process.env.CI ? undefined : 'chrome',
     storageState: {
       cookies: [],
       origins: [

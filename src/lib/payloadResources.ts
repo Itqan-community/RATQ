@@ -56,6 +56,17 @@ function licenseFor(raw: string): License {
   );
 }
 
+// Only http(s) links may reach an href: the backend validates website_url only, and the API can be called directly.
+export function isHttpUrl(v: string): boolean {
+  try {
+    const p = new URL(v).protocol;
+    return p === 'http:' || p === 'https:';
+  } catch {
+    return false;
+  }
+}
+const safeUrl = (v?: string | null): string | undefined => (v && isHttpUrl(v) ? v : undefined);
+
 export function toDesignResource(doc: PayloadResourceDoc): Resource {
   const license = licenseFor(doc.license);
   // Payload has no publisher entity (owner is a user); attribute to the community publisher.
@@ -74,9 +85,9 @@ export function toDesignResource(doc: PayloadResourceDoc): Resource {
     access_level: 'open',
     status: doc.status,
     itqan_level: doc.itqan_badge ? 'verified' : 'none',
-    repo_url: doc.github_url ?? undefined,
-    docs_url: doc.documentation_url ?? undefined,
-    homepage_url: doc.website_url ?? undefined,
+    repo_url: safeUrl(doc.github_url),
+    docs_url: safeUrl(doc.documentation_url),
+    homepage_url: safeUrl(doc.website_url),
     tech_stack: [],
     languages: ['ar'],
     categories: TYPE_CATEGORY[doc.type] ? [TYPE_CATEGORY[doc.type]] : [],

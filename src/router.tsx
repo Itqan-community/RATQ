@@ -55,6 +55,8 @@ import AppSettingsPage from '@/views/AppSettings';
 import PublisherDashboardPage from '@/views/PublisherDashboard';
 import PublisherResourcesPage from '@/views/PublisherResources';
 import PublisherResourceNewPage from '@/views/PublisherResourceNew';
+import PublisherResourceFormPage from '@/views/PublisherResourceForm';
+import { isLive } from '@/lib/payloadAuth';
 import PublisherRequestsPage from '@/views/PublisherRequests';
 import PublisherAnalyticsPage from '@/views/PublisherAnalytics';
 import PublisherClaimPage from '@/views/PublisherClaim';
@@ -222,7 +224,15 @@ export const AppRouter: React.FC = () => {
             path="/publisher/resources/new"
             element={
               <PortalLayout portal="publisher">
-                <PublisherResourceNewPage />
+                {isLive() ? <PublisherResourceFormPage /> : <PublisherResourceNewPage />}
+              </PortalLayout>
+            }
+          />
+          <Route
+            path="/publisher/resources/:id/edit"
+            element={
+              <PortalLayout portal="publisher">
+                {isLive() ? <PublisherResourceFormPage /> : <NotFoundPage />}
               </PortalLayout>
             }
           />

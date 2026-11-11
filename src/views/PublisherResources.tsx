@@ -10,11 +10,12 @@ import { ItqanBadge } from '@/components/ui/ItqanBadge';
 import { AccessBadge } from '@/components/ui/AccessBadge';
 import { LicenseBadge } from '@/components/ui/LicenseBadge';
 import { DEMO_RESOURCES, DEMO_PUBLISHERS } from '@/lib/mockData';
-import { Plus, Search, Eye, Trash2 } from 'lucide-react';
+import { Plus, Search, Eye, Pencil, Trash2 } from 'lucide-react';
 import { Resource } from '@/types';
 import { useAuthStore } from '@/store/useAuthStore';
 import { isLive } from '@/lib/payloadAuth';
-import { deleteResource, fetchMyResources } from '@/lib/payloadOwnResources';
+import { hydrateFromPayload } from '@/lib/payloadResources';
+import { canTransition, deleteResource, fetchMyResources, setResourceStatus, type ResourceStatus } from '@/lib/payloadOwnResources';
 
 export const PublisherResourcesPage: React.FC = () => {
   const { i18n } = useTranslation();
@@ -39,6 +40,25 @@ export const PublisherResourcesPage: React.FC = () => {
     setListError(await deleteResource(r.id));
     await reload();
   };
+  const changeStatus = async (r: Resource, to: ResourceStatus) => {
+    const from = r.status as ResourceStatus;
+    if (busy) return; // in-flight guard
+    const label = {
+      published: isAr ? 'نشر' : 'Publish',
+      draft: from === 'archived' ? (isAr ? 'استعادة' : 'Restore') : (isAr ? 'إلغاء النشر' : 'Unpublish'),
+      archived: isAr ? 'أرشفة' : 'Archive',
+    }[to];
+    const note = to === 'published' ? (isAr ? ' سيصبح المورد عاماً.' : ' It becomes publicly visible.') : '';
+    if (!window.confirm(`${label}: "${r.title_ar}"?${note}`)) return;
+    setBusy(true);
+    // canTransition is a UI convenience: the server does not enforce transitions, only ownership.
+    const err = await setResourceStatus(r.id, from, to);
+    setListError(err);
+    if (!err) await hydrateFromPayload(); // public catalog is loaded once at boot; refresh so View/catalog reflect the change
+    await reload();
+    setBusy(false);
+  };
+  const [busy, setBusy] = useState(false);
   const [search, setSearch] = useState('');
   const [typeFilter, setTypeFilter] = useState('all');
 
@@ -140,14 +160,30 @@ export const PublisherResourcesPage: React.FC = () => {
                   </td>
                   <td className="py-4 px-4 text-end">
                     <div className="flex items-center justify-end gap-1.5">
-                      {live && r.status === 'draft' && (
-                        <span className="text-2xs text-amber-600 font-semibold">{isAr ? 'مسودة' : 'Draft'}</span>
+                      {live && r.status !== 'published' && (
+                        <span className="text-2xs text-amber-600 font-semibold">
+                          {r.status === 'archived' ? (isAr ? 'مؤرشف' : 'Archived') : (isAr ? 'مسودة' : 'Draft')}
+                        </span>
                       )}
+                      {live && (['published', 'draft', 'archived'] as const)
+                        .filter((to) => canTransition(r.status as ResourceStatus, to))
+                        .map((to) => (
+                          <Button key={to} variant="ghost" size="sm" className="h-8 px-2 text-2xs" disabled={busy} onClick={() => changeStatus(r, to)}>
+                            {{ published: isAr ? 'نشر' : 'Publish', draft: r.status === 'archived' ? (isAr ? 'استعادة' : 'Restore') : (isAr ? 'إلغاء النشر' : 'Unpublish'), archived: isAr ? 'أرشفة' : 'Archive' }[to]}
+                          </Button>
+                        ))}
                       <Link to={`/resources/${r.slug}`} title={isAr ? 'عرض' : 'View'}>
                         <Button variant="ghost" size="sm" className="p-1.5 h-8 w-8">
                           <Eye className="w-4 h-4" />
                         </Button>
                       </Link>
+                      {live && (
+                        <Link to={`/publisher/resources/${r.id.replace('payload_', '')}/edit`} title={isAr ? 'تعديل' : 'Edit'}>
+                          <Button variant="ghost" size="sm" className="p-1.5 h-8 w-8">
+                            <Pencil className="w-4 h-4" />
+                          </Button>
+                        </Link>
+                      )}
                       {live && (
                         <Button
                           variant="ghost"
