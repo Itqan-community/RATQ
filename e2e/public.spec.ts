@@ -40,7 +40,8 @@ test('home page shows no announcement strip', async ({ page }) => {
 
 test('@prod catalog lists resources from the API', async ({ page }) => {
   await page.goto('/resources');
-  await expect(page.locator('a[href^="/resources/"]').first()).toBeVisible();
+  // payload- prefix: plain `/resources/` also matches nav links such as /resources/roadmap.
+  await expect(page.locator('a[href^="/resources/payload-"]').first()).toBeVisible();
 });
 
 test('@prod guest is redirected from the developer portal', async ({ page }) => {

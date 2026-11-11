@@ -33,6 +33,9 @@ export const useAuthStore = create<AuthState>((set) => ({
   profile: DEMO_PROFILES.developer,
 
   switchRole: (role: UserRole) => {
+    // Demo-only. In live mode the role comes solely from the server session; a client-side switch would unlock
+    // admin/review screens for any visitor (data stays server-protected, but the screens must not open).
+    if (payloadAuth.isLive()) return;
     let newProfile = DEMO_PROFILES.developer;
     if (role === 'publisher_owner' || role === 'publisher_member') newProfile = DEMO_PROFILES.publisher;
     else if (role === 'reviewer') newProfile = DEMO_PROFILES.reviewer;

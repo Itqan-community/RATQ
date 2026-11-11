@@ -358,6 +358,7 @@ export const SiteHeader: React.FC<SiteHeaderProps> = ({ onOpenCommandPalette }) 
           >
             {isAr ? 'معيار إتقان' : 'Itqan Standard'}
           </Link>
+          {!isLive() && (
           <div className="pt-2 border-t border-border flex items-center justify-between text-xs">
             <span className="text-fg-subtle">تبديل الدور التجريبي:</span>
             <select
@@ -372,6 +373,7 @@ export const SiteHeader: React.FC<SiteHeaderProps> = ({ onOpenCommandPalette }) 
               ))}
             </select>
           </div>
+          )}
         </div>
       )}
     </header>

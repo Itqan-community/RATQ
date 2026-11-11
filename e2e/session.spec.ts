@@ -18,6 +18,11 @@ test('sign in reaches the portal, reload keeps the session, /logout ends it', as
   await page.goto('/dashboard/api-keys'); // legacy path, signed in
   await expect(page).toHaveURL(/\/app\/keys$/);
 
+  // A normal user hitting an admin area gets the 403 page, with no demo "switch role" escape hatch.
+  await page.goto('/moderation');
+  await expect(page).toHaveURL(/\/403$/);
+  await expect(page.getByRole('button', { name: /^(Admin|Reviewer|Publisher)$/ })).toHaveCount(0);
+
   await page.goto('/logout');
   await expect(page).toHaveURL(/\/$/);
   await page.goto('/app');

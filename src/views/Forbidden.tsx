@@ -6,6 +6,7 @@ import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { ShieldAlert, Home, LogIn } from 'lucide-react';
 import { useAuthStore } from '@/store/useAuthStore';
+import { isLive } from '@/lib/payloadAuth';
 
 export const ForbiddenPage: React.FC = () => {
   const { i18n } = useTranslation();
@@ -27,7 +28,8 @@ export const ForbiddenPage: React.FC = () => {
             : `Your current role (${currentRole}) does not have permission to view this resource.`}
         </p>
 
-        {/* Demo Helper Switcher */}
+        {/* Demo Helper Switcher: mock mode only (switchRole is a no-op in live mode) */}
+        {!isLive() && (
         <Card className="p-4 bg-canvas-subtle border-border text-xs">
           <span className="font-semibold text-fg block mb-2">
             {isAr ? 'في وضع العرض التجريبي: يمكنك تبديل دورك لتجربة اللوحة:' : 'Demo Mode: Switch role to proceed:'}
@@ -44,6 +46,7 @@ export const ForbiddenPage: React.FC = () => {
             </Button>
           </div>
         </Card>
+        )}
 
         <div className="flex flex-wrap items-center justify-center gap-3 pt-2">
           <Link to="/">

@@ -12,7 +12,7 @@ Beta is built with it pointing at the prod API (`api.ratq.itqan.dev`, user-appro
 | `/resources` | Catalog | Resources | MED | ported (db8b63f; `src/lib/payloadResources.ts`, verified vs local Payload) |
 | `/resources/[slug]` | ResourceDetails | Resources, Comments | MED | ported: resource data + comments (`src/lib/payloadComments.ts`, 7 tests; post + delete own; ratings not in Payload so hidden in live mode; verified e2e) |
 | `/about` | About | - | LOW | ported (design copy kept) |
-| `/contact` | Contact | - | LOW | ported |
+| `/contact` | Contact | - | LOW | ported: live mode shows old prod's real channels (connect@itqan.dev, GitHub issues, community.itqan.dev); the design's form only faked "sent", so it stays demo-only |
 | `/privacy` | LegalPage `/legal/:slug` | - | LOW | ported |
 | `/standards` | Standards | - | LOW | ported |
 | `/docs` | `LivePages.tsx` DocsPage | - | LOW | ported (copy extracted from live messages into i18n ns `live`; verified RTL) |

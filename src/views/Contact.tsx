@@ -8,7 +8,15 @@ import { Select } from '@/components/ui/Select';
 import { Button } from '@/components/ui/Button';
 import { Alert } from '@/components/ui/Alert';
 import { Badge } from '@/components/ui/Badge';
+import { isLive } from '@/lib/payloadAuth';
 import { Mail, MessageSquare, Send, CheckCircle2, ShieldCheck, Github, ExternalLink } from 'lucide-react';
+
+// Same channels as old prod's /contact page.
+const CHANNELS = {
+  email: 'connect@itqan.dev',
+  issues: 'https://github.com/Itqan-community/RATQ/issues',
+  forum: 'https://community.itqan.dev',
+};
 
 export const ContactPage: React.FC = () => {
   const { i18n } = useTranslation();
@@ -67,21 +75,23 @@ export const ContactPage: React.FC = () => {
             <ul className="space-y-3 text-sm">
               <li>
                 <a
-                  href="https://github.com"
+                  href={CHANNELS.issues}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex items-center justify-between p-2 rounded-lg hover:bg-canvas-subtle text-fg-muted hover:text-fg transition-colors"
                 >
                   <span className="flex items-center gap-2">
                     <Github className="w-4 h-4" />
-                    <span>GitHub Organization</span>
+                    <span>{isAr ? 'تذاكر GitHub' : 'GitHub Issues'}</span>
                   </span>
                   <ExternalLink className="w-3.5 h-3.5" />
                 </a>
               </li>
               <li>
                 <a
-                  href="#forum"
+                  href={CHANNELS.forum}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="flex items-center justify-between p-2 rounded-lg hover:bg-canvas-subtle text-fg-muted hover:text-fg transition-colors"
                 >
                   <span className="flex items-center gap-2">
@@ -92,10 +102,10 @@ export const ContactPage: React.FC = () => {
                 </a>
               </li>
               <li>
-                <div className="p-2 text-fg-muted flex items-center gap-2">
+                <a href={`mailto:${CHANNELS.email}`} className="p-2 text-fg-muted hover:text-fg flex items-center gap-2 transition-colors">
                   <ShieldCheck className="w-4 h-4 text-ratq-600" />
-                  <span>security@ratq.org</span>
-                </div>
+                  <span>{CHANNELS.email}</span>
+                </a>
               </li>
             </ul>
           </Card>
@@ -112,10 +122,38 @@ export const ContactPage: React.FC = () => {
           </Card>
         </div>
 
-        {/* Contact Form */}
+        {/* Contact Form (demo only: it never sends anything, so live mode shows the real channels, as old prod did) */}
         <div className="md:col-span-2">
           <Card className="p-6 md:p-8">
-            {submitted ? (
+            {isLive() ? (
+              <div className="space-y-4 text-sm leading-relaxed">
+                <h3 className="text-xl font-bold text-fg">{isAr ? 'كيف تتواصل معنا' : 'How to reach us'}</h3>
+                <p className="text-fg-muted">
+                  {isAr
+                    ? 'رَتْق مشروع مفتوح المصدر تديره المجتمع، وكل من يعمل عليه يبدأ من نفس قائمة المهام المفتوحة على GitHub.'
+                    : 'RATQ is a community-run open-source project. Everyone working on it starts from the same open queue on GitHub.'}
+                </p>
+                <ul className="space-y-3 text-fg-muted">
+                  <li>
+                    {isAr ? 'بريدنا الإلكتروني: ' : 'Email: '}
+                    <a href={`mailto:${CHANNELS.email}`} className="font-semibold text-fg underline">{CHANNELS.email}</a>
+                  </li>
+                  <li>
+                    {isAr ? 'للمشاكل التقنية أو اقتراح ميزة جديدة، افتح تذكرة على ' : 'For bugs and feature requests, open an issue on '}
+                    <a href={CHANNELS.issues} target="_blank" rel="noopener noreferrer" className="font-semibold text-fg underline">GitHub</a>
+                  </li>
+                  <li>
+                    {isAr ? 'للنقاش المجتمعي العام: ' : 'For general community discussion: '}
+                    <a href={CHANNELS.forum} target="_blank" rel="noopener noreferrer" className="font-semibold text-fg underline">community.itqan.dev</a>
+                  </li>
+                  <li>
+                    {isAr
+                      ? 'تريد المساهمة بالكود؟ راجع دليل المساهمة (CONTRIBUTING.md) في المستودع للبدء.'
+                      : 'Want to contribute code? See CONTRIBUTING.md in the repo to get started.'}
+                  </li>
+                </ul>
+              </div>
+            ) : submitted ? (
               <div className="py-12 text-center space-y-4">
                 <div className="w-16 h-16 rounded-full bg-emerald-500/10 text-emerald-500 mx-auto flex items-center justify-center">
                   <CheckCircle2 className="w-10 h-10" />

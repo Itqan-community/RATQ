@@ -68,6 +68,7 @@ export const ResourceDetails: React.FC = () => {
 
   // Live comments (Payload) for live resources; loaded after mount.
   const myProfileId = useAuthStore((s) => s.profile.id);
+  const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
   const [liveReviews, setLiveReviews] = useState<Review[]>([]);
   const [reviewError, setReviewError] = useState<string | null>(null);
   const resource = mockRepo.getResourceBySlug(slug || '');
@@ -207,6 +208,19 @@ export const ResourceDetails: React.FC = () => {
                 variant="gold"
                 size="md"
                 onClick={() => setRequestDialogOpen(true)}
+                startIcon={<Lock className="w-4 h-4" />}
+              >
+                طلب وصول معتمد
+              </Button>
+            )}
+
+            {/* Live resources are all 'open' in the design model, but the API still gates keys behind an approved
+                request (as on old prod's resource page), so offer the request here too. Guests go sign in first. */}
+            {isLiveRes && resource.access_level === 'open' && (
+              <Button
+                variant="gold"
+                size="md"
+                onClick={() => (isAuthenticated ? setRequestDialogOpen(true) : navigate('/auth/sign-in'))}
                 startIcon={<Lock className="w-4 h-4" />}
               >
                 طلب وصول معتمد

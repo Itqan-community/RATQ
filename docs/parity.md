@@ -35,6 +35,26 @@ Enforced by `src/test/legacyRoutes.test.tsx` and `e2e/public.spec.ts`.
 | Announcements | `payloadAnnouncements.ts` |
 | Media | **none: gap.** Old `ResourceForm` uploads a cover image (`POST /media`, then `image` id on the resource) |
 
+## Full beta check against the live API (2026-11-11, second pass)
+
+72 Playwright specs on beta: 71 pass, 1 skipped (`collab.spec.ts`, needs two accounts and leaves residue). Verified:
+
+- 24 public pages in English and Arabic: load, correct RTL/LTR, no console or page errors.
+- Catalog contains every API resource; its filter narrows; a real resource page shows the right name.
+- Dark mode, language toggle and theme palette work.
+- Two accounts, live API (`collab.spec.ts`, run separately and passing): request access from a resource page, publisher inbox shows it, approve, requester notified, requester issues and revokes a key, posts a comment (stored), submits a report (stored).
+
+Bugs found and fixed by this pass:
+
+1. **Demo role switcher exposed in live mode** (403 page and mobile menu): any visitor could switch to admin in the UI. `switchRole` is now a no-op in live mode and both switchers are hidden.
+2. **No way to request access** to a live resource (live resources are all `open`, which hid the request button; old prod has `AccessRequestButton` on every resource page). The button now shows on live resources; guests are sent to sign in.
+3. **Contact form faked "sent"** and dropped messages; old prod shows email, GitHub issues and forum links. Live mode now shows those, and the broken community links (generic github.com, dead `#forum`, invented `security@ratq.org`) are fixed.
+4. Two earlier e2e checks passed on nav links instead of real resources (`/resources/roadmap` matched `/resources/`); they now target `/resources/payload-<slug>`.
+
+Not verifiable with a developer account: moderation queue actions and the admin console (admin role needed; the guard returns 403 as designed). Unverified: password-reset email delivery, GitHub OAuth, email verification.
+
+Residue the e2e runs leave that only an admin can delete (live API returns 403 to authors): 3 comments, 4 notifications, and the two throwaway users (`e2e-parity-*@example.invalid`).
+
 ## Owner-resource flows verified on beta against the prod API (2026-11-11, Worker version e1aa92e2)
 
 Throwaway account, all test data deleted afterwards (the account itself remains for an admin to delete).
