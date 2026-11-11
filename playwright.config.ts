@@ -8,6 +8,7 @@ export default defineConfig({
   timeout: 30_000,
   expect: { timeout: 15_000 },
   retries: 1,
+  workers: 1, // the authenticated specs share one account; parallel logins/logouts invalidate each other's session
   use: {
     baseURL,
     // Local: system Chrome (no download). CI: bundled Chromium (`npx playwright install chromium`).

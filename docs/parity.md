@@ -35,7 +35,24 @@ Enforced by `src/test/legacyRoutes.test.tsx` and `e2e/public.spec.ts`.
 | Announcements | `payloadAnnouncements.ts` |
 | Media | **none: gap.** Old `ResourceForm` uploads a cover image (`POST /media`, then `image` id on the resource) |
 
-## Owner-resource gaps: implemented 2026-11-11, UI Unverified
+## Owner-resource flows verified on beta against the prod API (2026-11-11, Worker version e1aa92e2)
+
+Throwaway account, all test data deleted afterwards (the account itself remains for an admin to delete).
+
+| Flow | Result |
+|---|---|
+| Create draft with cover image | Verified (resource stored `image`, Media `alt` set via `_payload`) |
+| Edit form loads own resource from the raw doc | Verified |
+| API key create on an owned resource, delete | Verified via API (key shown once, 200 on delete) |
+| Sign in, reload, legacy redirect while signed in, /logout | Verified (run alone; parallel logins on one account invalidated each other, so the config now uses 1 worker) |
+| **Edit save, Publish, Unpublish, Archive, Restore** | **Blocked by a backend bug** |
+| Key create from the UI | Needs an owned *published* resource or an approved request, so blocked by the same bug for a fresh account |
+
+**Backend bug (deployed `payload-backend`, #341):** the Resources `beforeChange` hook does `delete data.owner` on update. That hook runs before field validation, so every update by an owner or an admin fails with "The following field is invalid: Owner". Reproduced with plain `curl` PATCH bodies, including `{"status":"published"}`. Old prod therefore could not update resources either, so this is not a regression, but edit and publish cannot work until it is fixed (e.g. keep `data.owner = originalDoc.owner` instead of deleting it). Backend deploys on push to `beta`; not changed here.
+
+Other findings: deleting a resource leaves its cover in Media (orphan); Media has no ownership rules, so any signed-in user can delete any cover.
+
+## Owner-resource gaps: implemented 2026-11-11
 
 Decisions: draft on create + owner Publish/Unpublish/Archive/Restore buttons; edit page; cover image (alt = resource name); `documentation_url` and `website_url`. Adapter: `src/lib/payloadOwnResources.ts` (54 tests). UI: `PublisherResourceForm.tsx` (live-mode create + edit, wizard stays for mock mode) and status/edit buttons in `PublisherResources.tsx`. Not exercised in a browser or against the real API (localhost is CORS-blocked; needs a deploy to beta and a throwaway account). Caveat: old upload sent no `alt`, which `Media` requires, so it likely failed on old prod too.
 
