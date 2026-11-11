@@ -11,6 +11,7 @@ export default defineConfig({
   workers: 1, // the authenticated specs share one account; parallel logins/logouts invalidate each other's session
   use: {
     baseURL,
+    actionTimeout: 15_000, // default is unlimited: a wrong selector would hang until the test timeout and skip cleanup
     // Local: system Chrome (no download). CI: bundled Chromium (`npx playwright install chromium`).
     channel: process.env.CI ? undefined : 'chrome',
     storageState: {

@@ -45,16 +45,16 @@ Throwaway account, all test data deleted afterwards (the account itself remains 
 | Edit form loads own resource from the raw doc | Verified |
 | API key create on an owned resource, delete | Verified via API (key shown once, 200 on delete) |
 | Sign in, reload, legacy redirect while signed in, /logout | Verified (run alone; parallel logins on one account invalidated each other, so the config now uses 1 worker) |
-| **Edit save, Publish, Unpublish, Archive, Restore** | **Blocked by a backend bug** |
-| Key create from the UI | Needs an owned *published* resource or an approved request, so blocked by the same bug for a fresh account |
+| Edit save, Publish, Unpublish, public page, delete | Verified on beta (17/17 e2e specs, Worker version 1184f623) after the backend fix below |
+| Key create from the UI, reveal once, revoke | Verified on beta (spec creates and publishes its own resource first; a fresh account owns nothing) |
 
-**Backend bug (deployed `payload-backend`, #341):** the Resources `beforeChange` hook does `delete data.owner` on update. That hook runs before field validation, so every update by an owner or an admin fails with "The following field is invalid: Owner". Reproduced with plain `curl` PATCH bodies, including `{"status":"published"}`. Old prod therefore could not update resources either, so this is not a regression, but edit and publish cannot work until it is fixed (e.g. keep `data.owner = originalDoc.owner` instead of deleting it). Backend deploys on push to `beta`; not changed here.
+**Backend bug, fixed (RATQ PR #363, merged to `beta` 2026-11-11, deploy-backend run green):** the Resources `beforeChange` hook did `delete data.owner` on update. That hook runs before field validation, so every update by an owner or an admin failed with "The following field is invalid: Owner". Old prod therefore could not update resources either. Fix: restore `originalDoc.owner` instead of deleting it (spoofed owners are still ignored). Verified on a real Payload (old code 400, new code 200 for edit/publish/unpublish/archive) and on the live API after deploy (edit, spoof-ignored, archive, restore all 200).
 
-Other findings: deleting a resource leaves its cover in Media (orphan); Media has no ownership rules, so any signed-in user can delete any cover.
+Other findings, not fixed: deleting a resource leaves its cover in Media (orphan; each e2e run leaves one, removed by hand); Media has no ownership rules, so any signed-in user can delete any cover. The key dialog's "Target Resource" label is not bound to its `<select>` (accessibility).
 
 ## Owner-resource gaps: implemented 2026-11-11
 
-Decisions: draft on create + owner Publish/Unpublish/Archive/Restore buttons; edit page; cover image (alt = resource name); `documentation_url` and `website_url`. Adapter: `src/lib/payloadOwnResources.ts` (54 tests). UI: `PublisherResourceForm.tsx` (live-mode create + edit, wizard stays for mock mode) and status/edit buttons in `PublisherResources.tsx`. Not exercised in a browser or against the real API (localhost is CORS-blocked; needs a deploy to beta and a throwaway account). Caveat: old upload sent no `alt`, which `Media` requires, so it likely failed on old prod too.
+Decisions: draft on create + owner Publish/Unpublish/Archive/Restore buttons; edit page; cover image (alt = resource name); `documentation_url` and `website_url`. Adapter: `src/lib/payloadOwnResources.ts` (54 tests). UI: `PublisherResourceForm.tsx` (live-mode create + edit, wizard stays for mock mode) and status/edit buttons in `PublisherResources.tsx`. Exercised in a browser against the real API on beta (see above). Caveat: old upload sent no `alt`, which `Media` requires, so it likely failed on old prod too.
 
 Original findings. Old prod API layer (`ratq/src/modules/developer/infrastructure/resources-api.ts` + `ResourceForm.tsx`) supports four things the new `payloadOwnResources.ts` does not:
 
