@@ -24,7 +24,6 @@ import {
 } from 'lucide-react';
 import { useThemeStore } from '@/store/useThemeStore';
 import { isLive } from '@/lib/payloadAuth';
-import { AnnouncementsStrip } from '@/components/home/AnnouncementsStrip';
 
 export const Home: React.FC = () => {
   const navigate = useNavigate();
@@ -104,7 +103,6 @@ export const Home: React.FC = () => {
 
   return (
     <div className="flex flex-col w-full text-center">
-      {isLive() && <AnnouncementsStrip />}
       {/* 1. Hero Section */}
       <section className="relative pt-14 pb-16 sm:pt-16 sm:pb-20 px-4 sm:px-6 overflow-hidden border-b border-border hero-gradient-bg transition-colors">
         {heroLayout === 'split' ? (
