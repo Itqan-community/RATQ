@@ -97,13 +97,18 @@ export const Resources: CollectionConfig = {
       },
     ],
     beforeChange: [
-      ({ req, data, operation }) => {
+      ({ req, data, operation, originalDoc }) => {
         // Only stamp ownership on create. On update the owner must stay put, otherwise
         // an admin moderating someone's resource would silently take it over.
         if (operation === 'create') {
           if (req.user) data.owner = req.user.id
         } else {
-          delete data.owner
+          // Restore the stored owner rather than deleting it: field validation runs after this hook and
+          // `owner` is required, so a deleted owner made EVERY update fail with "Owner is required".
+          const stored = originalDoc?.owner
+          const storedId = typeof stored === 'object' && stored !== null ? stored.id : stored
+          if (storedId !== undefined && storedId !== null) data.owner = storedId
+          else delete data.owner
         }
         return data
       },

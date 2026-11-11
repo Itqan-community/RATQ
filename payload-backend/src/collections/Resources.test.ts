@@ -149,6 +149,7 @@ interface BeforeChangeArgs {
   req: { user: ReqUser }
   data: Record<string, unknown>
   operation: string
+  originalDoc?: Record<string, unknown>
 }
 
 describe('Resources beforeChange hook (owner-spoofing prevention)', () => {
@@ -177,21 +178,49 @@ describe('Resources beforeChange hook (owner-spoofing prevention)', () => {
     expect(result.owner).toBe(10)
   })
 
-  it('beforeChangeHook_adminUpdatesOthersResource_doesNotTakeOwnership', () => {
+  // Field validation runs AFTER this hook and `owner` is required, so on update the owner must be present
+  // (restored from the stored doc), never deleted: deleting it made every update fail with "Owner is required".
+  it('beforeChangeHook_adminUpdatesOthersResource_keepsOriginalOwnerNotTheAdmin', () => {
     const result = beforeChangeHook({
       req: { user: { id: 1, role: 'admin' } },
       data: { status: 'draft' },
       operation: 'update',
+      originalDoc: { owner: 7 },
     })
 
-    expect(result).not.toHaveProperty('owner')
+    expect(result.owner).toBe(7)
+    expect(result.status).toBe('draft')
   })
 
-  it('beforeChangeHook_updateWithSpoofedOwner_dropsClientSuppliedOwner', () => {
+  it('beforeChangeHook_updateWithSpoofedOwner_restoresOriginalOwner', () => {
     const result = beforeChangeHook({
       req: { user: { id: 42, role: 'developer' } },
       data: { name: 'Renamed', owner: 999 },
       operation: 'update',
+      originalDoc: { owner: 42 },
+    })
+
+    expect(result.owner).toBe(42)
+    expect(result.owner).not.toBe(999)
+  })
+
+  it('beforeChangeHook_updateWithPopulatedOriginalOwner_usesItsId', () => {
+    const result = beforeChangeHook({
+      req: { user: { id: 1, role: 'admin' } },
+      data: { name: 'Renamed' },
+      operation: 'update',
+      originalDoc: { owner: { id: 7 } },
+    })
+
+    expect(result.owner).toBe(7)
+  })
+
+  it('beforeChangeHook_updateWithNoStoredOwner_neverInventsOne', () => {
+    const result = beforeChangeHook({
+      req: { user: { id: 1, role: 'admin' } },
+      data: { name: 'Renamed', owner: 999 },
+      operation: 'update',
+      originalDoc: {},
     })
 
     expect(result).not.toHaveProperty('owner')
