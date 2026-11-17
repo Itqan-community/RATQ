@@ -52,7 +52,7 @@ const initialTheme = (safeGetItem('ratq_theme', 'light') as ThemeMode);
 const initialPalette = (safeGetItem('ratq_palette', 'gold') as PaletteType);
 const initialFont = (safeGetItem('ratq_font', 'suisse') as FontType);
 const initialRadius = (safeGetItem('ratq_radius', '4px') as RadiusType);
-const initialHeroLayout = (safeGetItem('ratq_hero_layout', 'split') as HeroLayoutType);
+const initialHeroLayout = (safeGetItem('ratq_hero_layout', 'third') as HeroLayoutType);
 const initialLigatures = safeGetItem('ratq_ligatures', 'true') !== 'false';
 const initialLocale = (safeGetItem('ratq_locale', 'ar') as 'ar' | 'en');
 const initialNumeral = (safeGetItem('ratq_numeral', 'western') as 'western' | 'arabic-indic');
@@ -175,7 +175,7 @@ export const useThemeStore = create<ThemeState>((set, get) => ({
       palette: 'gold' as PaletteType,
       font: 'suisse' as FontType,
       radius: '4px' as RadiusType,
-      heroLayout: 'split' as HeroLayoutType,
+      heroLayout: 'third' as HeroLayoutType,
       ligatures: true,
     };
     set(defaultState);
@@ -184,7 +184,7 @@ export const useThemeStore = create<ThemeState>((set, get) => ({
       window.localStorage.setItem('ratq_palette', 'gold');
       window.localStorage.setItem('ratq_font', 'suisse');
       window.localStorage.setItem('ratq_radius', '4px');
-      window.localStorage.setItem('ratq_hero_layout', 'split');
+      window.localStorage.setItem('ratq_hero_layout', 'third');
       window.localStorage.setItem('ratq_ligatures', 'true');
     }
     applyDomAttributes('light', 'gold', 'suisse', '4px', true);
