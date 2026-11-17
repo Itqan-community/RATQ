@@ -6,7 +6,6 @@ import { queryClient } from '@/lib/queryClient';
 import { useTranslation } from 'react-i18next';
 import { useThemeStore } from '@/store/useThemeStore';
 import { AppRouter } from '@/router';
-import { ThemeCustomizerFloatingButton } from '@/components/theme/ThemeCustomizerFloatingButton';
 
 export const App: React.FC = () => {
   const { i18n } = useTranslation();
@@ -32,7 +31,6 @@ export const App: React.FC = () => {
     <QueryClientProvider client={queryClient}>
       <BrowserRouter>
         <AppRouter />
-        <ThemeCustomizerFloatingButton />
       </BrowserRouter>
     </QueryClientProvider>
   );
