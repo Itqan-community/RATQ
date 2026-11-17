@@ -3,6 +3,7 @@ import { SpaShell } from '../SpaShell';
 import { SeoBlock, getResources, openGraph } from '../seo';
 
 export const dynamic = 'force-dynamic';
+export const runtime = 'edge'; // Cloudflare Pages (next-on-pages) needs every dynamic route on the edge runtime
 
 const TITLE = 'مكتبة الموارد';
 const DESCRIPTION = 'تصفّح مكتبة الموارد القرآنية: مكتبات، حزم تطوير، مجموعات بيانات، تلاوات وتفاسير مفتوحة المصدر.';

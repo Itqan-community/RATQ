@@ -2,6 +2,7 @@
 import { fetchApiResources, handle, listParamsFrom, listResources, preflight } from '@/lib/publicApi';
 
 export const dynamic = 'force-dynamic';
+export const runtime = 'edge';
 
 export const GET = (request: Request) =>
   handle(request, async () => listResources(await fetchApiResources(), listParamsFrom(new URL(request.url).searchParams)));
