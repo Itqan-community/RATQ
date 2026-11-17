@@ -4,15 +4,6 @@ import path from 'path';
 
 export default defineConfig({
   plugins: [react()],
-  resolve: {
-    alias: {
-      '@': path.resolve(__dirname, './src'),
-    },
-  },
-  test: {
-    environment: 'jsdom',
-    setupFiles: ['./vitest.setup.ts'],
-    globals: true,
-    include: ['src/__tests__/**/*.test.{ts,tsx}'],
-  },
+  resolve: { alias: { '@': path.resolve(__dirname, './src') } },
+  test: { exclude: ['e2e/**', 'payload-backend/**','node_modules/**', '.open-next/**'], globals: true, environment: 'jsdom', setupFiles: './src/test/setup.ts' },
 });
