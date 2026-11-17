@@ -1,0 +1,28 @@
+{
+  "docs": {
+    "title": "Docs",
+    "intro": "The starting point for using RATQ as a developer — whether you're looking for a resource or publishing one.",
+    "browse": {
+      "title": "Browsing resources",
+      "body": "Use the resource catalog to search and filter by type, license, or keyword. Every resource page shows documentation, license, version, and access information."
+    },
+    "publish": {
+      "title": "Publishing and access",
+      "body": "Have a resource to add? Sign in via GitHub from the developer dashboard to publish it and manage access requests if it's restricted."
+    },
+    "apiKeys": {
+      "title": "API keys",
+      "body": "From the developer dashboard you can generate API keys to integrate RATQ's data directly into your project."
+    },
+    "contribute": {
+      "title": "Contributing code",
+      "body": "RATQ is open source. See CONTRIBUTING.md in the GitHub repo for how to set up a dev environment and contribute code."
+    }
+  },
+  "contributors": {
+    "pageTitle": "Contributors",
+    "subtitle": "RATQ is built with the community. These contributors have fixed bugs, closed issues, and shipped improvements to the platform.",
+    "viewIssue": "Issue",
+    "viewPr": "Pull request"
+  }
+}

@@ -2,54 +2,49 @@
 
 RATQ is the developer marketplace at the center of the Itqan ecosystem: a place where developers discover, verify, and integrate Quranic-data resources, including libraries, SDKs, datasets, APIs, and tafsir sources.
 
-This repo's `main` branch is a Next.js/TypeScript rebuild in active development, previewable at [beta.ratq.itqan.dev](https://beta.ratq.itqan.dev) and [ratq.itqan.dev](https://ratq.itqan.dev). The product itself is still pre-launch (per the roadmap) even though `main` is now the source of truth for the codebase. All contributions target `main`. (The old static-wiki version of this repo is preserved on the `old_main` branch for reference.)
+The site runs at [ratq.itqan.dev](https://ratq.itqan.dev); [beta.ratq.itqan.dev](https://beta.ratq.itqan.dev) is the preview. All contributions target `main`. The frontend is now the Next 15 + react-router app under `app/` and `src/`, and the old structure is tagged `pre-new-design-2026-11-10`.
 
 This project follows Itqan's [Community-first process](https://app.notion.com/p/3a97056925c880cf98d5db323853e93a): no work happens without a GitHub Issue, and community contributors work from the same queue as the internal team.
 
 ## Setup
 
-1. Fork and clone the repo (`main` is checked out by default).
-2. `npm install`
-3. Copy `.env.example` to `.env.local` and adjust if needed (defaults work for local development against mock data).
-4. `npm run dev` and open `http://localhost:3000`.
+Requires Node 20+ and pnpm 10+.
+
+1. Fork and clone the repo.
+2. `pnpm install`
+3. `pnpm dev` and open `http://localhost:3000`. With no env vars it runs on mock data, no backend needed. See `README.md` for live mode.
 
 ## Project structure
 
-The codebase is organized by domain, DDD-style:
+- `app/[[...slug]]/`: Next.js catch-all that hands every URL to the client router.
+- `src/router.tsx`: all routes. Old live-RATQ paths redirect via `src/lib/legacyRoutes.tsx`.
+- `src/views/`: one file per page.
+- `src/components/`: shared UI (`ui/` atoms, `layout/` shells and portals).
+- `src/lib/`: data layer. `payload*.ts` call the Payload REST API; `mockData.ts` and `supabase.ts` (the in-memory `mockRepo`) back Demo pages.
+- `src/i18n/locales/{ar,en}/*.json`: translations. UI text goes through i18n, not hardcoded strings (existing pages with inline `isAr ? ... : ...` copy are tolerated, don't add more).
+- `src/test/`: Vitest. `e2e/`: Playwright.
+- `payload-backend/`: the CMS/API. Backend changes follow its own README and tests.
 
-- `src/app/`: Next.js App Router pages. Kept thin, routes import from `modules/` rather than holding logic themselves.
-- `src/modules/{resources,developer,auth}/`: one folder per domain, each with:
-  - `domain/`: framework-free logic (value objects, policy/ranking services) - only added where a real rule exists, not for every module.
-  - `application/use-cases/`: one function per operation, called by hooks. Thin wrappers around infrastructure are fine for plain CRUD; anything with a real rule to apply calls into `domain/`.
-  - `infrastructure/`: the actual data-source layer. `modules/resources/infrastructure/repositories/` is the resource data-source layer specifically - each source (RATQ's own mock data, the CMS integration, Payload) normalizes into the shared `Resource` type. Adding a new data source means adding one file here, see `ratq-native.ts` and `cms.ts` for the pattern.
-  - `components/`: feature-specific UI for that domain.
-- `src/shared/`: cross-cutting code used by more than one module - `infrastructure/` (token storage, Payload config, error parsing, edge cache), `ui/` (design-system atoms, global layout chrome, i18n), `utils/`.
-- `src/shared/ui/i18n/`: Arabic/English translation strings (`messages/ar.json`, `messages/en.json`). UI text should go through the `t.*`/`useTranslations()` object, not hardcoded strings.
-- `src/hooks/`: client-side hooks that call into a module's use-cases (e.g. `useResources.ts` calls `modules/resources/application/use-cases/*`). Stay top-level rather than living inside a module, since some are consumed across domains.
-- `src/types/`: shared, generic TypeScript definitions (e.g. `resource.ts`).
+## Demo features
 
-Note: `src/app/dashboard/*` and `src/app/developer/*` currently overlap (both have their own resource/API-key/request pages) - this predates the module restructure and is tracked separately, not a pattern to copy.
+Pages marked **Demo / تجريبي** run on mock data and are listed in `MOCKED.md` (code: `src/lib/mockRoutes.ts`). Finishing one means adding the Payload collection in `payload-backend/`, a `src/lib/payload<Thing>.ts` adapter with tests, switching the view to it behind `isLive()`, and removing it from `MOCK_ROUTES` and `MOCKED.md`. `PORTING.md` shows how finished features were done.
 
 ## Coding standards
 
-- Match the existing structure and conventions of surrounding files - a new domain rule goes in that module's `domain/`, not inline in a component.
-- New UI text goes through `src/shared/ui/i18n/messages/{ar,en}.json`, not inline hardcoded strings.
+- Match the existing structure and conventions of surrounding files.
+- Compare against typed constants (enums, role names), never display strings.
 - Keep changes scoped to what the issue asks for.
 
 ## Testing
 
-- Run `npm test` (watch mode) or `npm run test:run` (single run) before opening a PR. For `payload-backend/` changes, run its own test suite from that directory instead.
-- **Tests are required, not optional, when your change touches:**
-  - Access control / permissions (anything in a collection's `access` block, an `Access` function, or similar auth-path logic) - cover every distinct role/case your change affects (e.g. admin, owner, a different non-owner user, unauthenticated), not just the happy path. See `payload-backend/src/collections/Comments.test.ts` for the expected shape.
-  - A bug fix where the bug was a logic error (not a pure encoding/formatting/copy fix) - add a regression test that fails on the old code and passes on the new one.
-  - A new hook or utility function with any branching logic.
-- **Tests are optional** for pure styling/markup tweaks, dependency bumps, encoding fixes (e.g. stripping a BOM byte), copy/translation changes, or config-only edits with no logic change - explain briefly in the PR description why no test was added if it's not obvious.
-- When you introduce a new helper to replace an old one, remove the old one if it's no longer referenced anywhere - don't leave dead code behind (a lingering unused function will show up as a new lint warning in review).
-
-## Linting
-
-- Run `npm run lint` before opening a PR.
-- This repo currently has some pre-existing lint errors, tracked as good-first-issues rather than fixed all at once. If `npm run lint` reports errors in files unrelated to your change, that's expected, just make sure your own change doesn't introduce new ones.
+- Run `pnpm typecheck` and `pnpm test` before opening a PR. For `payload-backend/` changes, run its own test suite from that directory.
+- **Tests are required when your change touches:**
+  - Access control / permissions (a collection's `access` block, route guards in `src/lib/portalAccess.ts`): cover every distinct role/case (admin, owner, another user, unauthenticated), not just the happy path. See `payload-backend/src/collections/Comments.test.ts` for the expected shape.
+  - A bug fix where the bug was a logic error: add a regression test that fails on the old code and passes on the new one.
+  - A new helper with branching logic, or a new `src/lib/payload*.ts` adapter.
+- **Tests are optional** for pure styling/markup, dependency bumps, copy/translation changes, or config-only edits. Say briefly in the PR why none was added if it isn't obvious.
+- `pnpm test:e2e` (Playwright) runs against beta and is not required for PRs. Never put real credentials in specs; see `.env.example`.
+- When you introduce a helper that replaces an old one, remove the old one if nothing else uses it.
 
 ## Picking an issue
 
