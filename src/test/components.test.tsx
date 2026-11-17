@@ -10,6 +10,7 @@ import { ResourceCard } from '../components/resources/ResourceCard';
 import { Home } from '../views/Home';
 import { MemoryRouter } from 'react-router-dom';
 import { mockRepo } from '../lib/supabase';
+import { useThemeStore } from '../store/useThemeStore';
 import { ArrowLeft, ArrowRight } from 'lucide-react';
 
 const dummyResource = mockRepo.getResources()[0];
@@ -127,6 +128,8 @@ describe('UI Component Suite', () => {
   });
 
   it('renders Featured Resources in Home page with app ecosystem badges without label', () => {
+    // The default hero is now the cards carousel (no <img>); this test needs the image hero to assert on images.
+    useThemeStore.setState({ heroLayout: 'split' });
     render(
       <MemoryRouter>
         <Home />

@@ -93,7 +93,7 @@ describe('Theme Customizer Component & Store', () => {
     expect(useThemeStore.getState().radius).toBe('4px');
     expect(useThemeStore.getState().palette).toBe('gold');
     expect(useThemeStore.getState().font).toBe('suisse');
-    expect(useThemeStore.getState().heroLayout).toBe('split');
+    expect(useThemeStore.getState().heroLayout).toBe('third');
   });
 
   it('switches hero section layout (centered vs split vs third)', () => {
