@@ -7,6 +7,7 @@ import { routeTitle } from '@/lib/routeTitle';
 import { resourceMeta } from '@/lib/seoMeta';
 
 export const dynamic = 'force-dynamic';
+export const runtime = 'edge';
 
 type Props = { params: Promise<{ slug: string }> };
 

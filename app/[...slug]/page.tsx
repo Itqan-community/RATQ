@@ -6,6 +6,7 @@ import { routeTitle } from '@/lib/routeTitle';
 import { mockRobots } from '../seo';
 
 export const dynamic = 'force-dynamic';
+export const runtime = 'edge';
 
 type Props = { params: Promise<{ slug: string[] }> };
 const pathOf = async ({ params }: Props) => '/' + (await params).slug.join('/');
