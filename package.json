@@ -1,41 +1,57 @@
 {
-  "name": "ratq-frontend",
-  "version": "0.1.0",
+  "name": "ratq-community-platform",
   "private": true,
+  "version": "1.0.0",
+  "type": "module",
   "scripts": {
-    "dev": "next dev",
+    "dev": "next dev -p 3000",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint .",
+    "test": "vitest run",
+    "test:watch": "vitest",
     "typecheck": "tsc --noEmit",
-    "test": "vitest",
-    "test:run": "vitest run"
+    "test:e2e": "playwright test",
+    "test:e2e:prod": "BASE_URL=https://ratq.itqan.dev playwright test --grep @prod",
+    "cf:build": "opennextjs-cloudflare build",
+    "cf:deploy": "opennextjs-cloudflare build && opennextjs-cloudflare deploy"
   },
   "dependencies": {
-    "@gsap/react": "^2.1.2",
+    "@supabase/supabase-js": "^2.49.1",
+    "@tanstack/react-query": "^5.67.1",
+    "clsx": "^2.1.1",
     "gsap": "^3.15.0",
-    "next": "16.2.4",
-    "react": "19.2.5",
-    "react-dom": "19.2.5",
-    "swr": "^2.2.5"
+    "i18next": "^24.2.2",
+    "lucide-react": "^0.475.0",
+    "next": "15.1.6",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-i18next": "^15.4.1",
+    "react-router-dom": "^6.30.0",
+    "tailwind-merge": "^3.0.2",
+    "zod": "^3.24.2",
+    "zustand": "^5.0.3"
   },
   "devDependencies": {
-    "@tailwindcss/forms": "^0.5.9",
-    "@testing-library/dom": "^10.4.1",
-    "@testing-library/jest-dom": "^6.6.0",
-    "@testing-library/react": "^16.1.0",
-    "@types/node": "^20.14.0",
-    "@types/react": "19.2.14",
-    "@types/react-dom": "19.2.3",
-    "@vitejs/plugin-react": "^4.3.0",
-    "@vitest/ui": "^3.0.0",
+    "@opennextjs/cloudflare": "1.9.2",
+    "@playwright/test": "1.49.1",
+    "@testing-library/jest-dom": "^6.6.3",
+    "@testing-library/react": "^16.2.0",
+    "@types/node": "^22.13.5",
+    "@types/react": "^18.3.18",
+    "@types/react-dom": "^18.3.5",
+    "@vitejs/plugin-react": "^4.3.4",
     "autoprefixer": "^10.4.20",
-    "eslint": "^9.39.4",
-    "eslint-config-next": "16.2.4",
     "jsdom": "^26.0.0",
-    "postcss": "^8.4.47",
-    "tailwindcss": "^3.4.13",
-    "typescript": "^5.5.0",
-    "vitest": "^3.0.0"
+    "postcss": "^8.5.3",
+    "sharp": "file:stubs/sharp",
+    "tailwindcss": "^3.4.17",
+    "typescript": "^5.7.3",
+    "vitest": "^3.0.7",
+    "wrangler": "4.152.0"
+  },
+  "pnpm": {
+    "overrides": {
+      "sharp": "file:./stubs/sharp"
+    }
   }
 }
