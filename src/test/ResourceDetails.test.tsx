@@ -2,6 +2,7 @@
 import { describe, it, expect } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import { MemoryRouter, Routes, Route } from 'react-router-dom';
+import '@/i18n/config';
 import { ResourceDetails } from '@/views/ResourceDetails';
 
 describe('ResourceDetails Page - Ecosystem Apps in Sidebar', () => {

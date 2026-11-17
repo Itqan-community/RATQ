@@ -2,6 +2,7 @@ import React from 'react';
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
 import { MemoryRouter, Routes, Route } from 'react-router-dom';
+import '@/i18n/config';
 import { ResourceDetails } from '@/views/ResourceDetails';
 import { toDesignResource, type PayloadResourceDoc } from '@/lib/payloadResources';
 import { mockRepo } from '@/lib/supabase';

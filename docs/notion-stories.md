@@ -13,7 +13,7 @@ Source for the community board. One story per Demo group (routes in `src/lib/moc
 | 5 | Admin console (users, resources, flags, audit) | `/admin` | Audit log needs a collection; suspend action missing |
 | 6 | Categories | `/categories` | Derived from resource type today |
 | 7 | Licenses | `/licenses` | License objects are synthesized for non-CC licenses |
-| 8 | Tech stacks | `/resources/stacks` | Wizard tech-stack field is dropped on submit |
+| 8 | Tech stacks | `/stacks`, `/resources/stacks` | Wizard tech-stack field is dropped on submit |
 | 9 | Quranic roadmap | `/resources/roadmap` | Static data today |
 | 10 | Project wizard | `/resources/wizard` | Checksum, pledge and self-audit fields have no column |
 | 11 | Standards checklist | `/standards/checklist` | |

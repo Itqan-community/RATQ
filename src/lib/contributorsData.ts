@@ -148,9 +148,9 @@ export const contributors: Contributor[] = [
     githubUrl: 'https://github.com/Walid-Khalfa',
     avatarUrl: 'https://github.com/Walid-Khalfa.png',
     contribution:
-      'Built the real Payload backend for Announcements, replacing the mock data it had been running on - a proper collection with admin-only writes, public reads scoped to active/non-expired announcements, and resource links that resolve through the real catalog instead of pointing at fake resource IDs. Later added Edge Cache for GitHub repository previews, caching successful responses per-repository while explicitly excluding failed, invalid, or missing-token results from the cache. Later added the website CTA banners - an optional website_url field plus "Visit site" and "Use API" banners, gated on real data and hidden otherwise, along with a fix so the GitHub stats card only shows for genuinely GitHub-hosted resources. Then added a resource-detail photo carousel with previous/next controls, a slide counter, and dot navigation, falling back to the single resource image when no photo list is available.',
-    issueUrl: 'https://github.com/Itqan-community/RATQ/issues/295',
-    prUrl: 'https://github.com/Itqan-community/RATQ/pull/313',
+      'Built the real Payload backend for Announcements, replacing the mock data it had been running on - a proper collection with admin-only writes, public reads scoped to active/non-expired announcements, and resource links that resolve through the real catalog instead of pointing at fake resource IDs. Later added Edge Cache for GitHub repository previews, caching successful responses per-repository while explicitly excluding failed, invalid, or missing-token results from the cache. Later added the website CTA banners - an optional website_url field plus "Visit site" and "Use API" banners, gated on real data and hidden otherwise, along with a fix so the GitHub stats card only shows for genuinely GitHub-hosted resources. Then added a resource-detail photo carousel with previous/next controls, a slide counter, and dot navigation, falling back to the single resource image when no photo list is available. Then fixed the Publishers filter dropdown so it closes on an outside click, Escape, or page scroll while staying open when scrolling inside the list, with regression tests. Most recently fixed the Newest/Oldest resource sorting so resources with a missing or invalid creation date no longer break the date comparator and land in a deterministic spot, with regression tests that fail on the old code. Then fixed dashboard subpages redirecting to the overview on refresh - the five dashboard auth guards now wait for the session to finish restoring before redirecting, with regression tests that fail on the old code.',
+    issueUrl: 'https://github.com/Itqan-community/RATQ/issues/337',
+    prUrl: 'https://github.com/Itqan-community/RATQ/pull/338',
   },
   {
     name: 'Zyad-Eltayabi',
@@ -248,9 +248,9 @@ export const contributors: Contributor[] = [
     githubUrl: 'https://github.com/MahmoudSheemy127',
     avatarUrl: 'https://github.com/MahmoudSheemy127.png',
     contribution:
-      "Migrated authentication from a JWT stored in localStorage to a secure HttpOnly cookie, closing an XSS exposure - reconfigured Payload's auth settings, updated the GitHub OAuth flow to match, and moved every frontend request over to session-based auth.",
-    issueUrl: 'https://github.com/Itqan-community/RATQ/issues/269',
-    prUrl: 'https://github.com/Itqan-community/RATQ/pull/281',
+      "Migrated authentication from a JWT stored in localStorage to a secure HttpOnly cookie, closing an XSS exposure - reconfigured Payload's auth settings, updated the GitHub OAuth flow to match, and moved every frontend request over to session-based auth. Later stopped the resource detail page from scanning the whole catalog to find one slug - each source now exposes a direct single-resource lookup (CMS, Payload and the native source), the aggregator routes a slug to the source that owns its prefix, and the old full scan stays only as a fallback, with tests asserting the list call is skipped.",
+    issueUrl: 'https://github.com/Itqan-community/RATQ/issues/329',
+    prUrl: 'https://github.com/Itqan-community/RATQ/pull/336',
   },
   {
     name: 'Salmaameer',
@@ -281,5 +281,15 @@ export const contributors: Contributor[] = [
       "Added a publisher filter to the resources catalog - a reusable multi-select dropdown, a new publishers endpoint, and publisher names shown on resource cards and the resource detail page, with a dedicated 'No publisher' option.",
     issueUrl: 'https://github.com/Itqan-community/RATQ/issues/301',
     prUrl: 'https://github.com/Itqan-community/RATQ/pull/315',
+  },
+  {
+    name: 'CRYPTONIKAV',
+    githubUsername: 'CRYPTONIKAV',
+    githubUrl: 'https://github.com/CRYPTONIKAV',
+    avatarUrl: 'https://github.com/CRYPTONIKAV.png',
+    contribution:
+      "Made the login and register flows honor the ?redirect= parameter, so visitors who click 'Log in to comment' or 'Report this resource' land back on the resource instead of the dashboard - with a same-origin-only redirect check hardened over two review rounds against protocol-relative, backslash, control-character and dot-segment bypasses, and tests covering each.",
+    issueUrl: 'https://github.com/Itqan-community/RATQ/issues/345',
+    prUrl: 'https://github.com/Itqan-community/RATQ/pull/354',
   },
 ];

@@ -38,7 +38,7 @@ async function patch(url: string): Promise<string | null> {
       credentials: 'include',
       body: JSON.stringify({ read: true }),
     });
-    return res.ok ? null : await errorMessage(res, 'Request failed');
+    return res.ok ? null : await errorMessage(res, 'Request failed', { authenticated: true });
   } catch {
     return 'Network error, please try again.';
   }

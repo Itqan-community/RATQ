@@ -1,6 +1,6 @@
 // src/views/SignUp.tsx
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { Card } from '@/components/ui/Card';
 import { Input } from '@/components/ui/Input';
@@ -9,6 +9,8 @@ import { Alert } from '@/components/ui/Alert';
 import { Checkbox } from '@/components/ui/Checkbox';
 import { useAuthStore } from '@/store/useAuthStore';
 import { isLive } from '@/lib/payloadAuth';
+import { safeRedirectPath, signInHref, validatePassword } from '@/lib/authFlow';
+import { GuestOnly } from '@/components/layout/GuestOnly';
 import { UserPlus, Mail, Lock, User } from 'lucide-react';
 
 export const SignUpPage: React.FC = () => {
@@ -16,6 +18,8 @@ export const SignUpPage: React.FC = () => {
   const isAr = i18n.language === 'ar';
   const navigate = useNavigate();
   const { signIn, signUpLive } = useAuthStore();
+  const redirect = useSearchParams()[0].get('redirect');
+  const after = safeRedirectPath(redirect);
 
   const [fullName, setFullName] = useState('');
   const [username, setUsername] = useState('');
@@ -29,6 +33,10 @@ export const SignUpPage: React.FC = () => {
     e.preventDefault();
     if (!fullName || !username || !email || !password) {
       setError(isAr ? 'يرجى تعبئة جميع الحقول المطلوبة' : 'Please fill all required fields');
+      return;
+    }
+    if (!validatePassword(password)) {
+      setError(isAr ? 'يجب أن تتراوح كلمة المرور بين 8 و64 حرفاً' : 'Password must be between 8 and 64 characters');
       return;
     }
     if (!agreeTerms) {
@@ -46,17 +54,18 @@ export const SignUpPage: React.FC = () => {
       const err = await signUpLive(email, password, fullName);
       setLoading(false);
       if (err) setError(err);
-      else navigate('/app');
+      else navigate(after, { replace: true });
       return;
     }
     setTimeout(() => {
       setLoading(false);
       signIn(email);
-      navigate('/app');
+      navigate(after, { replace: true });
     }, 600);
   };
 
   return (
+    <GuestOnly>
     <div className="container mx-auto px-4 py-12 flex items-center justify-center min-h-[calc(100vh-16rem)]">
       <div className="w-full max-w-md">
         <div className="text-center mb-8">
@@ -134,6 +143,8 @@ export const SignUpPage: React.FC = () => {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="••••••••"
+                  minLength={8}
+                  maxLength={64}
                   className="ps-10"
                 />
               </div>
@@ -168,13 +179,14 @@ export const SignUpPage: React.FC = () => {
 
           <p className="text-center text-xs text-fg-muted mt-6">
             {isAr ? 'لديك حساب بالفعل؟' : 'Already have an account?'}{' '}
-            <Link to="/auth/sign-in" className="text-ratq-600 font-semibold hover:underline">
+            <Link to={signInHref(redirect)} className="text-ratq-600 font-semibold hover:underline">
               {isAr ? 'تسجيل الدخول' : 'Sign In'}
             </Link>
           </p>
         </Card>
       </div>
     </div>
+    </GuestOnly>
   );
 };
 

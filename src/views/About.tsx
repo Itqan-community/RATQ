@@ -1,5 +1,6 @@
 // src/views/About.tsx
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/Button';
 import { ShieldCheck, Compass, Layers, KeyRound, MessagesSquare, Code2 } from 'lucide-react';
@@ -7,6 +8,7 @@ import { DotField } from '@/components/ui/DotField/DotField';
 import { useThemeStore } from '@/store/useThemeStore';
 
 export const About: React.FC = () => {
+  const { t } = useTranslation('site');
   const { palette } = useThemeStore();
 
   const dotColors = {
@@ -37,13 +39,13 @@ export const About: React.FC = () => {
       <div className="max-w-4xl mx-auto px-4 sm:px-6 pt-12 pb-12 w-full">
         <div className="text-center mb-12">
           <span className="text-xs font-bold text-ratq-700 uppercase tracking-wider block mb-2">
-            عن منصة مجتمع RATQ
+            {t('about.a00')}
           </span>
           <h1 className="text-3xl sm:text-4xl font-bold text-fg leading-snug">
-            المرجع الأول لحوكمة وتطوير البرمجيات القرآنية
+            {t('about.a01')}
           </h1>
           <p className="text-xs sm:text-sm text-fg-muted mt-3 max-w-2xl mx-auto leading-relaxed">
-            «اكتشف بثقة. ابنِ بإتقان. شارك بمسؤولية.»
+            {t('about.a02')}
           </p>
         </div>
 
@@ -54,9 +56,9 @@ export const About: React.FC = () => {
               <div className="w-10 h-10 rounded-xl bg-ratq-50 dark:bg-ratq-950 text-ratq-700 dark:text-ratq-300 flex items-center justify-center mb-4">
                 <Compass className="w-5 h-5" />
               </div>
-              <h2 className="text-base font-bold text-fg mb-2">رسالتنا</h2>
+              <h2 className="text-base font-bold text-fg mb-2">{t('about.a03')}</h2>
               <p className="text-fg-muted leading-relaxed">
-                تمكين المطورين والناشرين عبر توفير سوق آمن ومنتقى وخاضع للمعايير لموارد وتطبيقات القرآن الكريم الرقمية.
+                {t('about.a04')}
               </p>
             </div>
 
@@ -64,9 +66,9 @@ export const About: React.FC = () => {
               <div className="w-10 h-10 rounded-xl bg-cyan-50 dark:bg-cyan-950 text-cyan-700 dark:text-cyan-300 flex items-center justify-center mb-4">
                 <ShieldCheck className="w-5 h-5" />
               </div>
-              <h2 className="text-base font-bold text-fg mb-2">رؤيتنا</h2>
+              <h2 className="text-base font-bold text-fg mb-2">{t('about.a05')}</h2>
               <p className="text-fg-muted leading-relaxed">
-                أن نصبح المعيار العالمي الأول للثقة والدقة والتعاون في تطوير النظم والبرمجيات القرآنية.
+                {t('about.a06')}
               </p>
             </div>
           </div>
@@ -74,27 +76,27 @@ export const About: React.FC = () => {
           {/* The 3 Core Differences */}
           <div className="p-8 rounded-2xl border border-border bg-subtle/50">
             <h2 className="text-lg font-bold text-fg mb-4">
-              ما الذي يميز RATQ عن الأدلة المفتوحة الساكنة؟
+              {t('about.a07')}
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-start">
               <div>
-                <h3 className="text-sm font-bold text-ratq-700 mb-1">1. التحقق العلمي والتقني</h3>
+                <h3 className="text-sm font-bold text-ratq-700 mb-1">{t('about.a08')}</h3>
                 <p className="text-xs text-fg-muted leading-relaxed">
-                  لا نكتفي بوجود المورد، بل نتحقق من سلامته عبر شارات إتقان ومراجعة بشرية متخصصة ومصادقة على أمان الملفات.
+                  {t('about.a09')}
                 </p>
               </div>
 
               <div>
-                <h3 className="text-sm font-bold text-cyan-700 mb-1">2. الحوكمة الرقمية الحية</h3>
+                <h3 className="text-sm font-bold text-cyan-700 mb-1">{t('about.a10')}</h3>
                 <p className="text-xs text-fg-muted leading-relaxed">
-                  مسارات قرار واضحة لطلبات الوصول، سجل تدقيق غير قابل للتعديل، ومسارات استئناف شفافة تحمي حقوق الناشر والمطور.
+                  {t('about.a11')}
                 </p>
               </div>
 
               <div>
-                <h3 className="text-sm font-bold text-gold-700 mb-1">3. بوابة الناشرين الحقيقية</h3>
+                <h3 className="text-sm font-bold text-gold-700 mb-1">{t('about.a12')}</h3>
                 <p className="text-xs text-fg-muted leading-relaxed">
-                  المالك الحقيقي هو من يدير أصوله ويصدر إصداراته ويتحكم في تراخيصه ويتابع تحليلات التنزيل بدقة.
+                  {t('about.a13')}
                 </p>
               </div>
             </div>
@@ -122,13 +124,13 @@ export const About: React.FC = () => {
         <div className="max-w-4xl mx-auto px-4 sm:px-6 relative z-10">
           <div className="mb-10 text-start">
             <span className="text-xs font-semibold text-ratq-400 uppercase tracking-wider block mb-2">
-              ما توفر رتْق
+              {t('about.a14')}
             </span>
             <h2 className="text-2xl sm:text-3xl font-bold leading-snug mb-3 text-white">
-              ماذا توفر RATQ؟
+              {t('about.a15')}
             </h2>
             <p className="text-xs sm:text-sm text-gray-300 leading-relaxed max-w-2xl">
-              تدعم المنصة الرحلة كاملة، من اكتشاف المورد إلى نشره والمحافظة على معلوماته.
+              {t('about.a16')}
             </p>
           </div>
 
@@ -145,10 +147,10 @@ export const About: React.FC = () => {
                   </span>
                 </div>
                 <h3 className="text-base font-bold text-white mb-2">
-                  دليل منظم للموارد
+                  {t('about.a17')}
                 </h3>
                 <p className="text-xs sm:text-sm text-gray-300 leading-relaxed">
-                  اعثر على المكتبات ومجموعات البيانات وواجهات البرمجة وأدوات التطوير والبحث من خلال دليل موحد وقابل للبحث.
+                  {t('about.a18')}
                 </p>
               </div>
             </div>
@@ -165,10 +167,10 @@ export const About: React.FC = () => {
                   </span>
                 </div>
                 <h3 className="text-base font-bold text-white mb-2">
-                  معلومات واضحة عن الجودة
+                  {t('about.a19')}
                 </h3>
                 <p className="text-xs sm:text-sm text-gray-300 leading-relaxed">
-                  راجع التوثيق والرخص والإصدارات والنسبة ومعلومات توثيق إتقان قبل اختيار المورد المناسب.
+                  {t('about.a20')}
                 </p>
               </div>
             </div>
@@ -185,10 +187,10 @@ export const About: React.FC = () => {
                   </span>
                 </div>
                 <h3 className="text-base font-bold text-white mb-2">
-                  إدارة الوصول للناشرين
+                  {t('about.a21')}
                 </h3>
                 <p className="text-xs sm:text-sm text-gray-300 leading-relaxed">
-                  يمكن للناشرين إدارة الموارد المقيدة ومراجعة طلبات الوصول والمحافظة على تحديث معلومات مواردهم.
+                  {t('about.a22')}
                 </p>
               </div>
             </div>
@@ -205,10 +207,10 @@ export const About: React.FC = () => {
                   </span>
                 </div>
                 <h3 className="text-base font-bold text-white mb-2">
-                  ملاحظات المجتمع
+                  {t('about.a23')}
                 </h3>
                 <p className="text-xs sm:text-sm text-gray-300 leading-relaxed">
-                  تساعد التعليقات والبلاغات والمراجعات على إبراز الموارد المفيدة واكتشاف المعلومات القديمة والجوانب التي تحتاج إلى تحسين.
+                  {t('about.a24')}
                 </p>
               </div>
             </div>
@@ -225,10 +227,10 @@ export const About: React.FC = () => {
                   </span>
                 </div>
                 <h3 className="text-base font-bold text-white mb-2">
-                  أدوات للمطورين
+                  {t('about.a25')}
                 </h3>
                 <p className="text-xs sm:text-sm text-gray-300 leading-relaxed">
-                  تسهل صفحات المطورين ومفاتيح API وروابط التوثيق وتفاصيل التكامل استخدام الموارد في المشاريع الحقيقية.
+                  {t('about.a26')}
                 </p>
               </div>
             </div>
@@ -241,19 +243,19 @@ export const About: React.FC = () => {
         <div className="flex flex-col gap-10 text-xs sm:text-sm text-fg leading-relaxed">
           {/* Ethical Quranic Tech Principles */}
           <div className="p-6 rounded-2xl border border-border bg-canvas">
-            <h2 className="text-base font-bold text-fg mb-3">مبادئ القرار عند التعارض</h2>
+            <h2 className="text-base font-bold text-fg mb-3">{t('about.a27')}</h2>
             <ol className="list-decimal list-inside space-y-2 text-xs text-fg-muted">
-              <li>الدقة الشرعية والعلمية تتقدم دائماً على سرعة النشر.</li>
-              <li>حق الناشر في موارده يتقدم على رغبة المستخدم في الوصول المفتوح.</li>
-              <li>الشفافية في الحوكمة تتقدم على سهولة الإجراء.</li>
-              <li>حماية خصوصية المستخدم تتقدم على دقة وتفصيل التحليلات.</li>
+              <li>{t('about.a28')}</li>
+              <li>{t('about.a29')}</li>
+              <li>{t('about.a30')}</li>
+              <li>{t('about.a31')}</li>
             </ol>
           </div>
 
           <div className="text-center pt-4">
             <Link to="/resources">
               <Button variant="primary" size="lg">
-                استكشف الكتالوج الشامل
+                {t('about.a32')}
               </Button>
             </Link>
           </div>

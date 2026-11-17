@@ -26,6 +26,18 @@ export function safeCtaUrl(url?: string | null): string | null {
   return /^https?:\/\//i.test(url) ? url : null;
 }
 
+// CMS authors write bilingual text as "AR | EN" (or "EN | AR"): pick the half in the active locale's script.
+// Anything that is not exactly one Arabic half and one non-Arabic half is returned untouched.
+const ARABIC = /[؀-ۿ]/;
+export function localizeAnnouncementText(text: string, lang: string): string {
+  const parts = text.split('|').map((p) => p.trim());
+  if (parts.length !== 2 || !parts[0] || !parts[1]) return text;
+  const [a, b] = parts;
+  if (ARABIC.test(a) === ARABIC.test(b)) return text;
+  const wantAr = lang === 'ar';
+  return ARABIC.test(a) === wantAr ? a : b;
+}
+
 export function toAnnouncement(doc: PayloadAnnouncementDoc): Announcement {
   return {
     id: doc.id,

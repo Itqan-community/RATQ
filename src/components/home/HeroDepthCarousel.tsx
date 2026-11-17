@@ -1,6 +1,7 @@
 // src/components/home/HeroDepthCarousel.tsx
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { ArrowLeft, CheckCircle2, Sparkles } from 'lucide-react';
 import { DepthCarousel } from '@/components/ui/DepthCarousel/DepthCarousel';
 import { useThemeStore } from '@/store/useThemeStore';
@@ -16,84 +17,52 @@ export type WizardJourneyFamily =
 
 export interface WizardJourneyCard {
   number: string;
-  stepLabel: string;
-  title_ar: string;
   title_en: string;
-  desc: string;
   family: WizardJourneyFamily;
-  family_ar: string;
 }
 
 export const WIZARD_JOURNEY_CARDS: WizardJourneyCard[] = [
   // 1. Decision 1 - Platform
   {
     number: '01',
-    stepLabel: 'القرار ١ • نوع المنصة',
-    title_ar: 'ما هي منصة مشروعك؟',
     title_en: 'Target Platform',
-    desc: 'حدد وجهتك: تطبيق هاتف ذكي، موقع ويب تفاعلي، واجهة سحابية API، أو منصة بحثية.',
     family: 'step1',
-    family_ar: 'تحديد المنصة',
   },
   // 2. Decision 2 - Tech Stack
   {
     number: '02',
-    stepLabel: 'القرار ٢ • التقنية واللغة',
-    title_ar: 'بأي لغة ومحرك تبني؟',
     title_en: 'Language & Framework',
-    desc: 'اختر المكدس التقني المفضل: Flutter أو React/Next.js أو Python أو Swift للبدء السريع.',
     family: 'step2',
-    family_ar: 'بيئة التطوير',
   },
   // 3. Decision 3 - Quranic Text & Script
   {
     number: '03',
-    stepLabel: 'القرار ٣ • النص والرسم',
-    title_ar: 'ما نوع النص القرآني؟',
     title_en: 'Uthmanic Script & Text',
-    desc: 'اختر الرواية المعتمدة (حفص، ورش) ومستوى الرسم: مصحف المدينة، خط حاسوبي، أو نصوص مجردة.',
     family: 'step3',
-    family_ar: 'المتن المصحفي',
   },
   // 4. Decision 4 - Audio Recitations
   {
     number: '04',
-    stepLabel: 'القرار ٤ • الصوتيات والتلاوات',
-    title_ar: 'هل يحتاج مشروعك تلاوات؟',
     title_en: 'Audio & Synchronized Ayahs',
-    desc: 'اربط تسجيلات كبار القراء بروايات متواترة مع ملفات مزامنة الآيات والكلمات بالمللي ثانية.',
     family: 'step4',
-    family_ar: 'المكتبة الصوتية',
   },
   // 5. Decision 5 - Tafsir & Translation
   {
     number: '05',
-    stepLabel: 'القرار ٥ • العلوم والتفاسير',
-    title_ar: 'هل تود إضافة تفاسير وترجمات؟',
     title_en: 'Tafsir & Translations',
-    desc: 'أمهات كتب التفسير المحققة، أسباب النزول، وترجمات معتمدة بأكثر من 40 لغة عالمية.',
     family: 'step5',
-    family_ar: 'العلوم والمعارف',
   },
   // 6. Decision 6 - License & Compliance
   {
     number: '06',
-    stepLabel: 'القرار ٦ • الترخيص والاعتماد',
-    title_ar: 'ما هي رخصة استخدامك؟',
     title_en: 'License & Itqan Standard',
-    desc: 'فلترة الموارد المتوافقة مع أهدافك: رخصة حرة بالكامل، تجاري متاح، أو استخدام وقفي.',
     family: 'step6',
-    family_ar: 'الأمان والترخيص',
   },
   // 7. Result - Vetted Stack Ready
   {
     number: '07',
-    stepLabel: 'النتيجة • اكتمال الوصفة',
-    title_ar: 'تم توليد وصفتك المعمارية!',
     title_en: 'Vetted Recipe Ready',
-    desc: 'حزمة موثقة بالكامل تجمع الخطوط والأكواد والتلاوات مع أمر تثبيت فوري.',
     family: 'success',
-    family_ar: 'اكتمال الوصفة',
   },
 ];
 
@@ -183,6 +152,8 @@ export const WIZARD_JOURNEY_COLORS: Record<
 };
 
 export const HeroDepthCarousel: React.FC = () => {
+  const { t, i18n } = useTranslation('site');
+  const en = i18n.language === 'en';
   const direction = useThemeStore((s) => s.direction);
 
   return (
@@ -240,7 +211,7 @@ export const HeroDepthCarousel: React.FC = () => {
                     #{item.number}
                   </span>
                   <span className="text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-white/20 dark:bg-emerald-500/25 text-white dark:text-emerald-100 border border-white/30 dark:border-emerald-400/40 backdrop-blur-xs shadow-xs">
-                    {item.stepLabel}
+                    {t(`journey.${item.family}.step`)}
                   </span>
                 </div>
 
@@ -257,20 +228,20 @@ export const HeroDepthCarousel: React.FC = () => {
                   </div>
 
                   <h3 className="text-base sm:text-lg font-extrabold text-white leading-tight drop-shadow-xs">
-                    {item.title_ar}
+                    {en ? item.title_en : t(`journey.${item.family}.title`)}
                   </h3>
                   <span className="text-[11px] text-emerald-200 font-mono block mt-0.5">
                     {item.title_en}
                   </span>
                   <p className="text-xs text-emerald-100/90 dark:text-emerald-200/80 leading-relaxed mt-1.5 line-clamp-2">
-                    {item.desc}
+                    {t(`journey.${item.family}.desc`)}
                   </p>
                 </div>
 
                 {/* Bottom: Journey Phase Pill & Direct Link */}
                 <div className="pt-3 border-t border-white/20 dark:border-emerald-500/30 flex items-center justify-between text-xs relative z-10">
                   <span className="px-2.5 py-0.5 rounded-md text-[11px] font-bold bg-white/20 dark:bg-emerald-500/25 text-white border border-white/30 dark:border-emerald-400/30 backdrop-blur-xs">
-                    {item.family_ar}
+                    {t(`journey.${item.family}.family`)}
                   </span>
 
                   <Link
@@ -280,7 +251,7 @@ export const HeroDepthCarousel: React.FC = () => {
                       e.stopPropagation();
                     }}
                   >
-                    <span>عرض الوصفة</span>
+                    <span>{t('journey.view_recipe')}</span>
                     <ArrowLeft className="w-3.5 h-3.5 rtl:rotate-0 rotate-180 group-hover:-translate-x-0.5 transition-transform" />
                   </Link>
                 </div>
@@ -312,14 +283,14 @@ export const HeroDepthCarousel: React.FC = () => {
                   <span
                     className={`text-[10px] font-bold px-2.5 py-0.5 rounded-full border shadow-2xs ${color.stepTagBg} ${color.stepTagText} ${color.stepTagBorder}`}
                   >
-                    {item.stepLabel}
+                    {t(`journey.${item.family}.step`)}
                   </span>
                 </div>
 
                 {/* Middle: Title without the 2-letter symbol */}
                 <div className="mb-3.5">
                   <h3 className="text-base sm:text-lg font-bold text-fg leading-tight">
-                    {item.title_ar}
+                    {en ? item.title_en : t(`journey.${item.family}.title`)}
                   </h3>
                   <span className="text-[11px] text-fg-subtle font-mono block mt-1">
                     {item.title_en}
@@ -328,7 +299,7 @@ export const HeroDepthCarousel: React.FC = () => {
 
                 {/* Short concise description (simple, clean) */}
                 <p className="text-xs text-fg-muted leading-relaxed line-clamp-3">
-                  {item.desc}
+                  {t(`journey.${item.family}.desc`)}
                 </p>
               </div>
 
@@ -337,7 +308,7 @@ export const HeroDepthCarousel: React.FC = () => {
                 <span
                   className={`px-2 py-0.5 rounded-md text-[11px] font-semibold ${color.badgeBg} ${color.badgeText}`}
                 >
-                  {item.family_ar}
+                  {t(`journey.${item.family}.family`)}
                 </span>
 
                 <Link
@@ -347,7 +318,7 @@ export const HeroDepthCarousel: React.FC = () => {
                     e.stopPropagation();
                   }}
                 >
-                  <span>استكشف</span>
+                  <span>{t('journey.explore')}</span>
                   <ArrowLeft className="w-3.5 h-3.5 rtl:rotate-0 rotate-180" />
                 </Link>
               </div>

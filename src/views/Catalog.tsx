@@ -2,6 +2,7 @@
 // Canonical Resource Library - Categorized Sections with Sticky Scroll-Spy
 import React, { useState, useMemo, useEffect, useRef } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { mockRepo } from '@/lib/supabase';
 import { DEMO_CATEGORIES } from '@/lib/mockData';
 import { Resource } from '@/types';
@@ -9,6 +10,20 @@ import { ResourceCard } from '@/components/resources/ResourceCard';
 import { ResourceFilters } from '@/components/resources/ResourceFilters';
 import { CatalogWizardHelper } from '@/components/resources/CatalogWizardHelper';
 import { useCatalogStore } from '@/store/useCatalogStore';
+import {
+  matchesLicenseFilter,
+  matchesPublisherFilter,
+  matchesSearch,
+  parseCatalogQuery,
+  publisherKey,
+  publisherOptions,
+  sortResources,
+  withQuery,
+  CC_LICENSE_ROWS,
+  SORT_OPTIONS,
+  type CatalogQuery,
+  type SortOption,
+} from '@/lib/catalogQuery';
 import {
   Layers,
   Search,
@@ -47,16 +62,16 @@ const CATEGORY_ICONS: Record<string, React.ElementType> = {
 };
 
 const BADGE_FILTER_OPTIONS = [
-  { id: 'gold', label: 'إتقان ذهبي', icon: Crown, color: 'text-amber-500' },
-  { id: 'certified', label: 'معتمد', icon: Award, color: 'text-cyan-600 dark:text-cyan-400' },
-  { id: 'verified', label: 'موثّق تقنياً', icon: ShieldCheck, color: 'text-ratq-600 dark:text-ratq-400' },
-  { id: 'basic', label: 'إتقان أساسي', icon: Shield, color: 'text-fg-subtle' },
+  { id: 'gold', icon: Crown, color: 'text-amber-500' },
+  { id: 'certified', icon: Award, color: 'text-cyan-600 dark:text-cyan-400' },
+  { id: 'verified', icon: ShieldCheck, color: 'text-ratq-600 dark:text-ratq-400' },
+  { id: 'basic', icon: Shield, color: 'text-fg-subtle' },
 ];
 
 const ACCESS_FILTER_OPTIONS = [
-  { id: 'open', label: 'مفتوح ومباشر', icon: Unlock, desc: 'تنزيل فوري بدون قيود' },
-  { id: 'request', label: 'بالطلب', icon: Lock, desc: 'يتطلب مفتاح API أو تسجيل' },
-  { id: 'institutional', label: 'مؤسسي فقط', icon: Building2, desc: 'مخصص للجهات والمعاهد' },
+  { id: 'open', icon: Unlock },
+  { id: 'request', icon: Lock },
+  { id: 'institutional', icon: Building2 },
 ];
 
 export interface CategoryTheme {
@@ -155,9 +170,17 @@ const DEFAULT_CATEGORY_THEME: CategoryTheme = {
 };
 
 export const Catalog: React.FC = () => {
-  const [searchParams] = useSearchParams();
+  const { t, i18n } = useTranslation('site');
+  const en = i18n.language === 'en';
+  const [searchParams, setSearchParams] = useSearchParams();
   const allResources = useMemo(() => mockRepo.getResources(), []);
-  const [searchQuery, setSearchQuery] = useState('');
+  const query = useMemo(() => parseCatalogQuery(searchParams), [searchParams]);
+  const { search: searchQuery, types: selectedTypes, licenses: selectedLicenseValues, publishers: selectedPublishers, sort } = query;
+  // Back/Forward or a link changing ?search updates the box; typing replaces the entry so history is not flooded.
+  const [searchDraft, setSearchDraft] = useState(searchQuery);
+  useEffect(() => setSearchDraft(searchQuery), [searchQuery]);
+  const updateQuery = (patch: Partial<CatalogQuery>, replace = false) =>
+    setSearchParams(withQuery(searchParams, patch), { replace });
   const [activeCategory, setActiveCategory] = useState<string>('cat_quran_sources');
   const [expandedCategories, setExpandedCategories] = useState<Record<string, boolean>>({});
   const [isFilterDrawerOpen, setIsFilterDrawerOpen] = useState(false);
@@ -169,27 +192,25 @@ export const Catalog: React.FC = () => {
   const badgeDropdownRef = useRef<HTMLDivElement>(null);
   const accessDropdownRef = useRef<HTMLDivElement>(null);
 
-  // Sync URL search query if provided (e.g., from Home search bar)
-  useEffect(() => {
-    const qParam = searchParams.get('q');
-    if (qParam) {
-      setSearchQuery(qParam);
-    }
-  }, [searchParams]);
-
   // Connect to catalog store for advanced filters
   const {
-    selectedTypes,
-    selectedLicenses,
     selectedAccess,
     toggleAccess,
     selectedBadges,
     toggleBadge,
     selectedTech,
     commercialOnly,
-    resetFilters,
+    resetFilters: resetStoreFilters,
     isCompact,
   } = useCatalogStore();
+
+  const resetFilters = () => {
+    resetStoreFilters();
+    updateQuery({ search: '', types: [], licenses: [], publishers: [], sort: 'relevance' });
+  };
+  const publishers = useMemo(() => publisherOptions(allResources), [allResources]);
+  // A license row counts once however many raw values it stores in the URL.
+  const selectedLicenseRows = CC_LICENSE_ROWS.filter((row) => row.values.some((v) => selectedLicenseValues.includes(v))).length;
 
   // Close dropdowns on outside click
   useEffect(() => {
@@ -218,17 +239,19 @@ export const Catalog: React.FC = () => {
   const drawerFiltersCount = useMemo(() => {
     return (
       selectedTypes.length +
-      selectedLicenses.length +
+      selectedLicenseRows +
+      selectedPublishers.length +
       selectedTech.length +
       (commercialOnly ? 1 : 0)
     );
-  }, [selectedTypes, selectedLicenses, selectedTech, commercialOnly]);
+  }, [selectedTypes, selectedLicenseRows, selectedPublishers, selectedTech, commercialOnly]);
 
   // Total active filters count (including toolbar dropdowns + drawer)
   const activeFiltersCount = useMemo(() => {
     return (
       selectedTypes.length +
-      selectedLicenses.length +
+      selectedLicenseRows +
+      selectedPublishers.length +
       selectedAccess.length +
       selectedBadges.length +
       selectedTech.length +
@@ -236,7 +259,8 @@ export const Catalog: React.FC = () => {
     );
   }, [
     selectedTypes,
-    selectedLicenses,
+    selectedLicenseRows,
+    selectedPublishers,
     selectedAccess,
     selectedBadges,
     selectedTech,
@@ -245,25 +269,22 @@ export const Catalog: React.FC = () => {
 
   // Comprehensive filter matching
   const filteredResources = useMemo(() => {
-    return allResources.filter((r) => {
-      // 1. Text Search Query
-      if (searchQuery.trim()) {
-        const q = searchQuery.toLowerCase();
-        const matchesQuery =
-          r.title_ar.toLowerCase().includes(q) ||
-          (r.title_en && r.title_en.toLowerCase().includes(q)) ||
-          r.summary_ar.toLowerCase().includes(q) ||
-          r.tags.some((tag) => tag.toLowerCase().includes(q));
-        if (!matchesQuery) return false;
-      }
+    const matched = allResources.filter((r) => {
+      // 1. Text Search Query (Arabic-normalized, name + description in both languages)
+      if (!matchesSearch(r, searchQuery)) return false;
 
       // 2. Resource Type Filter
       if (selectedTypes.length > 0 && !selectedTypes.includes(r.resource_type)) {
         return false;
       }
 
-      // 3. License Filter
-      if (selectedLicenses.length > 0 && !selectedLicenses.includes(r.license_id)) {
+      // 3. License Filter (live semantics: untracked licenses are never hidden)
+      if (!matchesLicenseFilter(r.license_spdx ?? '', selectedLicenseValues)) {
+        return false;
+      }
+
+      // 3b. Publisher Filter
+      if (!matchesPublisherFilter(publisherKey(r), selectedPublishers)) {
         return false;
       }
 
@@ -292,11 +313,14 @@ export const Catalog: React.FC = () => {
 
       return true;
     });
+    return sortResources(matched, sort);
   }, [
     allResources,
     searchQuery,
+    sort,
     selectedTypes,
-    selectedLicenses,
+    selectedLicenseValues,
+    selectedPublishers,
     selectedAccess,
     selectedBadges,
     selectedTech,
@@ -388,17 +412,17 @@ export const Catalog: React.FC = () => {
       <div className="mb-6 space-y-2">
         <div className="flex items-center gap-2 text-xs text-fg-subtle mb-3">
           <Link to="/" className="hover:text-ratq-700 transition-colors">
-            الرئيسية
+            {t('catalog.home')}
           </Link>
           <span>/</span>
-          <span className="text-ratq-700 font-bold">مكتبة الموارد</span>
+          <span className="text-ratq-700 font-bold">{t('catalog.library')}</span>
         </div>
 
         <h1 className="text-2xl sm:text-3xl font-bold text-fg">
-          مكتبة الموارد القرآنية الموثقة
+          {t('catalog.title')}
         </h1>
         <p className="text-xs sm:text-sm text-fg-subtle mt-1">
-          استكشف مكتبات البرمجة، مجموعات البيانات، واجهات API، وخطوط المصحف الخاضعة لمعايير إتقان.
+          {t('catalog.subtitle')}
         </p>
 
         {/* Smart Wizard Helper Banner */}
@@ -414,11 +438,25 @@ export const Catalog: React.FC = () => {
           <Search className="w-4 h-4 text-fg-subtle absolute start-3 top-1/2 -translate-y-1/2" />
           <input
             type="text"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="تصفية الموارد داخل الأقسام بالاسم أو الكلمات المفتاحية..."
-            className="w-full ps-9 pe-3 py-2 rounded-xl border border-border bg-subtle/50 text-xs sm:text-sm placeholder:text-fg-subtle focus:outline-none focus:border-ratq-500 focus:bg-canvas transition-all"
+            value={searchDraft}
+            onChange={(e) => {
+              setSearchDraft(e.target.value);
+              updateQuery({ search: e.target.value }, true);
+            }}
+            placeholder={t('catalog.search_placeholder')}
+            aria-label={t('catalog.search_aria')}
+            className="w-full ps-9 pe-8 py-2 rounded-xl border border-border bg-subtle/50 text-xs sm:text-sm placeholder:text-fg-subtle focus:outline-none focus:border-ratq-500 focus:bg-canvas transition-all"
           />
+          {searchDraft && (
+            <button
+              type="button"
+              onClick={() => updateQuery({ search: '' })}
+              aria-label={t('catalog.clear_search')}
+              className="absolute end-2 top-1/2 -translate-y-1/2 p-1 rounded-full text-fg-subtle hover:text-fg hover:bg-subtle cursor-pointer"
+            >
+              <X className="w-3.5 h-3.5" />
+            </button>
+          )}
         </div>
 
         {/* Filter Trigger Buttons & Results Counter (All on the same line) */}
@@ -429,10 +467,10 @@ export const Catalog: React.FC = () => {
               type="button"
               onClick={resetFilters}
               className="inline-flex items-center gap-1.5 px-2.5 py-2 rounded-xl bg-ratq-50 dark:bg-ratq-950/80 border border-ratq-200 dark:border-ratq-800 text-ratq-700 dark:text-ratq-300 text-xs font-semibold hover:bg-ratq-100 transition-colors cursor-pointer"
-              title="إلغاء تفعيل كافة الفلاتر"
+              title={t('catalog.clear_all_filters')}
             >
               <RotateCcw className="w-3 h-3" />
-              <span>إعادة ضبط ({activeFiltersCount})</span>
+              <span>{t('catalog.reset_count', { count: activeFiltersCount })}</span>
             </button>
           )}
 
@@ -445,10 +483,10 @@ export const Catalog: React.FC = () => {
                 ? 'border-ratq-500 bg-ratq-600 text-white shadow-xs hover:bg-ratq-700'
                 : 'border-border bg-canvas hover:bg-subtle text-fg hover:border-ratq-300'
             }`}
-            title="فتح نافذة الفلاتر المتقدمة للمكتبة"
+            title={t('catalog.open_filters')}
           >
             <SlidersHorizontal className="w-3.5 h-3.5" />
-            <span>الفلاتر المتقدمة</span>
+            <span>{t('catalog.advanced_filters')}</span>
             {drawerFiltersCount > 0 && (
               <span className="w-4 h-4 rounded-full bg-white text-ratq-700 text-[10px] font-mono flex items-center justify-center font-bold">
                 {drawerFiltersCount}
@@ -469,10 +507,10 @@ export const Catalog: React.FC = () => {
                   ? 'border-ratq-500 bg-ratq-50 dark:bg-ratq-950/70 text-ratq-800 dark:text-ratq-200 font-bold shadow-2xs'
                   : 'border-border bg-canvas hover:bg-subtle text-fg hover:border-ratq-300'
               }`}
-              title="تصفية الموارد حسب شارة إتقان"
+              title={t('catalog.filter_by_badge')}
             >
               <ShieldCheck className="w-3.5 h-3.5 text-ratq-600" />
-              <span>شارة إتقان</span>
+              <span>{t('catalog.badge')}</span>
               {selectedBadges.length > 0 && (
                 <span className="w-4 h-4 rounded-full bg-ratq-700 text-white text-[10px] font-mono flex items-center justify-center font-bold">
                   {selectedBadges.length}
@@ -489,7 +527,7 @@ export const Catalog: React.FC = () => {
             {isBadgeDropdownOpen && (
               <div className="absolute start-0 top-full mt-2 w-56 z-50 rounded-2xl border border-border bg-canvas shadow-xl p-2.5 animate-in fade-in zoom-in-95 duration-150">
                 <div className="flex items-center justify-between pb-2 mb-1.5 border-b border-border-subtle px-1">
-                  <span className="text-[11px] font-bold text-fg-subtle">تصفية بشارة إتقان</span>
+                  <span className="text-[11px] font-bold text-fg-subtle">{t('catalog.badge_dropdown')}</span>
                   {selectedBadges.length > 0 && (
                     <button
                       type="button"
@@ -498,7 +536,7 @@ export const Catalog: React.FC = () => {
                       }}
                       className="text-[10px] text-ratq-700 dark:text-ratq-300 hover:underline cursor-pointer font-medium"
                     >
-                      مسح التحديد
+                      {t('catalog.clear_selection')}
                     </button>
                   )}
                 </div>
@@ -520,7 +558,7 @@ export const Catalog: React.FC = () => {
                       >
                         <div className="flex items-center gap-2">
                           <Icon className={`w-3.5 h-3.5 ${opt.color}`} />
-                          <span>{opt.label}</span>
+                          <span>{t(`catalog.badge_${opt.id}`)}</span>
                         </div>
                         <div
                           className={`w-4 h-4 rounded border flex items-center justify-center transition-colors ${
@@ -552,10 +590,10 @@ export const Catalog: React.FC = () => {
                   ? 'border-ratq-500 bg-ratq-50 dark:bg-ratq-950/70 text-ratq-800 dark:text-ratq-200 font-bold shadow-2xs'
                   : 'border-border bg-canvas hover:bg-subtle text-fg hover:border-ratq-300'
               }`}
-              title="تصفية الموارد حسب مستوى الوصول"
+              title={t('catalog.filter_by_access')}
             >
               <Unlock className="w-3.5 h-3.5 text-ratq-600" />
-              <span>مستوى الوصول</span>
+              <span>{t('catalog.access')}</span>
               {selectedAccess.length > 0 && (
                 <span className="w-4 h-4 rounded-full bg-ratq-700 text-white text-[10px] font-mono flex items-center justify-center font-bold">
                   {selectedAccess.length}
@@ -572,7 +610,7 @@ export const Catalog: React.FC = () => {
             {isAccessDropdownOpen && (
               <div className="absolute start-0 top-full mt-2 w-64 z-50 rounded-2xl border border-border bg-canvas shadow-xl p-2.5 animate-in fade-in zoom-in-95 duration-150">
                 <div className="flex items-center justify-between pb-2 mb-1.5 border-b border-border-subtle px-1">
-                  <span className="text-[11px] font-bold text-fg-subtle">تصفية بمستوى الوصول</span>
+                  <span className="text-[11px] font-bold text-fg-subtle">{t('catalog.access_dropdown')}</span>
                   {selectedAccess.length > 0 && (
                     <button
                       type="button"
@@ -581,7 +619,7 @@ export const Catalog: React.FC = () => {
                       }}
                       className="text-[10px] text-ratq-700 dark:text-ratq-300 hover:underline cursor-pointer font-medium"
                     >
-                      مسح التحديد
+                      {t('catalog.clear_selection')}
                     </button>
                   )}
                 </div>
@@ -604,8 +642,8 @@ export const Catalog: React.FC = () => {
                         <div className="flex items-start gap-2">
                           <Icon className="w-3.5 h-3.5 text-ratq-600 mt-0.5 shrink-0" />
                           <div>
-                            <div className="font-semibold text-fg">{opt.label}</div>
-                            <div className="text-[10px] text-fg-subtle">{opt.desc}</div>
+                            <div className="font-semibold text-fg">{t(`catalog.access_${opt.id}`)}</div>
+                            <div className="text-[10px] text-fg-subtle">{t(`catalog.access_${opt.id}_desc`)}</div>
                           </div>
                         </div>
                         <div
@@ -632,12 +670,27 @@ export const Catalog: React.FC = () => {
             className="lg:hidden inline-flex items-center gap-1.5 px-3 py-2 rounded-xl border border-border bg-canvas text-xs font-semibold hover:bg-subtle text-fg cursor-pointer"
           >
             <Bookmark className="w-3.5 h-3.5 text-ratq-600" />
-            <span>الفهرس</span>
+            <span>{t('catalog.toc')}</span>
           </button>
+
+          <select
+            value={sort}
+            onChange={(e) => updateQuery({ sort: e.target.value as SortOption })}
+            aria-label={t('catalog.sort_aria')}
+            className="px-3 py-2 rounded-xl border border-border bg-canvas text-xs font-semibold text-fg hover:border-ratq-300 focus:outline-none focus:border-ratq-500 cursor-pointer"
+          >
+            {SORT_OPTIONS.map((o) => (
+              <option key={o} value={o}>
+                {t(`catalog.sort_${o}`)}
+              </option>
+            ))}
+          </select>
 
           {/* Results Count Tag */}
           <span className="text-xs font-mono text-fg-subtle bg-subtle px-2.5 py-1.5 rounded-xl border border-border-subtle whitespace-nowrap">
-            {filteredResources.length} مورد معتمد
+            {searchQuery.trim()
+              ? t('catalog.results_for', { count: filteredResources.length, query: searchQuery.trim() })
+              : t('catalog.approved_count', { count: filteredResources.length })}
           </span>
         </div>
       </div>
@@ -650,10 +703,10 @@ export const Catalog: React.FC = () => {
             <div className="flex items-center justify-between pb-3 mb-2 border-b border-border-subtle">
               <span className="text-xs font-bold text-fg flex items-center gap-2">
                 <Bookmark className="w-3.5 h-3.5 text-ratq-600" />
-                <span>فهرس الأقسام</span>
+                <span>{t('catalog.sections_toc')}</span>
               </span>
               <span className="text-[10px] font-mono text-fg-subtle">
-                {categorizedData.length} أقسام
+                {t('catalog.sections_count', { count: categorizedData.length })}
               </span>
             </div>
 
@@ -680,7 +733,7 @@ export const Catalog: React.FC = () => {
                           isActive ? 'text-white' : theme.iconColor
                         }`}
                       />
-                      <span className="truncate">{group.category.name_ar}</span>
+                      <span className="truncate">{en ? group.category.name_en : group.category.name_ar}</span>
                     </div>
 
                     <span
@@ -704,7 +757,7 @@ export const Catalog: React.FC = () => {
                 className="w-full py-1.5 text-center text-[11px] font-semibold text-fg-subtle hover:text-ratq-700 transition-colors flex items-center justify-center gap-1 cursor-pointer"
               >
                 <ArrowUp className="w-3 h-3" />
-                <span>العودة لأعلى الصفحة</span>
+                <span>{t('catalog.back_to_top')}</span>
               </button>
             </div>
           </div>
@@ -717,9 +770,11 @@ export const Catalog: React.FC = () => {
               <div className="w-12 h-12 rounded-2xl bg-subtle flex items-center justify-center mx-auto text-fg-subtle">
                 <Search className="w-6 h-6" />
               </div>
-              <h3 className="text-base font-bold text-fg">لا توجد موارد مطابقة لمعايير البحث الحالية</h3>
+              <h3 className="text-base font-bold text-fg">
+                {searchQuery.trim() ? t('catalog.no_results_for', { query: searchQuery.trim() }) : t('catalog.no_results')}
+              </h3>
               <p className="text-xs text-fg-muted max-w-md mx-auto leading-relaxed">
-                حاول تعديل شروط البحث أو الفلاتر المحددة، أو قم بإعادة ضبط كافة المرشحات لعرض جميع الأقسام.
+                {t('catalog.no_results_hint')}
               </p>
               <button
                 type="button"
@@ -727,7 +782,7 @@ export const Catalog: React.FC = () => {
                 className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-ratq-700 text-white text-xs font-bold hover:bg-ratq-800 transition-colors cursor-pointer mt-2"
               >
                 <RotateCcw className="w-3.5 h-3.5" />
-                <span>إعادة ضبط كافة الفلاتر</span>
+                <span>{t('catalog.reset_all')}</span>
               </button>
             </div>
           ) : (
@@ -763,20 +818,22 @@ export const Catalog: React.FC = () => {
                         <div className="space-y-1 min-w-0">
                           <div className="flex items-center gap-2.5 flex-wrap">
                             <h2 className="text-base sm:text-lg font-extrabold text-fg tracking-tight">
-                              {group.category.name_ar}
+                              {en ? group.category.name_en : group.category.name_ar}
                             </h2>
-                            <span className="text-xs font-mono text-fg-subtle">
-                              ({group.category.name_en})
-                            </span>
+                            {!en && (
+                              <span className="text-xs font-mono text-fg-subtle">
+                                ({group.category.name_en})
+                              </span>
+                            )}
                             <span
                               className={`text-[11px] font-mono font-bold px-2.5 py-0.5 rounded-full border ${theme.badgeBg}`}
                             >
-                              {group.count} مورد
+                              {t('catalog.resources_count', { count: group.count })}
                             </span>
                           </div>
 
                           <p className="text-xs text-fg-muted leading-relaxed line-clamp-2">
-                            {group.category.description_ar}
+                            {en ? t(`catalog.cat_desc.${group.category.id}`, { defaultValue: group.category.description_ar }) : group.category.description_ar}
                           </p>
                         </div>
                       </div>
@@ -787,9 +844,9 @@ export const Catalog: React.FC = () => {
                           type="button"
                           onClick={() => toggleCategoryExpand(group.category.id)}
                           className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-border/80 bg-canvas/80 hover:bg-subtle text-xs font-semibold text-fg transition-colors cursor-pointer shadow-2xs"
-                          title={isCollapsed ? 'توسيع القسم وعرض الموارد' : 'طي القسم مؤقتاً'}
+                          title={isCollapsed ? t('catalog.expand_title') : t('catalog.collapse_title')}
                         >
-                          <span>{isCollapsed ? 'عرض الموارد' : 'طي القسم'}</span>
+                          <span>{isCollapsed ? t('catalog.expand') : t('catalog.collapse')}</span>
                           {isCollapsed ? (
                             <ChevronDown className="w-3.5 h-3.5 text-fg-subtle" />
                           ) : (
@@ -844,7 +901,7 @@ export const Catalog: React.FC = () => {
             <div className="p-5 border-b border-border flex items-center justify-between bg-subtle/30">
               <div className="flex items-center gap-2">
                 <SlidersHorizontal className="w-4 h-4 text-ratq-600" />
-                <h3 className="text-sm font-bold text-fg">الفلاتر المتقدمة للمكتبة</h3>
+                <h3 className="text-sm font-bold text-fg">{t('catalog.drawer_title')}</h3>
               </div>
               <button
                 type="button"
@@ -856,7 +913,7 @@ export const Catalog: React.FC = () => {
             </div>
 
             <div className="p-5 overflow-y-auto flex-1">
-              <ResourceFilters />
+              <ResourceFilters url={{ query, onChange: updateQuery, publishers }} />
             </div>
 
             <div className="p-4 border-t border-border bg-subtle/30 flex items-center justify-between gap-3">
@@ -865,7 +922,7 @@ export const Catalog: React.FC = () => {
                 onClick={resetFilters}
                 className="px-4 py-2 text-xs font-semibold text-fg-subtle hover:text-fg hover:underline cursor-pointer"
               >
-                إعادة ضبط
+                {t('catalog.reset')}
               </button>
 
               <button
@@ -873,7 +930,7 @@ export const Catalog: React.FC = () => {
                 onClick={() => setIsFilterDrawerOpen(false)}
                 className="px-5 py-2 rounded-xl bg-ratq-700 hover:bg-ratq-800 text-white text-xs font-bold transition-colors cursor-pointer shadow-xs"
               >
-                تطبيق الفلاتر ({filteredResources.length} مورد)
+                {t('catalog.apply_filters', { count: filteredResources.length })}
               </button>
             </div>
           </div>
@@ -892,7 +949,7 @@ export const Catalog: React.FC = () => {
             <div className="flex items-center justify-between pb-3 border-b border-border">
               <div className="flex items-center gap-2">
                 <Bookmark className="w-4 h-4 text-ratq-600" />
-                <h3 className="text-sm font-bold text-fg">فهرس الانتقال السريع للأقسام</h3>
+                <h3 className="text-sm font-bold text-fg">{t('catalog.quick_toc')}</h3>
               </div>
               <button
                 type="button"
@@ -922,10 +979,10 @@ export const Catalog: React.FC = () => {
                   >
                     <div className="flex items-center gap-2.5">
                       <Icon className={`w-4 h-4 ${isActive ? 'text-white' : theme.iconColor}`} />
-                      <span>{group.category.name_ar}</span>
+                      <span>{en ? group.category.name_en : group.category.name_ar}</span>
                     </div>
                     <span className={`text-2xs font-mono px-2 py-0.5 rounded-full ${isActive ? 'bg-white/20 text-white' : 'bg-muted text-fg-subtle'}`}>
-                      {group.count} مورد
+                      {t('catalog.resources_count', { count: group.count })}
                     </span>
                   </button>
                 );

@@ -1,6 +1,7 @@
 // src/components/home/QuranTechPeriodicTable.tsx
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import {
   Atom,
   BookOpen,
@@ -38,9 +39,7 @@ interface PeriodicElement {
   code: string;
   name_ar: string;
   name_en: string;
-  short_desc: string;
   family: 'text' | 'audio' | 'fonts' | 'code' | 'data';
-  family_ar: string;
 }
 
 const PERIODIC_ELEMENTS: PeriodicElement[] = [
@@ -51,9 +50,7 @@ const PERIODIC_ELEMENTS: PeriodicElement[] = [
     code: 'mushaf',
     name_ar: 'مصحف رقمي',
     name_en: 'Mushaf',
-    short_desc: 'نصوص المصحف الشريف بالرسم العثماني المعتمد وفق الروايات الموثوقة.',
     family: 'text',
-    family_ar: 'النصوص والعلوم',
   },
   {
     number: '02',
@@ -61,9 +58,7 @@ const PERIODIC_ELEMENTS: PeriodicElement[] = [
     code: 'recitation',
     name_ar: 'تلاوة وقراءات',
     name_en: 'Recitation',
-    short_desc: 'تسجيلات صوتية مقطعية ومصحوبة ببيانات التزامن للروايات والقراءات.',
     family: 'audio',
-    family_ar: 'الصوتيات والوسائط',
   },
   {
     number: '03',
@@ -71,9 +66,7 @@ const PERIODIC_ELEMENTS: PeriodicElement[] = [
     code: 'tafsir',
     name_ar: 'تفسير وبيان',
     name_en: 'Tafsir',
-    short_desc: 'أمهات كتب وبيانات التفسير المعتمدة وأسباب النزول وغريب القرآن.',
     family: 'text',
-    family_ar: 'النصوص والعلوم',
   },
   {
     number: '04',
@@ -81,9 +74,7 @@ const PERIODIC_ELEMENTS: PeriodicElement[] = [
     code: 'translation',
     name_ar: 'ترجمة معاني',
     name_en: 'Translation',
-    short_desc: 'ترجمات معتمدة ومحققة لمعاني القرآن الكريم بأكثر من 40 لغة عالمية.',
     family: 'text',
-    family_ar: 'النصوص والعلوم',
   },
   {
     number: '05',
@@ -91,9 +82,7 @@ const PERIODIC_ELEMENTS: PeriodicElement[] = [
     code: 'tajweed',
     name_ar: 'أحكام تجويد',
     name_en: 'Tajweed',
-    short_desc: 'قواعد وأحكام التجويد المرمزة وعلامات الوقف ومخارج الحروف.',
     family: 'text',
-    family_ar: 'النصوص والعلوم',
   },
   {
     number: '06',
@@ -101,9 +90,7 @@ const PERIODIC_ELEMENTS: PeriodicElement[] = [
     code: 'font',
     name_ar: 'خط طباعي',
     name_en: 'Font',
-    short_desc: 'خطوط حاسوبية عثمانية عالية الدقة متوافقة مع مصحف المدينة ويونيكود.',
     family: 'fonts',
-    family_ar: 'الخطوط والطباعة',
   },
   {
     number: '07',
@@ -111,9 +98,7 @@ const PERIODIC_ELEMENTS: PeriodicElement[] = [
     code: 'api',
     name_ar: 'واجهة API',
     name_en: 'API',
-    short_desc: 'نقاط نهاية سحابية منخفضة التأخير للاستعلام المباشر عن السور والآيات.',
     family: 'code',
-    family_ar: 'البرمجيات والواجهات',
   },
   {
     number: '08',
@@ -121,9 +106,7 @@ const PERIODIC_ELEMENTS: PeriodicElement[] = [
     code: 'sdk',
     name_ar: 'حزمة SDK',
     name_en: 'SDK',
-    short_desc: 'أطقم برمجية متعددة اللغات لتسريع بناء وتكامل التطبيقات القرآنية.',
     family: 'code',
-    family_ar: 'البرمجيات والواجهات',
   },
   {
     number: '09',
@@ -131,9 +114,7 @@ const PERIODIC_ELEMENTS: PeriodicElement[] = [
     code: 'library',
     name_ar: 'مكتبة برمجية',
     name_en: 'Library',
-    short_desc: 'حزم مفتوحة المصدر لمعالجة النصوص القرآنية وتقسيم الأحزاب والأرباع.',
     family: 'code',
-    family_ar: 'البرمجيات والواجهات',
   },
   {
     number: '10',
@@ -141,9 +122,7 @@ const PERIODIC_ELEMENTS: PeriodicElement[] = [
     code: 'dataset',
     name_ar: 'مجموعة بيانات',
     name_en: 'Dataset',
-    short_desc: 'بيانات منظمة بصيغ JSON و Parquet و SQL للبحوث والتدريب التقني.',
     family: 'data',
-    family_ar: 'البيانات المنظمة',
   },
   {
     number: '11',
@@ -151,9 +130,7 @@ const PERIODIC_ELEMENTS: PeriodicElement[] = [
     code: 'tool',
     name_ar: 'أداة مساعدة',
     name_en: 'Tool',
-    short_desc: 'أدوات وفاحصات برمجية مساندة للمطورين للتحقق والتحويل بين الصيغ.',
     family: 'code',
-    family_ar: 'البرمجيات والواجهات',
   },
 ];
 
@@ -224,6 +201,8 @@ const FAMILY_STYLES: Record<
 };
 
 export const QuranTechPeriodicTable: React.FC = () => {
+  const { t, i18n } = useTranslation('site');
+  const en = i18n.language === 'en';
   const [selectedFamily, setSelectedFamily] = useState<string>('all');
   const resources = mockRepo.getResources();
 
@@ -240,13 +219,13 @@ export const QuranTechPeriodicTable: React.FC = () => {
           <div className="max-w-xl">
             <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-ratq-50 dark:bg-ratq-950 text-ratq-700 dark:text-ratq-300 text-[11px] font-semibold mb-3 border border-ratq-200 dark:border-ratq-800">
               <Atom className="w-3.5 h-3.5 text-ratq-600 dark:text-ratq-400" />
-              <span>الجدول الدوري للأصول التقنية القرآنية</span>
+              <span>{t('periodic.kicker')}</span>
             </div>
             <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold text-fg tracking-tight">
-              فهرس الأصول والموارد المعياري
+              {t('periodic.title')}
             </h2>
             <p className="text-xs sm:text-sm text-fg-muted mt-1.5 leading-relaxed">
-              توزيع هندسي منظّم للأصول القرآنية الـ 11 بحسب طبيعتها البرمجية وحجم مواردها المتاحة.
+              {t('periodic.subtitle')}
             </p>
           </div>
 
@@ -260,7 +239,7 @@ export const QuranTechPeriodicTable: React.FC = () => {
                   : 'text-fg-muted hover:text-fg'
               }`}
             >
-              الكل (11)
+              {t('periodic.all')}
             </button>
             <button
               onClick={() => setSelectedFamily('text')}
@@ -270,7 +249,7 @@ export const QuranTechPeriodicTable: React.FC = () => {
                   : 'text-fg-muted hover:text-fg'
               }`}
             >
-              النصوص والعلوم
+              {t('periodic.family.text')}
             </button>
             <button
               onClick={() => setSelectedFamily('code')}
@@ -280,7 +259,7 @@ export const QuranTechPeriodicTable: React.FC = () => {
                   : 'text-fg-muted hover:text-fg'
               }`}
             >
-              البرمجيات والـ APIs
+              {t('periodic.family.code')}
             </button>
             <button
               onClick={() => setSelectedFamily('data')}
@@ -290,7 +269,7 @@ export const QuranTechPeriodicTable: React.FC = () => {
                   : 'text-fg-muted hover:text-fg'
               }`}
             >
-              البيانات
+              {t('periodic.family.data')}
             </button>
             <button
               onClick={() => setSelectedFamily('audio')}
@@ -300,7 +279,7 @@ export const QuranTechPeriodicTable: React.FC = () => {
                   : 'text-fg-muted hover:text-fg'
               }`}
             >
-              الصوتيات
+              {t('periodic.family.audio')}
             </button>
           </div>
         </div>
@@ -338,23 +317,23 @@ export const QuranTechPeriodicTable: React.FC = () => {
                       <Icon className="w-5 h-5 stroke-[2.2]" />
                     </div>
                     <h3 className="text-sm sm:text-base font-bold text-fg group-hover:text-ratq-700 dark:group-hover:text-ratq-300 transition-colors leading-snug">
-                      {el.name_ar}
+                      {en ? el.name_en : el.name_ar}
                     </h3>
                   </div>
 
                   {/* 1-Line Clean Short Description */}
                   <p className="text-xs text-fg-muted leading-relaxed mt-2 line-clamp-2">
-                    {el.short_desc}
+                    {t(`periodic.desc.${el.code}`)}
                   </p>
                 </div>
 
                 {/* Card Bottom: Family Tag & Resource Count (replaces old "استعراض" button) */}
                 <div className="pt-3 mt-3 border-t border-border/50 flex items-center justify-between text-[11px] relative z-10">
                   <span className={`px-1.5 py-0.5 rounded text-[10px] font-medium ${style.badgeBg} ${style.badgeText}`}>
-                    {el.family_ar}
+                    {t(`periodic.family.${el.family}`)}
                   </span>
                   <span className="text-[11px] font-mono px-2 py-0.5 rounded-md bg-subtle text-fg-muted font-medium border border-border/60">
-                    {count} مورد
+                    {t('periodic.count', { count })}
                   </span>
                 </div>
               </Link>

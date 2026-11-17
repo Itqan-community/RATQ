@@ -1,26 +1,28 @@
 // src/views/StandardsRevocations.tsx
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { formatDate } from '@/lib/format';
 import { ShieldAlert } from 'lucide-react';
 
 export const StandardsRevocations: React.FC = () => {
+  const { t } = useTranslation('site');
   // Public transparent revocation ledger records
   const revocations = [
     {
       id: 'rev_log_01',
-      resource_name: 'حزمة الخطوط التجريبية v0.9',
-      previous_badge: 'موثّق تقنياً',
-      reason_category: 'انقطاع الرابط الرسمي وخلل في التنزيل',
+      resource_name: t('revocations.r00'),
+      previous_badge: t('revocations.r01'),
+      reason_category: t('revocations.r02'),
       date: '2025-12-10T10:00:00Z',
-      status: 'سارية (قيد التصحيح من الناشر)',
+      status: t('revocations.r03'),
     },
     {
       id: 'rev_log_02',
-      resource_name: 'مجموعة نصوص ترجمات قديمة',
-      previous_badge: 'إتقان أساسي',
-      reason_category: 'عدم اكتمال وثائق التحقق من المصدر والترخيص',
+      resource_name: t('revocations.r04'),
+      previous_badge: t('revocations.r05'),
+      reason_category: t('revocations.r06'),
       date: '2025-11-04T14:30:00Z',
-      status: 'سارية',
+      status: t('revocations.r07'),
     },
   ];
 
@@ -28,14 +30,14 @@ export const StandardsRevocations: React.FC = () => {
     <div className="max-w-4xl mx-auto px-4 sm:px-6 py-10 w-full text-start">
       <div className="mb-8">
         <span className="text-xs font-bold text-amber-600 uppercase tracking-wider block mb-1">
-          الشفافية والحوكمة العامة
+          {t('revocations.r08')}
         </span>
         <h1 className="text-2xl font-bold text-fg flex items-center gap-2">
           <ShieldAlert className="w-6 h-6 text-amber-600" />
-          <span>سجل الشارات المسحوبة والمُعلّقة</span>
+          <span>{t('revocations.r09')}</span>
         </h1>
         <p className="text-xs text-fg-subtle mt-1.5 leading-relaxed">
-          وفقاً للقسم 23.7 من معيار إتقان، تُنشر جميع حالات سحب الشارات أو تجميدها بشفافية لحماية مجتمع المطورين والمستخدمين.
+          {t('revocations.r10')}
         </p>
       </div>
 
@@ -43,11 +45,11 @@ export const StandardsRevocations: React.FC = () => {
         <table className="w-full">
           <thead className="bg-subtle border-b border-border text-fg-subtle">
             <tr>
-              <th className="py-3 px-4 font-bold">المورد المعني</th>
-              <th className="py-3 px-4 font-bold">المستوى السابق</th>
-              <th className="py-3 px-4 font-bold">سبب السحب / التعليق</th>
-              <th className="py-3 px-4 font-bold">التاريخ</th>
-              <th className="py-3 px-4 font-bold">الحالة الحالية</th>
+              <th className="py-3 px-4 font-bold">{t('revocations.r11')}</th>
+              <th className="py-3 px-4 font-bold">{t('revocations.r12')}</th>
+              <th className="py-3 px-4 font-bold">{t('revocations.r13')}</th>
+              <th className="py-3 px-4 font-bold">{t('revocations.r14')}</th>
+              <th className="py-3 px-4 font-bold">{t('revocations.r15')}</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-border-subtle">

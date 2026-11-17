@@ -117,7 +117,7 @@ export const AppOverviewPage: React.FC = () => {
           </div>
 
           <div className="space-y-3">
-            {DEMO_ACCESS_REQUESTS.map((req) => (
+            {requests.map((req) => (
               <Card key={req.id} className="p-5 hover:border-ratq-400 transition-colors">
                 <div className="flex items-start justify-between gap-4">
                   <div>

@@ -1,9 +1,11 @@
 // src/components/resources/CatalogStickyDiscoveryPill.tsx
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { Wand2, ExternalLink, X } from 'lucide-react';
 
 export const CatalogStickyDiscoveryPill: React.FC = () => {
+  const { t } = useTranslation('site');
   const navigate = useNavigate();
   const [isVisible, setIsVisible] = useState(false);
   const [dismissed, setDismissed] = useState(false);
@@ -34,7 +36,7 @@ export const CatalogStickyDiscoveryPill: React.FC = () => {
 
         {/* Text prompt */}
         <span className="text-fg font-medium hidden sm:inline whitespace-nowrap">
-          تبحث عن توليفة معتمدة لمشروعك؟
+          {t('wizard.pill_prompt')}
         </span>
 
         {/* CTA Button */}
@@ -43,7 +45,7 @@ export const CatalogStickyDiscoveryPill: React.FC = () => {
           onClick={() => navigate('/resources/wizard')}
           className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-ratq-600 hover:bg-ratq-700 text-white font-bold text-xs shadow-xs transition-colors cursor-pointer"
         >
-          <span>المُوجِّه التفاعلي Wizard</span>
+          <span>{t('wizard.cta')}</span>
           <ExternalLink className="w-3 h-3 rtl:rotate-0" />
         </button>
 
@@ -52,8 +54,8 @@ export const CatalogStickyDiscoveryPill: React.FC = () => {
           type="button"
           onClick={() => setDismissed(true)}
           className="p-1 rounded-full text-fg-subtle hover:text-fg hover:bg-subtle transition-colors cursor-pointer"
-          aria-label="إغلاق التلميح العائم"
-          title="إغلاق"
+          aria-label={t('wizard.pill_dismiss')}
+          title={t('wizard.pill_close')}
         >
           <X className="w-3.5 h-3.5" />
         </button>

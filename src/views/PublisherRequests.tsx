@@ -10,9 +10,10 @@ import { Textarea } from '@/components/ui/Textarea';
 import { Select } from '@/components/ui/Select';
 import { Modal } from '@/components/ui/Modal';
 import { Tooltip } from '@/components/ui/Tooltip';
+import { ConfirmDialog } from '@/components/ui/ConfirmDialog';
 import { mockRepo } from '@/lib/supabase';
 import { isLive } from '@/lib/payloadAuth';
-import { decideRequest, hydrateRequests, requestsFor } from '@/lib/payloadRequests';
+import { decideRequest, hydrateRequests, requestsFor, revokeRequest } from '@/lib/payloadRequests';
 import { useAuthStore } from '@/store/useAuthStore';
 import { AccessRequest } from '@/types';
 import {
@@ -24,6 +25,7 @@ import {
   FileText,
   Check,
   X,
+  Ban,
   ExternalLink,
 } from 'lucide-react';
 
@@ -34,6 +36,8 @@ export const PublisherRequestsPage: React.FC = () => {
   const myId = useAuthStore((s) => s.profile.id);
   const [requests, setRequests] = useState<AccessRequest[]>(() => requestsFor(mockRepo.getRequests(), 'inbound', myId));
   const [decisionError, setDecisionError] = useState<string | null>(null);
+  const [revokeTarget, setRevokeTarget] = useState<AccessRequest | null>(null);
+  const [revokeError, setRevokeError] = useState<string | null>(null);
   const [filter, setFilter] = useState('all');
   const [search, setSearch] = useState('');
 
@@ -136,6 +140,22 @@ export const PublisherRequestsPage: React.FC = () => {
     setActiveRequest(null);
   };
 
+  // Server-side the revoke also deletes the holder's API keys and notifies them; only reflect it on success.
+  const handleConfirmRevoke = async () => {
+    const target = revokeTarget;
+    setRevokeTarget(null);
+    if (!target) return;
+    if (isLive() && target.id.startsWith('payload_req_')) {
+      const err = await revokeRequest(target.id);
+      setRevokeError(err);
+      if (err) return;
+      await hydrateRequests();
+      setRequests(requestsFor(mockRepo.getRequests(), 'inbound', myId));
+      return;
+    }
+    setRequests((prev) => prev.map((r) => (r.id === target.id ? { ...r, status: 'cancelled' } : r)));
+  };
+
   return (
     <div className="space-y-6">
       {/* Header */}
@@ -170,10 +190,13 @@ export const PublisherRequestsPage: React.FC = () => {
               { value: 'under_review', label: isAr ? 'بانتظار القرار' : 'Pending Decision' },
               { value: 'approved', label: isAr ? 'معتمد' : 'Approved' },
               { value: 'rejected', label: isAr ? 'مرفوض' : 'Rejected' },
+              { value: 'cancelled', label: isAr ? 'ملغى' : 'Revoked' },
             ]}
           />
         </div>
       </Card>
+
+      {revokeError && <p role="alert" className="text-xs text-red-600">{revokeError}</p>}
 
       {/* Requests Table */}
       {filtered.length === 0 ? (
@@ -304,6 +327,12 @@ export const PublisherRequestsPage: React.FC = () => {
                           <span>{isAr ? 'مرفوض' : 'Rejected'}</span>
                         </Badge>
                       )}
+                      {req.status === 'cancelled' && (
+                        <Badge variant="outline" className="gap-1 text-xs">
+                          <Ban className="w-3.5 h-3.5" />
+                          <span>{isAr ? 'ملغى' : 'Revoked'}</span>
+                        </Badge>
+                      )}
                     </td>
 
                     {/* Actions */}
@@ -320,6 +349,19 @@ export const PublisherRequestsPage: React.FC = () => {
                             <FileText className="w-4 h-4" />
                           </button>
                         </Tooltip>
+
+                        {req.status === 'approved' && (
+                          <Tooltip content={isAr ? 'إلغاء الوصول الممنوح' : 'Revoke Access'} position="top-right">
+                            <button
+                              type="button"
+                              onClick={() => setRevokeTarget(req)}
+                              className="w-8 h-8 rounded-lg border border-red-200 dark:border-red-900/50 text-red-600 hover:bg-red-50 dark:hover:bg-red-950/30 flex items-center justify-center transition-colors cursor-pointer"
+                              aria-label={isAr ? 'إلغاء الوصول الممنوح' : 'Revoke Access'}
+                            >
+                              <Ban className="w-4 h-4" />
+                            </button>
+                          </Tooltip>
+                        )}
 
                         {/* Decisions if Under Review */}
                         {req.status === 'under_review' && (
@@ -357,6 +399,22 @@ export const PublisherRequestsPage: React.FC = () => {
             </table>
           </div>
         </Card>
+      )}
+
+      {revokeTarget && (
+        <ConfirmDialog
+          isOpen
+          onClose={() => setRevokeTarget(null)}
+          onConfirm={handleConfirmRevoke}
+          title={isAr ? 'تأكيد إلغاء الوصول' : 'Revoke access'}
+          description={
+            isAr
+              ? `سيتم إلغاء وصول "${revokeTarget.requester?.display_name ?? ''}" وحذف مفاتيح API الخاصة به لهذا المورد فوراً، وسيصله إشعار بذلك. لا يمكن التراجع.`
+              : `This revokes ${revokeTarget.requester?.display_name ?? 'the requester'}'s access, immediately deletes their API keys for this resource and notifies them. This cannot be undone.`
+          }
+          confirmLabel={isAr ? 'نعم، إلغاء الوصول' : 'Yes, revoke'}
+          isDestructive
+        />
       )}
 
       {/* Purpose Modal */}
@@ -402,6 +460,12 @@ export const PublisherRequestsPage: React.FC = () => {
                     <Badge variant="danger" className="gap-1">
                       <XCircle className="w-3.5 h-3.5" />
                       <span>{isAr ? 'مرفوض' : 'Rejected'}</span>
+                    </Badge>
+                  )}
+                  {purposeRequest.status === 'cancelled' && (
+                    <Badge variant="outline" className="gap-1">
+                      <Ban className="w-3.5 h-3.5" />
+                      <span>{isAr ? 'ملغى' : 'Revoked'}</span>
                     </Badge>
                   )}
                 </div>

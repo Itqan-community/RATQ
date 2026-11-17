@@ -4,7 +4,11 @@ import { Routes, Route, useLocation } from 'react-router-dom';
 import { AppShell } from '@/components/layout/AppShell';
 import { PortalLayout } from '@/components/layout/PortalLayout';
 import { Skeleton } from '@/components/ui/Skeleton';
+import { routeTitle } from '@/lib/routeTitle';
+import { isResourceDetailPath } from '@/lib/knownRoutes';
+import { useThemeStore } from '@/store/useThemeStore';
 
+// Heavy and portal views are lazy (React.lazy) to keep the initial bundle small; Suspense fallback is PageFallback.
 // Public Pages
 import { Home as HomePage } from '@/views/Home';
 import { Catalog as CatalogPage } from '@/views/Catalog';
@@ -23,17 +27,17 @@ import ChangelogPage from '@/views/Changelog';
 import StatusPage from '@/views/Status';
 import LegalPage from '@/views/LegalPage';
 import ContactPage from '@/views/Contact';
-import UxStudyPage from '@/views/UxStudy';
+const UxStudyPage = React.lazy(() => import('@/views/UxStudy'));
 
 // Interactive Resources Exploration Views
-import QuranicRoadmapPage from '@/views/QuranicRoadmap';
-import ProjectWizardPage from '@/views/ProjectWizard';
-import TechStacksPage from '@/views/TechStacks';
+const QuranicRoadmapPage = React.lazy(() => import('@/views/QuranicRoadmap'));
+const ProjectWizardPage = React.lazy(() => import('@/views/ProjectWizard'));
+const TechStacksPage = React.lazy(() => import('@/views/TechStacks'));
 
 // Resource Catalog Alternative Previews (Modular Showcase for CTO)
-import { SectionsPreviewPage } from '@/views/previews/SectionsPreviewPage';
-import { TreeExplorerPreviewPage } from '@/views/previews/TreeExplorerPreviewPage';
-import TechSpecTablePreviewPage from '@/views/previews/TechSpecTablePreviewPage';
+const SectionsPreviewPage = React.lazy(() => import('@/views/previews/SectionsPreviewPage').then((m) => ({ default: m.SectionsPreviewPage })));
+const TreeExplorerPreviewPage = React.lazy(() => import('@/views/previews/TreeExplorerPreviewPage').then((m) => ({ default: m.TreeExplorerPreviewPage })));
+const TechSpecTablePreviewPage = React.lazy(() => import('@/views/previews/TechSpecTablePreviewPage'));
 
 // Auth Pages
 import SignInPage from '@/views/SignIn';
@@ -48,33 +52,35 @@ import AppOverviewPage from '@/views/AppOverview';
 import AppRequestsPage from '@/views/AppRequests';
 import AppKeysPage from '@/views/AppKeys';
 import AppSavedPage from '@/views/AppSaved';
+import AppReportsPage from '@/views/AppReports';
+import AppCommentsPage from '@/views/AppComments';
 import AppNotificationsPage from '@/views/AppNotifications';
 import AppSettingsPage from '@/views/AppSettings';
 
 // Publisher Portal
-import PublisherDashboardPage from '@/views/PublisherDashboard';
-import PublisherResourcesPage from '@/views/PublisherResources';
-import PublisherResourceNewPage from '@/views/PublisherResourceNew';
-import PublisherResourceFormPage from '@/views/PublisherResourceForm';
+const PublisherDashboardPage = React.lazy(() => import('@/views/PublisherDashboard'));
+const PublisherResourcesPage = React.lazy(() => import('@/views/PublisherResources'));
+const PublisherResourceNewPage = React.lazy(() => import('@/views/PublisherResourceNew'));
+const PublisherResourceFormPage = React.lazy(() => import('@/views/PublisherResourceForm'));
 import { isLive } from '@/lib/payloadAuth';
-import PublisherRequestsPage from '@/views/PublisherRequests';
-import PublisherAnalyticsPage from '@/views/PublisherAnalytics';
-import PublisherClaimPage from '@/views/PublisherClaim';
-import PublisherWebhooksPage from '@/views/PublisherWebhooks';
+const PublisherRequestsPage = React.lazy(() => import('@/views/PublisherRequests'));
+const PublisherAnalyticsPage = React.lazy(() => import('@/views/PublisherAnalytics'));
+const PublisherClaimPage = React.lazy(() => import('@/views/PublisherClaim'));
+const PublisherWebhooksPage = React.lazy(() => import('@/views/PublisherWebhooks'));
 
 // Reviewer Portal
-import ReviewQueuePage from '@/views/ReviewQueue';
-import ReviewDetailsPage from '@/views/ReviewDetails';
+const ReviewQueuePage = React.lazy(() => import('@/views/ReviewQueue'));
+const ReviewDetailsPage = React.lazy(() => import('@/views/ReviewDetails'));
 
 // Moderation Portal
-import ModerationDashboardPage from '@/views/ModerationDashboard';
+const ModerationDashboardPage = React.lazy(() => import('@/views/ModerationDashboard'));
 
 // Admin Portal
-import AdminDashboardPage from '@/views/AdminDashboard';
-import AdminUsersPage from '@/views/AdminUsers';
-import AdminResourcesPage from '@/views/AdminResources';
-import AdminAuditPage from '@/views/AdminAudit';
-import AdminFlagsPage from '@/views/AdminFlags';
+const AdminDashboardPage = React.lazy(() => import('@/views/AdminDashboard'));
+const AdminUsersPage = React.lazy(() => import('@/views/AdminUsers'));
+const AdminResourcesPage = React.lazy(() => import('@/views/AdminResources'));
+const AdminAuditPage = React.lazy(() => import('@/views/AdminAudit'));
+const AdminFlagsPage = React.lazy(() => import('@/views/AdminFlags'));
 
 // Error Pages
 import NotFoundPage from '@/views/NotFound';
@@ -86,6 +92,16 @@ const ScrollToTop: React.FC = () => {
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [pathname]);
+  return null;
+};
+
+const DocumentTitle: React.FC = () => {
+  const { pathname } = useLocation();
+  const locale = useThemeStore((s) => s.locale);
+  useEffect(() => {
+    if (isResourceDetailPath(pathname)) return; // titled by the server and by ResourceDetails (needs the resource name)
+    document.title = routeTitle(pathname, locale === 'ar' ? 'ar' : 'en');
+  }, [pathname, locale]);
   return null;
 };
 
@@ -105,6 +121,7 @@ export const AppRouter: React.FC = () => {
   return (
     <AppShell>
       <ScrollToTop />
+      <DocumentTitle />
       <Suspense fallback={<PageFallback />}>
         <Routes>
           {/* Public Routes */}
@@ -183,6 +200,22 @@ export const AppRouter: React.FC = () => {
             element={
               <PortalLayout portal="app">
                 <AppSavedPage />
+              </PortalLayout>
+            }
+          />
+          <Route
+            path="/app/reports"
+            element={
+              <PortalLayout portal="app">
+                <AppReportsPage />
+              </PortalLayout>
+            }
+          />
+          <Route
+            path="/app/comments"
+            element={
+              <PortalLayout portal="app">
+                <AppCommentsPage />
               </PortalLayout>
             }
           />

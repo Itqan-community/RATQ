@@ -1,6 +1,6 @@
 // src/views/SignIn.tsx
-import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { Card } from '@/components/ui/Card';
 import { Input } from '@/components/ui/Input';
@@ -9,6 +9,8 @@ import { Alert } from '@/components/ui/Alert';
 import { useAuthStore } from '@/store/useAuthStore';
 import { UserRole } from '@/types';
 import { githubOAuthUrl, isLive } from '@/lib/payloadAuth';
+import { AUTH_ERRORS, SESSION_EXPIRED_REASON, mapAuthError, safeRedirectPath, signInHref } from '@/lib/authFlow';
+import { GuestOnly } from '@/components/layout/GuestOnly';
 import { LogIn, Lock, Mail } from 'lucide-react';
 
 export const SignInPage: React.FC = () => {
@@ -16,6 +18,11 @@ export const SignInPage: React.FC = () => {
   const isAr = i18n.language === 'ar';
   const navigate = useNavigate();
   const { signIn, signInLive, switchRole } = useAuthStore();
+  const redirect = useSearchParams()[0].get('redirect');
+  const after = safeRedirectPath(redirect);
+  const sessionExpired = useAuthStore((s) => s.sessionExpired);
+  // The notice is one-shot: forget it when the visitor leaves this screen.
+  useEffect(() => () => useAuthStore.getState().clearSessionExpired(), []);
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -31,17 +38,18 @@ export const SignInPage: React.FC = () => {
 
     setLoading(true);
     setError(null);
+    useAuthStore.getState().clearSessionExpired();
     if (isLive()) {
       const err = await signInLive(email, password);
       setLoading(false);
       if (err) setError(err);
-      else navigate('/app');
+      else navigate(after, { replace: true });
       return;
     }
     setTimeout(() => {
       setLoading(false);
       signIn(email);
-      navigate('/app');
+      navigate(after, { replace: true });
     }, 500);
   };
 
@@ -54,7 +62,10 @@ export const SignInPage: React.FC = () => {
     else navigate('/app');
   };
 
+  const displayedError = mapAuthError(error ?? (sessionExpired ? SESSION_EXPIRED_REASON : null), AUTH_ERRORS[isAr ? 'ar' : 'en']);
+
   return (
+    <GuestOnly>
     <div className="container mx-auto px-4 py-12 flex items-center justify-center min-h-[calc(100vh-16rem)]">
       <div className="w-full max-w-md">
         <div className="text-center mb-8">
@@ -72,7 +83,9 @@ export const SignInPage: React.FC = () => {
         </div>
 
         <Card className="p-6 md:p-8">
-          {error && <Alert variant="error" className="mb-4">{error}</Alert>}
+          {displayedError && (
+            <Alert variant={error ? 'error' : 'warning'} className="mb-4">{displayedError}</Alert>
+          )}
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
@@ -177,13 +190,14 @@ export const SignInPage: React.FC = () => {
 
           <p className="text-center text-xs text-fg-muted mt-6">
             {isAr ? 'ليس لديك حساب بعد؟' : "Don't have an account?"}{' '}
-            <Link to="/auth/sign-up" className="text-ratq-600 font-semibold hover:underline">
+            <Link to={signInHref(redirect, 'sign-up')} className="text-ratq-600 font-semibold hover:underline">
               {isAr ? 'إنشاء حساب جديد' : 'Sign up'}
             </Link>
           </p>
         </Card>
       </div>
     </div>
+    </GuestOnly>
   );
 };
 

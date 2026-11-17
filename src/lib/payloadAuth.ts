@@ -1,6 +1,7 @@
 // Payload cookie-session auth (same endpoints live's payload-auth-repository.ts uses).
 // The session is an httpOnly cookie set by Payload: no token or password is ever held or stored in JS.
 import { DEMO_PROFILES } from './mockData';
+import { notifySessionExpired } from './sessionExpiry';
 import type { Profile, UserRole } from '@/types';
 
 // Read at call time so tests can stub it; unset = mock mode.
@@ -34,13 +35,35 @@ export function toProfile(doc: PayloadUserDoc): Profile {
   };
 }
 
-export async function errorMessage(res: Response, fallback: string): Promise<string> {
+// The session is an httpOnly cookie JS cannot read, so after a 401/403 on a cookie-authenticated call the only way
+// to tell an expired session from a real permission error is to ask who the cookie belongs to.
+async function sessionCookieInvalid(): Promise<boolean> {
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), 5000);
   try {
-    const body = await res.json();
-    return body?.errors?.[0]?.message || fallback;
+    const res = await fetch(`${payloadBase()}/users/me`, { credentials: 'include', cache: 'no-store', signal: controller.signal });
+    if (!res.ok) return false;
+    const data = await res.json();
+    return typeof data === 'object' && data !== null && data.user === null;
   } catch {
-    return fallback;
+    return false;
+  } finally {
+    clearTimeout(timer);
   }
+}
+
+// `authenticated`: the failed request relied on the session cookie; a confirmed-dead session raises the expiry event.
+export async function errorMessage(
+  res: Response,
+  fallback: string,
+  options: { authenticated?: boolean } = {},
+): Promise<string> {
+  const body = await res.json().catch(() => null);
+  if (options.authenticated && (res.status === 401 || res.status === 403) && (await sessionCookieInvalid())) {
+    notifySessionExpired();
+  }
+  // Prefer the nested field-level reason (e.g. duplicate email) over the generic ValidationError text.
+  return body?.errors?.[0]?.data?.errors?.[0]?.message || body?.errors?.[0]?.message || fallback;
 }
 
 const post = (path: string, body: unknown) =>

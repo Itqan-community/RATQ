@@ -104,19 +104,19 @@ export const ThemeCustomizerModal: React.FC<ThemeCustomizerModalProps> = ({
       id: 'suisse',
       label: 'SuisseIntl',
       sub: isAr ? 'سويس إنتل (الافتراضي)' : 'Suisse Intl (Default)',
-      fontFamily: "'SuisseIntl', 'IBM Plex Sans Arabic', sans-serif",
+      fontFamily: "'SuisseIntl', var(--font-plex-ar, 'IBM Plex Sans Arabic'), sans-serif",
     },
     {
       id: 'default',
       label: 'IBM Plex Sans',
       sub: isAr ? 'آي بي إم بلكس' : 'IBM Plex',
-      fontFamily: "'IBM Plex Sans Arabic', sans-serif",
+      fontFamily: "var(--font-plex-ar, 'IBM Plex Sans Arabic'), sans-serif",
     },
     {
       id: 'thmanyah',
       label: 'خط ثمانية',
       sub: 'Thmanyah',
-      fontFamily: "'Thmanyah Sans', 'IBM Plex Sans Arabic', sans-serif",
+      fontFamily: "'Thmanyah Sans', var(--font-plex-ar, 'IBM Plex Sans Arabic'), sans-serif",
     },
   ];
 

@@ -1,6 +1,7 @@
 // src/views/Home.tsx
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { Button } from '@/components/ui/Button';
 import { ResourceCard } from '@/components/resources/ResourceCard';
 import { ItqanBadge } from '@/components/ui/ItqanBadge';
@@ -24,8 +25,11 @@ import {
 } from 'lucide-react';
 import { useThemeStore } from '@/store/useThemeStore';
 import { isLive } from '@/lib/payloadAuth';
+import { newestResources } from '@/lib/catalogQuery';
+import { AnnouncementsStrip } from '@/components/home/AnnouncementsStrip';
 
 export const Home: React.FC = () => {
+  const { t } = useTranslation('site');
   const navigate = useNavigate();
   const heroLayout = useThemeStore((s) => s.heroLayout);
   const palette = useThemeStore((s) => s.palette);
@@ -58,21 +62,22 @@ export const Home: React.FC = () => {
   const publishers = mockRepo.getPublishers();
   const keys = mockRepo.getKeys();
 
-  const featuredResources = resources.filter((r) => r.is_featured).slice(0, 6);
+  // Live has no featured flag (Payload/CMS), so like production's home it shows the 4 newest from the real catalog.
+  const featuredResources = isLive() ? newestResources(resources, 4) : resources.filter((r) => r.is_featured).slice(0, 6);
 
   // Live trust metrics from store/DB
   // Publisher and key counts are mock-only (no Payload source), so live mode shows only API-backed counts.
   const trustMetrics = [
-    { label: 'مورد برمجي منشور', value: resources.length },
-    ...(isLive() ? [] : [{ label: 'ناشر ومؤسسة موثقة', value: publishers.length }]),
-    { label: 'شارة إتقان ممنوحة', value: resources.filter((r) => r.itqan_level !== 'none').length },
-    ...(isLive() ? [] : [{ label: 'مفتاح API نشط', value: keys.length }]),
+    { label: t('home.metric_resources'), value: resources.length },
+    ...(isLive() ? [] : [{ label: t('home.metric_publishers'), value: publishers.length }]),
+    { label: t('home.metric_badges'), value: resources.filter((r) => r.itqan_level !== 'none').length },
+    ...(isLive() ? [] : [{ label: t('home.metric_keys'), value: keys.length }]),
   ];
 
   const handleHeroSearch = (e: React.FormEvent) => {
     e.preventDefault();
     if (searchQuery.trim()) {
-      navigate(`/resources?q=${encodeURIComponent(searchQuery.trim())}`);
+      navigate(`/resources?search=${encodeURIComponent(searchQuery.trim())}`);
     } else {
       navigate('/resources');
     }
@@ -80,29 +85,31 @@ export const Home: React.FC = () => {
 
   const faqs = [
     {
-      q: 'ما هو معيار إتقان وما الذي يميزه؟',
-      a: 'معيار إتقان هو إطار حوكمة جودة متعدد المستويات يفحص الموارد البرمجية القرآنية عبر 4 طبقات: التقنية، الأمان، التراخيص، والتحقيق العلمي الشرعي الإلزامي المعتمد.',
+      q: t('home.faq1_q'),
+      a: t('home.faq1_a'),
     },
     {
-      q: 'كيف يمكنني الحصول على مفتاح API للموارد المقيّدة؟',
-      a: 'من خلال تقديم طلب وصول إلكتروني بنقرة واحدة وتوضيح الغرض من المشروع، ويقوم الناشر بمراجعته والبت فيه وفق الـ SLA المحدد لتوليد مفتاحك الآمن.',
+      q: t('home.faq2_q'),
+      a: t('home.faq2_a'),
     },
     {
-      q: 'هل يمكن لناشري المصاحف ودور النشر إدارة أصولهم مباشرة؟',
-      a: 'نعم، توفر المنصة بوابة ناشرين متكاملة للمطالبة بملكية الموارد، إصدار النسخ، متابعة طلبات المطورين، والحصول على تحليلات دقيقة.',
+      q: t('home.faq3_q'),
+      a: t('home.faq3_a'),
     },
     {
-      q: 'هل تضم المنصة نصوصاً قرآنية مولدة بالذكاء الاصطناعي؟',
-      a: 'كلا تماماً، تفرض المنصة حواجز صارمة وقواعد تمنع توليد أو تخمين نص القرآن الكريم بالذكاء الاصطناعي، وجميع الموارد مسندة لجهات معتمدة ومحققة.',
+      q: t('home.faq4_q'),
+      a: t('home.faq4_a'),
     },
     {
-      q: 'هل استخدام المنصة مجاني للمطورين؟',
-      a: 'نعم، المنصة مجانية لمجتمع المطورين والباحثين، وتدعم المشاريع المفتوحة المصدر والتطوعية لخدمة كتاب الله.',
+      q: t('home.faq5_q'),
+      a: t('home.faq5_a'),
     },
   ];
 
   return (
     <div className="flex flex-col w-full text-center">
+      <AnnouncementsStrip />
+
       {/* 1. Hero Section */}
       <section className="relative pt-14 pb-16 sm:pt-16 sm:pb-20 px-4 sm:px-6 overflow-hidden border-b border-border hero-gradient-bg transition-colors">
         {heroLayout === 'split' ? (
@@ -112,16 +119,16 @@ export const Home: React.FC = () => {
               {/* Badge pill */}
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-ratq-200 bg-ratq-50 dark:border-ratq-800 dark:bg-ratq-950 text-ratq-800 dark:text-ratq-300 text-xs font-semibold mb-6">
                 <Sparkles className="w-3.5 h-3.5 text-ratq-600" />
-                <span>البنية التحتية المعتمدة للبرمجيات القرآنية</span>
+                <span>{t('home.hero_badge')}</span>
               </div>
 
               <h1 className="hero-title-typography text-3xl sm:text-5xl lg:text-5xl xl:text-6xl font-bold text-fg tracking-normal leading-[1.1] sm:leading-[1.15] lg:leading-[1.2] flex flex-col items-center lg:items-start gap-2 sm:gap-3.5">
-                <span className="block">مرجعك الموثوق لتطوير</span>
-                <span className="text-ratq-700 dark:text-ratq-400 block pb-1">البرمجيات القرآنية</span>
+                <span className="block">{t('home.hero_title_1')}</span>
+                <span className="text-ratq-700 dark:text-ratq-400 block pb-1">{t('home.hero_title_2')}</span>
               </h1>
 
               <p className="mt-5 text-sm sm:text-base text-fg-muted max-w-xl leading-relaxed">
-                كتالوج شامل للمكتبات، حزم التطوير، مجموعات البيانات، والخطوط — خاضعة لمعايير إتقان الصارمة مع مسارات وصول منظّمة ومفاتيح API مُدارة.
+                {t('home.hero_sub')}
               </p>
 
               {/* Large Hero Search Bar */}
@@ -132,11 +139,11 @@ export const Home: React.FC = () => {
                     type="text"
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    placeholder="ابحث عن مكتبة، حزمة SDK، مجموعة بيانات، أو خط..."
+                    placeholder={t('home.hero_search_placeholder')}
                     className="w-full py-4 px-3 text-sm text-fg placeholder:text-fg-subtle bg-transparent focus:outline-none"
                   />
                   <Button type="submit" variant="primary" size="md" className="me-2 shrink-0">
-                    بحث فوري
+                    {t('home.hero_search_btn')}
                   </Button>
                 </div>
               </form>
@@ -144,10 +151,10 @@ export const Home: React.FC = () => {
               {/* Hero CTAs */}
               <div className="flex flex-wrap items-center justify-center lg:justify-start gap-3 mt-6">
                 <Button variant="primary" size="lg" onClick={() => navigate('/resources')} className="shadow-sm">
-                  استكشف الموارد
+                  {t('home.hero_cta_explore')}
                 </Button>
                 <Button variant="outline" size="lg" onClick={() => navigate('/publisher')} className="bg-canvas/80 backdrop-blur-xs shadow-xs">
-                  وثّق موردك كناشر
+                  {t('home.hero_cta_publish')}
                 </Button>
               </div>
             </div>
@@ -167,8 +174,8 @@ export const Home: React.FC = () => {
                       <ShieldCheck className="w-4 h-4" />
                     </div>
                     <div className="flex flex-col text-start">
-                      <span className="text-[11px] sm:text-xs font-bold text-fg leading-tight">معيار إتقان — 4 مستويات</span>
-                      <span className="text-[9px] sm:text-[10px] text-fg-subtle leading-tight mt-0.5">فحص علمي وأمني معتمد</span>
+                      <span className="text-[11px] sm:text-xs font-bold text-fg leading-tight">{t('home.card1_t')}</span>
+                      <span className="text-[9px] sm:text-[10px] text-fg-subtle leading-tight mt-0.5">{t('home.card1_d')}</span>
                     </div>
                   </div>
                 </div>
@@ -180,8 +187,8 @@ export const Home: React.FC = () => {
                       <Database className="w-4 h-4" />
                     </div>
                     <div className="flex flex-col text-start">
-                      <span className="text-[11px] sm:text-xs font-bold text-fg leading-tight">+128 مورد موثّق</span>
-                      <span className="text-[9px] sm:text-[10px] text-fg-subtle leading-tight mt-0.5">مكتبات وحزم وبيانات قرآنية</span>
+                      <span className="text-[11px] sm:text-xs font-bold text-fg leading-tight">{t('home.card2_t', { count: resources.length })}</span>
+                      <span className="text-[9px] sm:text-[10px] text-fg-subtle leading-tight mt-0.5">{t('home.card2_d')}</span>
                     </div>
                   </div>
                 </div>
@@ -189,7 +196,7 @@ export const Home: React.FC = () => {
                 {/* Central 3D Quran Illustration (Fully Clear and Unobstructed) */}
                 <img
                   src="/hero-quran.png"
-                  alt="البرمجيات القرآنية — رَتْق"
+                  alt={t('home.hero_img_alt')}
                   className="relative w-full max-w-[270px] sm:max-w-[340px] lg:max-w-[380px] object-contain drop-shadow-2xl transition-transform duration-700 hover:scale-105 select-none pointer-events-none"
                 />
 
@@ -201,8 +208,8 @@ export const Home: React.FC = () => {
                       <KeyRound className="w-4 h-4" />
                     </div>
                     <div className="flex flex-col text-start">
-                      <span className="text-[11px] sm:text-xs font-bold text-fg leading-tight">مفاتيح API مشفّرة</span>
-                      <span className="text-[9px] sm:text-[10px] text-fg-subtle leading-tight mt-0.5">وصول محكوم وحوكمة أمنية</span>
+                      <span className="text-[11px] sm:text-xs font-bold text-fg leading-tight">{t('home.card3_t')}</span>
+                      <span className="text-[9px] sm:text-[10px] text-fg-subtle leading-tight mt-0.5">{t('home.card3_d')}</span>
                     </div>
                   </div>
                 </div>
@@ -214,24 +221,24 @@ export const Home: React.FC = () => {
                       <CheckCircle2 className="w-4 h-4" />
                     </div>
                     <div className="flex flex-col text-start">
-                      <span className="text-[11px] sm:text-xs font-bold text-fg leading-tight">تدقيق ومراجعة بشرية 100%</span>
-                      <span className="text-[9px] sm:text-[10px] text-fg-subtle leading-tight mt-0.5">تحت إشراف مختصين لحماية النص القرآني</span>
+                      <span className="text-[11px] sm:text-xs font-bold text-fg leading-tight">{t('home.card4_t')}</span>
+                      <span className="text-[9px] sm:text-[10px] text-fg-subtle leading-tight mt-0.5">{t('home.card4_d')}</span>
                     </div>
                   </div>
                 </div>
 
-                {/* Card 5: Outside Left */}
-                <div className="absolute bottom-3 sm:bottom-4 end-[-10px] sm:end-[-20px] lg:end-[-90px] z-20">
+                {/* Card 5: Outside Left. Publisher count is mock-only, so it is hidden live rather than invented. */}
+                {!isLive() && <div className="absolute bottom-3 sm:bottom-4 end-[-10px] sm:end-[-20px] lg:end-[-90px] z-20">
                   <div className="animate-float-5 inline-flex items-center gap-2 px-3 py-1.5 sm:px-3 sm:py-2 rounded-xl border border-slate-200/90 dark:border-slate-800 bg-white/95 dark:bg-slate-900/95 shadow-lg backdrop-blur-xs select-none transition-all duration-300 hover:scale-105 whitespace-nowrap">
                     <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg flex items-center justify-center shrink-0 bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400">
                       <Building2 className="w-4 h-4" />
                     </div>
                     <div className="flex flex-col text-start">
-                      <span className="text-[11px] sm:text-xs font-bold text-fg leading-tight">+34 ناشر ومؤسسة</span>
-                      <span className="text-[9px] sm:text-[10px] text-fg-subtle leading-tight mt-0.5">جهات رسمية ودور نشر موثوقة</span>
+                      <span className="text-[11px] sm:text-xs font-bold text-fg leading-tight">{t('home.card5_t', { count: publishers.length })}</span>
+                      <span className="text-[9px] sm:text-[10px] text-fg-subtle leading-tight mt-0.5">{t('home.card5_d')}</span>
                     </div>
                   </div>
-                </div>
+                </div>}
               </div>
             </div>
           </div>
@@ -242,16 +249,16 @@ export const Home: React.FC = () => {
               {/* Badge pill */}
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-ratq-200 bg-ratq-50 dark:border-ratq-800 dark:bg-ratq-950 text-ratq-800 dark:text-ratq-300 text-xs font-semibold mb-6 animate-in fade-in slide-in-from-top-3">
                 <Sparkles className="w-3.5 h-3.5 text-ratq-600" />
-                <span>البنية التحتية المعتمدة للبرمجيات القرآنية</span>
+                <span>{t('home.hero_badge')}</span>
               </div>
 
               <h1 className="hero-title-typography text-3xl sm:text-5xl lg:text-5xl xl:text-6xl font-bold text-fg tracking-normal leading-[1.1] sm:leading-[1.15] lg:leading-[1.2] flex flex-col items-center lg:items-start gap-2 sm:gap-3.5">
-                <span className="block">مرجعك الموثوق لتطوير</span>
-                <span className="text-ratq-700 dark:text-ratq-400 block pb-1">البرمجيات القرآنية</span>
+                <span className="block">{t('home.hero_title_1')}</span>
+                <span className="text-ratq-700 dark:text-ratq-400 block pb-1">{t('home.hero_title_2')}</span>
               </h1>
 
               <p className="mt-5 text-sm sm:text-base text-fg-muted max-w-xl leading-relaxed">
-                كتالوج شامل للمكتبات، حزم التطوير، مجموعات البيانات، والخطوط — خاضعة لمعايير إتقان الصارمة مع مسارات وصول منظّمة ومفاتيح API مُدارة.
+                {t('home.hero_sub')}
               </p>
 
               {/* Large Hero Search Bar */}
@@ -262,11 +269,11 @@ export const Home: React.FC = () => {
                     type="text"
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    placeholder="ابحث عن مكتبة، حزمة SDK، مجموعة بيانات، أو خط..."
+                    placeholder={t('home.hero_search_placeholder')}
                     className="w-full py-4 px-3 text-sm text-fg placeholder:text-fg-subtle bg-transparent focus:outline-none"
                   />
                   <Button type="submit" variant="primary" size="md" className="me-2 shrink-0">
-                    بحث فوري
+                    {t('home.hero_search_btn')}
                   </Button>
                 </div>
               </form>
@@ -274,10 +281,10 @@ export const Home: React.FC = () => {
               {/* Hero CTAs */}
               <div className="flex flex-wrap items-center justify-center lg:justify-start gap-3 mt-6">
                 <Button variant="primary" size="lg" onClick={() => navigate('/resources')} className="shadow-sm">
-                  استكشف الموارد
+                  {t('home.hero_cta_explore')}
                 </Button>
                 <Button variant="outline" size="lg" onClick={() => navigate('/publisher')} className="bg-canvas/80 backdrop-blur-xs shadow-xs">
-                  وثّق موردك كناشر
+                  {t('home.hero_cta_publish')}
                 </Button>
               </div>
             </div>
@@ -292,16 +299,16 @@ export const Home: React.FC = () => {
             {/* Badge pill */}
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-ratq-200 bg-ratq-50 dark:border-ratq-800 dark:bg-ratq-950 text-ratq-800 dark:text-ratq-300 text-xs font-semibold mb-6 animate-in fade-in slide-in-from-top-3">
               <Sparkles className="w-3.5 h-3.5 text-ratq-600" />
-              <span>البنية التحتية المعتمدة للبرمجيات القرآنية</span>
+              <span>{t('home.hero_badge')}</span>
             </div>
 
             <h1 className="hero-title-typography text-3xl sm:text-5xl lg:text-6xl font-bold text-fg tracking-normal leading-[1.1] sm:leading-[1.15] lg:leading-[1.2] flex flex-col items-center gap-2.5 sm:gap-4">
-              <span className="block">مرجعك الموثوق لتطوير</span>
-              <span className="text-ratq-700 dark:text-ratq-400 block pb-1">البرمجيات القرآنية</span>
+              <span className="block">{t('home.hero_title_1')}</span>
+              <span className="text-ratq-700 dark:text-ratq-400 block pb-1">{t('home.hero_title_2')}</span>
             </h1>
 
             <p className="mt-5 text-sm sm:text-base text-fg-muted max-w-2xl leading-relaxed">
-              كتالوج شامل للمكتبات، حزم التطوير، مجموعات البيانات، والخطوط — خاضعة لمعايير إتقان الصارمة مع مسارات وصول منظّمة ومفاتيح API مُدارة.
+              {t('home.hero_sub')}
             </p>
 
             {/* Large Hero Search Bar */}
@@ -312,11 +319,11 @@ export const Home: React.FC = () => {
                   type="text"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  placeholder="ابحث عن مكتبة، حزمة SDK، مجموعة بيانات، أو خط..."
+                  placeholder={t('home.hero_search_placeholder')}
                   className="w-full py-4 px-3 text-sm text-fg placeholder:text-fg-subtle bg-transparent focus:outline-none"
                 />
                 <Button type="submit" variant="primary" size="md" className="me-2 shrink-0">
-                  بحث فوري
+                  {t('home.hero_search_btn')}
                 </Button>
               </div>
             </form>
@@ -324,10 +331,10 @@ export const Home: React.FC = () => {
             {/* Hero CTAs */}
             <div className="flex flex-wrap items-center justify-center gap-3 mt-6">
               <Button variant="primary" size="lg" onClick={() => navigate('/resources')} className="shadow-sm">
-                استكشف الموارد
+                {t('home.hero_cta_explore')}
               </Button>
               <Button variant="outline" size="lg" onClick={() => navigate('/publisher')} className="bg-canvas/80 backdrop-blur-xs shadow-xs">
-                وثّق موردك كناشر
+                {t('home.hero_cta_publish')}
               </Button>
             </div>
           </div>
@@ -356,20 +363,22 @@ export const Home: React.FC = () => {
       {/* 3c. Quran Tech Periodic Carousel (مخفي مؤقتاً ويمكن إظهاره لاحقاً) */}
       {/* <QuranTechPeriodicCarousel /> */}
 
-      {/* 4. Featured Resources (Payload has no featured flag, so the rail is empty in live mode and hidden) */}
+      {/* 4. Featured (mock) / Newest (live) resources */}
       {featuredResources.length > 0 && (
       <section className="py-16 border-b border-border bg-subtle/20">
         <div className="max-w-container mx-auto px-4 sm:px-6">
           <div className="flex items-center justify-between mb-8 text-start">
             <div>
-              <h2 className="text-xl sm:text-2xl font-bold text-fg">الموارد المختارة والمتميزة</h2>
-              <p className="text-xs text-fg-subtle mt-1">حزم ومكتبات حائزة على أعلى تقييمات إتقان واعتماد المجتمع</p>
+              <h2 className="text-xl sm:text-2xl font-bold text-fg">{isLive() ? t('home.latest_title') : t('home.featured_title')}</h2>
+              <p className="text-xs text-fg-subtle mt-1">
+                {isLive() ? t('home.latest_sub') : t('home.featured_sub')}
+              </p>
             </div>
             <Link
               to="/resources"
               className="text-xs font-bold text-ratq-700 hover:underline flex items-center gap-1"
             >
-              <span>عرض الكتالوج كاملاً</span>
+              <span>{t('home.view_catalog')}</span>
               <ArrowLeft className="w-3.5 h-3.5 rtl:rotate-0 rotate-180" />
             </Link>
           </div>
@@ -432,38 +441,38 @@ export const Home: React.FC = () => {
 
         <div className="max-w-container mx-auto px-4 sm:px-6 relative z-10">
           <div className="text-center max-w-xl mx-auto mb-12">
-            <h2 className="text-xl sm:text-2xl font-bold text-fg">كيف تعمل منصة RATQ؟</h2>
-            <p className="text-xs text-fg-subtle mt-1">رحلة مبسطة من الاكتشاف إلى أول طلب تكامل ناجح</p>
+            <h2 className="text-xl sm:text-2xl font-bold text-fg">{t('home.how_title')}</h2>
+            <p className="text-xs text-fg-subtle mt-1">{t('home.how_sub')}</p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-start">
             <div className="p-6 rounded-xl border border-border bg-canvas/85 backdrop-blur-sm relative shadow-xs">
               <div className="w-10 h-10 rounded-xl bg-ratq-50 text-ratq-700 flex items-center justify-center font-bold text-sm mb-4">
-                ١
+                {t('home.step1_n')}
               </div>
-              <h3 className="text-sm font-bold text-fg mb-1">اكتشف بثقة</h3>
+              <h3 className="text-sm font-bold text-fg mb-1">{t('home.step1_t')}</h3>
               <p className="text-xs text-fg-muted leading-relaxed">
-                ابحث في الكتالوج الشامل، واستخدم الفلاتر المتطورة للعثور على المكتبات والرخص والتقنيات المناسبة لمشروعك.
+                {t('home.step1_d')}
               </p>
             </div>
 
             <div className="p-6 rounded-xl border border-border bg-canvas/85 backdrop-blur-sm relative shadow-xs">
               <div className="w-10 h-10 rounded-xl bg-cyan-50 text-cyan-700 flex items-center justify-center font-bold text-sm mb-4">
-                ٢
+                {t('home.step2_n')}
               </div>
-              <h3 className="text-sm font-bold text-fg mb-1">تحقّق من الجودة</h3>
+              <h3 className="text-sm font-bold text-fg mb-1">{t('home.step2_t')}</h3>
               <p className="text-xs text-fg-muted leading-relaxed">
-                تحقق من شارة إتقان الممنوحة للمورد، راجع بصمات SHA-256 للملفات وتأكد من مطابقتها للمعايير العلمية والتقنية.
+                {t('home.step2_d')}
               </p>
             </div>
 
             <div className="p-6 rounded-xl border border-border bg-canvas/85 backdrop-blur-sm relative shadow-xs">
               <div className="w-10 h-10 rounded-xl bg-gold-50 text-gold-700 flex items-center justify-center font-bold text-sm mb-4">
-                ٣
+                {t('home.step3_n')}
               </div>
-              <h3 className="text-sm font-bold text-fg mb-1">ابنِ وتكامل بأمان</h3>
+              <h3 className="text-sm font-bold text-fg mb-1">{t('home.step3_t')}</h3>
               <p className="text-xs text-fg-muted leading-relaxed">
-                احصل على مفاتيح API مدارة بنقرة واحدة، انسخ كود التثبيت المباشر، وتابع تحديثات الإصدارات تلقائياً.
+                {t('home.step3_d')}
               </p>
             </div>
           </div>
@@ -491,21 +500,21 @@ export const Home: React.FC = () => {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
             <div>
               <span className="text-xs font-semibold text-ratq-400 uppercase tracking-wider block mb-2">
-                معيار الجودة والموثوقية
+                {t('home.std_kicker')}
               </span>
               <h2 className="text-2xl sm:text-3xl font-bold leading-snug mb-4">
-                معيار إتقان: حوكمة رقمية وعلمية لحماية البرمجيات القرآنية
+                {t('home.std_title')}
               </h2>
               <p className="text-xs text-gray-300 leading-relaxed mb-6">
-                لا نكتفي بكون المورد مفتوح المصدر أو متاحاً؛ بل نخضعه لتقييم موزون من أربعة مستويات يضمن سلامة الرسم العثماني ودقة التفاسير واستقرار الأكواد والامتثال التام للحقوق الفكرية.
+                {t('home.std_body')}
               </p>
 
               <div className="flex flex-wrap gap-3">
                 <Button variant="primary" size="md" onClick={() => navigate('/standards')}>
-                  استكشف معايير إتقان
+                  {t('home.std_cta')}
                 </Button>
                 <Button variant="outline" size="md" onClick={() => navigate('/standards/checklist')} className="border-ratq-700 text-white hover:bg-ratq-900">
-                  قائمة التحقق التفصيلية
+                  {t('home.std_checklist')}
                 </Button>
               </div>
             </div>
@@ -513,19 +522,19 @@ export const Home: React.FC = () => {
             <div className="grid grid-cols-2 gap-4">
               <div className="p-4 rounded-xl bg-ratq-900 border border-ratq-800 hover:border-ratq-700 transition-colors shadow-xs">
                 <ItqanBadge level="basic" size="sm" />
-                <p className="text-2xs text-gray-300 mt-2">بيانات مكتملة ومصرّح بها ذاتياً</p>
+                <p className="text-2xs text-gray-300 mt-2">{t('home.lvl_basic')}</p>
               </div>
               <div className="p-4 rounded-xl bg-ratq-900 border border-ratq-800 hover:border-ratq-700 transition-colors shadow-xs">
                 <ItqanBadge level="verified" size="sm" />
-                <p className="text-2xs text-gray-300 mt-2">تدقيق تقني لسلامة الروابط والملفات</p>
+                <p className="text-2xs text-gray-300 mt-2">{t('home.lvl_verified')}</p>
               </div>
               <div className="p-4 rounded-xl bg-ratq-900 border border-ratq-800 hover:border-ratq-700 transition-colors shadow-xs">
                 <ItqanBadge level="certified" size="sm" />
-                <p className="text-2xs text-gray-300 mt-2">مراجعة بشرية وعلمية معتمدة</p>
+                <p className="text-2xs text-gray-300 mt-2">{t('home.lvl_certified')}</p>
               </div>
               <div className="p-4 rounded-xl bg-ratq-900 border border-ratq-800 hover:border-ratq-700 transition-colors shadow-xs">
                 <ItqanBadge level="gold" size="sm" />
-                <p className="text-2xs text-gray-300 mt-2">النخبة في فئتها واستقرار استثنائي</p>
+                <p className="text-2xs text-gray-300 mt-2">{t('home.lvl_gold')}</p>
               </div>
             </div>
           </div>
@@ -536,8 +545,8 @@ export const Home: React.FC = () => {
       <section className="py-16 border-b border-border text-start">
         <div className="max-w-3xl mx-auto px-4 sm:px-6">
           <div className="text-center mb-10">
-            <h2 className="text-xl sm:text-2xl font-bold text-fg">الأسئلة الشائعة</h2>
-            <p className="text-xs text-fg-subtle mt-1">إجابات موجزة لأبرز تساؤلات المطورين والناشرين</p>
+            <h2 className="text-xl sm:text-2xl font-bold text-fg">{t('home.faq_title')}</h2>
+            <p className="text-xs text-fg-subtle mt-1">{t('home.faq_sub')}</p>
           </div>
 
           <div className="flex flex-col gap-3">
@@ -596,16 +605,16 @@ export const Home: React.FC = () => {
         </div>
 
         <div className="max-w-2xl mx-auto text-center relative z-10">
-          <h2 className="text-2xl sm:text-3xl font-bold text-fg mb-3">جاهز للبناء والتطوير؟</h2>
+          <h2 className="text-2xl sm:text-3xl font-bold text-fg mb-3">{t('home.final_title')}</h2>
           <p className="text-xs sm:text-sm text-fg-muted mb-6 leading-relaxed">
-            انضم إلى مئات المطورين والباحثين القرآنيين، وابدأ دمج أحدث المجموعات البرمجية الموثقة في مشروعك اليوم.
+            {t('home.final_body')}
           </p>
           <div className="flex flex-wrap items-center justify-center gap-3">
             <Button variant="primary" size="lg" onClick={() => navigate('/resources')}>
-              تصفح الكتالوج الآن
+              {t('home.final_cta1')}
             </Button>
             <Button variant="outline" size="lg" onClick={() => navigate('/auth/sign-up')}>
-              إنشاء حساب مطور
+              {t('home.final_cta2')}
             </Button>
           </div>
         </div>

@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
-import { toDesignKey, createKey, revokeKey, rotateKey } from '@/lib/payloadKeys';
+import { toDesignKey, createKey, revokeKey, rotateKey, scopeOf } from '@/lib/payloadKeys';
 
 const API = 'http://payload.test/api';
 const ok = (body: unknown) => Promise.resolve(new Response(JSON.stringify(body), { status: 200 }));
@@ -25,6 +25,12 @@ describe('toDesignKey', () => {
     expect(JSON.stringify(k)).not.toContain('full_secret');
   });
 
+  it('maps last_used_at when present and leaves it unset for never-used keys', () => {
+    expect(toDesignKey({ ...keyDoc, last_used_at: '2026-02-03T00:00:00.000Z' }).last_used_at).toBe('2026-02-03T00:00:00.000Z');
+    expect(toDesignKey({ ...keyDoc, last_used_at: null }).last_used_at).toBeUndefined();
+    expect(toDesignKey(keyDoc).last_used_at).toBeUndefined();
+  });
+
   it('accepts a populated resource relation', () => {
     expect(toDesignKey({ ...keyDoc, resource: { id: 9, name: 'x' } }).resource_id).toBe('payload_9');
   });
@@ -39,6 +45,16 @@ describe('createKey', () => {
     expect(url).toBe(`${API}/api-keys`);
     expect(init.credentials).toBe('include');
     expect(JSON.parse(init.body as string)).toEqual({ name: 'CI key', resource: 7, scope: 'read' });
+  });
+
+  it('sends the chosen scope; anything but read,write falls back to read (server enum)', async () => {
+    const f = vi.fn(() => ok({ doc: { ...keyDoc, key: 'ratq_live_abc' } }));
+    vi.stubGlobal('fetch', f);
+    await createKey('payload_7', 'k', 'read,write');
+    await createKey('payload_7', 'k', 'admin' as never);
+    const body = (i: number) => JSON.parse(((f.mock.calls[i] as unknown as [string, RequestInit])[1].body as string)).scope;
+    expect(body(0)).toBe('read,write');
+    expect(body(1)).toBe('read');
   });
 
   it('returns the server refusal (no approved request) and no key', async () => {
@@ -91,11 +107,24 @@ describe('rotateKey (create new, then delete old)', () => {
     expect((f.mock.calls[1] as unknown as [string, RequestInit])[0]).toBe(`${API}/api-keys/4`);
   });
 
+  it('mints the replacement with the old key scope (never silently downgrades)', async () => {
+    const f = vi
+      .fn()
+      .mockImplementationOnce(() => ok({ doc: { ...keyDoc, id: 5, key: 'ratq_live_new' } }))
+      .mockImplementationOnce(() => ok({ doc: {} }));
+    vi.stubGlobal('fetch', f);
+    await rotateKey('payload_key_4', 'payload_7', 'CI key', 'read,write');
+    expect(JSON.parse((f.mock.calls[0] as unknown as [string, RequestInit])[1].body as string).scope).toBe('read,write');
+  });
+
   it('keeps the old key if creating the new one fails (never deletes)', async () => {
     const f = vi.fn(() => fail(403, 'nope'));
     vi.stubGlobal('fetch', f);
     expect(await rotateKey('payload_key_4', 'payload_7', 'CI key')).toEqual({ key: null, error: 'nope' });
-    expect(f).toHaveBeenCalledTimes(1);
+    // A 403 on an authenticated call also probes /users/me (session-expiry check); the key itself must see one write and no DELETE.
+    const calls = (f.mock.calls as unknown as [string, RequestInit?][]).filter(([u]) => !u.endsWith('/users/me'));
+    expect(calls).toHaveLength(1);
+    expect(calls[0][1]?.method).not.toBe('DELETE');
   });
 
   it('still reveals the new key and reports the error if deleting the old one fails', async () => {
@@ -105,5 +134,13 @@ describe('rotateKey (create new, then delete old)', () => {
       .mockImplementationOnce(() => fail(500, 'delete failed'));
     vi.stubGlobal('fetch', f);
     expect(await rotateKey('payload_key_4', 'payload_7', 'CI key')).toEqual({ key: 'ratq_live_new', error: 'delete failed' });
+  });
+});
+
+describe('scopeOf', () => {
+  it('rejoins a design key scopes into the server enum', () => {
+    expect(scopeOf(['read', 'write'])).toBe('read,write');
+    expect(scopeOf(['read'])).toBe('read');
+    expect(scopeOf(['resources:read', 'api:call'])).toBe('read');
   });
 });

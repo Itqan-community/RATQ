@@ -7,6 +7,11 @@ describe('isMockRoute', () => {
     (p) => expect(isMockRoute(p)).toBe(true)
   );
 
+  it.each(['/stacks', '/stacks/tech-spec-table'])(
+    'isMockRoute_StacksAlias_True (%s)',
+    (p) => expect(isMockRoute(p)).toBe(true)
+  );
+
   it.each(['/', '/resources', '/resources/payload-foo', '/standards', '/categoriesx', '/resourcesx'])(
     'isMockRoute_LiveOrLookalikePath_False (%s)',
     (p) => expect(isMockRoute(p)).toBe(false)

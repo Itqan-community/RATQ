@@ -72,51 +72,62 @@ export const LegalPage: React.FC = () => {
     },
     privacy: {
       slug: 'privacy',
-      title_ar: 'سياسة الخصوصية وحماية البيانات',
-      title_en: 'Privacy Policy & Data Protection',
+      title_ar: 'سياسة الخصوصية',
+      title_en: 'Privacy Policy',
       icon: Lock,
+      // Copied from live ratq.itqan.dev (messages en/ar "privacy"); en item3 follows the ar wording since beta uses a cookie session.
       content_ar: (
         <div className="space-y-6 leading-relaxed">
+          <p className="text-fg-muted">هذه الصفحة تشرح البيانات التي تجمعها منصة رَتْق ولماذا.</p>
           <section>
-            <h3 className="text-lg font-bold text-fg mb-2">1. جمع البيانات والحد الأدنى</h3>
-            <p className="text-fg-muted">
-              تتبنى رتق مبدأ "الحد الأدنى الضروري من البيانات" (Data Minimization). لا نجمع سوى البريد الإلكتروني الضروري للمصادقة واسم المستخدم وبيانات الموارد البرمجية التي تختار نشرها علناً.
-            </p>
+            <h3 className="text-lg font-bold text-fg mb-2">ما الذي نجمعه</h3>
+            <ul className="list-disc ps-6 space-y-2 text-fg-muted">
+              <li>عند تسجيل الدخول كمطوّر عبر GitHub، نحصل على بريدك الإلكتروني الموثّق واسم العرض من GitHub لإنشاء حسابك وربط جلستك.</li>
+              <li>عند نشر مورد أو طلب وصول إليه، نخزّن البيانات التي تُدخلها لهذا الغرض تحديدا (وصف المورد، رابط GitHub، معلومات الترخيص، وما شابه).</li>
+              <li>ملف تعريف ارتباط (كوكي) واحد للجلسة يُستخدم فقط لإبقائك مسجّل الدخول، وليس للتتبع.</li>
+            </ul>
           </section>
           <section>
-            <h3 className="text-lg font-bold text-fg mb-2">2. تخزين المفاتيح والتجزئة الأمنية</h3>
-            <p className="text-fg-muted">
-              لا نقوم بتخزين مفاتيح API الخاصة بك في شكلها الخام أبدًا. يتم حفظ تجزئة SHA-256 للمفتاح فقط، ويُعرض المفتاح الكامل مرة واحدة عند إنشائه.
-            </p>
+            <h3 className="text-lg font-bold text-fg mb-2">ما لا نفعله</h3>
+            <ul className="list-disc ps-6 space-y-2 text-fg-muted">
+              <li>لا نستخدم أدوات تحليلات أو إعلانات من طرف ثالث لتتبع زوار الموقع.</li>
+              <li>لا نبيع بياناتك أو نشاركها مع أي جهة خارجية لأغراض تسويقية.</li>
+            </ul>
           </section>
           <section>
-            <h3 className="text-lg font-bold text-fg mb-2">3. حقوق المستخدمين (GDPR)</h3>
+            <h3 className="text-lg font-bold text-fg mb-2">طلب حذف الحساب أو البيانات</h3>
             <p className="text-fg-muted">
-              يحق لكل مستخدم طلب تصدير بياناته أو حذف حسابه عبر التواصل معنا من صفحة «اتصل بنا».
+              تواصل معنا عبر GitHub Issues (انظر صفحة "تواصل معنا") وسنعالج الطلب.
             </p>
           </section>
+          <p className="text-sm text-fg-subtle">هذه سياسة أولية لمنصة لا تزال في مرحلة Beta، وقد تُحدَّث مع تطور المنصة.</p>
         </div>
       ),
       content_en: (
         <div className="space-y-6 leading-relaxed">
+          <p className="text-fg-muted">This page explains what data RATQ collects and why.</p>
           <section>
-            <h3 className="text-lg font-bold text-fg mb-2">1. Data Minimization</h3>
-            <p className="text-fg-muted">
-              RATQ collects only the minimal information required to provide authentication and manage repository publication: email address, username, and public package metadata.
-            </p>
+            <h3 className="text-lg font-bold text-fg mb-2">What we collect</h3>
+            <ul className="list-disc ps-6 space-y-2 text-fg-muted">
+              <li>When you sign in as a developer via GitHub, we receive your verified email and display name from GitHub to create your account and link your session.</li>
+              <li>When you publish a resource or request access to one, we store the data you enter specifically for that purpose (resource description, GitHub URL, license info, and similar).</li>
+              <li>One session cookie is used only to keep you signed in, not for tracking.</li>
+            </ul>
           </section>
           <section>
-            <h3 className="text-lg font-bold text-fg mb-2">2. Key Security & Cryptographic Hashing</h3>
-            <p className="text-fg-muted">
-              Raw API keys are never stored in databases. Only a SHA-256 hash of each key is kept; the full key is shown once, when it is created.
-            </p>
+            <h3 className="text-lg font-bold text-fg mb-2">What we don&apos;t do</h3>
+            <ul className="list-disc ps-6 space-y-2 text-fg-muted">
+              <li>We don&apos;t use third-party analytics or advertising trackers on the site.</li>
+              <li>We don&apos;t sell your data or share it with outside parties for marketing purposes.</li>
+            </ul>
           </section>
           <section>
-            <h3 className="text-lg font-bold text-fg mb-2">3. User Rights & Data Portability</h3>
+            <h3 className="text-lg font-bold text-fg mb-2">Requesting account or data deletion</h3>
             <p className="text-fg-muted">
-              Users may request an export or deletion of their personal data by contacting us through the Contact page.
+              Reach out via GitHub Issues (see the Contact page) and we&apos;ll handle the request.
             </p>
           </section>
+          <p className="text-sm text-fg-subtle">This is an initial policy for a platform still in Beta, and may be updated as the platform evolves.</p>
         </div>
       ),
     },
@@ -240,9 +251,11 @@ export const LegalPage: React.FC = () => {
               <h1 className="text-2xl md:text-4xl font-extrabold text-fg tracking-tight">
                 {isAr ? currentDoc.title_ar : currentDoc.title_en}
               </h1>
-              <p className="text-xs text-fg-subtle mt-2 font-mono">
-                {isAr ? 'آخر تحديث: 2026-03-20 • إصدار 1.0' : 'Last updated: 2026-03-20 • Version 1.0'}
-              </p>
+              {currentDoc.slug !== 'privacy' && (
+                <p className="text-xs text-fg-subtle mt-2 font-mono">
+                  {isAr ? 'آخر تحديث: 2026-03-20 • إصدار 1.0' : 'Last updated: 2026-03-20 • Version 1.0'}
+                </p>
+              )}
             </div>
 
             {isAr ? currentDoc.content_ar : currentDoc.content_en}

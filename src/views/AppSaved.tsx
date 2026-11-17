@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { ResourceCard } from '@/components/resources/ResourceCard';
 import { mockRepo } from '@/lib/supabase';
+import { isLive } from '@/lib/payloadAuth';
 import { Bookmark, Search, Compass, Trash2 } from 'lucide-react';
 
 export const AppSavedPage: React.FC = () => {
@@ -14,7 +15,7 @@ export const AppSavedPage: React.FC = () => {
   const isAr = i18n.language === 'ar';
 
   // Mock page: no persisted saves exist, so it shows the first 2 listed resources (none in live mode if API is empty).
-  const [savedResources, setSavedResources] = useState(() => mockRepo.getResources().slice(0, 2));
+  const [savedResources, setSavedResources] = useState(() => (isLive() ? [] : mockRepo.getResources().slice(0, 2)));
   const [search, setSearch] = useState('');
 
   const handleRemove = (id: string) => {

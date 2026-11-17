@@ -1,7 +1,10 @@
 // src/views/Licenses.tsx
 import React from 'react';
+import { useTranslation } from 'react-i18next';
+import type { TFunction } from 'i18next';
 import { Link } from 'react-router-dom';
 import { mockRepo } from '@/lib/supabase';
+import { licenseRowHref } from '@/lib/catalogQuery';
 import { Scale, Check, X, ArrowLeft, ExternalLink, Unlock, Shield, Info, Sparkles } from 'lucide-react';
 
 interface LicenseTierInfo {
@@ -10,60 +13,62 @@ interface LicenseTierInfo {
   freedomRank: string;
 }
 
-const getLicenseTier = (id: string): LicenseTierInfo => {
+const getLicenseTier = (id: string, t: TFunction): LicenseTierInfo => {
   switch (id) {
     case 'cc0':
       return {
-        label: 'أقصى حرية — نطاق عام بلا شروط',
+        label: t('licenses.l00'),
         badgeClass: 'bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300 border-emerald-200 dark:border-emerald-800',
-        freedomRank: 'المستوى 1: مفتوح بالكامل',
+        freedomRank: t('licenses.l01'),
       };
     case 'cc-by':
       return {
-        label: 'حرية عالية — اشتراط الإسناد فقط',
+        label: t('licenses.l02'),
         badgeClass: 'bg-teal-50 dark:bg-teal-950/60 text-teal-700 dark:text-teal-300 border-teal-200 dark:border-teal-800',
-        freedomRank: 'المستوى 2: إسناد حر',
+        freedomRank: t('licenses.l03'),
       };
     case 'cc-by-sa':
       return {
-        label: 'حرية متوازنة — المشاركة بالمثل (Copyleft)',
+        label: t('licenses.l04'),
         badgeClass: 'bg-sky-50 dark:bg-sky-950/60 text-sky-700 dark:text-sky-300 border-sky-200 dark:border-sky-800',
-        freedomRank: 'المستوى 3: إسناد ومشاركة بالمثل',
+        freedomRank: t('licenses.l05'),
       };
     case 'cc-by-nd':
       return {
-        label: 'استخدام موثوق — منع الاشتقاق والتعديل',
+        label: t('licenses.l06'),
         badgeClass: 'bg-indigo-50 dark:bg-indigo-950/60 text-indigo-700 dark:text-indigo-300 border-indigo-200 dark:border-indigo-800',
-        freedomRank: 'المستوى 4: بلا اشتقاق',
+        freedomRank: t('licenses.l07'),
       };
     case 'cc-by-nc':
       return {
-        label: 'نفع عام — حظر الاستخدام التجاري',
+        label: t('licenses.l08'),
         badgeClass: 'bg-amber-50 dark:bg-amber-950/60 text-amber-700 dark:text-amber-300 border-amber-200 dark:border-amber-800',
-        freedomRank: 'المستوى 5: غير تجاري',
+        freedomRank: t('licenses.l09'),
       };
     case 'cc-by-nc-sa':
       return {
-        label: 'نفع عام مشروط — غير تجاري ومشاركة بالمثل',
+        label: t('licenses.l10'),
         badgeClass: 'bg-orange-50 dark:bg-orange-950/60 text-orange-700 dark:text-orange-300 border-orange-200 dark:border-orange-800',
-        freedomRank: 'المستوى 6: غير تجاري متوارث',
+        freedomRank: t('licenses.l11'),
       };
     case 'cc-by-nc-nd':
       return {
-        label: 'أقصى حماية — للاطلاع فقط بلا تعديل أو تجارة',
+        label: t('licenses.l12'),
         badgeClass: 'bg-rose-50 dark:bg-rose-950/60 text-rose-700 dark:text-rose-300 border-rose-200 dark:border-rose-800',
-        freedomRank: 'المستوى 7: مشروط ومحمي',
+        freedomRank: t('licenses.l13'),
       };
     default:
       return {
-        label: 'ترخيص معتمد',
+        label: t('licenses.l14'),
         badgeClass: 'bg-subtle text-fg-muted border-border',
-        freedomRank: 'ترخيص موثق',
+        freedomRank: t('licenses.l15'),
       };
   }
 };
 
 export const Licenses: React.FC = () => {
+  const { t, i18n } = useTranslation('site');
+  const en = i18n.language === 'en';
   const licenses = mockRepo.getLicenses();
   const resources = mockRepo.getResources();
 
@@ -73,14 +78,14 @@ export const Licenses: React.FC = () => {
       <div className="mb-10 text-start">
         <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-ratq-200 bg-ratq-50 dark:border-ratq-800 dark:bg-ratq-950 text-ratq-800 dark:text-ratq-300 text-xs font-semibold mb-3">
           <Sparkles className="w-3.5 h-3.5 text-ratq-600" />
-          <span>منظومة الحوكمة وحقوق الملكية الفكرية للمشاريع القرآنية</span>
+          <span>{t('licenses.l16')}</span>
         </div>
         <h1 className="text-2xl sm:text-3xl font-bold text-fg">
-          دليل تراخيص المشاع الإبداعي (Creative Commons)
+          {t('licenses.l17')}
         </h1>
         <p className="text-xs sm:text-sm text-fg-subtle mt-2 leading-relaxed max-w-2xl">
-          خريطة هرمية ومسار زمني تفصيلي لتراخيص المشاع الإبداعي السبعة المعتمدة في منصة «رَتْق»،
-          مرتبة من الأعلى إلى الأسفل بحسب درجة الانفتاح وحرية الاستخدام، مع بيان أبعاد الصلاحيات الأربعة (التجاري، الإسناد، الاشتقاق، والمشاركة بالمثل).
+          {t('licenses.l18')}
+          {t('licenses.l19')}
         </p>
 
         {/* Informative Guidance Banner */}
@@ -90,14 +95,14 @@ export const Licenses: React.FC = () => {
               <Info className="w-4 h-4" />
             </div>
             <div>
-              <p className="font-semibold text-fg">كيف تقرأ هذا الخط الزمني؟</p>
+              <p className="font-semibold text-fg">{t('licenses.l20')}</p>
               <p className="text-fg-muted text-[11px] mt-0.5">
-                يبدأ المسار من أعلى بالتراخيص الأكثر مرونة وحرية (النطاق العام)، وينحدر تدريجياً نحو التراخيص الأكثر اشتراطاً وحماية للمصنفات.
+                {t('licenses.l21')}
               </p>
             </div>
           </div>
           <div className="shrink-0 hidden md:flex items-center gap-2 text-[11px] font-mono text-fg-subtle bg-canvas px-3 py-1.5 rounded-lg border border-border">
-            <span>7 تراخيص معتمدة</span>
+            <span>{t('licenses.l22')}</span>
           </div>
         </div>
       </div>
@@ -111,10 +116,10 @@ export const Licenses: React.FC = () => {
           </div>
           <div className="flex flex-col">
             <span className="text-xs font-bold text-emerald-700 dark:text-emerald-400">
-              قمة الخط الزمني — النطاق العام والأعلى حرية
+              {t('licenses.l23')}
             </span>
             <span className="text-[11px] text-fg-subtle">
-              تراخيص مفتوحة تمنح المجتمع أوسع صلاحيات الاستخدام والتطوير والدمج
+              {t('licenses.l24')}
             </span>
           </div>
         </div>
@@ -129,7 +134,7 @@ export const Licenses: React.FC = () => {
         <div className="space-y-8 relative z-10">
           {licenses.map((lic, index) => {
             const count = resources.filter((r) => r.license_id === lic.id).length;
-            const tier = getLicenseTier(lic.id);
+            const tier = getLicenseTier(lic.id, t);
             const stepNumber = index + 1;
 
             return (
@@ -147,7 +152,7 @@ export const Licenses: React.FC = () => {
                   <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 mb-3">
                     <div className="flex flex-wrap items-center gap-2">
                       <Scale className="w-5 h-5 text-ratq-700 dark:text-ratq-400 shrink-0" />
-                      <h3 className="text-base sm:text-lg font-bold text-fg">{lic.name_ar}</h3>
+                      <h3 className="text-base sm:text-lg font-bold text-fg">{en ? (lic.name_en || lic.name_ar) : lic.name_ar}</h3>
                       <span className="text-xs font-mono font-bold text-fg-subtle uppercase px-2 py-0.5 rounded bg-subtle border border-border">
                         {lic.name_en || lic.id}
                       </span>
@@ -179,9 +184,9 @@ export const Licenses: React.FC = () => {
                         </div>
                       )}
                       <span className="text-fg font-medium">
-                        الاستخدام التجاري:{' '}
+                        {t('licenses.dim_commercial')}{' '}
                         <strong className={lic.allows_commercial ? 'text-emerald-700 dark:text-emerald-400' : 'text-red-600 dark:text-red-400'}>
-                          {lic.allows_commercial ? 'مسموح' : 'غير تجاري'}
+                          {lic.allows_commercial ? t('licenses.l25') : t('licenses.l26')}
                         </strong>
                       </span>
                     </div>
@@ -198,9 +203,9 @@ export const Licenses: React.FC = () => {
                         </div>
                       )}
                       <span className="text-fg font-medium">
-                        إلزام الإسناد:{' '}
+                        {t('licenses.dim_attribution')}{' '}
                         <strong className={lic.requires_attribution ? 'text-amber-700 dark:text-amber-400' : 'text-fg-subtle'}>
-                          {lic.requires_attribution ? 'مطلوب للمؤلف' : 'غير مطلوب'}
+                          {lic.requires_attribution ? t('licenses.l27') : t('licenses.l28')}
                         </strong>
                       </span>
                     </div>
@@ -217,9 +222,9 @@ export const Licenses: React.FC = () => {
                         </div>
                       )}
                       <span className="text-fg font-medium">
-                        التعديل والاشتقاق:{' '}
+                        {t('licenses.dim_derivatives')}{' '}
                         <strong className={lic.allows_modification ? 'text-emerald-700 dark:text-emerald-400' : 'text-red-600 dark:text-red-400'}>
-                          {lic.allows_modification ? 'مسموح' : 'ممنوع (بلا اشتقاق)'}
+                          {lic.allows_modification ? t('licenses.l25') : t('licenses.l29')}
                         </strong>
                       </span>
                     </div>
@@ -236,9 +241,9 @@ export const Licenses: React.FC = () => {
                         </div>
                       )}
                       <span className="text-fg font-medium">
-                        المشاركة بالمثل:{' '}
+                        {t('licenses.dim_sharealike')}{' '}
                         <strong className={lic.requires_share_alike ? 'text-sky-700 dark:text-sky-400' : 'text-fg-subtle'}>
-                          {lic.requires_share_alike ? 'إلزامية بنفس الرخصة' : 'غير ملزمة'}
+                          {lic.requires_share_alike ? t('licenses.l30') : t('licenses.l31')}
                         </strong>
                       </span>
                     </div>
@@ -248,7 +253,7 @@ export const Licenses: React.FC = () => {
                   <div className="pt-3.5 border-t border-border-subtle flex flex-wrap items-center justify-between gap-3 text-xs">
                     <div className="flex items-center gap-2">
                       <span className="font-semibold text-fg-subtle">
-                        {count} {count === 1 ? 'مورد قرآني مسجل' : 'موارد قرآنية مسجلة'}
+                        {count} {count === 1 ? t('licenses.l32') : t('licenses.l33')}
                       </span>
                       {lic.url && (
                         <a
@@ -257,17 +262,17 @@ export const Licenses: React.FC = () => {
                           rel="noreferrer"
                           className="text-[11px] text-fg-subtle hover:text-fg inline-flex items-center gap-1 transition-colors"
                         >
-                          <span>نص الرخصة القانوني</span>
+                          <span>{t('licenses.l34')}</span>
                           <ExternalLink className="w-3 h-3" />
                         </a>
                       )}
                     </div>
 
                     <Link
-                      to={`/resources?license=${lic.id}`}
+                      to={licenseRowHref(lic.id)}
                       className="text-ratq-700 dark:text-ratq-400 font-bold hover:underline inline-flex items-center gap-1.5 transition-colors"
                     >
-                      <span>استعراض موارد هذا الترخيص</span>
+                      <span>{t('licenses.l35')}</span>
                       <ArrowLeft className="w-3.5 h-3.5 rtl:rotate-0 rotate-180" />
                     </Link>
                   </div>
@@ -284,10 +289,10 @@ export const Licenses: React.FC = () => {
           </div>
           <div className="flex flex-col">
             <span className="text-xs font-bold text-rose-700 dark:text-rose-400">
-              قاعدة الخط الزمني — أقصى درجات التحفظ والحماية
+              {t('licenses.l36')}
             </span>
             <span className="text-[11px] text-fg-subtle">
-              تراخيص تشترط الحفاظ على المصنف الأصلي دون أي تعديل أو استغلال تجاري
+              {t('licenses.l37')}
             </span>
           </div>
         </div>

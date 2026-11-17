@@ -9,6 +9,9 @@ import { Button } from '@/components/ui/Button';
 import { Alert } from '@/components/ui/Alert';
 import { exchangeOAuthCode, isLive, parseOAuthCode, resetPassword, verifyEmail } from '@/lib/payloadAuth';
 import { useAuthStore } from '@/store/useAuthStore';
+import { validatePassword } from '@/lib/authFlow';
+import { GuestOnly } from '@/components/layout/GuestOnly';
+import { hydrateUserData } from '@/lib/hydrateUserData';
 
 const Shell: React.FC<{ title: string; children: React.ReactNode }> = ({ title, children }) => (
   <div className="container mx-auto px-4 py-12 flex items-center justify-center min-h-[calc(100vh-16rem)]">
@@ -23,12 +26,22 @@ export const ResetPasswordPage: React.FC = () => {
   const isAr = useTranslation().i18n.language === 'ar';
   const token = useSearchParams()[0].get('token') ?? '';
   const [password, setPassword] = useState('');
+  const [confirm, setConfirm] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [done, setDone] = useState(false);
   const [loading, setLoading] = useState(false);
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!validatePassword(password)) {
+      setError(isAr ? 'يجب أن تتراوح كلمة المرور بين 8 و64 حرفاً' : 'Password must be between 8 and 64 characters');
+      return;
+    }
+    if (password !== confirm) {
+      setError(isAr ? 'كلمتا المرور غير متطابقتين' : 'Passwords do not match');
+      return;
+    }
+    setError(null);
     setLoading(true);
     const err = await resetPassword(token, password);
     setLoading(false);
@@ -37,8 +50,16 @@ export const ResetPasswordPage: React.FC = () => {
   };
 
   return (
+    <GuestOnly>
     <Shell title={isAr ? 'تعيين كلمة مرور جديدة' : 'Set a New Password'}>
-      {done ? (
+      {!token ? (
+        <>
+          <Alert variant="error">
+            {isAr ? 'رابط إعادة التعيين غير صالح أو مفقود.' : 'This reset link is invalid or missing.'}
+          </Alert>
+          <Link to="/auth/forgot"><Button className="w-full">{isAr ? 'اطلب رابطاً جديداً' : 'Request a new link'}</Button></Link>
+        </>
+      ) : done ? (
         <>
           <Alert variant="success">{isAr ? 'تم تغيير كلمة المرور.' : 'Your password has been changed.'}</Alert>
           <Link to="/auth/sign-in"><Button className="w-full">{isAr ? 'تسجيل الدخول' : 'Sign In'}</Button></Link>
@@ -51,7 +72,17 @@ export const ResetPasswordPage: React.FC = () => {
             required
             value={password}
             onChange={(e) => setPassword(e.target.value)}
+            minLength={8}
+            maxLength={64}
             placeholder={isAr ? 'كلمة المرور الجديدة' : 'New password'}
+          />
+          <Input
+            type="password"
+            required
+            value={confirm}
+            onChange={(e) => setConfirm(e.target.value)}
+            maxLength={64}
+            placeholder={isAr ? 'تأكيد كلمة المرور' : 'Confirm password'}
           />
           <Button type="submit" variant="primary" loading={loading} className="w-full">
             {isAr ? 'حفظ' : 'Save'}
@@ -59,6 +90,7 @@ export const ResetPasswordPage: React.FC = () => {
         </form>
       )}
     </Shell>
+    </GuestOnly>
   );
 };
 
@@ -78,7 +110,9 @@ export const VerifyEmailPage: React.FC = () => {
     <Shell title={isAr ? 'تأكيد البريد الإلكتروني' : 'Verify Email'}>
       {state === 'pending' && <p className="text-sm text-fg-muted">{isAr ? 'جارٍ التحقق...' : 'Verifying...'}</p>}
       {state === 'ok' && <Alert variant="success">{isAr ? 'تم تأكيد بريدك الإلكتروني.' : 'Your email is verified.'}</Alert>}
-      {state !== 'pending' && state !== 'ok' && <Alert variant="error">{state}</Alert>}
+      {state !== 'pending' && state !== 'ok' && (
+        <Alert variant="error">{token ? state : isAr ? 'رابط التأكيد غير صالح أو مفقود.' : 'This verification link is invalid or missing.'}</Alert>
+      )}
       <Link to="/auth/sign-in"><Button variant="outline" className="w-full">{isAr ? 'تسجيل الدخول' : 'Sign In'}</Button></Link>
     </Shell>
   );
@@ -113,6 +147,7 @@ export const OAuthCallbackPage: React.FC = () => {
     exchangeOAuthCode(code).then(async (err) => {
       if (err) return navigate('/auth/sign-in', { replace: true });
       await useAuthStore.getState().hydrateAuth();
+      if (useAuthStore.getState().isAuthenticated) await hydrateUserData();
       navigate('/app', { replace: true });
     });
   }, [navigate]);

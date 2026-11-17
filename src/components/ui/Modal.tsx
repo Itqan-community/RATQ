@@ -1,6 +1,7 @@
 // src/components/ui/Modal.tsx
 import React, { useEffect } from 'react';
 import { X } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 
@@ -21,6 +22,7 @@ export const Modal: React.FC<ModalProps> = ({
   children,
   maxWidth = 'md',
 }) => {
+  const { t } = useTranslation('site');
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape') onClose();
@@ -80,7 +82,7 @@ export const Modal: React.FC<ModalProps> = ({
           <button
             onClick={onClose}
             className="p-1.5 text-fg-subtle hover:text-fg rounded-md hover:bg-subtle transition-colors"
-            aria-label="إغلاق النافذة"
+            aria-label={t('ui.close_dialog')}
           >
             <X className="w-4 h-4" />
           </button>

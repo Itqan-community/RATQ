@@ -2,7 +2,7 @@
 export const MOCK_ROUTES = [
   '/publishers', '/publisher/claim', '/publisher/analytics', '/publisher/webhooks',
   '/review', '/admin', // /moderation is Reports (live), so not listed
-  '/categories', '/licenses', '/resources/stacks', '/resources/roadmap', '/resources/wizard',
+  '/categories', '/licenses', '/stacks', '/resources/stacks', '/resources/roadmap', '/resources/wizard',
   '/standards/checklist', '/standards/revocations',
   '/app/saved', '/status', '/changelog', '/roadmap', '/faq', '/ux-study',
 ];

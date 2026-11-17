@@ -2,37 +2,43 @@
 import { useEffect, useState } from 'react';
 import '@/i18n/config';
 import App from '@/App';
-import { hydrateFromPayload } from '@/lib/payloadResources';
+import { hydrateResources } from '@/lib/payloadResources';
+import { useApiStatus } from '@/store/useApiStatus';
 import { isLive } from '@/lib/payloadAuth';
-import { hydrateRequests } from '@/lib/payloadRequests';
-import { hydrateKeys } from '@/lib/payloadKeys';
-import { hydrateNotifications } from '@/lib/payloadNotifications';
+import { hydrateUserData } from '@/lib/hydrateUserData';
 import { useAuthStore } from '@/store/useAuthStore';
+import { isStaticPath } from '@/lib/staticRoutes';
+import { Skeleton } from '@/components/ui/Skeleton';
 
 // The design is a react-router SPA; BrowserRouter handles every path under the catch-all.
 // Pages read the repo synchronously, so live data must land before the first render.
 export default function ClientApp() {
   const [ready, setReady] = useState(false);
-  const [apiDown, setApiDown] = useState(false);
+  // Entry on a static page (about, legal, ...) needs no data, so render at once instead of a blank wait.
+  const [early] = useState(() => isStaticPath(window.location.pathname));
   useEffect(() => {
     // Requests need the resource list (join) and the session, so they hydrate last.
-    Promise.all([hydrateFromPayload(), isLive() ? useAuthStore.getState().hydrateAuth() : undefined])
-      .then(([ok]) => {
-        setApiDown(!ok);
-        return useAuthStore.getState().isAuthenticated && isLive() ? Promise.all([hydrateRequests(), hydrateKeys(), hydrateNotifications()]) : undefined;
+    Promise.all([hydrateResources(), isLive() ? useAuthStore.getState().hydrateAuth() : undefined])
+      .then(([status]) => {
+        // Down state is rendered per data route by ApiDownGate; static pages keep working.
+        useApiStatus.getState().set(status);
+        return useAuthStore.getState().isAuthenticated && isLive() ? hydrateUserData() : undefined;
       })
       .finally(() => setReady(true));
   }, []);
-  if (!ready) return null;
-  // Live mode only: show the failure instead of quietly falling back to mock data.
-  if (apiDown) {
+  if (!ready && !early) {
     return (
-      <div role="alert" style={{ padding: 32, fontFamily: 'sans-serif', textAlign: 'center' }}>
-        <h1>تعذّر الاتصال بالخادم / Could not reach the RATQ API</h1>
-        <p>{process.env.NEXT_PUBLIC_PAYLOAD_API_URL}</p>
-        <button onClick={() => location.reload()}>إعادة المحاولة / Retry</button>
+      <div role="status" aria-busy="true" className="container mx-auto px-4 py-16 space-y-6">
+        <Skeleton className="h-10 w-1/3" />
+        <Skeleton className="h-32 w-full" />
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <Skeleton className="h-48" />
+          <Skeleton className="h-48" />
+          <Skeleton className="h-48" />
+        </div>
       </div>
     );
   }
-  return <App />;
+  // ponytail: key remounts App once data lands so a user who left the static entry page mid-hydrate sees real data.
+  return <App key={ready ? 'ready' : 'early'} />;
 }

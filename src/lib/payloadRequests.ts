@@ -64,7 +64,7 @@ async function send(path: string, method: 'POST' | 'PATCH', body: unknown): Prom
       credentials: 'include',
       body: JSON.stringify(body),
     });
-    return res.ok ? null : await errorMessage(res, 'Request failed');
+    return res.ok ? null : await errorMessage(res, 'Request failed', { authenticated: true });
   } catch {
     return 'Network error, please try again.';
   }
@@ -87,6 +87,14 @@ export async function decideRequest(
     status: decision === 'rejected' ? 'denied' : 'approved',
     publisher_notes: note,
   });
+}
+
+// Approved -> revoked is the only transition the server allows after a decision. It also deletes the holder's API
+// keys for the resource and notifies them, all in one transaction, so the client sends nothing but the status.
+export async function revokeRequest(requestId: string): Promise<string | null> {
+  const id = numericId(requestId, 'payload_req_');
+  if (Number.isNaN(id)) return NOT_PAYLOAD;
+  return send(`/access-requests/${id}`, 'PATCH', { status: 'revoked' });
 }
 
 // Live mode: the server already limits the set to my requests + those on my resources; split it per view.

@@ -3,6 +3,7 @@ import { create } from 'zustand';
 import { UserRole, Profile } from '@/types';
 import { DEMO_PROFILES } from '@/lib/mockData';
 import * as payloadAuth from '@/lib/payloadAuth';
+import { clearUserData, hydrateUserData } from '@/lib/hydrateUserData';
 
 interface AuthState {
   isAuthenticated: boolean;
@@ -16,6 +17,10 @@ interface AuthState {
   signUpLive: (email: string, password: string, displayName: string) => Promise<string | null>;
   hydrateAuth: () => Promise<void>;
   signOutLive: () => Promise<void>;
+  // Set when an authenticated call found the cookie dead; SignIn shows the message once.
+  sessionExpired: boolean;
+  handleSessionExpired: () => Promise<void>;
+  clearSessionExpired: () => void;
 }
 
 const guest = { isAuthenticated: false, currentRole: 'guest' as UserRole };
@@ -31,6 +36,8 @@ export const useAuthStore = create<AuthState>((set) => ({
   isAuthenticated: !payloadAuth.isLive(),
   currentRole: payloadAuth.isLive() ? 'guest' : 'developer',
   profile: DEMO_PROFILES.developer,
+
+  sessionExpired: false,
 
   switchRole: (role: UserRole) => {
     // Demo-only. In live mode the role comes solely from the server session; a client-side switch would unlock
@@ -67,6 +74,7 @@ export const useAuthStore = create<AuthState>((set) => ({
   signInLive: async (email, password) => {
     try {
       set(authed(await payloadAuth.login(email, password)));
+      await hydrateUserData();
       return null;
     } catch (e) {
       set(guest);
@@ -78,6 +86,7 @@ export const useAuthStore = create<AuthState>((set) => ({
     try {
       await payloadAuth.register(email, password, displayName);
       set(authed(await payloadAuth.login(email, password)));
+      await hydrateUserData();
       return null;
     } catch (e) {
       set(guest);
@@ -100,6 +109,16 @@ export const useAuthStore = create<AuthState>((set) => ({
     } catch {
       // fail safe: always drop local state even if the request failed
     }
+    clearUserData();
     set(guest);
   },
+
+  // Cookie confirmed dead mid-session: drop local state (and the stale cookie) and flag it for the sign-in screen.
+  // Ignored when nobody is signed in so a late event cannot show a spurious banner.
+  handleSessionExpired: async () => {
+    if (!useAuthStore.getState().isAuthenticated) return;
+    await useAuthStore.getState().signOutLive();
+    set({ sessionExpired: true });
+  },
+  clearSessionExpired: () => set({ sessionExpired: false }),
 }));

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { EcosystemApp } from '@/types';
 import { clsx } from 'clsx';
 import { CheckCircle2 } from 'lucide-react';
@@ -120,6 +121,7 @@ export const ResourceAppBadges: React.FC<ResourceAppBadgesProps> = ({
   size = 'sm',
   linkToTechStack = false,
 }) => {
+  const { t } = useTranslation('site');
   if (!apps || apps.length === 0) {
     return null;
   }
@@ -151,7 +153,7 @@ export const ResourceAppBadges: React.FC<ResourceAppBadgesProps> = ({
       {showLabel && (
         <span className="text-[11px] font-medium text-fg-subtle shrink-0 flex items-center gap-1 select-none">
           <CheckCircle2 className="w-3.5 h-3.5 text-ratq-600 dark:text-ratq-400 shrink-0" />
-          <span>مُعتمد في:</span>
+          <span>{t('detail.adopted_in')}</span>
         </span>
       )}
 
@@ -174,7 +176,7 @@ export const ResourceAppBadges: React.FC<ResourceAppBadgesProps> = ({
             >
               <div className="absolute -top-1 left-1/2 -translate-x-1/2 w-2 h-2 rotate-45 bg-zinc-900 dark:bg-zinc-100 border-t border-l border-zinc-700/60 dark:border-zinc-300" />
               <div className="relative px-2.5 py-1 rounded-md bg-zinc-900 text-white dark:bg-zinc-100 dark:text-zinc-900 text-[11px] font-semibold whitespace-nowrap shadow-xl border border-zinc-700/60 dark:border-zinc-300 text-center">
-                <span>تطبيقات أخرى: {remainingNames}</span>
+                <span>{t('detail.other_apps', { names: remainingNames })}</span>
               </div>
             </div>
           </div>

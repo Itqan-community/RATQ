@@ -90,7 +90,7 @@ async function patch(resourceId: string, body: unknown, fallback: string): Promi
       credentials: 'include',
       body: JSON.stringify(body),
     });
-    return res.ok ? null : await errorMessage(res, fallback);
+    return res.ok ? null : await errorMessage(res, fallback, { authenticated: true });
   } catch {
     return NET_ERR;
   }
@@ -120,7 +120,7 @@ export async function uploadCoverImage(file: File, alt: string): Promise<{ id: n
   try {
     // No Content-Type header: the browser sets the multipart boundary.
     const res = await fetch(`${payloadBase()}/media`, { method: 'POST', credentials: 'include', body });
-    if (!res.ok) return { id: null, error: await errorMessage(res, 'Could not upload image') };
+    if (!res.ok) return { id: null, error: await errorMessage(res, 'Could not upload image', { authenticated: true }) };
     const id = (await res.json())?.doc?.id;
     return typeof id === 'number' ? { id, error: null } : { id: null, error: 'Could not upload image' };
   } catch {
@@ -141,7 +141,7 @@ export async function createResource(f: WizardForm, imageId?: number): Promise<s
       credentials: 'include',
       body: JSON.stringify({ ...toPayloadBody(f), ...(imageId !== undefined ? { image: imageId } : {}) }),
     });
-    return res.ok ? null : await errorMessage(res, 'Could not create resource');
+    return res.ok ? null : await errorMessage(res, 'Could not create resource', { authenticated: true });
   } catch {
     return 'Network error, please try again.';
   }
@@ -174,7 +174,7 @@ export async function fetchResourceById(resourceId: string, ownerProfileId: stri
   try {
     const res = await fetch(`${payloadBase()}/resources/${n}?depth=0`, { credentials: 'include' });
     if (res.status === 404 || res.status === 403) return NOT_FOUND;
-    if (!res.ok) return { resource: null, form: null, error: await errorMessage(res, 'Could not load resource') };
+    if (!res.ok) return { resource: null, form: null, error: await errorMessage(res, 'Could not load resource', { authenticated: true }) };
     const doc = (await res.json()) as PayloadResourceDoc & { owner?: number | { id: number } };
     const ownerId = typeof doc.owner === 'object' && doc.owner ? doc.owner.id : doc.owner;
     if (ownerId !== Number(me[1])) return NOT_FOUND;
@@ -206,7 +206,7 @@ export async function deleteResource(resourceId: string): Promise<string | null>
   if (Number.isNaN(n)) return 'Only live resources can be deleted.';
   try {
     const res = await fetch(`${payloadBase()}/resources/${n}`, { method: 'DELETE', credentials: 'include' });
-    return res.ok ? null : await errorMessage(res, 'Could not delete resource');
+    return res.ok ? null : await errorMessage(res, 'Could not delete resource', { authenticated: true });
   } catch {
     return 'Network error, please try again.';
   }

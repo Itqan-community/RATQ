@@ -1,6 +1,7 @@
 // src/components/resources/FilterHelpTooltip.tsx
 import React, { useState, useRef, useEffect } from 'react';
 import { HelpCircle } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 export interface FilterHelpItem {
   label: string;
@@ -16,83 +17,16 @@ export interface FilterHelpData {
   tip?: string;
 }
 
-export const FILTER_TOOLTIPS: Record<string, FilterHelpData> = {
-  badge: {
-    title: 'شارة إتقان لضبط الجودة',
-    badge: 'معيار إتقان',
-    description: 'نظام حوكمة واعتماد معياري صارم من 4 مستويات يتحقق من سلامة النص القرآني، دقة علامات الضبط والتشكيل، والتخريج العلمي، مع منع التوليد العشوائي (Zero-Hallucination).',
-    items: [
-      { label: 'إتقان ذهبي', desc: 'تدقيق ثلاثي مستقل وإسناد مباشر لمصحف مطبوع معتمد (مثل مصحف مجمع الملك فهد).' },
-      { label: 'معتمد', desc: 'مراجعة علمية وإجازة رسمية من هيئة قرآنية أو دار نشر موثوقة.' },
-      { label: 'موثّق تقنياً', desc: 'فحص آلي خوارزمي لمطابقة التشفير واليونيكود وقواعد الرسم العثماني.' },
-      { label: 'إتقان أساسي', desc: 'مورد خام مؤهل برمجياً قيد التدقيق النهائي.' },
-    ],
-    tip: '💡 نصيحة: اختر "معتمد" أو "ذهبي" للتطبيقات الإنتاجية والمصاحف الرقمية الموجهة للجمهور.',
-  },
-  access: {
-    title: 'مستوى الوصول وسياسات الاستخدام',
-    badge: 'سياسات الوصول',
-    description: 'يحدد الصلاحيات والإجراءات المطلوبة لاستخدام المورد برمجياً أو تنزيله عبر المنصة وواجهات برمجة التطبيقات (APIs).',
-    items: [
-      { label: 'مفتوح ومباشر', desc: 'متاح للجميع فوراً للتنزيل المباشر أو الاستهلاك دون قيود أو شروط مسبقة.' },
-      { label: 'بالطلب', desc: 'يتطلب تقديم طلب مراجعة سريع وتوليد مفتاح وصول (API Key) لتتبع معدل الاستهلاك.' },
-      { label: 'مؤسسي فقط', desc: 'مخصص للمراكز البحثية والجهات الرسمية ودور النشر بموجب اتفاقية ترخيص خاصة.' },
-    ],
-    tip: '💡 نصيحة: الموارد المفتوحة هي الأسرع لبدء النماذج الأولية والمشاريع الفردية المستقلة.',
-  },
-  type: {
-    title: 'نوع المورد والتصنيف الفني',
-    badge: '11 فئة تخصصية',
-    description: 'يصنف الكتالوج الأصول البرمجية والمعرفية إلى فئات متخصصة لتسهيل الوصول للأصل المطلوب بدقة متناهية.',
-    items: [
-      { label: 'نصوص ومصاحف', desc: 'بيانات نصية كاملة بالرسم العثماني أو الإملائي وعلامات الوقف.' },
-      { label: 'حزم ومكتبات (SDK)', desc: 'مكتبات برمجية تسهل التعامل مع الآيات والسور والتقسيمات والبحث.' },
-      { label: 'خطوط رقمية', desc: 'خطوط حاسوبية عثمانية متخصصة بالمصاحف وعلامات الضبط الدقيقة.' },
-      { label: 'بيانات وتفاسير', desc: 'قواعد بيانات التفاسير المعتمدة، أسباب النزول، والإعراب.' },
-      { label: 'صوتيات وذكاء اصطناعي', desc: 'تلاوات مسندة، وموجّهات معالجة اللغات الطبيعية (NLP) الموثوقة.' },
-    ],
-    tip: '💡 نصيحة: يمكنك تفعيل أكثر من نوع في آن واحد لحصر الموارد المركبة (مثل الحزم مع التفاسير).',
-  },
-  license: {
-    title: 'التراخيص وحقوق الملكية الفكرية',
-    badge: 'Creative Commons',
-    description: 'تحدد الرخص القانونية الصلاحيات والقيود المفروضة على استخدام المورد أو تعديله أو توزيعه وفق المعايير الدولية.',
-    items: [
-      { label: 'CC0 / الملكية العامة', desc: 'حرية استخدام وتوزيع ونشر كاملة بدون أي قيود أو شروط.' },
-      { label: 'CC BY (نسب المصنف)', desc: 'يسمح بالاستخدام والتطوير مع وجوب ذكر جهة التحقيق أو الناشر.' },
-      { label: 'CC BY-SA (المشاركة بالمثل)', desc: 'يلزم ترخيص الأعمال المشتقة بنفس الرخصة المفتوحة.' },
-      { label: 'CC BY-NC (غير تجاري)', desc: 'يقتصر على التطبيقات الخيرية والمشاريع غير الربحية.' },
-      { label: 'CC BY-ND (منع الاشتقاق)', desc: 'يمنع تعديل النصوص أو الخطوط لحماية قدسية الرسم المصحفي.' },
-      { label: 'رخص البرمجيات', desc: 'رخص مفتوحة المصدر (مثل MIT و Apache) للشيفرات البرمجية.' },
-    ],
-    tip: '💡 نصيحة: انتبه لشرط "منع الاشتقاق ND" إذا كنت تخطط لتعديل بنية البيانات أو تصميم الخطوط.',
-  },
-  tech: {
-    title: 'التقنية والمنصات المدعومة',
-    badge: 'بيئات التطوير',
-    description: 'تصفية الموارد التي توفر دعماً برمجياً مباشراً، حزم تثبيت (Packages)، أو أمثلة كود متوافقة مع لغة تطبيقك.',
-    items: [
-      { label: 'Flutter / Dart', desc: 'لتطبيقات الهواتف الذكية والأجهزة اللوحية متعددة المنصات (iOS & Android).' },
-      { label: 'React / Next.js / Vue', desc: 'لتطبيقات الويب والمواقع القرآنية التفاعلية الحديثة.' },
-      { label: 'Python', desc: 'للأبحاث القرآنية، معالجة النصوص، والتحليل الحاسوبي للبيانات.' },
-      { label: 'Swift / Kotlin', desc: 'للتطوير الأصلي (Native) على أنظمة Apple و Android.' },
-      { label: 'Node.js / Go / Rust', desc: 'للخدمات السحابية والأنظمة الخلفية عالية الأداء.' },
-    ],
-    tip: '💡 نصيحة: تحديد تقنيتك الحالية يضمن ظهور الموارد ذات التوثيق الجاهز للتكامل الفوري.',
-  },
-  commercial: {
-    title: 'الاستخدام التجاري المسموح',
-    badge: 'الاستثمار التجاري',
-    description: 'فلترة فورية تستبعد الموارد المقيدة برخص غير تجارية (مثل CC BY-NC)، وتُبقي فقط الأصول المصرح باستثمارها في منتجات ربحية أو مدفوعة.',
-    tip: '💡 نصيحة: فعّل هذا الخيار إذا كان تطبيقك يحتوي على اشتراكات أو خطط مدفوعة أو إعلانات.',
-  },
-};
+// Copy lives in the site namespace (filter_help.<topic>) so it follows the language toggle.
+export type FilterHelpTopic = 'badge' | 'access' | 'type' | 'license' | 'tech' | 'commercial';
 
 interface FilterHelpTooltipProps {
-  data: FilterHelpData;
+  topic: FilterHelpTopic;
 }
 
-export const FilterHelpTooltip: React.FC<FilterHelpTooltipProps> = ({ data }) => {
+export const FilterHelpTooltip: React.FC<FilterHelpTooltipProps> = ({ topic }) => {
+  const { t } = useTranslation('site');
+  const data = t(`filter_help.${topic}`, { returnObjects: true }) as FilterHelpData;
   const [isOpen, setIsOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
   const closeTimerRef = useRef<NodeJS.Timeout | null>(null);
@@ -151,7 +85,7 @@ export const FilterHelpTooltip: React.FC<FilterHelpTooltipProps> = ({ data }) =>
         onClick={() => setIsOpen((prev) => !prev)}
         onFocus={handleMouseEnter}
         onBlur={handleMouseLeave}
-        aria-label={`توضيح ${data.title}`}
+        aria-label={t('filter_help.aria', { title: data.title })}
         aria-expanded={isOpen}
         className="p-1 -m-1 rounded-full text-fg-subtle hover:text-ratq-700 dark:hover:text-ratq-400 hover:bg-subtle/80 transition-colors focus:outline-none focus:ring-1 focus:ring-ratq-500 cursor-help"
       >

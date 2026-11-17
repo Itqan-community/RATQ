@@ -1,6 +1,7 @@
 // src/components/ui/RatingStars.tsx
 import React from 'react';
 import { Star } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { clsx } from 'clsx';
 
 interface RatingStarsProps {
@@ -18,6 +19,7 @@ export const RatingStars: React.FC<RatingStarsProps> = ({
   interactive = false,
   onRatingChange,
 }) => {
+  const { t } = useTranslation('site');
   return (
     <div className="inline-flex items-center gap-1 select-none">
       {Array.from({ length: maxStars }).map((_, index) => {
@@ -35,7 +37,7 @@ export const RatingStars: React.FC<RatingStarsProps> = ({
               'transition-transform',
               interactive && 'cursor-pointer hover:scale-110 focus:outline-none'
             )}
-            aria-label={`${starValue} من 5 نجوم`}
+            aria-label={t('ui.stars', { n: starValue, max: maxStars })}
           >
             <Star
               size={size}

@@ -37,10 +37,12 @@ describe('legacy redirects', () => {
     expect(screen.getByTestId('where').textContent).toBe('/auth/sign-in');
   });
 
-  it('legacyRoutes_DeveloperResourceSlug_KeepsSlugEncoded', () => {
-    renderAt('/developer/resources/my%20slug');
-    expect(screen.getByTestId('where').textContent).toBe('/resources/my%20slug');
+  // Old prod's /developer/resources/:slug was the OWNER manage page, not the public page: land on the owner list.
+  it('legacyRoutes_DeveloperResourceSlug_GoesToOwnerResourceList', () => {
+    renderAt('/developer/resources/payload-tanzil?x=1');
+    expect(screen.getByTestId('where').textContent).toBe('/publisher/resources?x=1');
   });
+
 
   it('legacyRoutes_QueryAndHash_Preserved', () => {
     renderAt('/dashboard/api-keys?x=1#h');

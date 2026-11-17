@@ -58,6 +58,48 @@ describe('toDesignResource', () => {
     expect(toDesignResource({ ...doc, type }).categories).toEqual([cat]);
   });
 
+  it('attributes to the real Payload publisher instead of one generic community publisher', () => {
+    const r = toDesignResource({ ...doc, publisher: { id: 44, name: 'abdullah' } });
+    expect(r.publisher_id).toBe('payload_pub_44');
+    expect(r.publisher?.name_en).toBe('abdullah');
+  });
+
+  it('falls back to the RATQ community publisher when the doc carries none', () => {
+    expect(toDesignResource(doc).publisher_id).toBe('pub_ratq');
+  });
+
+  it('carries content language, audio fields and source tags', () => {
+    const r = toDesignResource({
+      ...doc, content_language: 'en', audio_url: 'https://a.test/x.mp3', audio_thumbnail: 'javascript:1',
+      reciter_name: 'R', audio_quality: '128kbps',
+    });
+    expect(r.content_language).toBe('en');
+    expect(r.languages).toEqual(['en']);
+    expect(r.audio_url).toBe('https://a.test/x.mp3');
+    expect(r.audio_thumbnail).toBeUndefined(); // non-http(s) dropped
+    expect([r.reciter_name, r.audio_quality, r.source]).toEqual(['R', '128kbps', 'payload']);
+  });
+
+  it('maps GitHub stats/commits/topics, treating an all-null stats group as absent', () => {
+    expect(toDesignResource({ ...doc, github_stats: { stars: null, forks: null, open_issues: null, last_commit: null } }).github_stats).toBeUndefined();
+    const r = toDesignResource({
+      ...doc,
+      github_stats: { stars: 5, forks: 1, open_issues: 0, last_commit: '2026-01-01T00:00:00Z' },
+      github_stats_fetched_at: '2026-01-02T00:00:00Z',
+      github_commits: [{ sha: 'a', message: 'm', author: 'x', date: '2026-01-01', url: 'https://github.com/x' }],
+      github_topics: ['quran', 5 as unknown as string],
+    });
+    expect(r.github_stats).toEqual({ stars: 5, forks: 1, open_issues: 0, last_commit: '2026-01-01T00:00:00Z', fetched_at: '2026-01-02T00:00:00Z' });
+    expect(r.github_commits).toHaveLength(1);
+    expect(r.github_topics).toEqual(['quran']);
+  });
+
+  it('maps the populated cover image (http(s) only) and ignores an unpopulated relation id', () => {
+    expect(toDesignResource({ ...doc, image: { url: 'https://cdn.test/c.png' } }).image_url).toBe('https://cdn.test/c.png');
+    expect(toDesignResource({ ...doc, image: { url: 'javascript:1' } }).image_url).toBeUndefined();
+    expect(toDesignResource({ ...doc, image: 12 }).image_url).toBeUndefined();
+  });
+
   it('maps itqan_badge to a level and tolerates missing optional fields', () => {
     expect(toDesignResource(doc).itqan_level).toBe('verified');
     const r = toDesignResource({ ...doc, itqan_badge: false, github_url: null, documentation_url: null, version: null });

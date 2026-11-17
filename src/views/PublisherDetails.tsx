@@ -1,5 +1,6 @@
 // src/views/PublisherDetails.tsx
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { mockRepo } from '@/lib/supabase';
 import { ResourceCard } from '@/components/resources/ResourceCard';
@@ -7,6 +8,8 @@ import { Button } from '@/components/ui/Button';
 import { CheckCircle2, Globe, Mail } from 'lucide-react';
 
 export const PublisherDetails: React.FC = () => {
+  const { t, i18n } = useTranslation('site');
+  const en = i18n.language === 'en';
   const { slug } = useParams<{ slug: string }>();
   const navigate = useNavigate();
 
@@ -17,9 +20,9 @@ export const PublisherDetails: React.FC = () => {
   if (!publisher) {
     return (
       <div className="max-w-md mx-auto py-20 px-4 text-center">
-        <h2 className="text-xl font-bold text-fg mb-2">الناشر غير موجود</h2>
+        <h2 className="text-xl font-bold text-fg mb-2">{t('publisher_details.d00')}</h2>
         <Button variant="primary" onClick={() => navigate('/publishers')}>
-          العودة لدليل الناشرين
+          {t('publisher_details.d01')}
         </Button>
       </div>
     );
@@ -29,11 +32,11 @@ export const PublisherDetails: React.FC = () => {
     <div className="max-w-container mx-auto px-4 sm:px-6 py-10 w-full text-start">
       {/* Breadcrumb */}
       <nav className="flex items-center gap-2 text-xs text-fg-subtle mb-6">
-        <Link to="/" className="hover:text-fg">الرئيسية</Link>
+        <Link to="/" className="hover:text-fg">{t('publisher_details.d02')}</Link>
         <span>/</span>
-        <Link to="/publishers" className="hover:text-fg">المساهمون</Link>
+        <Link to="/publishers" className="hover:text-fg">{t('publisher_details.d03')}</Link>
         <span>/</span>
-        <span className="text-fg font-medium">{publisher.name_ar}</span>
+        <span className="text-fg font-medium">{en ? publisher.name_en || publisher.name_ar : publisher.name_ar}</span>
       </nav>
 
       {/* Publisher Banner Card */}
@@ -49,9 +52,9 @@ export const PublisherDetails: React.FC = () => {
             </div>
             <div>
               <div className="flex items-center gap-2 mb-1">
-                <h1 className="text-xl sm:text-2xl font-bold text-fg">{publisher.name_ar}</h1>
+                <h1 className="text-xl sm:text-2xl font-bold text-fg">{en ? publisher.name_en || publisher.name_ar : publisher.name_ar}</h1>
                 <span className="text-xs text-ratq-600 dark:text-ratq-400 font-semibold flex items-center gap-1">
-                  <CheckCircle2 className="w-4 h-4" /> موثق
+                  <CheckCircle2 className="w-4 h-4" /> {t('publisher_details.verified')}
                 </span>
               </div>
               {publisher.name_en && (
@@ -72,7 +75,7 @@ export const PublisherDetails: React.FC = () => {
                   startIcon={<Globe className="w-4 h-4" />}
                   className="bg-white/80 dark:bg-slate-900/80 hover:bg-white dark:hover:bg-slate-900 border-border/80 shadow-2xs"
                 >
-                  الموقع الرسمي
+                  {t('publisher_details.d04')}
                 </Button>
               </a>
             )}
@@ -83,7 +86,7 @@ export const PublisherDetails: React.FC = () => {
                   size="sm"
                   startIcon={<Mail className="w-4 h-4" />}
                 >
-                  تواصل
+                  {t('publisher_details.d05')}
                 </Button>
               </a>
             )}
@@ -94,12 +97,12 @@ export const PublisherDetails: React.FC = () => {
       {/* Published Resources */}
       <div>
         <h2 className="text-lg font-bold text-fg mb-4">
-          الموارد المنشورة بواسطة هذا الناشر ({resources.length})
+          {t('publisher_details.published_by', { count: resources.length })}
         </h2>
 
         {resources.length === 0 ? (
           <div className="py-12 text-center text-xs text-fg-subtle border border-dashed rounded-xl">
-            لا توجد موارد معلنة لهذا الناشر حالياً.
+            {t('publisher_details.d06')}
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">

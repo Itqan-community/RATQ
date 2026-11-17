@@ -43,7 +43,7 @@ export async function submitReport(
       credentials: 'include',
       body: JSON.stringify({ resource, reason: toPayloadReason(reason), details: buildDetails(reason, details, evidenceUrl) }),
     });
-    return res.ok ? null : await errorMessage(res, 'Could not submit report');
+    return res.ok ? null : await errorMessage(res, 'Could not submit report', { authenticated: true });
   } catch {
     return 'Network error, please try again.';
   }
@@ -109,6 +109,23 @@ export async function fetchReports(): Promise<Report[]> {
   }
 }
 
+// Reports I filed. The server's read rule also returns reports on resources I own, so reporter=me is filtered here.
+export async function fetchMyReports(profileId: string): Promise<Report[]> {
+  const me = /^payload_user_(\d+)$/.exec(profileId);
+  if (!me) return [];
+  try {
+    const res = await fetch(
+      `${payloadBase()}/reports?where[reporter][equals]=${me[1]}&depth=1&limit=100&sort=-createdAt`,
+      { credentials: 'include' }
+    );
+    if (!res.ok) return [];
+    const { docs } = (await res.json()) as { docs: PayloadReportDoc[] };
+    return docs.map(toDesignReport);
+  } catch {
+    return [];
+  }
+}
+
 // Admin-only on the server (update: isAdmin).
 export async function resolveReport(reportId: string): Promise<string | null> {
   const n = reportId.startsWith('payload_report_') ? Number(reportId.slice('payload_report_'.length)) : NaN;
@@ -120,7 +137,7 @@ export async function resolveReport(reportId: string): Promise<string | null> {
       credentials: 'include',
       body: JSON.stringify({ status: 'resolved' }),
     });
-    return res.ok ? null : await errorMessage(res, 'Could not resolve report');
+    return res.ok ? null : await errorMessage(res, 'Could not resolve report', { authenticated: true });
   } catch {
     return 'Network error, please try again.';
   }

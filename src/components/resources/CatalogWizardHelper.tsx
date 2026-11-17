@@ -1,6 +1,7 @@
 // src/components/resources/CatalogWizardHelper.tsx
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { Button } from '@/components/ui/Button';
 import { mockRepo } from '@/lib/supabase';
 import { Wand2, ArrowLeft, X } from 'lucide-react';
@@ -10,6 +11,7 @@ interface CatalogWizardHelperProps {
 }
 
 export const CatalogWizardHelper: React.FC<CatalogWizardHelperProps> = ({ className = '' }) => {
+  const { t } = useTranslation('site');
   const navigate = useNavigate();
   const [dismissed, setDismissed] = useState(false);
 
@@ -32,14 +34,14 @@ export const CatalogWizardHelper: React.FC<CatalogWizardHelperProps> = ({ classN
           <div>
             <div className="flex items-center gap-2 mb-1">
               <h2 className="text-xs sm:text-sm font-bold text-white">
-                محتار بين {mockRepo.getResources().length} مورداً ومكتبة قرآنية؟
+                {t('wizard.title', { count: mockRepo.getResources().length })}
               </h2>
               <span className="px-2 py-0.5 rounded-full bg-ratq-800/80 text-ratq-200 text-[10px] font-semibold border border-ratq-700/60">
-                توجيه ذكي
+                {t('wizard.badge')}
               </span>
             </div>
             <p className="text-2xs sm:text-xs text-gray-300 leading-relaxed">
-              لا تدع كثرة الخيارات تشتتك؛ دع المُوجِّه التفاعلي يغربل قاعدة البيانات ويستخرج لك المزيج الأنسب لبيئة عملك ومنصتك المستهدفة في 4 خطوات بسيطة.
+              {t('wizard.body')}
             </p>
           </div>
         </div>
@@ -52,7 +54,7 @@ export const CatalogWizardHelper: React.FC<CatalogWizardHelperProps> = ({ classN
             className="gap-2 font-bold text-xs bg-white text-ratq-950 hover:bg-gray-100 shadow-md px-4 py-2 cursor-pointer w-full sm:w-auto"
           >
             <Wand2 className="w-3.5 h-3.5 text-ratq-700" />
-            <span>المُوجِّه التفاعلي Wizard</span>
+            <span>{t('wizard.cta')}</span>
             <ArrowLeft className="w-3.5 h-3.5 rtl:rotate-0 rotate-180" />
           </Button>
 
@@ -60,8 +62,8 @@ export const CatalogWizardHelper: React.FC<CatalogWizardHelperProps> = ({ classN
             type="button"
             onClick={() => setDismissed(true)}
             className="p-1.5 rounded-lg text-gray-400 hover:text-white hover:bg-white/10 transition-colors cursor-pointer"
-            aria-label="إخفاء التلميح"
-            title="إخفاء التلميح"
+            aria-label={t('wizard.dismiss')}
+            title={t('wizard.dismiss')}
           >
             <X className="w-4 h-4" />
           </button>

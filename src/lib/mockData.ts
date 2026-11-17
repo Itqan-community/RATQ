@@ -641,16 +641,21 @@ const BASE_RESOURCES: Resource[] = [
   },
 ];
 
-const PREPARED_BETA_RESOURCES: Resource[] = BETA_RESOURCES.map((br) => ({
-  ...br,
-  license: DEMO_LICENSES.find((l) => l.id === br.license_id) || DEMO_LICENSES[1],
-  publisher: DEMO_PUBLISHERS.find((p) => p.id === br.publisher_id) || DEMO_PUBLISHERS[0],
-}));
+// Live build (NEXT_PUBLIC_PAYLOAD_API_URL set at build time, always so in production): the demo and the frozen
+// beta snapshot must never reach users, so they do not exist at all, not even by direct slug.
+export const LIVE_DATA = Boolean(process.env.NEXT_PUBLIC_PAYLOAD_API_URL);
 
-export const DEMO_RESOURCES: Resource[] = [
-  ...BASE_RESOURCES,
-  ...PREPARED_BETA_RESOURCES,
-];
+// Built inside the conditional so a live build can drop the 230KB snapshot from the bundle.
+export const DEMO_RESOURCES: Resource[] = LIVE_DATA
+  ? []
+  : [
+      ...BASE_RESOURCES,
+      ...BETA_RESOURCES.map((br) => ({
+        ...br,
+        license: DEMO_LICENSES.find((l) => l.id === br.license_id) || DEMO_LICENSES[1],
+        publisher: DEMO_PUBLISHERS.find((p) => p.id === br.publisher_id) || DEMO_PUBLISHERS[0],
+      })),
+    ];
 
 export const DEMO_ACCESS_REQUESTS: AccessRequest[] = [
   {

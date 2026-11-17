@@ -1,5 +1,6 @@
 // src/views/Standards.tsx
 import React, { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/Button';
 import { ItqanBadge } from '@/components/ui/ItqanBadge';
@@ -18,6 +19,7 @@ import {
 } from 'lucide-react';
 
 export const Standards: React.FC = () => {
+  const { t } = useTranslation('site');
   const [isChecklistDrawerOpen, setIsChecklistDrawerOpen] = useState(false);
 
   // Close drawer on Escape key and prevent body scroll
@@ -44,10 +46,10 @@ export const Standards: React.FC = () => {
         <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
           <div>
             <span className="text-xs font-bold text-ratq-700 uppercase tracking-wider block mb-1">
-              معيار إتقان — الإصدار 1.0
+              {t('standards.s00')}
             </span>
             <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-fg leading-tight">
-              معيار الجودة والموثوقية لتطوير البرمجيات القرآنية
+              {t('standards.s01')}
             </h1>
           </div>
 
@@ -58,13 +60,13 @@ export const Standards: React.FC = () => {
               onClick={() => setIsChecklistDrawerOpen(true)}
               startIcon={<FileText className="w-4 h-4" />}
             >
-              استعراض قائمة التحقق الموزونة
+              {t('standards.s02')}
             </Button>
           </div>
         </div>
 
         <p className="text-xs sm:text-sm text-fg-muted mt-4 leading-relaxed max-w-3xl">
-          إطار حوكمة تقني وعلمي موحد يضمن دقة النصوص القرآنية، استقرار الأكواد البرمجية، وضوح التراخيص، ونزاهة التوزيع الرقمي لكتاب الله.
+          {t('standards.s03')}
         </p>
       </div>
 
@@ -75,15 +77,15 @@ export const Standards: React.FC = () => {
           <div>
             <div className="flex items-center justify-between mb-3">
               <ItqanBadge level="basic" size="md" />
-              <span className="text-2xs font-bold text-fg-subtle">آلي بالكامل</span>
+              <span className="text-2xs font-bold text-fg-subtle">{t('standards.s04')}</span>
             </div>
-            <h3 className="text-base font-bold text-fg mb-2">إتقان أساسي (Basic)</h3>
+            <h3 className="text-base font-bold text-fg mb-2">{t('standards.s05')}</h3>
             <p className="text-xs text-fg-muted leading-relaxed mb-4">
-              بيانات مكتملة وذاتية التصريح من الناشر تستوفي الحد الأدنى من اسم المورد، الوصف، الترخيص المرفق، والناشر المرتبط.
+              {t('standards.s06')}
             </p>
           </div>
           <div className="pt-4 border-t border-border-subtle text-2xs text-fg-subtle">
-            تجديد سنوي تلقائي • لا يتطلب مراجعة بشرية
+            {t('standards.s07')}
           </div>
         </div>
 
@@ -92,15 +94,15 @@ export const Standards: React.FC = () => {
           <div>
             <div className="flex items-center justify-between mb-3">
               <ItqanBadge level="verified" size="md" />
-              <span className="text-2xs font-bold text-ratq-700 dark:text-ratq-400">تحقق تقني آلي</span>
+              <span className="text-2xs font-bold text-ratq-700 dark:text-ratq-400">{t('standards.s08')}</span>
             </div>
-            <h3 className="text-base font-bold text-fg mb-2">موثّق تقنياً (Verified)</h3>
+            <h3 className="text-base font-bold text-fg mb-2">{t('standards.s09')}</h3>
             <p className="text-xs text-fg-muted leading-relaxed mb-4">
-              فحص دوري أسبوعي لسلامة الروابط، توافر الملفات ومطابقة بصمات SHA-256، وخلو المورد من الأخطاء والبرمجيات الضارة.
+              {t('standards.s10')}
             </p>
           </div>
           <div className="pt-4 border-t border-border-subtle text-2xs text-fg-subtle">
-            إعادة فحص أسبوعية للروابط والملفات
+            {t('standards.s11')}
           </div>
         </div>
 
@@ -109,15 +111,15 @@ export const Standards: React.FC = () => {
           <div>
             <div className="flex items-center justify-between mb-3">
               <ItqanBadge level="certified" size="md" />
-              <span className="text-2xs font-bold text-cyan-700 dark:text-cyan-400">مراجعة بشرية إلزامية</span>
+              <span className="text-2xs font-bold text-cyan-700 dark:text-cyan-400">{t('standards.s12')}</span>
             </div>
-            <h3 className="text-base font-bold text-fg mb-2">معتمد علمياً وتقنياً (Certified)</h3>
+            <h3 className="text-base font-bold text-fg mb-2">{t('standards.s13')}</h3>
             <p className="text-xs text-fg-muted leading-relaxed mb-4">
-              مراجعة علمية متخصصة من محكمين معتمدين تؤكد صحة الإسناد لمصادر النصوص والتفاسير، وتجربة تركيب وتشغيل برمجية كاملة.
+              {t('standards.s14')}
             </p>
           </div>
           <div className="pt-4 border-t border-border-subtle text-2xs text-fg-subtle">
-            تحكيم بشري متخصص • إعادة اعتماد سنوية
+            {t('standards.s15')}
           </div>
         </div>
 
@@ -126,15 +128,15 @@ export const Standards: React.FC = () => {
           <div>
             <div className="flex items-center justify-between mb-3">
               <ItqanBadge level="gold" size="md" />
-              <span className="text-2xs font-bold text-gold-700 dark:text-gold-400">نخبة المنظومة</span>
+              <span className="text-2xs font-bold text-gold-700 dark:text-gold-400">{t('standards.s16')}</span>
             </div>
-            <h3 className="text-base font-bold text-fg mb-2">إتقان ذهبي (Gold Standard)</h3>
+            <h3 className="text-base font-bold text-fg mb-2">{t('standards.s17')}</h3>
             <p className="text-xs text-fg-muted leading-relaxed mb-4">
-              أعلى درجات الاعتماد: للمشاريع التي أثبتت استقراراً استثنائياً، صيانة منتظمة، تقييمات مجتمعية رفيعة (≥ 4.5)، وتوثيقاً متكاملاً.
+              {t('standards.s18')}
             </p>
           </div>
           <div className="pt-4 border-t border-border-subtle text-2xs text-fg-subtle">
-            ترشيح مزدوج من مجلس المعايير • فحص نصف سنوي
+            {t('standards.s19')}
           </div>
         </div>
       </div>
@@ -143,16 +145,16 @@ export const Standards: React.FC = () => {
       <div className="p-8 rounded-2xl border border-border bg-subtle/50 text-start">
         <h2 className="text-lg font-bold text-fg mb-3 flex items-center gap-2">
           <AlertTriangle className="w-5 h-5 text-amber-600" />
-          <span>بروتوكول سحب الشارات والشفافية العامة</span>
+          <span>{t('standards.s20')}</span>
         </h2>
         <p className="text-xs text-fg-muted leading-relaxed max-w-3xl mb-4">
-          للحفاظ على نزاهة المعيار، تخضع الشارات لإعادة تحقق دورية وسحب فوري عند حدوث أعطال مستمرة أو أخطاء علمية أو مخالفات لحقوق الملكية. وتعلن كافة حالات السحب بشفافية كاملة في السجل العام مع منح الناشر حق الاستئناف خلال 10 أيام عمل.
+          {t('standards.s21')}
         </p>
         <Link
           to="/standards/revocations"
           className="text-xs font-bold text-ratq-700 hover:underline inline-flex items-center gap-1"
         >
-          <span>استعراض السجل العام للشفافية والسحب</span>
+          <span>{t('standards.s22')}</span>
           <ArrowLeft className="w-3.5 h-3.5 rtl:rotate-0 rotate-180" />
         </Link>
       </div>
@@ -163,7 +165,7 @@ export const Standards: React.FC = () => {
           className="fixed inset-0 z-50 flex justify-end"
           role="dialog"
           aria-modal="true"
-          aria-label="قائمة التحقق الموزونة لمعيار إتقان"
+          aria-label={t('standards.s23')}
         >
           {/* Backdrop */}
           <div
@@ -182,10 +184,10 @@ export const Standards: React.FC = () => {
                 </div>
                 <div>
                   <span className="text-2xs font-bold text-ratq-700 dark:text-ratq-400 uppercase tracking-wider block font-mono">
-                    وثيقة المعايير الفنية v1.0
+                    {t('standards.s24')}
                   </span>
                   <h2 className="text-base sm:text-lg font-bold text-fg leading-tight">
-                    قائمة التحقق الموزونة لمعيار إتقان
+                    {t('standards.s23')}
                   </h2>
                 </div>
               </div>
@@ -198,14 +200,14 @@ export const Standards: React.FC = () => {
                   startIcon={<Printer className="w-4 h-4" />}
                   className="hidden sm:inline-flex"
                 >
-                  طباعة
+                  {t('standards.s25')}
                 </Button>
                 <button
                   type="button"
                   onClick={() => setIsChecklistDrawerOpen(false)}
                   className="p-2 rounded-lg text-fg-subtle hover:text-fg hover:bg-subtle transition-colors cursor-pointer"
-                  aria-label="إغلاق النافذة"
-                  title="إغلاق"
+                  aria-label={t('standards.s26')}
+                  title={t('standards.s27')}
                 >
                   <X className="w-5 h-5" />
                 </button>
@@ -217,24 +219,24 @@ export const Standards: React.FC = () => {
               {/* Weight Distribution Breakdown */}
               <div className="p-4 rounded-xl bg-subtle/70 border border-border">
                 <div className="flex items-center justify-between text-xs font-bold text-fg mb-2.5">
-                  <span>توزيع أوزان التقييم المعتمدة</span>
-                  <span className="text-ratq-700 dark:text-ratq-400 font-mono">المجموع: 100%</span>
+                  <span>{t('standards.s28')}</span>
+                  <span className="text-ratq-700 dark:text-ratq-400 font-mono">{t('standards.s29')}</span>
                 </div>
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-center text-xs">
                   <div className="p-2 rounded-lg bg-canvas border border-ratq-200 dark:border-ratq-900">
-                    <span className="text-2xs text-fg-subtle block">تقنية وأمنية</span>
+                    <span className="text-2xs text-fg-subtle block">{t('standards.s30')}</span>
                     <span className="font-bold text-ratq-700 dark:text-ratq-400 font-mono">35%</span>
                   </div>
                   <div className="p-2 rounded-lg bg-canvas border border-cyan-200 dark:border-cyan-900">
-                    <span className="text-2xs text-fg-subtle block">معرفية وتوثيق</span>
+                    <span className="text-2xs text-fg-subtle block">{t('standards.s31')}</span>
                     <span className="font-bold text-cyan-700 dark:text-cyan-400 font-mono">25%</span>
                   </div>
                   <div className="p-2 rounded-lg bg-canvas border border-amber-200 dark:border-amber-900">
-                    <span className="text-2xs text-fg-subtle block">علمية وشرعية</span>
+                    <span className="text-2xs text-fg-subtle block">{t('standards.s32')}</span>
                     <span className="font-bold text-amber-700 dark:text-amber-400 font-mono">30%</span>
                   </div>
                   <div className="p-2 rounded-lg bg-canvas border border-purple-200 dark:border-purple-900">
-                    <span className="text-2xs text-fg-subtle block">قانونية وتراخيص</span>
+                    <span className="text-2xs text-fg-subtle block">{t('standards.s33')}</span>
                     <span className="font-bold text-purple-700 dark:text-purple-400 font-mono">10%</span>
                   </div>
                 </div>
@@ -244,7 +246,7 @@ export const Standards: React.FC = () => {
               <div className="p-5 rounded-xl border border-border bg-canvas shadow-2xs">
                 <div className="flex items-center gap-2 mb-3 pb-2.5 border-b border-border-subtle">
                   <Code2 className="w-4 h-4 text-ratq-600 dark:text-ratq-400" />
-                  <h3 className="text-sm font-bold text-fg">1. المتطلبات التقنية والأمنية</h3>
+                  <h3 className="text-sm font-bold text-fg">{t('standards.s34')}</h3>
                   <span className="ms-auto text-xs font-bold font-mono px-2 py-0.5 rounded bg-ratq-100/70 text-ratq-800 dark:bg-ratq-950 dark:text-ratq-300">
                     35%
                   </span>
@@ -253,25 +255,25 @@ export const Standards: React.FC = () => {
                   <li className="flex items-start gap-2.5">
                     <CheckCircle2 className="w-4 h-4 text-ratq-600 shrink-0 mt-0.5" />
                     <div>
-                      <strong className="text-fg font-semibold">سلامة الروابط:</strong> كافة روابط المستودع والتوثيق والملفات تعمل وتستجيب برمز HTTP 200 دون تحويلات مكسورة.
+                      <strong className="text-fg font-semibold">{t('standards.s35')}</strong> {t('standards.s35d')}
                     </div>
                   </li>
                   <li className="flex items-start gap-2.5">
                     <CheckCircle2 className="w-4 h-4 text-ratq-600 shrink-0 mt-0.5" />
                     <div>
-                      <strong className="text-fg font-semibold">سلامة الملفات والبصمات:</strong> كل إصدار يحتوي على بصمة SHA-256 دقيقة مطابقة للملف المرفوع لمنع التلاعب.
+                      <strong className="text-fg font-semibold">{t('standards.s36')}</strong> {t('standards.s36d')}
                     </div>
                   </li>
                   <li className="flex items-start gap-2.5">
                     <CheckCircle2 className="w-4 h-4 text-ratq-600 shrink-0 mt-0.5" />
                     <div>
-                      <strong className="text-fg font-semibold">خلو البرمجيات من المخاطر:</strong> لا تحتوي الحزمة على برمجيات ضارة، تتبع غير مصرح، أو مكتبات مهجورة بها ثغرات أمنية حرجة.
+                      <strong className="text-fg font-semibold">{t('standards.s37')}</strong> {t('standards.s37d')}
                     </div>
                   </li>
                   <li className="flex items-start gap-2.5">
                     <CheckCircle2 className="w-4 h-4 text-ratq-600 shrink-0 mt-0.5" />
                     <div>
-                      <strong className="text-fg font-semibold">اتساق الترقيم الدلالي:</strong> الالتزام بنظام الترقيم الدلالي SemVer (Major.Minor.Patch) مع توثيق كسر التوافق في سجل التغييرات.
+                      <strong className="text-fg font-semibold">{t('standards.s38')}</strong> {t('standards.s38d')}
                     </div>
                   </li>
                 </ul>
@@ -281,7 +283,7 @@ export const Standards: React.FC = () => {
               <div className="p-5 rounded-xl border border-border bg-canvas shadow-2xs">
                 <div className="flex items-center gap-2 mb-3 pb-2.5 border-b border-border-subtle">
                   <BookOpen className="w-4 h-4 text-cyan-600 dark:text-cyan-400" />
-                  <h3 className="text-sm font-bold text-fg">2. المتطلبات المعرفية وتوثيق البيانات</h3>
+                  <h3 className="text-sm font-bold text-fg">{t('standards.s39')}</h3>
                   <span className="ms-auto text-xs font-bold font-mono px-2 py-0.5 rounded bg-cyan-100/70 text-cyan-800 dark:bg-cyan-950 dark:text-cyan-300">
                     25%
                   </span>
@@ -290,19 +292,19 @@ export const Standards: React.FC = () => {
                   <li className="flex items-start gap-2.5">
                     <CheckCircle2 className="w-4 h-4 text-cyan-600 shrink-0 mt-0.5" />
                     <div>
-                      <strong className="text-fg font-semibold">اكتمال الوصف الفني:</strong> ملخص عربي دقيق لا يقل عن 20 حرفاً مع شرح تفصيلي لطبيعة البيانات وحالات الاستخدام المستهدفة.
+                      <strong className="text-fg font-semibold">{t('standards.s40')}</strong> {t('standards.s40d')}
                     </div>
                   </li>
                   <li className="flex items-start gap-2.5">
                     <CheckCircle2 className="w-4 h-4 text-cyan-600 shrink-0 mt-0.5" />
                     <div>
-                      <strong className="text-fg font-semibold">تعليمات التثبيت:</strong> وجود أوامر تثبيت واستدعاء واضحة ومختبرة للمنصات المدعومة (npm, pip, flutter, REST...).
+                      <strong className="text-fg font-semibold">{t('standards.s41')}</strong> {t('standards.s41d')}
                     </div>
                   </li>
                   <li className="flex items-start gap-2.5">
                     <CheckCircle2 className="w-4 h-4 text-cyan-600 shrink-0 mt-0.5" />
                     <div>
-                      <strong className="text-fg font-semibold">تحديد الحدود والنواقص:</strong> بيان صريح لأي قيود فنية، لغوية، حدود للاستهلاك، أو اعتمادات خارجية تتطلب إذناً.
+                      <strong className="text-fg font-semibold">{t('standards.s42')}</strong> {t('standards.s42d')}
                     </div>
                   </li>
                 </ul>
@@ -313,9 +315,9 @@ export const Standards: React.FC = () => {
                 <div className="flex items-center gap-2 mb-3 pb-2.5 border-b border-amber-200 dark:border-amber-900">
                   <ShieldCheck className="w-4 h-4 text-amber-600 dark:text-amber-400" />
                   <div className="flex items-center gap-2 flex-wrap">
-                    <h3 className="text-sm font-bold text-fg">3. المتطلبات العلمية والشرعية</h3>
+                    <h3 className="text-sm font-bold text-fg">{t('standards.s43')}</h3>
                     <span className="text-[10px] font-bold text-amber-800 bg-amber-100 dark:text-amber-200 dark:bg-amber-900/60 px-2 py-0.5 rounded">
-                      إلزامي • لا تجاوز إطلاقاً
+                      {t('standards.s44')}
                     </span>
                   </div>
                   <span className="ms-auto text-xs font-bold font-mono px-2 py-0.5 rounded bg-amber-100 text-amber-800 dark:bg-amber-950 dark:text-amber-300">
@@ -326,25 +328,25 @@ export const Standards: React.FC = () => {
                   <li className="flex items-start gap-2.5">
                     <CheckCircle2 className="w-4 h-4 text-amber-600 shrink-0 mt-0.5" />
                     <div>
-                      <strong className="text-fg font-semibold">مطابقة المصدر المعتمد:</strong> إسناد النص القرآني أو التفسير لجهة موثقة معلنة (مجمع الملك فهد لطباعة المصحف، تنزيل، وغيرها).
+                      <strong className="text-fg font-semibold">{t('standards.s45')}</strong> {t('standards.s45d')}
                     </div>
                   </li>
                   <li className="flex items-start gap-2.5">
                     <CheckCircle2 className="w-4 h-4 text-amber-600 shrink-0 mt-0.5" />
                     <div>
-                      <strong className="text-fg font-semibold">سلامة الرسم والضبط:</strong> خلو النص تماماً من أي تحريف أو سقوط حركات أو خلط بين روايات المصحف الشريف.
+                      <strong className="text-fg font-semibold">{t('standards.s46')}</strong> {t('standards.s46d')}
                     </div>
                   </li>
                   <li className="flex items-start gap-2.5">
                     <CheckCircle2 className="w-4 h-4 text-amber-600 shrink-0 mt-0.5" />
                     <div>
-                      <strong className="text-fg font-semibold">صحة العزو والتأليف:</strong> توثيق أسماء المفسرين والمترجمين والجهات المحققة بدقة متناهية دون أدنى غموض.
+                      <strong className="text-fg font-semibold">{t('standards.s47')}</strong> {t('standards.s47d')}
                     </div>
                   </li>
                   <li className="flex items-start gap-2.5">
                     <CheckCircle2 className="w-4 h-4 text-amber-600 shrink-0 mt-0.5" />
                     <div>
-                      <strong className="text-fg font-semibold">حظر التوليد التخميني:</strong> حظر مطلق ونهائي لتوليد الآيات أو التفاسير بنماذج الذكاء الاصطناعي التوليدي من الذاكرة دون تحقق مباشر من نصوص موثقة.
+                      <strong className="text-fg font-semibold">{t('standards.s48')}</strong> {t('standards.s48d')}
                     </div>
                   </li>
                 </ul>
@@ -354,7 +356,7 @@ export const Standards: React.FC = () => {
               <div className="p-5 rounded-xl border border-border bg-canvas shadow-2xs">
                 <div className="flex items-center gap-2 mb-3 pb-2.5 border-b border-border-subtle">
                   <Scale className="w-4 h-4 text-purple-600 dark:text-purple-400" />
-                  <h3 className="text-sm font-bold text-fg">4. المتطلبات القانونية والتراخيص</h3>
+                  <h3 className="text-sm font-bold text-fg">{t('standards.s49')}</h3>
                   <span className="ms-auto text-xs font-bold font-mono px-2 py-0.5 rounded bg-purple-100/70 text-purple-800 dark:bg-purple-950 dark:text-purple-300">
                     10%
                   </span>
@@ -363,13 +365,13 @@ export const Standards: React.FC = () => {
                   <li className="flex items-start gap-2.5">
                     <CheckCircle2 className="w-4 h-4 text-purple-600 shrink-0 mt-0.5" />
                     <div>
-                      <strong className="text-fg font-semibold">وضوح الترخيص:</strong> تحديد رخصة مفتوحة أو مخصصة صريحة تحدد حقوق الاستخدام التجاري والتعديل وإعادة التوزيع.
+                      <strong className="text-fg font-semibold">{t('standards.s50')}</strong> {t('standards.s50d')}
                     </div>
                   </li>
                   <li className="flex items-start gap-2.5">
                     <CheckCircle2 className="w-4 h-4 text-purple-600 shrink-0 mt-0.5" />
                     <div>
-                      <strong className="text-fg font-semibold">إثبات الملكية:</strong> التحقق من انتماء المورد للناشر عبر النطاق المؤسسي أو البريد الرسمي أو مستودع GitHub الموثق.
+                      <strong className="text-fg font-semibold">{t('standards.s51')}</strong> {t('standards.s51d')}
                     </div>
                   </li>
                 </ul>
@@ -379,7 +381,7 @@ export const Standards: React.FC = () => {
               <div className="p-4 rounded-xl bg-ratq-50/50 dark:bg-ratq-950/30 border border-ratq-200 dark:border-ratq-900 flex items-start gap-3">
                 <Info className="w-4 h-4 text-ratq-600 dark:text-ratq-400 shrink-0 mt-0.5" />
                 <p className="text-2xs sm:text-xs text-fg-muted leading-relaxed">
-                  تُمنح شارات المعيار استناداً إلى مجموع النقاط المحققة مع اشتراط استيفاء المتطلبات العلمية والشرعية بنسبة 100% دون أي استثناء.
+                  {t('standards.s52')}
                 </p>
               </div>
             </div>
@@ -391,7 +393,7 @@ export const Standards: React.FC = () => {
                 size="md"
                 onClick={() => setIsChecklistDrawerOpen(false)}
               >
-                إغلاق النافذة
+                {t('standards.s26')}
               </Button>
               <Button
                 variant="primary"
@@ -399,7 +401,7 @@ export const Standards: React.FC = () => {
                 onClick={() => window.print()}
                 startIcon={<Printer className="w-4 h-4" />}
               >
-                طباعة القائمة
+                {t('standards.s53')}
               </Button>
             </div>
           </div>

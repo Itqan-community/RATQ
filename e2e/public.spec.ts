@@ -30,12 +30,13 @@ test('@prod unknown path shows the not-found page', async ({ page }) => {
   await expect(page.getByRole('heading', { level: 1 })).toBeVisible();
 });
 
-test('home page shows no announcement strip', async ({ page }) => {
-  // The CMS still serves the announcement (old prod shows it); the new home page intentionally does not.
+test('home page shows the CMS announcement strip with the bilingual text split by locale', async ({ page }) => {
+  // Live parity: Payload announcements render above the hero; "EN | AR" text must not appear unsplit.
   await page.goto('/');
   await expect(page.getByRole('heading', { level: 1 })).toBeVisible();
-  await expect(page.getByText('Catalog links now work everywhere')).toHaveCount(0);
-  await expect(page.getByText('Browse resources | تصفح الموارد')).toHaveCount(0);
+  const strip = page.getByLabel('announcements');
+  await expect(strip).toBeVisible();
+  await expect(strip.getByText('|')).toHaveCount(0);
 });
 
 test('@prod catalog lists resources from the API', async ({ page }) => {

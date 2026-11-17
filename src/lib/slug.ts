@@ -7,3 +7,7 @@ export function generateSlug(text: string): string {
     .replace(/[\s_-]+/g, '-')
     .replace(/^-+|-+$/g, '');
 }
+
+// Unicode-aware, matches payload-backend Resources.ts slugify (generateSlug above drops Arabic).
+export const slugFromName = (name: string): string =>
+  name.toLowerCase().trim().replace(/[^\p{L}\p{N}]+/gu, '-').replace(/^-+|-+$/g, '');

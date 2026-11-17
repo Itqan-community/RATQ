@@ -1,6 +1,7 @@
 // src/components/resources/ResourceCard.tsx
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { Resource } from '@/types';
 import { ItqanBadge } from '@/components/ui/ItqanBadge';
 import { LicenseBadge } from '@/components/ui/LicenseBadge';
@@ -10,6 +11,7 @@ import { ArrowLeft, Package, Download } from 'lucide-react';
 import { clsx } from 'clsx';
 import { ResourceAppBadges } from '@/components/resources/ResourceAppBadges';
 import { getAppsUsingResource } from '@/lib/appEcosystem';
+import { localizeResource } from '@/lib/localizeResource';
 
 export interface ResourceCardProps {
   resource: Resource;
@@ -21,6 +23,7 @@ export interface ResourceCardProps {
 
 interface ResourceCardTitleProps {
   titleAr: string;
+  titleDir?: 'rtl' | 'ltr';
   titleEn?: string;
   slug: string;
   showEnglishTitle?: boolean;
@@ -29,11 +32,13 @@ interface ResourceCardTitleProps {
 
 const ResourceCardTitle: React.FC<ResourceCardTitleProps> = ({
   titleAr,
+  titleDir,
   titleEn,
   slug,
   showEnglishTitle,
   isCompact,
 }) => {
+  const { t } = useTranslation('site');
   const [isTruncated, setIsTruncated] = React.useState(false);
   const titleSpanRef = React.useRef<HTMLSpanElement>(null);
 
@@ -72,7 +77,7 @@ const ResourceCardTitle: React.FC<ResourceCardTitleProps> = ({
           )}
         >
           <Package className="w-4 h-4 text-ratq-600 shrink-0" />
-          <span ref={titleSpanRef} className="truncate">
+          <span ref={titleSpanRef} dir={titleDir} className="truncate">
             {titleAr}
           </span>
         </h3>
@@ -87,7 +92,7 @@ const ResourceCardTitle: React.FC<ResourceCardTitleProps> = ({
           role="tooltip"
           className="pointer-events-none opacity-0 invisible group-hover/title:opacity-100 group-hover/title:visible transition-none absolute bottom-full start-0 mb-1.5 z-30 max-w-xs sm:max-w-sm px-2.5 py-1 rounded-lg bg-slate-900/95 dark:bg-slate-800 text-white text-xs font-medium shadow-lg border border-slate-700/60 leading-normal"
         >
-          عنوان المورد: {titleAr}
+          {t('card.title_tooltip', { title: titleAr })}
           <div className="absolute top-full start-4 -mt-px border-4 border-t-slate-900/95 dark:border-t-slate-800 border-x-transparent border-b-transparent" />
         </div>
       )}
@@ -102,6 +107,8 @@ export const ResourceCard: React.FC<ResourceCardProps> = ({
   isCompact = false,
   showAppUsages = true,
 }) => {
+  const { t, i18n } = useTranslation('site');
+  const loc = localizeResource(resource, i18n.language === 'en' ? 'en' : 'ar');
   const isList = viewMode === 'list';
   const appUsages = showAppUsages
     ? getAppsUsingResource(resource.slug, resource.title_ar)
@@ -121,7 +128,8 @@ export const ResourceCard: React.FC<ResourceCardProps> = ({
           {/* Header: Title */}
           <div className="mb-1.5">
             <ResourceCardTitle
-              titleAr={resource.title_ar}
+              titleAr={loc.title}
+              titleDir={loc.titleDir}
               titleEn={resource.title_en}
               slug={resource.slug}
               showEnglishTitle={false}
@@ -130,8 +138,8 @@ export const ResourceCard: React.FC<ResourceCardProps> = ({
           </div>
 
           {/* Single-line Core Purpose */}
-          <p className="text-xs text-fg-muted line-clamp-1 leading-relaxed">
-            {resource.summary_ar}
+          <p dir={loc.descriptionDir} className="text-xs text-fg-muted line-clamp-1 leading-relaxed">
+            {loc.summary}
           </p>
 
           {/* Compact App Usages */}
@@ -155,7 +163,7 @@ export const ResourceCard: React.FC<ResourceCardProps> = ({
             to={`/resources/${resource.slug}`}
             className="inline-flex items-center gap-1 font-semibold text-xs text-ratq-700 hover:text-ratq-800 transition-colors shrink-0"
           >
-            <span>التفاصيل</span>
+            <span>{t('card.details')}</span>
             <ArrowLeft className="w-3.5 h-3.5 rtl:rotate-0 rotate-180 transition-transform group-hover:-translate-x-0.5" />
           </Link>
         </div>
@@ -189,15 +197,16 @@ export const ResourceCard: React.FC<ResourceCardProps> = ({
 
         {/* Title and Short Description */}
         <ResourceCardTitle
-          titleAr={resource.title_ar}
+          titleAr={loc.title}
+          titleDir={loc.titleDir}
           titleEn={resource.title_en}
           slug={resource.slug}
           showEnglishTitle={showEnglishTitle}
           isCompact={false}
         />
 
-        <p className="text-xs text-fg-muted mt-2 line-clamp-2 leading-relaxed">
-          {resource.summary_ar}
+        <p dir={loc.descriptionDir} className="text-xs text-fg-muted mt-2 line-clamp-2 leading-relaxed">
+          {loc.summary}
         </p>
 
         {/* Tech Stack Chips */}
@@ -250,7 +259,7 @@ export const ResourceCard: React.FC<ResourceCardProps> = ({
           to={`/resources/${resource.slug}`}
           className="inline-flex items-center gap-1 font-semibold text-xs text-ratq-700 hover:text-ratq-800 transition-colors"
         >
-          <span>التفاصيل</span>
+          <span>{t('card.details')}</span>
           <ArrowLeft className="w-3.5 h-3.5 rtl:rotate-0 rotate-180 transition-transform group-hover:-translate-x-0.5" />
         </Link>
       </div>

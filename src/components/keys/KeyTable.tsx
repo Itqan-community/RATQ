@@ -1,5 +1,6 @@
 // src/components/keys/KeyTable.tsx
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { ApiKey } from '@/types';
 import { Button } from '@/components/ui/Button';
 import { ConfirmDialog } from '@/components/ui/ConfirmDialog';
@@ -14,12 +15,13 @@ interface KeyTableProps {
 }
 
 export const KeyTable: React.FC<KeyTableProps> = ({ keys, onRotate, onRevoke }) => {
+  const { t } = useTranslation('site');
   const [selectedKeyForRevoke, setSelectedKeyForRevoke] = useState<ApiKey | null>(null);
 
   if (keys.length === 0) {
     return (
       <div className="py-8 text-center text-xs text-fg-subtle">
-        ليس لديك أي مفاتيح API نشطة حالياً. يمكنك إصدار مفتاح جديد عند قبول طلبات الوصول الخاصة بك.
+        {t('key_table.empty')}
       </div>
     );
   }
@@ -29,13 +31,13 @@ export const KeyTable: React.FC<KeyTableProps> = ({ keys, onRotate, onRevoke }) 
       <table className="w-full text-xs">
         <thead className="bg-subtle border-b border-border text-fg-subtle">
           <tr>
-            <th className="py-3 px-4 font-bold">اسم المفتاح</th>
-            <th className="py-3 px-4 font-bold">المورد المرتبط</th>
-            <th className="py-3 px-4 font-bold">البادئة المقنعة</th>
-            <th className="py-3 px-4 font-bold">الحالة</th>
-            <th className="py-3 px-4 font-bold">ينتهي في</th>
-            <th className="py-3 px-4 font-bold">الاستخدام</th>
-            <th className="py-3 px-4 font-bold text-end">الإجراءات</th>
+            <th className="py-3 px-4 font-bold">{t('key_table.col_name')}</th>
+            <th className="py-3 px-4 font-bold">{t('key_table.col_resource')}</th>
+            <th className="py-3 px-4 font-bold">{t('key_table.col_prefix')}</th>
+            <th className="py-3 px-4 font-bold">{t('key_table.col_status')}</th>
+            <th className="py-3 px-4 font-bold">{t('key_table.col_expires')}</th>
+            <th className="py-3 px-4 font-bold">{t('key_table.col_usage')}</th>
+            <th className="py-3 px-4 font-bold text-end">{t('key_table.col_actions')}</th>
           </tr>
         </thead>
         <tbody className="divide-y divide-border-subtle">
@@ -46,7 +48,7 @@ export const KeyTable: React.FC<KeyTableProps> = ({ keys, onRotate, onRevoke }) 
                 <span>{k.name_ar}</span>
               </td>
               <td className="py-3 px-4 text-fg-muted font-medium">
-                {k.resource_title_ar || 'مورد مقيد'}
+                {k.resource_title_ar || t('key_table.restricted_resource')}
               </td>
               <td className="py-3 px-4 font-mono text-2xs text-fg-subtle" dir="ltr">
                 {maskApiKey(k.key_prefix)}
@@ -54,17 +56,17 @@ export const KeyTable: React.FC<KeyTableProps> = ({ keys, onRotate, onRevoke }) 
               <td className="py-3 px-4">
                 {k.status === 'active' && (
                   <span className="inline-flex items-center gap-1 text-[11px] font-medium text-emerald-700 bg-emerald-50 dark:bg-emerald-950 px-2 py-0.5 rounded border border-emerald-200">
-                    <CheckCircle className="w-3 h-3" /> نشط
+                    <CheckCircle className="w-3 h-3" /> {t('key_table.active')}
                   </span>
                 )}
                 {k.status === 'rotating' && (
                   <span className="inline-flex items-center gap-1 text-[11px] font-medium text-amber-700 bg-amber-50 dark:bg-amber-950 px-2 py-0.5 rounded border border-amber-200">
-                    <Clock className="w-3 h-3" /> قيد التدوير (24h)
+                    <Clock className="w-3 h-3" /> {t('key_table.rotating')}
                   </span>
                 )}
                 {k.status === 'revoked' && (
                   <span className="inline-flex items-center gap-1 text-[11px] font-medium text-red-700 bg-red-50 dark:bg-red-950 px-2 py-0.5 rounded border border-red-200">
-                    <AlertOctagon className="w-3 h-3" /> ملغى
+                    <AlertOctagon className="w-3 h-3" /> {t('key_table.revoked')}
                   </span>
                 )}
               </td>
@@ -72,7 +74,10 @@ export const KeyTable: React.FC<KeyTableProps> = ({ keys, onRotate, onRevoke }) 
                 {formatDate(k.expires_at)}
               </td>
               <td className="py-3 px-4 font-mono text-fg-muted">
-                {k.usage_count.toLocaleString()} طلب
+                {t('key_table.requests', { n: k.usage_count.toLocaleString() })}
+                {k.last_used_at && (
+                  <div className="font-sans text-2xs text-fg-subtle">{t('key_table.last_used', { date: formatDate(k.last_used_at) })}</div>
+                )}
               </td>
               <td className="py-3 px-4 text-end">
                 {k.status === 'active' && (
@@ -81,20 +86,20 @@ export const KeyTable: React.FC<KeyTableProps> = ({ keys, onRotate, onRevoke }) 
                       variant="ghost"
                       size="sm"
                       onClick={() => onRotate(k.id)}
-                      title="تدوير المفتاح (يُحذف القديم فوراً)"
+                      title={t('key_table.rotate_title')}
                       startIcon={<RotateCw className="w-3 h-3 text-fg-muted" />}
                     >
-                      تدوير
+                      {t('key_table.rotate')}
                     </Button>
                     <Button
                       variant="ghost"
                       size="sm"
                       onClick={() => setSelectedKeyForRevoke(k)}
-                      title="إلغاء فوري"
+                      title={t('key_table.revoke_title')}
                       className="text-red-600 hover:text-red-700 hover:bg-red-50"
                       startIcon={<Trash2 className="w-3 h-3 text-red-600" />}
                     >
-                      إلغاء
+                      {t('key_table.revoke')}
                     </Button>
                   </div>
                 )}
@@ -112,9 +117,9 @@ export const KeyTable: React.FC<KeyTableProps> = ({ keys, onRotate, onRevoke }) 
             onRevoke(selectedKeyForRevoke.id);
             setSelectedKeyForRevoke(null);
           }}
-          title="تأكيد إلغاء مفتاح الـ API"
-          description={`هل أنت متأكد من رغبتك في إلغاء المفتاح "${selectedKeyForRevoke.name_ar}" فوراً؟ ستتوقف أي تطبيقات تعتمد عليه عن العمل.`}
-          confirmLabel="نعم، قم بالإلغاء"
+          title={t('key_table.confirm_title')}
+          description={t('key_table.confirm_body', { name: selectedKeyForRevoke.name_ar })}
+          confirmLabel={t('key_table.confirm_yes')}
           isDestructive
         />
       )}

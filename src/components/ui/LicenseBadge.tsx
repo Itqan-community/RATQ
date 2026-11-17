@@ -1,6 +1,7 @@
 // src/components/ui/LicenseBadge.tsx
 import React from 'react';
 import { Scale } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 
@@ -70,6 +71,7 @@ export const LicenseBadge: React.FC<LicenseBadgeProps> = ({
   size = 'sm',
   showIcon = true,
 }) => {
+  const { t } = useTranslation('site');
   const raw = (licenseId || spdx || 'cc-by-sa').toLowerCase();
   const label = name || CC_LABELS[raw] || (licenseId || spdx || 'CC BY-SA').toUpperCase();
   const colorClass = getLicenseColorClass(licenseId, spdx);
@@ -90,7 +92,7 @@ export const LicenseBadge: React.FC<LicenseBadgeProps> = ({
       <span>{label}</span>
       {allowsCommercial && (
         <span className="text-[10px] text-ratq-700 bg-ratq-100 dark:bg-ratq-900 dark:text-ratq-300 px-1 rounded">
-          تجاري متاح
+          {t('ui.commercial_ok')}
         </span>
       )}
     </span>

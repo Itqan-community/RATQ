@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
-import { toDesignRequest, toDesignStatus, submitRequest, decideRequest, requestsFor } from '@/lib/payloadRequests';
+import { toDesignRequest, toDesignStatus, submitRequest, decideRequest, revokeRequest, requestsFor } from '@/lib/payloadRequests';
 
 const API = 'http://payload.test/api';
 const ok = (body: unknown) => Promise.resolve(new Response(JSON.stringify(body), { status: 200 }));
@@ -115,5 +115,40 @@ describe('decideRequest', () => {
   it('surfaces the server refusal when a decided request is changed again', async () => {
     vi.stubGlobal('fetch', vi.fn(() => fail(400, 'Access request status cannot be changed once decided.')));
     expect(await decideRequest('payload_req_9', 'approved', '')).toBe('Access request status cannot be changed once decided.');
+  });
+});
+
+describe('revokeRequest', () => {
+  it('PATCHes only status=revoked on the numeric request id, with the session cookie', async () => {
+    const f = vi.fn(() => ok({ doc: {} }));
+    vi.stubGlobal('fetch', f);
+    expect(await revokeRequest('payload_req_9')).toBeNull();
+    const [url, init] = f.mock.calls[0] as unknown as [string, RequestInit];
+    expect(url).toBe(`${API}/access-requests/9`);
+    expect(init.method).toBe('PATCH');
+    expect(init.credentials).toBe('include');
+    expect(JSON.parse(init.body as string)).toEqual({ status: 'revoked' });
+  });
+
+  it('non-owner / guest: surfaces the server refusal', async () => {
+    vi.stubGlobal('fetch', vi.fn(() => fail(403, 'You are not allowed to perform this action.')));
+    expect(await revokeRequest('payload_req_9')).toBe('You are not allowed to perform this action.');
+  });
+
+  it('surfaces the server rule that only approved requests can be revoked', async () => {
+    vi.stubGlobal('fetch', vi.fn(() => fail(400, 'Only an approved access request can be revoked.')));
+    expect(await revokeRequest('payload_req_9')).toBe('Only an approved access request can be revoked.');
+  });
+
+  it('refuses non-payload ids without a request', async () => {
+    const f = vi.fn();
+    vi.stubGlobal('fetch', f);
+    expect(await revokeRequest('req_001')).toBeTruthy();
+    expect(f).not.toHaveBeenCalled();
+  });
+
+  it('survives a network failure', async () => {
+    vi.stubGlobal('fetch', vi.fn(() => Promise.reject(new TypeError('network'))));
+    expect(await revokeRequest('payload_req_9')).toBeTruthy();
   });
 });

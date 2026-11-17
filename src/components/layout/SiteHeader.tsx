@@ -22,20 +22,25 @@ import {
   LogOut,
 } from 'lucide-react';
 
+// Live-parity links (About, Contributors, Dashboard) so existing users keep a path to them.
+const extraLinks = [
+  { to: '/about', key: 'about' },
+  { to: '/contributors', key: 'contributors' },
+  { to: '/app', key: 'dashboard' },
+] as const;
+
 interface SiteHeaderProps {
   onOpenCommandPalette?: () => void;
 }
 
 export const SiteHeader: React.FC<SiteHeaderProps> = ({ onOpenCommandPalette }) => {
-  const { t } = useTranslation('common');
+  const { t } = useTranslation(['common', 'site']);
   const navigate = useNavigate();
   const location = useLocation();
   const { isAuthenticated, currentRole, profile, switchRole, signOut, signOutLive } = useAuthStore();
   const { theme, toggleTheme, locale, setLocale } = useThemeStore();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [userMenuOpen, setUserMenuOpen] = useState(false);
-
-  const isAr = locale === 'ar';
 
   useEffect(() => {
     setUserMenuOpen(false);
@@ -58,14 +63,9 @@ export const SiteHeader: React.FC<SiteHeaderProps> = ({ onOpenCommandPalette }) 
     location.pathname.startsWith('/resources/stacks') ||
     location.pathname.startsWith('/stacks');
 
-  const roleOptions: { role: UserRole; label: string }[] = [
-    { role: 'developer', label: 'مطور (Developer)' },
-    { role: 'publisher_owner', label: 'ناشر (Publisher)' },
-    { role: 'reviewer', label: 'مراجع إتقان (Reviewer)' },
-    { role: 'moderator', label: 'مشرف (Moderator)' },
-    { role: 'admin', label: 'مسؤول المنصة (Admin)' },
-    { role: 'guest', label: 'زائر (Guest)' },
-  ];
+  const roleOptions: { role: UserRole; label: string }[] = (
+    ['developer', 'publisher_owner', 'reviewer', 'moderator', 'admin', 'guest'] as const
+  ).map((role) => ({ role, label: t(`site:header.role_${role}`) }));
 
   return (
     <header className="sticky top-0 z-40 w-full border-b border-border bg-canvas/90 backdrop-blur-md transition-colors">
@@ -75,16 +75,18 @@ export const SiteHeader: React.FC<SiteHeaderProps> = ({ onOpenCommandPalette }) 
           <Link
             to="/"
             className="flex flex-col items-center justify-center group py-0.5 select-none"
-            title="رَتْق — الرئيسية"
+            title={t('site:header.home_title')}
           >
             <img
               src="/logo.png"
-              alt="شعار رَتْق"
+              alt={t('site:header.logo_alt')}
               className="h-7 sm:h-8 w-auto max-w-[90px] object-contain dark:invert transition-transform duration-200 group-hover:scale-105"
             />
-            <span className="text-[9px] font-bold text-ratq-700 dark:text-ratq-300 bg-ratq-50 dark:bg-ratq-950/80 border border-ratq-200 dark:border-ratq-800/80 px-1.5 py-0.5 rounded leading-none tracking-tight mt-0.5 whitespace-nowrap">
-              {isAr ? 'نسخة تجريبية' : 'Beta Prototype'}
-            </span>
+            {!isLive() && (
+              <span className="text-[9px] font-bold text-ratq-700 dark:text-ratq-300 bg-ratq-50 dark:bg-ratq-950/80 border border-ratq-200 dark:border-ratq-800/80 px-1.5 py-0.5 rounded leading-none tracking-tight mt-0.5 whitespace-nowrap">
+                {t('site:header.beta')}
+              </span>
+            )}
           </Link>
 
           {/* Desktop Nav */}
@@ -97,7 +99,7 @@ export const SiteHeader: React.FC<SiteHeaderProps> = ({ onOpenCommandPalette }) 
                   : 'text-fg-muted hover:text-fg hover:bg-subtle'
               }`}
             >
-              {isAr ? 'الرئيسية' : 'Home'}
+              {t('site:header.home')}
             </Link>
 
             {/* Resources Nav Item */}
@@ -109,7 +111,7 @@ export const SiteHeader: React.FC<SiteHeaderProps> = ({ onOpenCommandPalette }) 
                   : 'text-fg-muted hover:text-fg hover:bg-subtle'
               }`}
             >
-              {isAr ? 'مكتبة الموارد' : 'Resources Library'}
+              {t('site:header.resources')}
             </Link>
 
             {/* Dev Roadmap Nav Item */}
@@ -121,8 +123,8 @@ export const SiteHeader: React.FC<SiteHeaderProps> = ({ onOpenCommandPalette }) 
                   : 'text-fg-muted hover:text-fg hover:bg-subtle'
               }`}
             >
-              {isAr ? 'مسار المطور' : 'Dev Roadmap'}
-              <DemoBadge to="/resources/roadmap" isAr={isAr} />
+              {t('site:header.roadmap')}
+              <DemoBadge to="/resources/roadmap" />
             </Link>
 
             {/* App Stacks Nav Item */}
@@ -134,8 +136,8 @@ export const SiteHeader: React.FC<SiteHeaderProps> = ({ onOpenCommandPalette }) 
                   : 'text-fg-muted hover:text-fg hover:bg-subtle'
               }`}
             >
-              {isAr ? 'حزم التطبيقات' : 'App Stacks'}
-              <DemoBadge to="/resources/stacks" isAr={isAr} />
+              {t('site:header.stacks')}
+              <DemoBadge to="/resources/stacks" />
             </Link>
 
             <Link
@@ -146,8 +148,8 @@ export const SiteHeader: React.FC<SiteHeaderProps> = ({ onOpenCommandPalette }) 
                   : 'text-fg-muted hover:text-fg hover:bg-subtle'
               }`}
             >
-              {isAr ? 'التصنيفات' : 'Categories'}
-              <DemoBadge to="/categories" isAr={isAr} />
+              {t('site:header.categories')}
+              <DemoBadge to="/categories" />
             </Link>
 
             <Link
@@ -158,8 +160,22 @@ export const SiteHeader: React.FC<SiteHeaderProps> = ({ onOpenCommandPalette }) 
                   : 'text-fg-muted hover:text-fg hover:bg-subtle'
               }`}
             >
-              {isAr ? 'معيار إتقان' : 'Itqan Standard'}
+              {t('site:header.standard')}
             </Link>
+
+            {extraLinks.map((l) => (
+              <Link
+                key={l.to}
+                to={l.to}
+                className={`px-3 py-1.5 rounded-md transition-colors ${
+                  location.pathname.startsWith(l.to)
+                    ? 'text-ratq-700 bg-ratq-50 dark:bg-ratq-950/60 dark:text-ratq-300 font-bold'
+                    : 'text-fg-muted hover:text-fg hover:bg-subtle'
+                }`}
+              >
+                {t(`site:header.${l.key}`)}
+              </Link>
+            ))}
           </nav>
         </div>
 
@@ -169,10 +185,10 @@ export const SiteHeader: React.FC<SiteHeaderProps> = ({ onOpenCommandPalette }) 
           <button
             onClick={onOpenCommandPalette}
             className="flex items-center gap-2 text-xs text-fg-subtle bg-subtle border border-border px-3 py-1.5 rounded-md hover:border-border-strong transition-colors cursor-pointer"
-            aria-label="البحث السريع"
+            aria-label={t('site:header.quick_search')}
           >
             <Search className="w-3.5 h-3.5 text-fg-muted" />
-            <span className="hidden sm:inline">ابحث في الموارد...</span>
+            <span className="hidden sm:inline">{t('site:header.search_placeholder')}</span>
             <kbd className="hidden sm:inline text-[10px] font-mono bg-muted text-fg-subtle px-1.5 py-0.5 rounded border border-border">
               ⌘K
             </kbd>
@@ -182,7 +198,7 @@ export const SiteHeader: React.FC<SiteHeaderProps> = ({ onOpenCommandPalette }) 
           <button
             onClick={toggleTheme}
             className="p-2 text-fg-muted hover:text-fg hover:bg-subtle rounded-md transition-colors"
-            aria-label="تبديل المظهر"
+            aria-label={t('site:header.toggle_theme')}
           >
             {theme === 'dark' ? <Sun className="w-4 h-4 text-amber-400" /> : <Moon className="w-4 h-4" />}
           </button>
@@ -191,10 +207,10 @@ export const SiteHeader: React.FC<SiteHeaderProps> = ({ onOpenCommandPalette }) 
           <button
             onClick={() => setLocale(locale === 'ar' ? 'en' : 'ar')}
             className="p-2 text-fg-muted hover:text-fg hover:bg-subtle rounded-md transition-colors flex items-center gap-1 text-xs font-semibold"
-            aria-label="تبديل اللغة"
+            aria-label={t('site:header.toggle_language')}
           >
             <Globe className="w-4 h-4" />
-            <span>{locale === 'ar' ? 'EN' : 'عربي'}</span>
+            <span>{t('site:header.other_language')}</span>
           </button>
 
           {/* Auth State Button / User Menu */}
@@ -224,35 +240,35 @@ export const SiteHeader: React.FC<SiteHeaderProps> = ({ onOpenCommandPalette }) 
                     className="flex items-center gap-2.5 px-3 py-2 text-xs font-medium text-fg hover:bg-subtle rounded-md transition-colors"
                   >
                     <User className="w-3.5 h-3.5 text-ratq-600" />
-                    <span>لوحة المطور</span>
+                    <span>{t('site:header.menu_developer')}</span>
                   </Link>
                   <Link
                     to="/publisher"
                     className="flex items-center gap-2.5 px-3 py-2 text-xs font-medium text-fg hover:bg-subtle rounded-md transition-colors"
                   >
                     <Layers className="w-3.5 h-3.5 text-blue-600" />
-                    <span>بوابة الناشر</span>
+                    <span>{t('site:header.menu_publisher')}</span>
                   </Link>
                   <Link
                     to="/review"
                     className="flex items-center gap-2.5 px-3 py-2 text-xs font-medium text-fg hover:bg-subtle rounded-md transition-colors"
                   >
                     <CheckCircle className="w-3.5 h-3.5 text-cyan-600" />
-                    <span>لوحة المراجع</span>
+                    <span>{t('site:header.menu_reviewer')}</span>
                   </Link>
                   <Link
                     to="/moderation"
                     className="flex items-center gap-2.5 px-3 py-2 text-xs font-medium text-fg hover:bg-subtle rounded-md transition-colors"
                   >
                     <Shield className="w-3.5 h-3.5 text-amber-600" />
-                    <span>لوحة الإشراف</span>
+                    <span>{t('site:header.menu_moderation')}</span>
                   </Link>
                   <Link
                     to="/admin"
                     className="flex items-center gap-2.5 px-3 py-2 text-xs font-medium text-fg hover:bg-subtle rounded-md transition-colors"
                   >
                     <Settings className="w-3.5 h-3.5 text-purple-600" />
-                    <span>لوحة الإدارة</span>
+                    <span>{t('site:header.menu_admin')}</span>
                   </Link>
 
                   <div className="border-t border-border-subtle my-1" />
@@ -266,7 +282,7 @@ export const SiteHeader: React.FC<SiteHeaderProps> = ({ onOpenCommandPalette }) 
                     className="w-full flex items-center gap-2.5 px-3 py-2 text-xs font-medium text-red-600 hover:bg-red-50 dark:hover:bg-red-950/40 rounded-md transition-colors"
                   >
                     <LogOut className="w-3.5 h-3.5" />
-                    <span>{t('actions.sign_out')}</span>
+                    <span>{t('common:actions.sign_out')}</span>
                   </button>
                 </div>
               )}
@@ -274,10 +290,10 @@ export const SiteHeader: React.FC<SiteHeaderProps> = ({ onOpenCommandPalette }) 
           ) : (
             <div className="flex items-center gap-2">
               <Button variant="outline" size="sm" onClick={() => navigate('/auth/sign-in')}>
-                {t('actions.sign_in')}
+                {t('common:actions.sign_in')}
               </Button>
               <Button variant="primary" size="sm" onClick={() => navigate('/auth/sign-up')}>
-                {t('actions.sign_up')}
+                {t('common:actions.sign_up')}
               </Button>
             </div>
           )}
@@ -286,7 +302,7 @@ export const SiteHeader: React.FC<SiteHeaderProps> = ({ onOpenCommandPalette }) 
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             className="lg:hidden p-2 text-fg-muted hover:text-fg rounded-md"
-            aria-label="القائمة"
+            aria-label={t('site:header.menu')}
           >
             {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
           </button>
@@ -303,7 +319,7 @@ export const SiteHeader: React.FC<SiteHeaderProps> = ({ onOpenCommandPalette }) 
               location.pathname === '/' ? 'text-ratq-700 bg-ratq-50 dark:bg-ratq-950/60 font-bold' : 'text-fg-muted'
             }`}
           >
-            {isAr ? 'الرئيسية' : 'Home'}
+            {t('site:header.home')}
           </Link>
 
           {/* Mobile Resources Nav Item */}
@@ -314,7 +330,7 @@ export const SiteHeader: React.FC<SiteHeaderProps> = ({ onOpenCommandPalette }) 
               isResourcesActive ? 'text-ratq-700 bg-ratq-50 dark:bg-ratq-950/60 font-bold' : 'text-fg-muted'
             }`}
           >
-            {isAr ? 'مكتبة الموارد' : 'Resources Library'}
+            {t('site:header.resources')}
           </Link>
 
           {/* Mobile Roadmap Item */}
@@ -325,7 +341,7 @@ export const SiteHeader: React.FC<SiteHeaderProps> = ({ onOpenCommandPalette }) 
               isRoadmapActive ? 'text-ratq-700 bg-ratq-50 dark:bg-ratq-950/60 font-bold' : 'text-fg-muted'
             }`}
           >
-            {isAr ? 'مسار المطور' : 'Dev Roadmap'}
+            {t('site:header.roadmap')}
           </Link>
 
           {/* Mobile Stacks Item */}
@@ -336,7 +352,7 @@ export const SiteHeader: React.FC<SiteHeaderProps> = ({ onOpenCommandPalette }) 
               isStacksActive ? 'text-ratq-700 bg-ratq-50 dark:bg-ratq-950/60 font-bold' : 'text-fg-muted'
             }`}
           >
-            {isAr ? 'حزم التطبيقات' : 'App Stacks'}
+            {t('site:header.stacks')}
           </Link>
 
           <Link
@@ -346,7 +362,7 @@ export const SiteHeader: React.FC<SiteHeaderProps> = ({ onOpenCommandPalette }) 
               location.pathname.startsWith('/categories') ? 'text-ratq-700 bg-ratq-50 dark:bg-ratq-950/60 font-bold' : 'text-fg-muted'
             }`}
           >
-            {isAr ? 'التصنيفات' : 'Categories'}
+            {t('site:header.categories')}
           </Link>
 
           <Link
@@ -356,11 +372,23 @@ export const SiteHeader: React.FC<SiteHeaderProps> = ({ onOpenCommandPalette }) 
               location.pathname.startsWith('/standards') ? 'text-ratq-700 bg-ratq-50 dark:bg-ratq-950/60 font-bold' : 'text-fg-muted'
             }`}
           >
-            {isAr ? 'معيار إتقان' : 'Itqan Standard'}
+            {t('site:header.standard')}
           </Link>
+          {extraLinks.map((l) => (
+            <Link
+              key={l.to}
+              to={l.to}
+              onClick={() => setMobileMenuOpen(false)}
+              className={`px-3 py-2 text-sm font-medium rounded-md transition-colors ${
+                location.pathname.startsWith(l.to) ? 'text-ratq-700 bg-ratq-50 dark:bg-ratq-950/60 font-bold' : 'text-fg-muted'
+              }`}
+            >
+              {t(`site:header.${l.key}`)}
+            </Link>
+          ))}
           {!isLive() && (
           <div className="pt-2 border-t border-border flex items-center justify-between text-xs">
-            <span className="text-fg-subtle">تبديل الدور التجريبي:</span>
+            <span className="text-fg-subtle">{t('site:header.demo_role_switch')}</span>
             <select
               value={currentRole}
               onChange={(e) => switchRole(e.target.value as UserRole)}

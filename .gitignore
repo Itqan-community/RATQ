@@ -13,7 +13,6 @@ dist-ssr
 
 # Environment
 .env
-.env.production
 .env.local
 .env.*.local
 
@@ -40,7 +39,10 @@ dist-ssr
 .wrangler
 next-env.d.ts
 tsconfig.tsbuildinfo
-.claude/memory.db
+.claude/memory.db*
+.claude/index.lock
+.claude/scope/
+!.env.production
 
 # Playwright
 test-results

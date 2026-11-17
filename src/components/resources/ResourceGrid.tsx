@@ -1,5 +1,6 @@
 // src/components/resources/ResourceGrid.tsx
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { Resource } from '@/types';
 import { ResourceCard } from './ResourceCard';
 import { Skeleton } from '@/components/ui/Skeleton';
@@ -21,6 +22,7 @@ export const ResourceGrid: React.FC<ResourceGridProps> = ({
   isCompact = false,
   onResetFilters,
 }) => {
+  const { t } = useTranslation('site');
   if (isLoading) {
     return (
       <div
@@ -56,9 +58,9 @@ export const ResourceGrid: React.FC<ResourceGridProps> = ({
   if (resources.length === 0) {
     return (
       <EmptyState
-        title="لا توجد موارد مطابقة لبحثك"
-        description="جرّب إزالة بعض الفلاتر أو استخدام كلمات بحث أعم، أو تصفح التصنيفات الشاملة."
-        actionLabel="إعادة تعيين الفلاتر"
+        title={t('grid.empty_title')}
+        description={t('grid.empty_desc')}
+        actionLabel={t('grid.reset_filters')}
         onAction={onResetFilters}
       />
     );

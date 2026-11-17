@@ -77,9 +77,9 @@
   --badge-gold:     var(--ratq-gold-500);
 
   /* الخطوط */
-  --font-ui: 'IBM Plex Sans Arabic', 'Segoe UI', 'Noto Sans Arabic', system-ui, -apple-system, sans-serif;
-  --font-quran: 'Amiri Quran', 'Scheherazade New', 'Noto Naskh Arabic', serif;
-  --font-mono: 'IBM Plex Mono', 'SFMono-Regular', ui-monospace, monospace;
+  --font-ui: var(--font-plex-ar, 'IBM Plex Sans Arabic'), 'Segoe UI', 'Noto Sans Arabic', system-ui, -apple-system, sans-serif;
+  --font-quran: var(--font-amiri-quran, 'Amiri Quran'), 'Scheherazade New', 'Noto Naskh Arabic', serif;
+  --font-mono: var(--font-plex-mono, 'IBM Plex Mono'), 'SFMono-Regular', ui-monospace, monospace;
 
   /* مقاسات الخط (Type Scale 1.200) */
   --fs-2xs: 0.6875rem; /* 11px */
@@ -320,11 +320,11 @@
    ========================================================================== */
 
 [data-font="thmanyah"] {
-  --font-ui: 'Thmanyah Sans', 'IBM Plex Sans Arabic', system-ui, -apple-system, sans-serif;
+  --font-ui: 'Thmanyah Sans', var(--font-plex-ar, 'IBM Plex Sans Arabic'), system-ui, -apple-system, sans-serif;
 }
 
 [data-font="suisse"] {
-  --font-ui: 'SuisseIntl', 'IBM Plex Sans Arabic', system-ui, -apple-system, sans-serif;
+  --font-ui: 'SuisseIntl', var(--font-plex-ar, 'IBM Plex Sans Arabic'), system-ui, -apple-system, sans-serif;
 }
 
 [data-ligatures="disabled"] {

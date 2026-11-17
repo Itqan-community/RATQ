@@ -1,5 +1,6 @@
 // src/components/requests/AccessRequestDialog.tsx
 import React, { useState } from 'react';
+import { Trans, useTranslation } from 'react-i18next';
 import { Modal } from '@/components/ui/Modal';
 import { Button } from '@/components/ui/Button';
 import { Textarea } from '@/components/ui/Textarea';
@@ -24,6 +25,7 @@ export const AccessRequestDialog: React.FC<AccessRequestDialogProps> = ({
   onClose,
   onSuccess,
 }) => {
+  const { t } = useTranslation('site');
   const [purpose, setPurpose] = useState('');
   const [intendedUse, setIntendedUse] = useState<any>('research');
   const [days, setDays] = useState('90');
@@ -34,11 +36,11 @@ export const AccessRequestDialog: React.FC<AccessRequestDialogProps> = ({
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!purpose || purpose.trim().length < 15) {
-      setError('يرجى كتابة شرح وافٍ للغرض من الاستخدام (15 حرفاً على الأقل).');
+      setError(t('access_request.err_purpose'));
       return;
     }
     if (!agreed) {
-      setError('يجب الموافقة على شروط الترخيص والاستخدام.');
+      setError(t('access_request.err_terms'));
       return;
     }
 
@@ -68,23 +70,23 @@ export const AccessRequestDialog: React.FC<AccessRequestDialogProps> = ({
       onSuccess();
       onClose();
     } catch {
-      setError('تعذر تقديم الطلب حالياً.');
+      setError(t('access_request.err_submit'));
       setLoading(false);
     }
   };
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} title="طلب وصول لمورد مقيّد" maxWidth="md">
+    <Modal isOpen={isOpen} onClose={onClose} title={t('access_request.title')} maxWidth="md">
       <form onSubmit={handleSubmit} className="flex flex-col gap-4 text-start">
         <div className="flex items-center gap-2 p-3 rounded-lg bg-gold-50 dark:bg-gold-950/40 border border-gold-200 text-gold-900 dark:text-gold-200 text-xs">
           <Lock className="w-4 h-4 shrink-0" />
           <span>
-            هذا المورد يتطلب موافقة الناشر <strong>({resource.publisher?.name_ar || 'الناشر'})</strong> قبل إصدار مفتاح الـ API.
+            <Trans t={t} i18nKey="access_request.approval_note" values={{ name: resource.publisher?.name_ar || t('access_request.publisher_fallback') }} components={{ b: <strong /> }} />
           </span>
         </div>
 
         <Textarea
-          label="الغرض من الاستخدام والمشروع التطبيقي"
+          label={t('access_request.purpose')}
           required
           rows={3}
           value={purpose}
@@ -92,30 +94,30 @@ export const AccessRequestDialog: React.FC<AccessRequestDialogProps> = ({
             setPurpose(e.target.value);
             setError(null);
           }}
-          placeholder="وضح طبيعة تطبيقك أو بحثك، الفئات المستفيدة، وتوقعات استهلاك البيانات..."
+          placeholder={t('access_request.purpose_placeholder')}
         />
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <Select
-            label="نوع الاستخدام"
+            label={t('access_request.use_type')}
             options={[
-              { value: 'research', label: 'أبحاث ودراسات أكاديمية' },
-              { value: 'education', label: 'تعليمي / تحفيظ' },
-              { value: 'nonprofit', label: 'خيري غير ربحي' },
-              { value: 'personal', label: 'تجربة شخصية' },
-              { value: 'commercial', label: 'تطبيق تجاري' },
+              { value: 'research', label: t('access_request.use_research') },
+              { value: 'education', label: t('access_request.use_education') },
+              { value: 'nonprofit', label: t('access_request.use_nonprofit') },
+              { value: 'personal', label: t('access_request.use_personal') },
+              { value: 'commercial', label: t('access_request.use_commercial') },
             ]}
             value={intendedUse}
             onChange={(e) => setIntendedUse(e.target.value)}
           />
 
           <Select
-            label="المدة المطلوبة"
+            label={t('access_request.duration')}
             options={[
-              { value: '30', label: '30 يوماً' },
-              { value: '90', label: '90 يوماً (المعتاد)' },
-              { value: '180', label: '180 يوماً' },
-              { value: '365', label: 'سنة كاملة' },
+              { value: '30', label: t('access_request.d30') },
+              { value: '90', label: t('access_request.d90') },
+              { value: '180', label: t('access_request.d180') },
+              { value: '365', label: t('access_request.d365') },
             ]}
             value={days}
             onChange={(e) => setDays(e.target.value)}
@@ -125,17 +127,17 @@ export const AccessRequestDialog: React.FC<AccessRequestDialogProps> = ({
         <Checkbox
           checked={agreed}
           onChange={(val: any) => setAgreed(Boolean(typeof val === 'boolean' ? val : val?.target?.checked))}
-          label="أتعهد بالالتزام بشروط الترخيص المعلنة للمورد وعدم إساءة استخدام البيانات."
+          label={t('access_request.pledge')}
         />
 
         {error && <p className="text-xs text-red-500 font-medium">{error}</p>}
 
         <div className="flex justify-end gap-2 pt-3 border-t border-border-subtle">
           <Button variant="outline" size="sm" type="button" onClick={onClose}>
-            إلغاء
+            {t('access_request.cancel')}
           </Button>
           <Button variant="primary" size="sm" type="submit" isLoading={loading}>
-            تقديم الطلب
+            {t('access_request.submit')}
           </Button>
         </div>
       </form>

@@ -7,5 +7,12 @@
   "ERR_422": "Validation failed. Please verify the indicated fields.",
   "ERR_429": "Rate limit exceeded. Please wait a moment before trying again.",
   "ERR_500": "Temporary server error. Our engineering team has been notified.",
-  "ERR_MAINTENANCE": "The platform is undergoing scheduled maintenance and will return shortly."
+  "ERR_MAINTENANCE": "The platform is undergoing scheduled maintenance and will return shortly.",
+  "API_DOWN_TITLE": "The catalog is temporarily unavailable",
+  "API_DOWN_BODY": "We could not reach the RATQ data services. Other pages still work; try again in a moment.",
+  "API_RETRY": "Try again",
+  "API_RETRYING": "Trying again...",
+  "API_DEGRADED": "Some resource sources are unreachable right now, so the catalog may be incomplete.",
+  "ERR_BOUNDARY_TITLE": "Something went wrong on this page",
+  "ERR_BOUNDARY_BODY": "The rest of the site is still available. Reload the page or go back home."
 }

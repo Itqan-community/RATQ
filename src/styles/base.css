@@ -17,6 +17,12 @@
     line-height: var(--lh-normal);
   }
 
+  /* Keyboard focus ring for any control that does not define its own. */
+  :focus-visible {
+    outline: 2px solid var(--ratq-primary-600);
+    outline-offset: 2px;
+  }
+
   /* Quranic sacred text styling */
   .font-quran {
     font-family: var(--font-quran);

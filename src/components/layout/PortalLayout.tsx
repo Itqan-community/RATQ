@@ -1,6 +1,7 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { Navigate } from 'react-router-dom';
+import { Navigate, useLocation } from 'react-router-dom';
+import { signInHref } from '@/lib/authFlow';
 import { SidebarNav, SidebarNavItem } from './SidebarNav';
 import { useAuthStore } from '@/store/useAuthStore';
 import { portalAccess } from '@/lib/portalAccess';
@@ -22,6 +23,8 @@ import {
   Users,
   ShieldAlert,
   FileCheck,
+  Flag,
+  MessageSquare,
 } from 'lucide-react';
 
 interface PortalLayoutProps {
@@ -34,6 +37,7 @@ export const PortalLayout: React.FC<PortalLayoutProps> = ({ children, portal }) 
   const isAr = i18n.language === 'ar';
   const role = useAuthStore((s) => s.currentRole);
   const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
+  const location = useLocation();
 
   const configs: Record<
     string,
@@ -63,6 +67,16 @@ export const PortalLayout: React.FC<PortalLayoutProps> = ({ children, portal }) 
           href: '/app/saved',
           label: isAr ? 'المحفوظات' : 'Saved',
           icon: <Bookmark className="w-4 h-4" />,
+        },
+        {
+          href: '/app/reports',
+          label: isAr ? 'بلاغاتي' : 'My Reports',
+          icon: <Flag className="w-4 h-4" />,
+        },
+        {
+          href: '/app/comments',
+          label: isAr ? 'تعليقاتي' : 'My Comments',
+          icon: <MessageSquare className="w-4 h-4" />,
         },
         {
           href: '/app/notifications',
@@ -180,7 +194,7 @@ export const PortalLayout: React.FC<PortalLayoutProps> = ({ children, portal }) 
   const currentConfig = configs[portal] || configs.app;
 
   const access = portalAccess(portal, role, isAuthenticated);
-  if (access === 'sign-in') return <Navigate to="/auth/sign-in" replace />;
+  if (access === 'sign-in') return <Navigate to={signInHref(location.pathname + location.search)} replace />;
   if (access === 'forbidden') return <Navigate to="/403" replace />;
 
   return (

@@ -1,6 +1,7 @@
 // src/components/ui/CopyButton.tsx
 import React, { useState } from 'react';
 import { Copy, Check } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { Button } from './Button';
 
 interface CopyButtonProps {
@@ -15,11 +16,12 @@ interface CopyButtonProps {
 export const CopyButton: React.FC<CopyButtonProps> = ({
   text,
   textToCopy,
-  label = 'نسخ',
+  label,
   size = 'sm',
   variant = 'outline',
   className,
 }) => {
+  const { t } = useTranslation('site');
   const [copied, setCopied] = useState(false);
   const rawText = text || textToCopy || '';
 
@@ -41,7 +43,7 @@ export const CopyButton: React.FC<CopyButtonProps> = ({
       className={className}
       startIcon={copied ? <Check className="w-3.5 h-3.5 text-emerald-600" /> : <Copy className="w-3.5 h-3.5" />}
     >
-      {copied ? 'تم النسخ' : label}
+      {copied ? t('detail.copied') : label ?? t('detail.copy')}
     </Button>
   );
 };

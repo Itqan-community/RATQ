@@ -175,10 +175,11 @@ export const ContactPage: React.FC = () => {
                 {error && <Alert variant="error">{error}</Alert>}
 
                 <div>
-                  <label className="block text-sm font-semibold text-fg mb-1.5">
+                  <label htmlFor="contact-name" className="block text-sm font-semibold text-fg mb-1.5">
                     {isAr ? 'الاسم الكامل *' : 'Full Name *'}
                   </label>
                   <Input
+                    id="contact-name"
                     required
                     value={form.name}
                     onChange={(e) => setForm({ ...form, name: e.target.value })}
@@ -187,10 +188,11 @@ export const ContactPage: React.FC = () => {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-semibold text-fg mb-1.5">
+                  <label htmlFor="contact-email" className="block text-sm font-semibold text-fg mb-1.5">
                     {isAr ? 'البريد الإلكتروني *' : 'Email Address *'}
                   </label>
                   <Input
+                    id="contact-email"
                     type="email"
                     required
                     value={form.email}
@@ -200,10 +202,11 @@ export const ContactPage: React.FC = () => {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-semibold text-fg mb-1.5">
+                  <label htmlFor="contact-subject" className="block text-sm font-semibold text-fg mb-1.5">
                     {isAr ? 'موضوع الرسالة' : 'Topic'}
                   </label>
                   <Select
+                    id="contact-subject"
                     value={form.subject}
                     onChange={(e) => setForm({ ...form, subject: e.target.value })}
                     options={[
@@ -217,10 +220,11 @@ export const ContactPage: React.FC = () => {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-semibold text-fg mb-1.5">
+                  <label htmlFor="contact-message" className="block text-sm font-semibold text-fg mb-1.5">
                     {isAr ? 'الرسالة أو التفاصيل *' : 'Message *'}
                   </label>
                   <Textarea
+                    id="contact-message"
                     rows={5}
                     required
                     value={form.message}

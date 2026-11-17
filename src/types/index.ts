@@ -198,6 +198,21 @@ export interface Resource {
   created_at: string;
   updated_at: string;
 
+  // Live-source fields (Itqan CMS / Payload); absent on demo data.
+  source?: 'cms' | 'payload';
+  source_url?: string;
+  description_en?: string;
+  content_language?: 'ar' | 'en';
+  preview_images?: string[];
+  image_url?: string;
+  reciter_name?: string;
+  audio_url?: string;
+  audio_thumbnail?: string;
+  audio_quality?: string;
+  github_stats?: { stars: number | null; forks: number | null; open_issues: number | null; last_commit: string | null; fetched_at?: string | null };
+  github_commits?: { sha: string; message: string; author: string; date: string; url: string }[];
+  github_topics?: string[];
+
   // Joined fields for view
   publisher?: Publisher;
   license?: License;

@@ -1,8 +1,13 @@
-// Live Payload `resources` -> design Resource. Active only when NEXT_PUBLIC_PAYLOAD_API_URL is set;
-// unset = the in-memory mock. Only the beta deploy build sets it (inline at build time, never committed).
-import { DEMO_LICENSES, DEMO_PUBLISHERS } from './mockData';
+// Live resources (Payload + Itqan CMS) -> design Resource. Active only when NEXT_PUBLIC_PAYLOAD_API_URL is set;
+// unset = the in-memory mock (local/test builds). Production builds always set it (.env.production).
+import { DEMO_PUBLISHERS } from './mockData';
 import { mockRepo } from './supabase';
-import type { License, Resource } from '@/types';
+import { cmsIdFromSlug, fetchCmsDetail, fetchCmsResources } from './cmsResources';
+import { categoriesFor, isHttpUrl, licenseFor, safeUrl } from './resourceMapping';
+import { mediaUrl } from './resourceDetail';
+import type { Publisher, Resource } from '@/types';
+
+export { isHttpUrl };
 
 // Mirrors payload-backend/src/collections/Resources.ts (same shape live's payload-resource-mapper.ts reads).
 export interface PayloadResourceDoc {
@@ -16,61 +21,53 @@ export interface PayloadResourceDoc {
   documentation_url: string | null;
   github_url: string | null;
   website_url?: string | null;
+  content_language?: 'ar' | 'en' | null;
   license: string;
   itqan_badge: boolean;
   status: 'draft' | 'published' | 'archived';
   version: string | null;
+  audio_url?: string | null;
+  audio_thumbnail?: string | null;
+  reciter_name?: string | null;
+  audio_quality?: string | null;
+  // Public-safe owner (the users collection itself is private).
+  publisher?: { id: number; name: string } | null;
+  github_stats?: { stars: number | null; forks: number | null; open_issues: number | null; last_commit: string | null } | null;
+  github_commits?: { sha: string; message: string; author: string; date: string; url: string }[] | null;
+  github_topics?: unknown[] | null;
+  github_stats_fetched_at?: string | null;
   createdAt: string;
   updatedAt: string;
 }
 
 export const PAYLOAD_API_URL = process.env.NEXT_PUBLIC_PAYLOAD_API_URL || '';
 
-// Payload resource type -> design category id (same grouping the beta snapshot in betaResources.ts uses).
-const TYPE_CATEGORY: Record<string, string> = {
-  library: 'cat_dev', sdk: 'cat_dev', api: 'cat_dev', program: 'cat_dev', search: 'cat_dev',
-  dataset: 'cat_datasets', json: 'cat_datasets', linguistic: 'cat_datasets',
-  tafsir: 'cat_tafsir',
-  audio: 'cat_recitations', recitation: 'cat_recitations',
-  mushaf: 'cat_quran_sources', tajweed: 'cat_quran_sources', pdf: 'cat_quran_sources',
-  translation: 'cat_translations',
-  font: 'cat_fonts',
-};
-
-// "CC-BY-NC-ND-4.0" -> "cc-by-nc-nd" (design license ids). Unknown licenses (MIT, Apache...) get a
-// neutral synthesized entry so the UI never claims CC terms the resource doesn't have.
-function licenseFor(raw: string): License {
-  const id = raw.toLowerCase().replace(/-\d+(\.\d+)*$/, '');
-  return (
-    DEMO_LICENSES.find((l) => l.id === id) ?? {
-      id: `spdx-${id}`,
-      name_ar: raw,
-      name_en: raw,
-      url: '',
-      allows_commercial: false,
-      requires_attribution: false,
-      requires_share_alike: false,
-      allows_modification: false,
-      is_osi_approved: false,
-    }
-  );
+// Docs without a publisher (older rows) are attributed to the community publisher.
+function publisherFor(doc: PayloadResourceDoc): Publisher {
+  const community = DEMO_PUBLISHERS.find((p) => p.id === 'pub_ratq') ?? DEMO_PUBLISHERS[0];
+  if (!doc.publisher) return community;
+  return {
+    ...community,
+    id: `payload_pub_${doc.publisher.id}`,
+    slug: `payload-publisher-${doc.publisher.id}`,
+    name_ar: doc.publisher.name,
+    name_en: doc.publisher.name,
+    kind: 'individual',
+    description_ar: '',
+    verification_status: 'unverified',
+  };
 }
 
-// Only http(s) links may reach an href: the backend validates website_url only, and the API can be called directly.
-export function isHttpUrl(v: string): boolean {
-  try {
-    const p = new URL(v).protocol;
-    return p === 'http:' || p === 'https:';
-  } catch {
-    return false;
-  }
+// The cron writes an all-null group when a repo has not been fetched yet; show nothing rather than zeros.
+function githubStats(doc: PayloadResourceDoc): Resource['github_stats'] {
+  const s = doc.github_stats;
+  if (!s || [s.stars, s.forks, s.open_issues, s.last_commit].every((v) => v == null)) return undefined;
+  return { ...s, fetched_at: doc.github_stats_fetched_at };
 }
-const safeUrl = (v?: string | null): string | undefined => (v && isHttpUrl(v) ? v : undefined);
 
 export function toDesignResource(doc: PayloadResourceDoc): Resource {
   const license = licenseFor(doc.license);
-  // Payload has no publisher entity (owner is a user); attribute to the community publisher.
-  const publisher = DEMO_PUBLISHERS.find((p) => p.id === 'pub_ratq') ?? DEMO_PUBLISHERS[0];
+  const publisher = publisherFor(doc);
   return {
     id: `payload_${doc.id}`,
     slug: `payload-${doc.slug}`,
@@ -88,9 +85,11 @@ export function toDesignResource(doc: PayloadResourceDoc): Resource {
     repo_url: safeUrl(doc.github_url),
     docs_url: safeUrl(doc.documentation_url),
     homepage_url: safeUrl(doc.website_url),
+    image_url: mediaUrl(typeof doc.image === 'object' && doc.image ? doc.image.url : undefined, PAYLOAD_API_URL),
     tech_stack: [],
-    languages: ['ar'],
-    categories: TYPE_CATEGORY[doc.type] ? [TYPE_CATEGORY[doc.type]] : [],
+    languages: [doc.content_language ?? 'ar'],
+    content_language: doc.content_language ?? undefined,
+    categories: categoriesFor(doc.type),
     tags: [],
     contains_quranic_text: false,
     latest_version: doc.version ?? undefined,
@@ -102,22 +101,81 @@ export function toDesignResource(doc: PayloadResourceDoc): Resource {
     featured_rank: 0,
     created_at: doc.createdAt,
     updated_at: doc.updatedAt,
+    source: 'payload',
+    audio_url: safeUrl(doc.audio_url),
+    audio_thumbnail: safeUrl(doc.audio_thumbnail),
+    reciter_name: doc.reciter_name ?? undefined,
+    audio_quality: doc.audio_quality ?? undefined,
+    github_stats: githubStats(doc),
+    github_commits: doc.github_commits?.length ? doc.github_commits : undefined,
+    github_topics: doc.github_topics?.filter((t): t is string => typeof t === 'string'),
     publisher,
     license,
   };
 }
 
-// Fetch published resources once at boot and merge them into the repo.
-// Returns false when the live API is unreachable so the caller can show an error instead of silently serving mock data.
-export async function hydrateFromPayload(): Promise<boolean> {
-  if (!PAYLOAD_API_URL) return true;
-  try {
-    const res = await fetch(`${PAYLOAD_API_URL}/resources?limit=200&depth=1&where[status][equals]=published`);
-    if (!res.ok) return false;
-    const { docs } = (await res.json()) as { docs: PayloadResourceDoc[] };
-    mockRepo.setLiveResources(docs.map(toDesignResource));
-    return true;
-  } catch {
-    return false; // network/CORS failure
-  }
+// Payload paginates itself (default 10/page). Live caps at 15 pages of 100; same 100/page, cap raised so the
+// catalog never silently truncates before ~5000 docs.
+const PAGE_SIZE = 100;
+const MAX_PAGES = 50;
+
+interface PayloadList { docs: PayloadResourceDoc[]; totalDocs?: number; totalPages?: number }
+
+async function fetchPayloadPage(page: number): Promise<PayloadList | null> {
+  const res = await fetch(
+    `${PAYLOAD_API_URL}/resources?limit=${PAGE_SIZE}&page=${page}&depth=1&where[status][equals]=published`,
+    { signal: AbortSignal.timeout(15_000) }, // a hung API must degrade to "source down", not hold the boot screen
+  );
+  return res.ok ? res.json() : null;
+}
+
+async function fetchPayloadResources(): Promise<Resource[]> {
+  const first = await fetchPayloadPage(1);
+  if (!first) throw new Error('Payload list failed');
+  const totalPages = Math.min(MAX_PAGES, first.totalPages ?? Math.ceil((first.totalDocs ?? first.docs.length) / PAGE_SIZE));
+  const rest = await Promise.all(
+    Array.from({ length: Math.max(0, totalPages - 1) }, (_, i) => fetchPayloadPage(i + 2).catch(() => null)),
+  );
+  return [first, ...rest].filter((p): p is PayloadList => p !== null).flatMap((p) => p.docs.map(toDesignResource));
+}
+
+// Fetch every source once at boot and merge into the repo (CMS first, like live's SOURCES order). Each source
+// fails on its own: one down degrades to the other, only both down is a failure the caller must show with a retry.
+// Pure fetch of every source (no repo mutation): shared by the browser boot below and the server SEO pages.
+export async function fetchAllResources(): Promise<{ ok: boolean; failed: ('cms' | 'payload')[]; resources: Resource[] }> {
+  if (!PAYLOAD_API_URL) return { ok: true, failed: [], resources: [] };
+  const [cms, payload] = await Promise.allSettled([fetchCmsResources(), fetchPayloadResources()]);
+  const failed: ('cms' | 'payload')[] = [];
+  if (cms.status === 'rejected') { failed.push('cms'); console.error('Source "cms" failed:', cms.reason); }
+  if (payload.status === 'rejected') { failed.push('payload'); console.error('Source "payload" failed:', payload.reason); }
+  return {
+    ok: failed.length < 2,
+    failed,
+    resources: [...(cms.status === 'fulfilled' ? cms.value : []), ...(payload.status === 'fulfilled' ? payload.value : [])],
+  };
+}
+
+export async function hydrateResources(): Promise<{ ok: boolean; failed: ('cms' | 'payload')[] }> {
+  if (!PAYLOAD_API_URL) return { ok: true, failed: [] };
+  const { ok, failed, resources } = await fetchAllResources();
+  if (ok) mockRepo.setLiveResources(resources);
+  return { ok, failed };
+}
+
+// Returns false only when no source could be reached, so the caller can show an error instead of mock data.
+export const hydrateFromPayload = async (): Promise<boolean> => (await hydrateResources()).ok;
+
+// Direct lookup for slugs the boot list does not hold (CMS asset added since boot, one source down at boot) and
+// CMS detail enrichment. null = unknown slug or mock mode (demo slugs are never resolved); throws = source unreachable.
+export async function fetchResourceBySlug(slug: string): Promise<Resource | null> {
+  if (!PAYLOAD_API_URL) return null;
+  const cmsId = cmsIdFromSlug(slug);
+  if (cmsId) return fetchCmsDetail(cmsId);
+  if (!slug.startsWith('payload-')) return null;
+  const res = await fetch(
+    `${PAYLOAD_API_URL}/resources?where[slug][equals]=${encodeURIComponent(slug.slice('payload-'.length))}&where[status][equals]=published&limit=1&depth=1`,
+  );
+  if (!res.ok) throw new Error(`Payload lookup failed (${res.status})`);
+  const doc = ((await res.json()) as PayloadList).docs[0];
+  return doc ? toDesignResource(doc) : null;
 }

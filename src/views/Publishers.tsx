@@ -1,11 +1,14 @@
 // src/views/Publishers.tsx
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import { mockRepo } from '@/lib/supabase';
 import { Button } from '@/components/ui/Button';
 import { CheckCircle2, ArrowLeft } from 'lucide-react';
 
 export const Publishers: React.FC = () => {
+  const { t, i18n } = useTranslation('site');
+  const en = i18n.language === 'en';
   const publishers = mockRepo.getPublishers();
   const resources = mockRepo.getResources();
 
@@ -13,15 +16,15 @@ export const Publishers: React.FC = () => {
     <div className="max-w-container mx-auto px-4 sm:px-6 py-10 w-full text-start">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
         <div>
-          <h1 className="text-2xl sm:text-3xl font-bold text-fg">دليل الناشرين والمؤسسات</h1>
+          <h1 className="text-2xl sm:text-3xl font-bold text-fg">{t('publishers.p00')}</h1>
           <p className="text-xs sm:text-sm text-fg-subtle mt-1">
-            الجهات والبيوت العلمية والمطورون المعتمدون لنشر وصيانة الأصول والبرمجيات القرآنية.
+            {t('publishers.p01')}
           </p>
         </div>
 
         <Link to="/publisher/claim">
           <Button variant="outline" size="sm">
-            المطالبة بملكية مورد أو الانضمام
+            {t('publishers.p02')}
           </Button>
         </Link>
       </div>
@@ -41,9 +44,9 @@ export const Publishers: React.FC = () => {
                     {pub.name_ar.charAt(0)}
                   </div>
                   <div>
-                    <h3 className="text-sm font-bold text-fg">{pub.name_ar}</h3>
+                    <h3 className="text-sm font-bold text-fg">{en ? pub.name_en || pub.name_ar : pub.name_ar}</h3>
                     <span className="text-[11px] text-emerald-600 font-semibold flex items-center gap-1 mt-0.5">
-                      <CheckCircle2 className="w-3.5 h-3.5" /> ناشر موثق
+                      <CheckCircle2 className="w-3.5 h-3.5" /> {t('publishers.verified_publisher')}
                     </span>
                   </div>
                 </div>
@@ -55,14 +58,14 @@ export const Publishers: React.FC = () => {
 
               <div className="pt-4 border-t border-border-subtle flex items-center justify-between text-xs">
                 <span className="font-semibold text-fg-subtle">
-                  {pubResources.length} موارد منشورة
+                  {t('publishers.published_count', { count: pubResources.length })}
                 </span>
 
                 <Link
                   to={`/publishers/${pub.slug}`}
                   className="inline-flex items-center gap-1 text-ratq-700 font-bold hover:underline"
                 >
-                  <span>عرض الملف</span>
+                  <span>{t('publishers.p03')}</span>
                   <ArrowLeft className="w-3.5 h-3.5 rtl:rotate-0 rotate-180" />
                 </Link>
               </div>

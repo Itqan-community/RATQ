@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
+import '@/i18n/config';
 import { ResourceAppBadges } from '@/components/resources/ResourceAppBadges';
 import { EcosystemApp } from '@/types';
 

@@ -62,7 +62,7 @@ describe('submitReport', () => {
   });
 });
 
-import { toDesignReport, fetchReports, resolveReport } from '@/lib/payloadReports';
+import { toDesignReport, fetchReports, fetchMyReports, resolveReport } from '@/lib/payloadReports';
 
 const reportDoc = (over = {}) => ({
   id: 4, resource: { id: 7, name: 'Tafsir API' }, reporter: 3, reason: 'inaccurate', details: '[sacred_error] wrong ayah',
@@ -124,5 +124,35 @@ describe('fetchReports / resolveReport', () => {
     vi.stubGlobal('fetch', g);
     expect(await resolveReport('rep_001')).toBeTruthy();
     expect(g).not.toHaveBeenCalled();
+  });
+});
+
+describe('fetchMyReports', () => {
+  const doc = { id: 3, resource: { id: 7, name: 'Tafsir' }, reporter: 5, reason: 'spam', details: '[abuse] bad', status: 'open', createdAt: '2026-01-01T00:00:00.000Z' };
+
+  it('filters by reporter = me (server also returns reports on my resources) and maps rows', async () => {
+    const f = vi.fn(() => ok({ docs: [doc] }));
+    vi.stubGlobal('fetch', f);
+    const rows = await fetchMyReports('payload_user_5');
+    const [url, init] = f.mock.calls[0] as unknown as [string, RequestInit];
+    expect(url).toBe(`${API}/reports?where[reporter][equals]=5&depth=1&limit=100&sort=-createdAt`);
+    expect(init.credentials).toBe('include');
+    expect(rows).toHaveLength(1);
+    expect(rows[0]).toMatchObject({ id: 'payload_report_3', reason: 'abuse', target_title: 'Tafsir', status: 'open' });
+  });
+
+  it('guest / non-payload profile: no request, empty list', async () => {
+    const f = vi.fn();
+    vi.stubGlobal('fetch', f);
+    expect(await fetchMyReports('user_dev_001')).toEqual([]);
+    expect(await fetchMyReports('')).toEqual([]);
+    expect(f).not.toHaveBeenCalled();
+  });
+
+  it('empty list on server refusal or network failure', async () => {
+    vi.stubGlobal('fetch', vi.fn(() => fail(403, 'no')));
+    expect(await fetchMyReports('payload_user_5')).toEqual([]);
+    vi.stubGlobal('fetch', vi.fn(() => Promise.reject(new TypeError('network'))));
+    expect(await fetchMyReports('payload_user_5')).toEqual([]);
   });
 });

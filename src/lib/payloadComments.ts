@@ -9,7 +9,7 @@ interface PayloadCommentDoc {
   content: string;
   author: number | { id: number };
   author_name: string;
-  resource: number | { id: number };
+  resource: number | { id: number; name?: string };
   createdAt: string;
 }
 
@@ -37,12 +37,29 @@ export async function fetchComments(resourceId: string): Promise<Review[]> {
   if (Number.isNaN(n)) return [];
   try {
     const res = await fetch(
-      `${payloadBase()}/comments?where[resource][equals]=${n}&sort=-createdAt&limit=50&depth=0`,
+      `${payloadBase()}/comments?where[resource][equals]=${n}&sort=-createdAt&limit=100&depth=0`,
       { credentials: 'include' }
     );
     if (!res.ok) return [];
     const { docs } = (await res.json()) as { docs: PayloadCommentDoc[] };
     return docs.map(toDesignReview);
+  } catch {
+    return [];
+  }
+}
+
+// Every comment I wrote, newest first, with the resource name (depth=1) so the list can say where it was posted.
+export async function fetchMyComments(profileId: string): Promise<{ review: Review; resourceName?: string }[]> {
+  const me = /^payload_user_(\d+)$/.exec(profileId);
+  if (!me) return [];
+  try {
+    const res = await fetch(
+      `${payloadBase()}/comments?where[author][equals]=${me[1]}&sort=-createdAt&depth=1&limit=100`,
+      { credentials: 'include' }
+    );
+    if (!res.ok) return [];
+    const { docs } = (await res.json()) as { docs: PayloadCommentDoc[] };
+    return docs.map((d) => ({ review: toDesignReview(d), resourceName: typeof d.resource === 'object' ? d.resource.name : undefined }));
   } catch {
     return [];
   }
@@ -58,7 +75,7 @@ export async function postComment(resourceId: string, content: string): Promise<
       credentials: 'include',
       body: JSON.stringify({ resource, content }),
     });
-    return res.ok ? null : await errorMessage(res, 'Could not post comment');
+    return res.ok ? null : await errorMessage(res, 'Could not post comment', { authenticated: true });
   } catch {
     return 'Network error, please try again.';
   }
@@ -69,7 +86,7 @@ export async function deleteComment(commentId: string): Promise<string | null> {
   if (Number.isNaN(n)) return NOT_LIVE;
   try {
     const res = await fetch(`${payloadBase()}/comments/${n}`, { method: 'DELETE', credentials: 'include' });
-    return res.ok ? null : await errorMessage(res, 'Could not delete comment');
+    return res.ok ? null : await errorMessage(res, 'Could not delete comment', { authenticated: true });
   } catch {
     return 'Network error, please try again.';
   }

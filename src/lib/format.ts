@@ -17,7 +17,9 @@ export function formatDate(
 ): string {
   if (!dateString) return '';
   const date = new Date(dateString);
-  const locale = options?.locale || 'ar-SA';
+  // Follows the site language (set on <html lang> by setLanguage); Arabic by default like live.
+  const siteLang = typeof document !== 'undefined' ? document.documentElement.lang : 'ar';
+  const locale = options?.locale || (siteLang === 'en' ? 'en-US' : 'ar-SA');
 
   const gregorian = new Intl.DateTimeFormat(locale, {
     year: 'numeric',
@@ -39,6 +41,16 @@ export function formatDate(
   }
 
   return gregorian;
+}
+
+// Same folding as live's shared/utils normalizeArabic so catalog search matches across tashkeel, alef forms, ya and ta marbuta.
+export function normalizeArabic(text: string): string {
+  return text
+    .replace(/[ؐ-ًؚ-ٟ]/g, '')
+    .replace(/[أإآٱ]/g, 'ا')
+    .replace(/ى/g, 'ي')
+    .replace(/ة/g, 'ه')
+    .toLowerCase();
 }
 
 export function formatFileSize(bytes: number): string {

@@ -11,7 +11,7 @@ import { DEMO_API_KEYS, DEMO_RESOURCES } from '@/lib/mockData';
 import { ApiKey } from '@/types';
 import { mockRepo } from '@/lib/supabase';
 import { isLive } from '@/lib/payloadAuth';
-import { createKey, hydrateKeys, revokeKey, rotateKey } from '@/lib/payloadKeys';
+import { createKey, hydrateKeys, revokeKey, rotateKey, scopeOf, type KeyScope } from '@/lib/payloadKeys';
 import { KeyTable } from '@/components/keys/KeyTable';
 import { ApiKeyRevealDialog } from '@/components/keys/ApiKeyRevealDialog';
 import { Plus, ShieldCheck, Lock } from 'lucide-react';
@@ -29,6 +29,7 @@ export const AppKeysPage: React.FC = () => {
   const [isCreateOpen, setIsCreateOpen] = useState(false);
   const [newKeyName, setNewKeyName] = useState('');
   const [selectedResourceId, setSelectedResourceId] = useState((live ? resources[0] : DEMO_RESOURCES[2])?.id ?? '');
+  const [newKeyScope, setNewKeyScope] = useState<KeyScope>('read');
   const [revealedKey, setRevealedKey] = useState<string | null>(null);
   const [keyError, setKeyError] = useState<string | null>(null);
 
@@ -42,7 +43,7 @@ export const AppKeysPage: React.FC = () => {
     if (!newKeyName.trim()) return;
 
     if (live) {
-      const { key, error } = await createKey(selectedResourceId, newKeyName.trim());
+      const { key, error } = await createKey(selectedResourceId, newKeyName.trim(), newKeyScope);
       if (!key) {
         setKeyError(error);
         return;
@@ -86,7 +87,7 @@ export const AppKeysPage: React.FC = () => {
     if (live && keyId.startsWith('payload_key_')) {
       const old = keys.find((k) => k.id === keyId);
       if (!old) return;
-      const { key, error } = await rotateKey(keyId, old.resource_id, old.name_ar);
+      const { key, error } = await rotateKey(keyId, old.resource_id, old.name_ar, scopeOf(old.scopes));
       setKeyError(error);
       if (key) setRevealedKey(key);
       await reloadLiveKeys();
@@ -207,10 +208,11 @@ export const AppKeysPage: React.FC = () => {
           </div>
 
           <div>
-            <label className="block text-xs font-semibold text-fg mb-1.5">
+            <label htmlFor="key-target-resource" className="block text-xs font-semibold text-fg mb-1.5">
               {isAr ? 'المورد المصرح به' : 'Target Resource'}
             </label>
             <Select
+              id="key-target-resource"
               value={selectedResourceId}
               onChange={(e) => setSelectedResourceId(e.target.value)}
               options={resources.map((r) => ({
@@ -219,6 +221,23 @@ export const AppKeysPage: React.FC = () => {
               }))}
             />
           </div>
+
+          {live && (
+            <div>
+              <label htmlFor="key-scope" className="block text-xs font-semibold text-fg mb-1.5">
+                {isAr ? 'الصلاحيات' : 'Scope'}
+              </label>
+              <Select
+                id="key-scope"
+                value={newKeyScope}
+                onChange={(e) => setNewKeyScope(e.target.value as KeyScope)}
+                options={[
+                  { value: 'read', label: isAr ? 'قراءة فقط' : 'Read only' },
+                  { value: 'read,write', label: isAr ? 'قراءة وكتابة' : 'Read and write' },
+                ]}
+              />
+            </div>
+          )}
 
           {!live && (
           <div className="p-3 rounded-lg bg-canvas-subtle border border-border text-2xs text-fg-muted flex items-start gap-2">

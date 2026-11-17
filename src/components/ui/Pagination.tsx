@@ -1,5 +1,6 @@
 // src/components/ui/Pagination.tsx
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { Button } from './Button';
 import { DirectionalIcon } from './DirectionalIcon';
 
@@ -14,6 +15,7 @@ export const Pagination: React.FC<PaginationProps> = ({
   totalPages,
   onPageChange,
 }) => {
+  const { t } = useTranslation('site');
   if (totalPages <= 1) return null;
 
   return (
@@ -25,11 +27,11 @@ export const Pagination: React.FC<PaginationProps> = ({
         onClick={() => onPageChange(currentPage - 1)}
         startIcon={<DirectionalIcon name="arrow-prev" />}
       >
-        السابق
+        {t('ui.prev')}
       </Button>
 
       <span className="text-xs font-medium text-fg-muted">
-        صفحة {currentPage} من {totalPages}
+        {t('ui.page_of', { current: currentPage, total: totalPages })}
       </span>
 
       <Button
@@ -39,7 +41,7 @@ export const Pagination: React.FC<PaginationProps> = ({
         onClick={() => onPageChange(currentPage + 1)}
         endIcon={<DirectionalIcon name="arrow-next" />}
       >
-        التالي
+        {t('ui.next')}
       </Button>
     </div>
   );

@@ -1,8 +1,10 @@
 // src/components/layout/CommandPalette.tsx
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { Search, X, Layers, BookOpen, Shield, Code2, ArrowLeft } from 'lucide-react';
 import { mockRepo } from '@/lib/supabase';
+import { localizeResource } from '@/lib/localizeResource';
 
 interface CommandPaletteProps {
   isOpen: boolean;
@@ -10,6 +12,8 @@ interface CommandPaletteProps {
 }
 
 export const CommandPalette: React.FC<CommandPaletteProps> = ({ isOpen, onClose }) => {
+  const { t, i18n } = useTranslation('site');
+  const locale = i18n.language === 'en' ? 'en' : 'ar';
   const [query, setQuery] = useState('');
   const navigate = useNavigate();
 
@@ -37,10 +41,10 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({ isOpen, onClose 
   ).slice(0, 5);
 
   const quickLinks = [
-    { label: 'الكتالوج الشامل', path: '/resources', icon: BookOpen },
-    { label: 'دليل الناشرين', path: '/publishers', icon: Layers },
-    { label: 'معيار إتقان للجودة', path: '/standards', icon: Shield },
-    { label: 'بوابة المطور', path: '/app', icon: Code2 },
+    { label: t('palette.catalog'), path: '/resources', icon: BookOpen },
+    { label: t('palette.publishers'), path: '/publishers', icon: Layers },
+    { label: t('palette.standard'), path: '/standards', icon: Shield },
+    { label: t('palette.developer'), path: '/app', icon: Code2 },
   ];
 
   return (
@@ -55,7 +59,7 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({ isOpen, onClose 
             type="text"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            placeholder="ابحث عن مورد، مكتبة، حزمة، أو تصنيف..."
+            placeholder={t('palette.placeholder')}
             autoFocus
             className="w-full bg-transparent text-sm text-fg placeholder:text-fg-subtle focus:outline-none"
           />
@@ -71,9 +75,11 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({ isOpen, onClose 
           {filteredResources.length > 0 && (
             <div className="mb-3">
               <span className="text-[11px] font-bold text-fg-subtle px-3 py-1 block uppercase">
-                الموارد والبرمجيات
+                {t('palette.resources')}
               </span>
-              {filteredResources.map((res) => (
+              {filteredResources.map((res) => {
+                const loc = localizeResource(res, locale);
+                return (
                 <button
                   key={res.id}
                   onClick={() => {
@@ -85,19 +91,20 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({ isOpen, onClose 
                   <div className="flex items-center gap-2.5">
                     <BookOpen className="w-4 h-4 text-ratq-600 shrink-0" />
                     <div>
-                      <p className="font-bold text-fg">{res.title_ar}</p>
-                      <p className="text-2xs text-fg-subtle">{res.summary_ar.slice(0, 50)}...</p>
+                      <p dir={loc.titleDir} className="font-bold text-fg">{loc.title}</p>
+                      <p dir={loc.descriptionDir} className="text-2xs text-fg-subtle">{loc.summary.slice(0, 50)}...</p>
                     </div>
                   </div>
                   <ArrowLeft className="w-3.5 h-3.5 text-fg-subtle rtl:rotate-0 rotate-180" />
                 </button>
-              ))}
+                );
+              })}
             </div>
           )}
 
           <div>
             <span className="text-[11px] font-bold text-fg-subtle px-3 py-1 block uppercase">
-              مسارات سريعة
+              {t('palette.quick_links')}
             </span>
             {quickLinks.map((link) => {
               const Icon = link.icon;
@@ -120,8 +127,8 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({ isOpen, onClose 
 
         {/* Footer info */}
         <div className="px-4 py-2 border-t border-border-subtle bg-muted/40 flex items-center justify-between text-[11px] text-fg-subtle">
-          <span>التنقل بالأسهم والمفاتيح</span>
-          <span>ESC للإغلاق</span>
+          <span>{t('palette.nav_hint')}</span>
+          <span>{t('palette.esc')}</span>
         </div>
       </div>
     </div>

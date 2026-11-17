@@ -1,6 +1,6 @@
 // Live-mode create + edit form. Only fields Payload stores; the 7-step wizard (PublisherResourceNew) stays for mock mode.
 // Create saves a DRAFT; publishing happens from the resource list (setResourceStatus).
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { Card } from '@/components/ui/Card';
@@ -10,6 +10,8 @@ import { Textarea } from '@/components/ui/Textarea';
 import { Select } from '@/components/ui/Select';
 import { Alert } from '@/components/ui/Alert';
 import { useAuthStore } from '@/store/useAuthStore';
+import { slugFromName } from '@/lib/slug';
+import { RESOURCE_TYPES } from '@/lib/constants';
 import { hydrateFromPayload } from '@/lib/payloadResources';
 import {
   PAYLOAD_TYPES,
@@ -35,9 +37,13 @@ export const PublisherResourceFormPage: React.FC = () => {
   const [form, setForm] = useState<WizardForm>(EMPTY);
   const [cover, setCover] = useState<File | null>(null);
   const [uploaded, setUploaded] = useState<{ file: File; id: number } | null>(null);
+  const [currentCover, setCurrentCover] = useState<string | undefined>();
   const [loading, setLoading] = useState(Boolean(id));
   const [error, setError] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
+  // Preview of the picked file; revoked when it changes so object URLs never pile up.
+  const coverPreview = useMemo(() => (cover ? URL.createObjectURL(cover) : undefined), [cover]);
+  useEffect(() => () => { if (coverPreview) URL.revokeObjectURL(coverPreview); }, [coverPreview]);
   const set = (k: keyof WizardForm) => (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) =>
     setForm((f) => ({ ...f, [k]: e.target.value }));
 
@@ -45,9 +51,10 @@ export const PublisherResourceFormPage: React.FC = () => {
     // Wait for the session profile (direct visit / refresh): the loader checks ownership against it.
     if (!id || !myId.startsWith('payload_user_')) return;
     // Direct GET: independent of the list's 100-item cap. Form values come from the raw doc (see docToForm).
-    void fetchResourceById(`payload_${id}`, myId).then(({ form: f, error: e }) => {
+    void fetchResourceById(`payload_${id}`, myId).then(({ form: f, resource, error: e }) => {
       if (f) {
         setForm(f);
+        setCurrentCover(resource?.image_url);
         setError(null);
       } else setError(e);
       setLoading(false);
@@ -97,13 +104,21 @@ export const PublisherResourceFormPage: React.FC = () => {
       {error && <Alert variant="error">{error}</Alert>}
 
       <Card className="p-6 space-y-4">
-        <Input label={isAr ? 'الاسم' : 'Name'} required value={form.title_ar} onChange={set('title_ar')} />
+        <div>
+          <Input label={isAr ? 'الاسم' : 'Name'} required value={form.title_ar} onChange={set('title_ar')} />
+          {!id && slugFromName(form.title_ar) && (
+            <p className="text-xs text-fg-subtle mt-1" dir="ltr">/{slugFromName(form.title_ar)}</p>
+          )}
+        </div>
         <Select
           label={isAr ? 'النوع' : 'Type'}
           value={form.resource_type}
           onChange={set('resource_type')}
           // A stored legacy type stays selectable so the dropdown never displays a value it won't send.
-          options={[...new Set([form.resource_type, ...PAYLOAD_TYPES])].map((t) => ({ value: t, label: t }))}
+          options={[...new Set([form.resource_type, ...PAYLOAD_TYPES])].map((t) => {
+            const meta = RESOURCE_TYPES.find((x) => x.code === t);
+            return { value: t, label: meta ? (isAr ? meta.name_ar : meta.name_en) : t };
+          })}
         />
         <Input label={isAr ? 'نبذة قصيرة' : 'Short description'} required maxLength={160} value={form.summary_ar} onChange={set('summary_ar')} />
         <Textarea label={isAr ? 'الوصف الكامل' : 'Full description'} rows={6} value={form.readme_ar} onChange={set('readme_ar')} />
@@ -125,6 +140,10 @@ export const PublisherResourceFormPage: React.FC = () => {
             onChange={(e) => setCover(e.target.files?.[0] ?? null)}
             className="block w-full text-sm text-fg"
           />
+          {(coverPreview ?? currentCover) && (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img src={coverPreview ?? currentCover} alt="" className="mt-2 h-24 rounded-lg border border-border object-cover" />
+          )}
           <p className="text-xs text-fg-subtle mt-1">PNG, JPEG, GIF, WebP</p>
         </div>
       </Card>

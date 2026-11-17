@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
-import { safeCtaUrl, toAnnouncement, fetchAnnouncements } from '@/lib/payloadAnnouncements';
+import { safeCtaUrl, toAnnouncement, fetchAnnouncements, localizeAnnouncementText } from '@/lib/payloadAnnouncements';
 
 const API = 'http://payload.test/api';
 const ok = (body: unknown = {}) => Promise.resolve(new Response(JSON.stringify(body), { status: 200 }));
@@ -24,6 +24,20 @@ describe('safeCtaUrl (admin-entered, rendered as a link)', () => {
   it('rejects script/data/other schemes, protocol-relative and empty values', () => {
     for (const bad of ['javascript:alert(1)', 'JaVaScRiPt:alert(1)', 'data:text/html,x', 'vbscript:x', '//evil.test', '', null, undefined])
       expect(safeCtaUrl(bad as never)).toBeNull();
+  });
+});
+
+describe('localizeAnnouncementText', () => {
+  it('picks the half in the active locale regardless of AR|EN order', () => {
+    expect(localizeAnnouncementText('تصفح الموارد | Browse resources', 'en')).toBe('Browse resources');
+    expect(localizeAnnouncementText('تصفح الموارد | Browse resources', 'ar')).toBe('تصفح الموارد');
+    expect(localizeAnnouncementText('Browse resources | تصفح الموارد', 'en')).toBe('Browse resources');
+    expect(localizeAnnouncementText('Browse resources | تصفح الموارد', 'ar')).toBe('تصفح الموارد');
+  });
+
+  it('leaves non-bilingual text untouched', () => {
+    for (const s of ['Plain text', 'a | b', 'a | b | c', 'only | ', ' | x', 'عربي | آخر', ''])
+      expect(localizeAnnouncementText(s, 'en')).toBe(s);
   });
 });
 

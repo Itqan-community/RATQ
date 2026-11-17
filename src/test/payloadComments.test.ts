@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
-import { toDesignReview, fetchComments, postComment, deleteComment } from '@/lib/payloadComments';
+import { toDesignReview, fetchComments, fetchMyComments, postComment, deleteComment } from '@/lib/payloadComments';
 
 const API = 'http://payload.test/api';
 const ok = (body: unknown = {}) => Promise.resolve(new Response(JSON.stringify(body), { status: 200 }));
@@ -39,6 +39,7 @@ describe('fetchComments', () => {
     expect(url).toContain(`${API}/comments?`);
     expect(url).toContain('where[resource][equals]=7');
     expect(url).toContain('sort=-createdAt');
+    expect(url).toContain('limit=100'); // old prod's cap; 50 silently hid older comments
   });
 
   it('returns [] for non-live resources (no request) and on failure', async () => {
@@ -90,5 +91,35 @@ describe('deleteComment', () => {
     vi.stubGlobal('fetch', f);
     expect(await deleteComment('rev_1')).toBeTruthy();
     expect(f).not.toHaveBeenCalled();
+  });
+});
+
+describe('fetchMyComments', () => {
+  const doc = { id: 11, content: 'jazak Allah', author: 5, author_name: 'Sara', resource: { id: 7, name: 'Tafsir' }, createdAt: '2026-01-01T00:00:00.000Z' };
+
+  it('filters by author = me and keeps the resource name for display', async () => {
+    const f = vi.fn(() => Promise.resolve(new Response(JSON.stringify({ docs: [doc] }), { status: 200 })));
+    vi.stubGlobal('fetch', f);
+    const rows = await fetchMyComments('payload_user_5');
+    const [url, init] = f.mock.calls[0] as unknown as [string, RequestInit];
+    expect(url).toBe(`${API}/comments?where[author][equals]=5&sort=-createdAt&depth=1&limit=100`);
+    expect(init.credentials).toBe('include');
+    expect(rows).toHaveLength(1);
+    expect(rows[0].review).toMatchObject({ id: 'payload_comment_11', resource_id: 'payload_7', body_ar: 'jazak Allah' });
+    expect(rows[0].resourceName).toBe('Tafsir');
+  });
+
+  it('guest / non-payload profile: no request, empty list', async () => {
+    const f = vi.fn();
+    vi.stubGlobal('fetch', f);
+    expect(await fetchMyComments('user_dev_001')).toEqual([]);
+    expect(f).not.toHaveBeenCalled();
+  });
+
+  it('empty list on server refusal or network failure', async () => {
+    vi.stubGlobal('fetch', vi.fn(() => Promise.resolve(new Response('{}', { status: 500 }))));
+    expect(await fetchMyComments('payload_user_5')).toEqual([]);
+    vi.stubGlobal('fetch', vi.fn(() => Promise.reject(new TypeError('network'))));
+    expect(await fetchMyComments('payload_user_5')).toEqual([]);
   });
 });

@@ -1,5 +1,5 @@
 // src/views/ForgotPassword.tsx
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { Card } from '@/components/ui/Card';
@@ -9,6 +9,9 @@ import { Alert } from '@/components/ui/Alert';
 import { Mail, ArrowLeft, ArrowRight, CheckCircle2 } from 'lucide-react';
 import { DirectionalIcon } from '@/components/ui/DirectionalIcon';
 import { forgotPassword, isLive } from '@/lib/payloadAuth';
+import { GuestOnly } from '@/components/layout/GuestOnly';
+
+const RESEND_COOLDOWN_S = 30;
 
 export const ForgotPasswordPage: React.FC = () => {
   const { i18n } = useTranslation();
@@ -18,20 +21,23 @@ export const ForgotPasswordPage: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [sent, setSent] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [cooldown, setCooldown] = useState(0);
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!email) {
-      setError(isAr ? 'يرجى إدخال عنوان البريد الإلكتروني' : 'Please provide your email address');
-      return;
-    }
+  useEffect(() => {
+    if (cooldown <= 0) return;
+    const t = setTimeout(() => setCooldown((c) => c - 1), 1000);
+    return () => clearTimeout(t);
+  }, [cooldown]);
 
+  // Shared by the first send and the resend button.
+  const send = async () => {
     setLoading(true);
     setError(null);
     if (isLive()) {
       try {
         await forgotPassword(email);
         setSent(true);
+        setCooldown(RESEND_COOLDOWN_S);
       } catch (err) {
         setError(err instanceof Error ? err.message : String(err));
       }
@@ -41,10 +47,21 @@ export const ForgotPasswordPage: React.FC = () => {
     setTimeout(() => {
       setLoading(false);
       setSent(true);
+      setCooldown(RESEND_COOLDOWN_S);
     }, 600);
   };
 
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!email) {
+      setError(isAr ? 'يرجى إدخال عنوان البريد الإلكتروني' : 'Please provide your email address');
+      return;
+    }
+    await send();
+  };
+
   return (
+    <GuestOnly>
     <div className="container mx-auto px-4 py-12 flex items-center justify-center min-h-[calc(100vh-16rem)]">
       <div className="w-full max-w-md">
         <div className="text-center mb-8">
@@ -77,6 +94,23 @@ export const ForgotPasswordPage: React.FC = () => {
                   ? `إذا كان الحساب (${email}) مسجلاً لدينا، فستصلك رسالة تحتوي على تعليمات إعادة الضبط خلال دقائق.`
                   : `If an account with (${email}) exists, instructions have been sent.`}
               </p>
+              {error && <Alert variant="error">{error}</Alert>}
+              <Button
+                type="button"
+                variant="ghost"
+                className="w-full"
+                loading={loading}
+                disabled={cooldown > 0}
+                onClick={send}
+              >
+                {cooldown > 0
+                  ? isAr
+                    ? `لم يصلك البريد؟ إعادة الإرسال بعد ${cooldown} ثانية`
+                    : `Didn't receive it? Resend in ${cooldown}s`
+                  : isAr
+                    ? 'لم يصلك البريد؟ إعادة الإرسال'
+                    : "Didn't receive it? Resend"}
+              </Button>
               <Link to="/auth/sign-in" className="block pt-2">
                 <Button variant="outline" className="w-full">
                   {isAr ? 'العودة لتسجيل الدخول' : 'Back to Sign In'}
@@ -122,6 +156,7 @@ export const ForgotPasswordPage: React.FC = () => {
         </Card>
       </div>
     </div>
+    </GuestOnly>
   );
 };
 

@@ -10,6 +10,7 @@ interface PayloadKeyDoc {
   resource: number | { id: number; name?: string };
   key_prefix: string;
   scope: string;
+  last_used_at?: string | null;
   createdAt: string;
 }
 
@@ -29,6 +30,7 @@ export function toDesignKey(doc: PayloadKeyDoc): ApiKey {
     status: 'active', // a key that exists is active; revoking deletes it
     expires_at: '', // Payload keys do not expire
     usage_count: 0,
+    last_used_at: doc.last_used_at ?? undefined,
     created_at: doc.createdAt,
     resource_title_ar: mockRepo.getResources().find((r) => r.id === resource_id)?.title_ar,
   };
@@ -37,7 +39,16 @@ export function toDesignKey(doc: PayloadKeyDoc): ApiKey {
 const NOT_PAYLOAD = 'API keys are only available for live resources.';
 const numericId = (id: string, prefix: string) => (id.startsWith(prefix) ? Number(id.slice(prefix.length)) : NaN);
 
-export async function createKey(resourceId: string, name: string): Promise<{ key: string | null; error: string | null }> {
+// Server enum (APIKeys.ts SCOPES); anything else would be a 400, so never send it.
+export type KeyScope = 'read' | 'read,write';
+export const KEY_SCOPES: KeyScope[] = ['read', 'read,write'];
+export const scopeOf = (scopes: string[]): KeyScope => (scopes.includes('write') ? 'read,write' : 'read');
+
+export async function createKey(
+  resourceId: string,
+  name: string,
+  scope: KeyScope = 'read'
+): Promise<{ key: string | null; error: string | null }> {
   const resource = numericId(resourceId, 'payload_');
   if (Number.isNaN(resource)) return { key: null, error: NOT_PAYLOAD };
   try {
@@ -45,9 +56,9 @@ export async function createKey(resourceId: string, name: string): Promise<{ key
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       credentials: 'include',
-      body: JSON.stringify({ name, resource, scope: 'read' }),
+      body: JSON.stringify({ name, resource, scope: KEY_SCOPES.includes(scope) ? scope : 'read' }),
     });
-    if (!res.ok) return { key: null, error: await errorMessage(res, 'Could not create key') };
+    if (!res.ok) return { key: null, error: await errorMessage(res, 'Could not create key', { authenticated: true }) };
     return { key: (await res.json()).doc?.key ?? null, error: null };
   } catch {
     return { key: null, error: 'Network error, please try again.' };
@@ -59,7 +70,7 @@ export async function revokeKey(keyId: string): Promise<string | null> {
   if (Number.isNaN(id)) return NOT_PAYLOAD;
   try {
     const res = await fetch(`${payloadBase()}/api-keys/${id}`, { method: 'DELETE', credentials: 'include' });
-    return res.ok ? null : await errorMessage(res, 'Could not revoke key');
+    return res.ok ? null : await errorMessage(res, 'Could not revoke key', { authenticated: true });
   } catch {
     return 'Network error, please try again.';
   }
@@ -69,9 +80,10 @@ export async function revokeKey(keyId: string): Promise<string | null> {
 export async function rotateKey(
   keyId: string,
   resourceId: string,
-  name: string
+  name: string,
+  scope: KeyScope = 'read'
 ): Promise<{ key: string | null; error: string | null }> {
-  const created = await createKey(resourceId, name);
+  const created = await createKey(resourceId, name, scope);
   if (!created.key) return created;
   return { key: created.key, error: await revokeKey(keyId) };
 }

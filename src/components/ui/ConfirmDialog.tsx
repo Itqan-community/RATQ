@@ -3,6 +3,7 @@ import React from 'react';
 import { Modal } from './Modal';
 import { Button } from './Button';
 import { AlertTriangle } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 interface ConfirmDialogProps {
   isOpen: boolean;
@@ -35,9 +36,10 @@ export const ConfirmDialog: React.FC<ConfirmDialogProps> = ({
   variant,
   isLoading = false,
 }) => {
+  const { t } = useTranslation('site');
   const effectiveDescription = description || message || '';
-  const effectiveConfirmLabel = confirmText || confirmLabel || 'تأكيد';
-  const effectiveCancelLabel = cancelText || cancelLabel || 'إلغاء';
+  const effectiveConfirmLabel = confirmText || confirmLabel || t('ui.confirm');
+  const effectiveCancelLabel = cancelText || cancelLabel || t('ui.cancel');
   const isDanger = isDestructive || variant === 'danger';
 
   return (

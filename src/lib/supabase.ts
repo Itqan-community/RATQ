@@ -5,6 +5,7 @@ import { createClient, SupabaseClient } from '@supabase/supabase-js';
 import {
   DEMO_RESOURCES,
   DEMO_PUBLISHERS,
+  LIVE_DATA,
   DEMO_CATEGORIES,
   DEMO_LICENSES,
   DEMO_ACCESS_REQUESTS,
@@ -51,18 +52,23 @@ class MockRepository {
 
   constructor() {
     this.resources = [...DEMO_RESOURCES];
-    this.publishers = [...DEMO_PUBLISHERS];
-    this.requests = [...DEMO_ACCESS_REQUESTS];
-    this.keys = [...DEMO_API_KEYS];
-    this.reviews = [...DEMO_REVIEWS];
-    this.reports = [...DEMO_REPORTS];
-    this.auditLogs = [...DEMO_AUDIT_LOGS];
-    this.notifications = [...DEMO_NOTIFICATIONS];
+    this.publishers = LIVE_DATA ? [] : [...DEMO_PUBLISHERS]; // live: publishers come from the fetched resources
+    // live builds never show demo portal rows; they are hydrated from Payload
+    this.requests = LIVE_DATA ? [] : [...DEMO_ACCESS_REQUESTS];
+    this.keys = LIVE_DATA ? [] : [...DEMO_API_KEYS];
+    this.reviews = LIVE_DATA ? [] : [...DEMO_REVIEWS];
+    this.reports = LIVE_DATA ? [] : [...DEMO_REPORTS];
+    this.auditLogs = LIVE_DATA ? [] : [...DEMO_AUDIT_LOGS];
+    this.notifications = LIVE_DATA ? [] : [...DEMO_NOTIFICATIONS];
   }
 
-  // Live mode: the live (Payload) list replaces all demo/snapshot resources so public lists match prod.
+  // Live mode: the merged live list (CMS + Payload) replaces all demo/snapshot resources so public lists match prod.
+  // Publishers come from the live resources too, so no demo publisher is shown next to real data.
   setLiveResources(live: Resource[]) {
     this.resources = [...live];
+    const pubs = new Map<string, Publisher>();
+    live.forEach((r) => r.publisher && pubs.set(r.publisher.id, r.publisher));
+    this.publishers = [...pubs.values()];
   }
 
   // Resources
@@ -70,9 +76,8 @@ class MockRepository {
     return [...this.resources];
   }
 
-  // Demo slugs stay reachable by direct URL (old bookmarks) even though they are not listed in live mode.
   getResourceBySlug(slug: string) {
-    return this.resources.find((r) => r.slug === slug) ?? DEMO_RESOURCES.find((r) => r.slug === slug);
+    return this.resources.find((r) => r.slug === slug);
   }
 
   addResource(res: Partial<Resource>): Resource {
@@ -122,9 +127,9 @@ class MockRepository {
     return newRes;
   }
 
-  // Replace hydrated live requests; demo requests are kept.
+  // Replace the list with the hydrated live requests.
   setLiveRequests(live: AccessRequest[]) {
-    this.requests = [...live, ...this.requests.filter((r) => !r.id.startsWith('payload_req_'))];
+    this.requests = [...live];
   }
 
   // Access Requests
@@ -175,9 +180,9 @@ class MockRepository {
     return req;
   }
 
-  // Replace hydrated live keys; demo keys are kept.
+  // Replace the list with the hydrated live keys.
   setLiveKeys(live: ApiKey[]) {
-    this.keys = [...live, ...this.keys.filter((k) => !k.id.startsWith('payload_key_'))];
+    this.keys = [...live];
   }
 
   // API Keys
@@ -301,9 +306,9 @@ class MockRepository {
     return item;
   }
 
-  // Replace hydrated live notifications; demo ones are kept.
+  // Replace the list with the hydrated live notifications.
   setLiveNotifications(live: NotificationItem[]) {
-    this.notifications = [...live, ...this.notifications.filter((n) => !n.id.startsWith('payload_notif_'))];
+    this.notifications = [...live];
   }
 
   // Notifications
