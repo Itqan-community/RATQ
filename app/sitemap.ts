@@ -3,6 +3,7 @@ import { getResources } from './seo';
 import { PUBLIC_PATHS } from '@/lib/knownRoutes';
 import { SITE_URL } from '@/lib/seoMeta';
 
+export const runtime = 'edge';
 export const dynamic = 'force-dynamic'; // resource URLs come from the live APIs; a build-time snapshot would go stale
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
