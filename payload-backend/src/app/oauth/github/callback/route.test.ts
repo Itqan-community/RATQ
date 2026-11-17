@@ -45,8 +45,8 @@ describe('GitHub OAuth callback - first-time signup', () => {
 
     process.env.GITHUB_CLIENT_ID = 'gh-client-id'
     process.env.GITHUB_CLIENT_SECRET = 'gh-client-secret'
-    process.env.OAUTH_CALLBACK_URL = 'https://api.beta.ratq.itqan.dev/oauth/github/callback'
-    process.env.FRONTEND_URL = 'https://beta.ratq.itqan.dev'
+    process.env.OAUTH_CALLBACK_URL = 'https://api.ratq.itqan.dev/oauth/github/callback'
+    process.env.FRONTEND_URL = 'https://ratq.itqan.dev'
 
     mockedGetPayload.mockResolvedValue(mockPayload as unknown as Awaited<ReturnType<typeof getPayload>>)
     mockedPickVerifiedEmail.mockReturnValue('test@example.com')
@@ -88,11 +88,23 @@ describe('GitHub OAuth callback - first-time signup', () => {
     })
   }
 
+  it('GET_FrontendUrlUnset_RedirectsToProductionFrontend', async () => {
+    delete process.env.FRONTEND_URL
+    delete process.env.GITHUB_CLIENT_ID
+
+    const { GET } = await import('./route')
+    const response = await GET(new Request('https://api.ratq.itqan.dev/oauth/github/callback'))
+
+    expect(response.headers.get('location')).toBe(
+      'https://ratq.itqan.dev/login?error=oauth_not_configured',
+    )
+  })
+
   it('creates a user with a password <= 64 chars on first-time GitHub signup', async () => {
     global.fetch = buildFetchMock()
 
     const request = new Request(
-      'https://beta.ratq.itqan.dev/oauth/github/callback?code=auth-code&state=test-state',
+      'https://ratq.itqan.dev/oauth/github/callback?code=auth-code&state=test-state',
       {
         headers: { cookie: 'oauth_state=test-state' },
       },
@@ -129,7 +141,7 @@ describe('GitHub OAuth callback - first-time signup', () => {
     mockPayload.create.mockClear()
 
     const request = new Request(
-      'https://beta.ratq.itqan.dev/oauth/github/callback?code=auth-code&state=test-state',
+      'https://ratq.itqan.dev/oauth/github/callback?code=auth-code&state=test-state',
       {
         headers: { cookie: 'oauth_state=test-state' },
       },

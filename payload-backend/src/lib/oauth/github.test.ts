@@ -15,13 +15,13 @@ describe('buildGitHubAuthorizeUrl', () => {
   it('builds the GitHub authorize URL with client_id/redirect_uri/scope/state', () => {
     const url = buildGitHubAuthorizeUrl({
       clientId: 'abc123',
-      redirectUri: 'https://api.beta.ratq.itqan.dev/oauth/github/callback',
+      redirectUri: 'https://api.ratq.itqan.dev/oauth/github/callback',
       state: 'xyz',
     })
     const parsed = new URL(url)
     expect(parsed.origin + parsed.pathname).toBe('https://github.com/login/oauth/authorize')
     expect(parsed.searchParams.get('client_id')).toBe('abc123')
-    expect(parsed.searchParams.get('redirect_uri')).toBe('https://api.beta.ratq.itqan.dev/oauth/github/callback')
+    expect(parsed.searchParams.get('redirect_uri')).toBe('https://api.ratq.itqan.dev/oauth/github/callback')
     expect(parsed.searchParams.get('scope')).toBe('read:user user:email')
     expect(parsed.searchParams.get('state')).toBe('xyz')
   })

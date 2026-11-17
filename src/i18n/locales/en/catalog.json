@@ -1,0 +1,32 @@
+{
+  "title": "Verified Quranic Resources Library",
+  "subtitle": "Explore verified developer libraries, datasets, APIs, and fonts compliant with Itqan standards.",
+  "results_count": "Found {{count}} resources",
+  "filters": {
+    "title": "Filter Results",
+    "resource_type": "Resource Type",
+    "license": "Licenses (Creative Commons)",
+    "access_level": "Access Level",
+    "itqan_badge": "Itqan Badge",
+    "tech_stack": "Tech Stack / Platform",
+    "commercial_allowed": "Allows Commercial Use",
+    "active_releases": "Updated in the last 12 months"
+  },
+  "sort": {
+    "label": "Sort by",
+    "relevance": "Most Relevant",
+    "newest": "Newest Release",
+    "rating": "Highest Rated",
+    "usage": "Most Used",
+    "alpha": "Alphabetical (A-Z)"
+  },
+  "view": {
+    "grid": "Grid View",
+    "list": "List View"
+  },
+  "empty": {
+    "title": "No resources match your search",
+    "desc": "Try clearing some filters or using broader search terms.",
+    "action": "Reset Filters"
+  }
+}
