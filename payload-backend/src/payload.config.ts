@@ -23,6 +23,8 @@ export default buildConfig({
     'https://beta.ratq.itqan.dev',
     'https://ratq.itqan.dev',
     'https://admin.ratq.itqan.dev',
+    // quran.tech serves the same frontend (read-only browsing); sign-in redirects to ratq.itqan.dev because the session cookie is SameSite=Lax on .ratq.itqan.dev
+    'https://quran.tech',
     'http://localhost:3000',
   ],
   admin: {
