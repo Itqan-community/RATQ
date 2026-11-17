@@ -9,7 +9,7 @@ Production: https://ratq.itqan.dev · Beta: https://beta.ratq.itqan.dev
 - **App:** Next.js 15 serving a client-side `react-router-dom` app (`app/[[...slug]]` catch-all, routes in `src/router.tsx`), React 18, TypeScript, Tailwind CSS 3, RTL-first, `i18next` (Arabic default, English).
 - **State/data:** TanStack Query, Zustand.
 - **Backend:** the Payload CMS API in `payload-backend/` (Users, Resources, Comments, AccessRequests, APIKeys, Reports, Notifications, Announcements). The frontend only calls its REST API; no other backend.
-- **Hosting:** Cloudflare Worker via OpenNext (`wrangler.jsonc`). The API is deployed separately (see `.github/workflows/deploy-backend.yml`).
+- **Hosting:** Cloudflare Pages (project `ratq-beta`), built by Cloudflare from `main` with `@cloudflare/next-on-pages`. Every dynamic route must export `runtime = 'edge'`. The API is deployed separately (see `.github/workflows/deploy-backend.yml`).
 - **Tests:** Vitest + Testing Library (unit), Playwright (`e2e/`).
 
 ## Live data vs Demo
@@ -40,17 +40,20 @@ The production API only allows the `ratq.itqan.dev` and `beta.ratq.itqan.dev` or
 ```bash
 pnpm typecheck
 pnpm test                      # Vitest
-pnpm cf:build                  # OpenNext build (what CI and deploy run)
+pnpm pages:build               # next-on-pages build (what Cloudflare runs), output in .vercel/output/static
 pnpm test:e2e                  # Playwright against beta (BASE_URL overrides)
 ```
 
 `pnpm test:e2e` runs read-only specs by default. The sign-in spec needs a throwaway account in `E2E_EMAIL` / `E2E_PASSWORD` and is skipped without them. Never use a real user.
 
 ## Deploy
+Pushing to `main` deploys by itself: the Cloudflare Pages project builds with `npx --yes --legacy-peer-deps @cloudflare/next-on-pages@1` and serves `.vercel/output/static`, so no GitHub Actions minutes are used. Pull requests get a preview URL from the same project. `.env.production` (committed, public URLs only) points the build at the live APIs. To try the build locally:
+
 ```bash
-NEXT_PUBLIC_PAYLOAD_API_URL=https://api.ratq.itqan.dev/api pnpm cf:deploy
+pnpm pages:build
+pnpm pages:dev                 # serves .vercel/output/static on http://localhost:8788
 ```
-Needs `wrangler` authenticated to the Cloudflare account in `wrangler.jsonc`.
+Roll back from the Cloudflare dashboard (Pages, ratq-beta, Deployments, Rollback).
 
 ## Contributing
 See [CONTRIBUTING.md](CONTRIBUTING.md) and our [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md). Features marked Demo are the best places to start. All contributions target the `main` branch.
