@@ -1,0 +1,153 @@
+.depth-carousel {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  min-height: 360px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  perspective: var(--dc-perspective, 1400px);
+  perspective-origin: 50% 50%;
+  touch-action: pan-y;
+  outline: none;
+  user-select: none;
+  -webkit-user-select: none;
+  cursor: grab;
+}
+
+.depth-carousel:active {
+  cursor: grabbing;
+}
+
+.depth-carousel:focus-visible {
+  outline: 2px solid rgba(255, 255, 255, 0.5);
+  outline-offset: 4px;
+  border-radius: 12px;
+}
+
+.depth-carousel__stage {
+  position: absolute;
+  top: 10px;
+  left: 0;
+  right: 0;
+  bottom: 95px;
+  transform-style: preserve-3d;
+}
+
+.depth-carousel__card {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform-origin: center center;
+  overflow: hidden;
+  box-shadow:
+    0 30px 60px -20px rgba(0, 0, 0, 0.45),
+    0 8px 20px -10px rgba(0, 0, 0, 0.3);
+  will-change: transform, opacity, filter;
+  cursor: pointer;
+  transform: translate(-50%, -50%);
+}
+
+.depth-carousel__img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  pointer-events: none;
+  -webkit-user-drag: none;
+}
+
+.depth-carousel__tint {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  pointer-events: none;
+  mix-blend-mode: multiply;
+  border-radius: inherit;
+}
+
+.depth-carousel__bottom-controls {
+  position: absolute;
+  bottom: 8px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 3000;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  pointer-events: auto;
+}
+
+.depth-carousel__dots {
+  display: flex;
+  gap: 7px;
+  padding: 6px 14px;
+  border-radius: 999px;
+  background: var(--bg-subtle, rgba(14, 16, 22, 0.6));
+  border: 1px solid var(--border-subtle, rgba(255, 255, 255, 0.1));
+  backdrop-filter: blur(10px);
+}
+
+.depth-carousel__dot {
+  width: 7px;
+  height: 7px;
+  padding: 0;
+  border: none;
+  border-radius: 999px;
+  background: var(--border-strong, rgba(255, 255, 255, 0.35));
+  cursor: pointer;
+  transition:
+    width 0.25s ease,
+    background 0.25s ease;
+}
+
+.depth-carousel__dot.is-active {
+  width: 20px;
+  background: var(--ratq-primary-500, #10b981);
+}
+
+.depth-carousel__arrows {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  direction: ltr;
+}
+
+.depth-carousel__arrow {
+  width: 36px;
+  height: 36px;
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--border-default, rgba(255, 255, 255, 0.2));
+  border-radius: 999px;
+  background: var(--bg-canvas, rgba(18, 20, 26, 0.8));
+  backdrop-filter: blur(10px);
+  color: var(--fg-default, #fff);
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.2);
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease,
+    transform 0.2s ease;
+}
+
+.depth-carousel__arrow:hover {
+  background: var(--bg-muted, rgba(28, 31, 40, 0.95));
+  border-color: var(--border-strong, rgba(255, 255, 255, 0.4));
+  transform: scale(1.06);
+}
+
+.depth-carousel__arrow:active {
+  transform: scale(0.92);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .depth-carousel__card {
+    will-change: auto;
+  }
+  .depth-carousel__arrow,
+  .depth-carousel__dot {
+    transition: none;
+  }
+}

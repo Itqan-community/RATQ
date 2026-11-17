@@ -1,0 +1,45 @@
+{
+  "tabs": {
+    "overview": "Overview",
+    "docs": "Documentation",
+    "versions": "Versions",
+    "install": "Installation",
+    "license": "Data & Licensing",
+    "reviews": "Reviews",
+    "discussions": "Discussions"
+  },
+  "metadata": {
+    "latest_version": "Latest Version",
+    "released_at": "Released On",
+    "downloads": "Downloads",
+    "views": "Views",
+    "license": "License",
+    "access": "Access Level",
+    "source_code": "Repository",
+    "documentation": "Documentation",
+    "demo": "Live Demo",
+    "sha256": "SHA-256 Checksum",
+    "filesize": "File Size",
+    "publisher": "Verified Publisher"
+  },
+  "sacred_notice": {
+    "title": "Verified Quranic Content Notice",
+    "body": "This resource provides texts or references linked to the Holy Quran attributed to verified authorities under Itqan standards."
+  },
+  "revoked_alert": {
+    "title": "Alert: Badge Currently Suspended",
+    "body": "The Itqan badge for this resource has been suspended pending technical compliance review."
+  },
+  "install": {
+    "title": "Installation Commands",
+    "copied": "Command copied to clipboard"
+  },
+  "reviews": {
+    "average": "Average Rating",
+    "based_on": "Based on {{count}} verified reviews",
+    "write_review": "Rate & Review this Resource",
+    "rating_label": "Star Rating",
+    "comment_placeholder": "Share your developer experience and technical feedback...",
+    "empty": "No published reviews yet for this resource."
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "/login": "/auth/sign-in",
+  "/register": "/auth/sign-up",
+  "/forgot-password": "/auth/forgot",
+  "/privacy": "/legal/privacy",
+  "/dashboard": "/app",
+  "/dashboard/requests": "/app/requests",
+  "/dashboard/api-keys": "/app/keys",
+  "/dashboard/settings": "/app/settings",
+  "/dashboard/resources": "/publisher/resources",
+  "/developer": "/publisher",
+  "/developer/resources": "/publisher/resources",
+  "/developer/resources/:slug": "/publisher/resources",
+  "/developer/requests": "/publisher/requests",
+  "/developer/access": "/publisher/requests",
+  "/developer/comments": "/app/comments",
+  "/developer/reports": "/app/reports",
+  "/developer/notifications": "/app/notifications",
+  "/developer/settings": "/app/settings"
+}

@@ -1,0 +1,24 @@
+{
+  "terms": {
+    "title": "Terms of Service",
+    "last_updated": "Last updated: January 2026",
+    "p1": "These terms govern your access to and use of RATQ Community Platform, APIs, and published assets.",
+    "p2": "All developers and publishers agree to uphold intellectual property rights, stated license agreements, and sacred text guardrails."
+  },
+  "privacy": {
+    "title": "Privacy & Data Protection Policy",
+    "last_updated": "Last updated: January 2026",
+    "p1": "We are dedicated to safeguarding your privacy in compliance with applicable standards including GDPR and Saudi Personal Data Protection Law.",
+    "p2": "We never sell your personal data. We collect only the minimum required to authenticate accounts and fulfill requested services."
+  },
+  "dmca": {
+    "title": "Copyright & DMCA Notice Policy",
+    "agent_title": "Designated Copyright Agent",
+    "agent_email": "copyright@ratq.org",
+    "instructions": "To file a copyright infringement notice, provide details of the copyrighted work, URL of the infringing item, and a good-faith statement."
+  },
+  "accessibility": {
+    "title": "Accessibility Statement",
+    "standard": "RATQ is committed to WCAG 2.1 Level AA compliance, providing an accessible experience for screen readers and keyboard navigation."
+  }
+}
