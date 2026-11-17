@@ -67,9 +67,11 @@ export const Home: React.FC = () => {
 
   // Live trust metrics from store/DB
   // Publisher and key counts are mock-only (no Payload source), so live mode shows only API-backed counts.
+  // Live: distinct publishers across the real catalog (CMS publisher ids + Payload owners), never the mock list.
+  const publishersCount = isLive() ? new Set(resources.map((r) => r.publisher_id).filter(Boolean)).size : publishers.length;
   const trustMetrics = [
     { label: t('home.metric_resources'), value: resources.length },
-    ...(isLive() ? [] : [{ label: t('home.metric_publishers'), value: publishers.length }]),
+    { label: t('home.metric_publishers'), value: publishersCount },
     { label: t('home.metric_badges'), value: resources.filter((r) => r.itqan_level !== 'none').length },
     ...(isLive() ? [] : [{ label: t('home.metric_keys'), value: keys.length }]),
   ];
@@ -227,18 +229,18 @@ export const Home: React.FC = () => {
                   </div>
                 </div>
 
-                {/* Card 5: Outside Left. Publisher count is mock-only, so it is hidden live rather than invented. */}
-                {!isLive() && <div className="absolute bottom-3 sm:bottom-4 end-[-10px] sm:end-[-20px] lg:end-[-90px] z-20">
+                {/* Card 5: Outside Left. Count comes from the real catalog's distinct publishers. */}
+                <div className="absolute bottom-3 sm:bottom-4 end-[-10px] sm:end-[-20px] lg:end-[-90px] z-20">
                   <div className="animate-float-5 inline-flex items-center gap-2 px-3 py-1.5 sm:px-3 sm:py-2 rounded-xl border border-slate-200/90 dark:border-slate-800 bg-white/95 dark:bg-slate-900/95 shadow-lg backdrop-blur-xs select-none transition-all duration-300 hover:scale-105 whitespace-nowrap">
                     <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg flex items-center justify-center shrink-0 bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400">
                       <Building2 className="w-4 h-4" />
                     </div>
                     <div className="flex flex-col text-start">
-                      <span className="text-[11px] sm:text-xs font-bold text-fg leading-tight">{t('home.card5_t', { count: publishers.length })}</span>
+                      <span className="text-[11px] sm:text-xs font-bold text-fg leading-tight">{t('home.card5_t', { count: publishersCount })}</span>
                       <span className="text-[9px] sm:text-[10px] text-fg-subtle leading-tight mt-0.5">{t('home.card5_d')}</span>
                     </div>
                   </div>
-                </div>}
+                </div>
               </div>
             </div>
           </div>
