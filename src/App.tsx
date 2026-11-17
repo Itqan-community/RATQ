@@ -7,6 +7,7 @@ import { useTranslation } from 'react-i18next';
 import { useThemeStore } from '@/store/useThemeStore';
 import { AppRouter } from '@/router';
 import { SessionExpiryRedirect } from '@/components/layout/SessionExpiryRedirect';
+import { CanonicalAuthRedirect } from '@/components/layout/CanonicalAuthRedirect';
 
 export const App: React.FC = () => {
   const { i18n } = useTranslation();
@@ -32,6 +33,7 @@ export const App: React.FC = () => {
     <QueryClientProvider client={queryClient}>
       <BrowserRouter>
         <SessionExpiryRedirect />
+        <CanonicalAuthRedirect />
         <AppRouter />
       </BrowserRouter>
     </QueryClientProvider>
