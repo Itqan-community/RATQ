@@ -311,7 +311,7 @@ const RoadmapStageSection: React.FC<RoadmapStageProps> = ({
               key={p.id}
               d={p.d}
               fill="none"
-              stroke={isHovered ? 'var(--ratq-primary-600)' : 'currentColor'}
+              stroke={isHovered ? 'var(--qtd-primary-600)' : 'currentColor'}
               strokeWidth={isHovered ? 2.5 : 1.5}
               className={`transition-all duration-200 ${
                 isHovered
@@ -346,16 +346,16 @@ const RoadmapStageSection: React.FC<RoadmapStageProps> = ({
                   onMouseLeave={() => setHoveredCardId(null)}
                   className={`px-3.5 py-2.5 min-h-[46px] rounded-xl border transition-all cursor-pointer select-none text-start text-xs font-bold leading-snug flex items-center justify-between gap-2 shadow-2xs group relative ${
                     matched
-                      ? 'border-ratq-600 bg-ratq-50 dark:bg-ratq-950 text-ratq-900 dark:text-ratq-100 ring-2 ring-ratq-500/40'
+                      ? 'border-qtd-600 bg-qtd-50 dark:bg-qtd-950 text-qtd-900 dark:text-qtd-100 ring-2 ring-qtd-500/40'
                       : dimmed
                       ? 'opacity-30 border-border bg-subtle/30 text-fg-subtle'
                       : isHovered
                       ? isCertified
                         ? 'border-emerald-500 bg-[#e7f7ee] dark:bg-[#122b22] text-emerald-950 dark:text-emerald-100 shadow-sm -translate-y-0.5'
-                        : 'border-ratq-600 bg-canvas text-ratq-800 dark:text-ratq-200 shadow-sm -translate-y-0.5'
+                        : 'border-qtd-600 bg-canvas text-qtd-800 dark:text-qtd-200 shadow-sm -translate-y-0.5'
                       : isCertified
                       ? 'border-[#c1edd4] dark:border-[#1d4737] bg-[#f0f9f4] dark:bg-[#0c1e19] text-fg hover:border-emerald-400 dark:hover:border-emerald-600 hover:shadow-xs'
-                      : 'border-border bg-canvas hover:border-ratq-400 text-fg hover:shadow-xs'
+                      : 'border-border bg-canvas hover:border-qtd-400 text-fg hover:shadow-xs'
                   }`}
                   title={isCertified ? undefined : res.title_ar}
                 >
@@ -377,7 +377,7 @@ const RoadmapStageSection: React.FC<RoadmapStageProps> = ({
                   <span
                     className={`w-1.5 h-1.5 rounded-full shrink-0 transition-transform ${
                       isHovered
-                        ? 'bg-ratq-600 scale-125'
+                        ? 'bg-qtd-600 scale-125'
                         : res.itqan_level === 'gold'
                         ? 'bg-amber-500'
                         : isCertified
@@ -394,7 +394,7 @@ const RoadmapStageSection: React.FC<RoadmapStageProps> = ({
         {/* Center Milestone Node (Prominent Stage Card with NO details) */}
         <div
           ref={centerNodeRef}
-          className="shrink-0 w-full md:w-64 lg:w-72 p-4 sm:p-5 rounded-2xl border-2 border-ratq-600 bg-canvas shadow-md text-center relative group overflow-hidden"
+          className="shrink-0 w-full md:w-64 lg:w-72 p-4 sm:p-5 rounded-2xl border-2 border-qtd-600 bg-canvas shadow-md text-center relative group overflow-hidden"
         >
           {/* Muted Micro Dot Matrix Background */}
           <div
@@ -406,7 +406,7 @@ const RoadmapStageSection: React.FC<RoadmapStageProps> = ({
               style={{
                 backgroundImage: 'radial-gradient(circle, currentColor 1.2px, transparent 1.2px)',
                 backgroundSize: '13px 13px',
-                color: 'var(--ratq-primary-600, #059669)',
+                color: 'var(--qtd-primary-600, #059669)',
               }}
             />
             {/* Subtle soft gradient overlay to keep center content calm and focused */}
@@ -418,15 +418,15 @@ const RoadmapStageSection: React.FC<RoadmapStageProps> = ({
           <div className="relative z-10">
             {/* Stage Number & Badge */}
             <div className="flex items-center justify-center gap-1.5 mb-2">
-              <span className="w-2 h-2 rounded-full bg-ratq-600 animate-pulse" />
-              <span className="text-[11px] font-bold font-mono text-ratq-700 dark:text-ratq-300 uppercase tracking-wider">
+              <span className="w-2 h-2 rounded-full bg-qtd-600 animate-pulse" />
+              <span className="text-[11px] font-bold font-mono text-qtd-700 dark:text-qtd-300 uppercase tracking-wider">
                 المرحلة {stage.number}
               </span>
             </div>
 
             {/* Stage Icon */}
-            <div className="w-10 h-10 rounded-xl bg-canvas/90 dark:bg-canvas/90 text-ratq-700 dark:text-ratq-300 mx-auto flex items-center justify-center mb-2.5 border border-ratq-200 dark:border-ratq-800 shadow-2xs backdrop-blur-xs">
-              <StageIcon className="w-5 h-5 text-ratq-600" />
+            <div className="w-10 h-10 rounded-xl bg-canvas/90 dark:bg-canvas/90 text-qtd-700 dark:text-qtd-300 mx-auto flex items-center justify-center mb-2.5 border border-qtd-200 dark:border-qtd-800 shadow-2xs backdrop-blur-xs">
+              <StageIcon className="w-5 h-5 text-qtd-600" />
             </div>
 
             {/* Clean Stage Title (Without Long Details) */}
@@ -464,16 +464,16 @@ const RoadmapStageSection: React.FC<RoadmapStageProps> = ({
                   onMouseLeave={() => setHoveredCardId(null)}
                   className={`px-3.5 py-2.5 min-h-[46px] rounded-xl border transition-all cursor-pointer select-none text-start text-xs font-bold leading-snug flex items-center justify-between gap-2 shadow-2xs group relative ${
                     matched
-                      ? 'border-ratq-600 bg-ratq-50 dark:bg-ratq-950 text-ratq-900 dark:text-ratq-100 ring-2 ring-ratq-500/40'
+                      ? 'border-qtd-600 bg-qtd-50 dark:bg-qtd-950 text-qtd-900 dark:text-qtd-100 ring-2 ring-qtd-500/40'
                       : dimmed
                       ? 'opacity-30 border-border bg-subtle/30 text-fg-subtle'
                       : isHovered
                       ? isCertified
                         ? 'border-emerald-500 bg-[#e7f7ee] dark:bg-[#122b22] text-emerald-950 dark:text-emerald-100 shadow-sm -translate-y-0.5'
-                        : 'border-ratq-600 bg-canvas text-ratq-800 dark:text-ratq-200 shadow-sm -translate-y-0.5'
+                        : 'border-qtd-600 bg-canvas text-qtd-800 dark:text-qtd-200 shadow-sm -translate-y-0.5'
                       : isCertified
                       ? 'border-[#c1edd4] dark:border-[#1d4737] bg-[#f0f9f4] dark:bg-[#0c1e19] text-fg hover:border-emerald-400 dark:hover:border-emerald-600 hover:shadow-xs'
-                      : 'border-border bg-canvas hover:border-ratq-400 text-fg hover:shadow-xs'
+                      : 'border-border bg-canvas hover:border-qtd-400 text-fg hover:shadow-xs'
                   }`}
                   title={isCertified ? undefined : res.title_ar}
                 >
@@ -495,7 +495,7 @@ const RoadmapStageSection: React.FC<RoadmapStageProps> = ({
                   <span
                     className={`w-1.5 h-1.5 rounded-full shrink-0 transition-transform ${
                       isHovered
-                        ? 'bg-ratq-600 scale-125'
+                        ? 'bg-qtd-600 scale-125'
                         : res.itqan_level === 'gold'
                         ? 'bg-amber-500'
                         : isCertified
@@ -662,17 +662,17 @@ export const QuranicRoadmapPage: React.FC = () => {
       {/* Breadcrumb & Header */}
       <div className="mb-8 pb-6 border-b border-border">
         <div className="flex items-center gap-2 text-xs text-fg-subtle mb-3">
-          <Link to="/" className="hover:text-ratq-700 transition-colors">
+          <Link to="/" className="hover:text-qtd-700 transition-colors">
             الرئيسية
           </Link>
           <span>/</span>
-          <span className="text-ratq-700 font-bold">مسار المطور</span>
+          <span className="text-qtd-700 font-bold">مسار المطور</span>
         </div>
 
         <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
           <div>
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-ratq-200 bg-ratq-50 dark:border-ratq-800 dark:bg-ratq-950 text-ratq-800 dark:text-ratq-300 text-xs font-semibold mb-3">
-              <Compass className="w-3.5 h-3.5 text-ratq-600" />
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-qtd-200 bg-qtd-50 dark:border-qtd-800 dark:bg-qtd-950 text-qtd-800 dark:text-qtd-300 text-xs font-semibold mb-3">
+              <Compass className="w-3.5 h-3.5 text-qtd-600" />
               <span>خريطة طريق تفاعلية مستوحاة من roadmap.sh</span>
             </div>
             <h1 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-fg tracking-tight">
@@ -686,7 +686,7 @@ export const QuranicRoadmapPage: React.FC = () => {
           <div className="flex flex-wrap items-stretch gap-3 shrink-0">
             <div className="px-4 py-2.5 rounded-xl border border-border bg-subtle/50 text-xs text-fg flex flex-col justify-center">
               <span className="text-fg-subtle block text-2xs leading-tight">إجمالي الموارد المشمولة:</span>
-              <span className="font-bold text-sm text-ratq-700 dark:text-ratq-400 font-mono leading-snug">
+              <span className="font-bold text-sm text-qtd-700 dark:text-qtd-400 font-mono leading-snug">
                 {allResources.length} مورداً موثقاً
               </span>
             </div>
@@ -697,7 +697,7 @@ export const QuranicRoadmapPage: React.FC = () => {
                 setShowQuizModal(true);
                 setQuizStep(1);
               }}
-              className="flex items-center gap-2.5 px-4 py-2.5 rounded-xl bg-gradient-to-r from-ratq-700 to-ratq-600 hover:from-ratq-800 hover:to-ratq-700 text-white shadow-xs hover:shadow-md transition-all cursor-pointer text-start border border-ratq-600/30"
+              className="flex items-center gap-2.5 px-4 py-2.5 rounded-xl bg-gradient-to-r from-qtd-700 to-qtd-600 hover:from-qtd-800 hover:to-qtd-700 text-white shadow-xs hover:shadow-md transition-all cursor-pointer text-start border border-qtd-600/30"
             >
               <div className="w-8 h-8 rounded-lg bg-white/15 flex items-center justify-center shrink-0">
                 <Sparkles className="w-4 h-4 text-amber-300 animate-pulse" />
@@ -713,15 +713,15 @@ export const QuranicRoadmapPage: React.FC = () => {
 
       {/* Applied Track Indicator if tailored via Wizard */}
       {selectedTrackId !== 'all' && (
-        <div className="mb-6 flex flex-wrap items-center justify-between gap-3 p-3.5 px-4 rounded-2xl border border-ratq-200 dark:border-ratq-800/60 bg-ratq-50/60 dark:bg-ratq-950/40 text-xs">
+        <div className="mb-6 flex flex-wrap items-center justify-between gap-3 p-3.5 px-4 rounded-2xl border border-qtd-200 dark:border-qtd-800/60 bg-qtd-50/60 dark:bg-qtd-950/40 text-xs">
           <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-xl bg-ratq-600 text-white flex items-center justify-center shrink-0">
+            <div className="w-8 h-8 rounded-xl bg-qtd-600 text-white flex items-center justify-center shrink-0">
               {React.createElement(currentTrack.icon, { className: 'w-4 h-4' })}
             </div>
             <div>
               <div className="flex items-center gap-2 flex-wrap">
                 <span className="font-bold text-fg">
-                  المسار المعتمد عبر المعالج: <span className="text-ratq-700 dark:text-ratq-300 font-extrabold">{currentTrack.name_ar}</span>
+                  المسار المعتمد عبر المعالج: <span className="text-qtd-700 dark:text-qtd-300 font-extrabold">{currentTrack.name_ar}</span>
                 </span>
                 <span className="text-2xs font-mono text-fg-subtle bg-canvas px-2 py-0.5 rounded border border-border-subtle">
                   {activeStages.length} مراحل مفلترة
@@ -740,9 +740,9 @@ export const QuranicRoadmapPage: React.FC = () => {
                 setShowQuizModal(true);
                 setQuizStep(1);
               }}
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-ratq-300 dark:border-ratq-800 bg-canvas hover:bg-subtle text-xs font-semibold text-ratq-700 dark:text-ratq-300 transition-colors shadow-2xs cursor-pointer"
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-qtd-300 dark:border-qtd-800 bg-canvas hover:bg-subtle text-xs font-semibold text-qtd-700 dark:text-qtd-300 transition-colors shadow-2xs cursor-pointer"
             >
-              <Sparkles className="w-3.5 h-3.5 text-ratq-600" />
+              <Sparkles className="w-3.5 h-3.5 text-qtd-600" />
               <span>إعادة التشخيص بالمعالج</span>
             </button>
             <span className="text-fg-subtle">•</span>
@@ -770,11 +770,11 @@ export const QuranicRoadmapPage: React.FC = () => {
                 ? `ابحث داخل ${currentTrack.name_ar} بالاسم أو التقنية...`
                 : 'ابحث عن مورد في الخريطة بالاسم أو التقنية...'
             }
-            className="w-full ps-10 pe-16 py-2.5 text-xs rounded-xl border border-border bg-canvas text-fg placeholder:text-fg-subtle focus:outline-none focus:border-ratq-500 shadow-2xs"
+            className="w-full ps-10 pe-16 py-2.5 text-xs rounded-xl border border-border bg-canvas text-fg placeholder:text-fg-subtle focus:outline-none focus:border-qtd-500 shadow-2xs"
           />
           {searchQuery && (
             <div className="absolute end-3 top-1/2 -translate-y-1/2 flex items-center gap-2">
-              <span className="text-2xs font-mono font-bold text-ratq-700 dark:text-ratq-400">
+              <span className="text-2xs font-mono font-bold text-qtd-700 dark:text-qtd-400">
                 {searchMatchingCount} تطابق
               </span>
               <button
@@ -796,12 +796,12 @@ export const QuranicRoadmapPage: React.FC = () => {
           <button
             type="button"
             onClick={() => setShowMethodologyModal(true)}
-            className="flex flex-col items-center justify-center py-2 px-2.5 sm:px-3.5 rounded-xl border border-border bg-muted/70 hover:bg-muted dark:bg-muted/50 hover:border-ratq-500 hover:text-ratq-700 text-fg transition-all cursor-pointer shadow-2xs shrink-0 self-stretch group min-w-[72px] sm:min-w-[100px]"
+            className="flex flex-col items-center justify-center py-2 px-2.5 sm:px-3.5 rounded-xl border border-border bg-muted/70 hover:bg-muted dark:bg-muted/50 hover:border-qtd-500 hover:text-qtd-700 text-fg transition-all cursor-pointer shadow-2xs shrink-0 self-stretch group min-w-[72px] sm:min-w-[100px]"
             title="دليل منهجية وفلسفة بناء المراحل وكيف تساعدك في مشروعك"
             aria-label="دليل منهجية وفلسفة بناء المراحل"
           >
             <div className="flex items-center gap-1.5">
-              <HelpCircle className="w-4 h-4 text-ratq-600 group-hover:scale-110 transition-transform shrink-0" />
+              <HelpCircle className="w-4 h-4 text-qtd-600 group-hover:scale-110 transition-transform shrink-0" />
               <span className="text-xs font-bold leading-tight whitespace-nowrap">دليل المسار</span>
             </div>
             <span className="text-[10px] mt-0.5 sm:mt-1 font-medium text-fg-subtle leading-none whitespace-nowrap">
@@ -825,22 +825,22 @@ export const QuranicRoadmapPage: React.FC = () => {
                   onClick={() => scrollToStage(st.number)}
                   className={`flex-1 min-w-[85px] flex flex-col items-center justify-center py-2 px-2 rounded-xl border transition-all cursor-pointer shadow-2xs select-none text-center ${
                     isActive
-                      ? 'border-ratq-600 bg-ratq-700 text-white shadow-xs ring-2 ring-ratq-600/20'
-                      : 'border-border bg-canvas hover:border-ratq-500 hover:text-ratq-700 text-fg hover:bg-subtle/60'
+                      ? 'border-qtd-600 bg-qtd-700 text-white shadow-xs ring-2 ring-qtd-600/20'
+                      : 'border-border bg-canvas hover:border-qtd-500 hover:text-qtd-700 text-fg hover:bg-subtle/60'
                   }`}
                   title={`الانتقال إلى المرحلة ${st.number}: ${st.title}`}
                 >
                   <div className="flex items-center gap-1.5">
                     <span
                       className={`w-1.5 h-1.5 rounded-full transition-colors ${
-                        isActive ? 'bg-white' : 'bg-ratq-600'
+                        isActive ? 'bg-white' : 'bg-qtd-600'
                       }`}
                     />
                     <span className="text-xs font-bold leading-tight">المرحلة {st.number}</span>
                   </div>
                   <span
                     className={`text-[10px] mt-1 font-medium transition-colors leading-none ${
-                      isActive ? 'text-ratq-100' : 'text-fg-muted'
+                      isActive ? 'text-qtd-100' : 'text-fg-muted'
                     }`}
                   >
                     {count} مورد
@@ -877,11 +877,11 @@ export const QuranicRoadmapPage: React.FC = () => {
                 {/* Vertical Central Spine Connector between Stages */}
                 {idx < activeStages.length - 1 && (
                   <div className="flex flex-col items-center justify-center my-2 py-1 relative z-20">
-                    <div className="w-0.5 h-10 bg-gradient-to-b from-ratq-600 to-ratq-500/30" />
-                    <div className="w-7 h-7 rounded-full border-2 border-ratq-600 bg-canvas flex items-center justify-center text-ratq-700 dark:text-ratq-300 text-xs shadow-xs my-1 font-bold">
+                    <div className="w-0.5 h-10 bg-gradient-to-b from-qtd-600 to-qtd-500/30" />
+                    <div className="w-7 h-7 rounded-full border-2 border-qtd-600 bg-canvas flex items-center justify-center text-qtd-700 dark:text-qtd-300 text-xs shadow-xs my-1 font-bold">
                       ↓
                     </div>
-                    <div className="w-0.5 h-10 bg-gradient-to-b from-ratq-500/30 to-ratq-600" />
+                    <div className="w-0.5 h-10 bg-gradient-to-b from-qtd-500/30 to-qtd-600" />
                   </div>
                 )}
               </React.Fragment>
@@ -910,12 +910,12 @@ export const QuranicRoadmapPage: React.FC = () => {
             {/* Drawer Header */}
             <div className="p-5 sm:p-6 border-b border-border flex items-center justify-between gap-4 bg-canvas/95 backdrop-blur-xs sticky top-0 z-20">
               <div className="flex items-center gap-3 min-w-0">
-                <div className="w-10 h-10 rounded-xl bg-ratq-50 dark:bg-ratq-950 text-ratq-700 dark:text-ratq-300 flex items-center justify-center shrink-0 border border-ratq-200 dark:border-ratq-800 shadow-2xs">
-                  <Package className="w-5 h-5 text-ratq-600" />
+                <div className="w-10 h-10 rounded-xl bg-qtd-50 dark:bg-qtd-950 text-qtd-700 dark:text-qtd-300 flex items-center justify-center shrink-0 border border-qtd-200 dark:border-qtd-800 shadow-2xs">
+                  <Package className="w-5 h-5 text-qtd-600" />
                 </div>
                 <div className="min-w-0">
                   <div className="flex items-center gap-2 mb-1 flex-wrap">
-                    <span className="text-[10px] font-bold font-mono text-ratq-700 uppercase tracking-wider bg-ratq-50 dark:bg-ratq-950 px-2 py-0.5 rounded border border-ratq-200 dark:border-ratq-800">
+                    <span className="text-[10px] font-bold font-mono text-qtd-700 uppercase tracking-wider bg-qtd-50 dark:bg-qtd-950 px-2 py-0.5 rounded border border-qtd-200 dark:border-qtd-800">
                       تفاصيل المورد المعتمد
                     </span>
                     <ItqanBadge level={drawerResource.itqan_level} size="sm" />
@@ -1047,7 +1047,7 @@ export const QuranicRoadmapPage: React.FC = () => {
                       href={drawerResource.docs_url}
                       target="_blank"
                       rel="noreferrer"
-                      className="inline-flex items-center gap-1.5 text-xs text-ratq-700 hover:underline font-semibold"
+                      className="inline-flex items-center gap-1.5 text-xs text-qtd-700 hover:underline font-semibold"
                     >
                       <FileText className="w-3.5 h-3.5" />
                       <span>الوثائق والتوثيق البرمجي ↗</span>
@@ -1058,7 +1058,7 @@ export const QuranicRoadmapPage: React.FC = () => {
                       href={drawerResource.repo_url}
                       target="_blank"
                       rel="noreferrer"
-                      className="inline-flex items-center gap-1.5 text-xs text-ratq-700 hover:underline font-semibold"
+                      className="inline-flex items-center gap-1.5 text-xs text-qtd-700 hover:underline font-semibold"
                     >
                       <Code2 className="w-3.5 h-3.5" />
                       <span>المستودع المصدري ↗</span>
@@ -1109,12 +1109,12 @@ export const QuranicRoadmapPage: React.FC = () => {
             {/* Header */}
             <div className="p-5 sm:p-6 border-b border-border bg-canvas/95 backdrop-blur-xs flex items-center justify-between gap-4 sticky top-0 z-20">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-xl bg-ratq-50 dark:bg-ratq-950 text-ratq-700 dark:text-ratq-300 flex items-center justify-center shrink-0 border border-ratq-200 dark:border-ratq-800 shadow-2xs">
-                  <Compass className="w-5 h-5 text-ratq-600" />
+                <div className="w-10 h-10 rounded-xl bg-qtd-50 dark:bg-qtd-950 text-qtd-700 dark:text-qtd-300 flex items-center justify-center shrink-0 border border-qtd-200 dark:border-qtd-800 shadow-2xs">
+                  <Compass className="w-5 h-5 text-qtd-600" />
                 </div>
                 <div>
                   <div className="flex items-center gap-2 mb-1">
-                    <span className="text-[10px] font-bold font-mono text-ratq-700 uppercase tracking-wider bg-ratq-50 dark:bg-ratq-950 px-2 py-0.5 rounded border border-ratq-200 dark:border-ratq-800">
+                    <span className="text-[10px] font-bold font-mono text-qtd-700 uppercase tracking-wider bg-qtd-50 dark:bg-qtd-950 px-2 py-0.5 rounded border border-qtd-200 dark:border-qtd-800">
                       دليل المنهجية المعمارية
                     </span>
                   </div>
@@ -1151,7 +1151,7 @@ export const QuranicRoadmapPage: React.FC = () => {
                 <div className="space-y-3">
                   {/* Stage 1 */}
                   <div className="p-3.5 rounded-xl border border-border bg-subtle/30 flex gap-3.5 items-start">
-                    <div className="w-7 h-7 rounded-lg bg-ratq-600 text-white font-mono font-bold text-xs flex items-center justify-center shrink-0 mt-0.5 shadow-2xs">
+                    <div className="w-7 h-7 rounded-lg bg-qtd-600 text-white font-mono font-bold text-xs flex items-center justify-center shrink-0 mt-0.5 shadow-2xs">
                       1
                     </div>
                     <div className="space-y-1">
@@ -1167,7 +1167,7 @@ export const QuranicRoadmapPage: React.FC = () => {
 
                   {/* Stage 2 */}
                   <div className="p-3.5 rounded-xl border border-border bg-subtle/30 flex gap-3.5 items-start">
-                    <div className="w-7 h-7 rounded-lg bg-ratq-600 text-white font-mono font-bold text-xs flex items-center justify-center shrink-0 mt-0.5 shadow-2xs">
+                    <div className="w-7 h-7 rounded-lg bg-qtd-600 text-white font-mono font-bold text-xs flex items-center justify-center shrink-0 mt-0.5 shadow-2xs">
                       2
                     </div>
                     <div className="space-y-1">
@@ -1183,7 +1183,7 @@ export const QuranicRoadmapPage: React.FC = () => {
 
                   {/* Stage 3 */}
                   <div className="p-3.5 rounded-xl border border-border bg-subtle/30 flex gap-3.5 items-start">
-                    <div className="w-7 h-7 rounded-lg bg-ratq-600 text-white font-mono font-bold text-xs flex items-center justify-center shrink-0 mt-0.5 shadow-2xs">
+                    <div className="w-7 h-7 rounded-lg bg-qtd-600 text-white font-mono font-bold text-xs flex items-center justify-center shrink-0 mt-0.5 shadow-2xs">
                       3
                     </div>
                     <div className="space-y-1">
@@ -1199,7 +1199,7 @@ export const QuranicRoadmapPage: React.FC = () => {
 
                   {/* Stage 4 */}
                   <div className="p-3.5 rounded-xl border border-border bg-subtle/30 flex gap-3.5 items-start">
-                    <div className="w-7 h-7 rounded-lg bg-ratq-600 text-white font-mono font-bold text-xs flex items-center justify-center shrink-0 mt-0.5 shadow-2xs">
+                    <div className="w-7 h-7 rounded-lg bg-qtd-600 text-white font-mono font-bold text-xs flex items-center justify-center shrink-0 mt-0.5 shadow-2xs">
                       4
                     </div>
                     <div className="space-y-1">
@@ -1215,7 +1215,7 @@ export const QuranicRoadmapPage: React.FC = () => {
 
                   {/* Stage 5 */}
                   <div className="p-3.5 rounded-xl border border-border bg-subtle/30 flex gap-3.5 items-start">
-                    <div className="w-7 h-7 rounded-lg bg-ratq-600 text-white font-mono font-bold text-xs flex items-center justify-center shrink-0 mt-0.5 shadow-2xs">
+                    <div className="w-7 h-7 rounded-lg bg-qtd-600 text-white font-mono font-bold text-xs flex items-center justify-center shrink-0 mt-0.5 shadow-2xs">
                       5
                     </div>
                     <div className="space-y-1">
@@ -1231,7 +1231,7 @@ export const QuranicRoadmapPage: React.FC = () => {
 
                   {/* Stage 6 */}
                   <div className="p-3.5 rounded-xl border border-border bg-subtle/30 flex gap-3.5 items-start">
-                    <div className="w-7 h-7 rounded-lg bg-ratq-600 text-white font-mono font-bold text-xs flex items-center justify-center shrink-0 mt-0.5 shadow-2xs">
+                    <div className="w-7 h-7 rounded-lg bg-qtd-600 text-white font-mono font-bold text-xs flex items-center justify-center shrink-0 mt-0.5 shadow-2xs">
                       6
                     </div>
                     <div className="space-y-1">
@@ -1254,19 +1254,19 @@ export const QuranicRoadmapPage: React.FC = () => {
                 </h3>
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                   <div className="p-3 rounded-xl border border-border bg-canvas shadow-2xs">
-                    <span className="text-ratq-600 font-bold block mb-1">1. منع الهدر البرمجي</span>
+                    <span className="text-qtd-600 font-bold block mb-1">1. منع الهدر البرمجي</span>
                     <p className="text-xs text-fg-muted">
                       بدلاً من قضاء أسابيع في تنظيف نصوص أو بناء محركات تجريد الحروف، توفر الخريطة مكتبات مجربة وموثقة جاهزة للتثبيت الفوري.
                     </p>
                   </div>
                   <div className="p-3 rounded-xl border border-border bg-canvas shadow-2xs">
-                    <span className="text-ratq-600 font-bold block mb-1">2. وضوح خطة البناء</span>
+                    <span className="text-qtd-600 font-bold block mb-1">2. وضوح خطة البناء</span>
                     <p className="text-xs text-fg-muted">
                       تعطيك وفريقك تسلسلاً معمارياً دقيقاً، وتمنع البدء بطبقات متقدمة قبل استيفاء المتطلبات الأساسية للنص والخطوط.
                     </p>
                   </div>
                   <div className="p-3 rounded-xl border border-border bg-canvas shadow-2xs">
-                    <span className="text-ratq-600 font-bold block mb-1">3. مطابقة معيار إتقان</span>
+                    <span className="text-qtd-600 font-bold block mb-1">3. مطابقة معيار إتقان</span>
                     <p className="text-xs text-fg-muted">
                       كافة الموارد المعروضة مفحوصة ومرتبطة بمستويات إتقان وتراخيص واضحة، لحماية مشروعك من المخالفات الفقهية أو القانونية.
                     </p>
@@ -1280,7 +1280,7 @@ export const QuranicRoadmapPage: React.FC = () => {
               <Link
                 to="/resources/wizard"
                 onClick={() => setShowMethodologyModal(false)}
-                className="text-xs font-bold text-ratq-700 hover:text-ratq-800 dark:text-ratq-400 dark:hover:text-ratq-300 transition-colors flex items-center gap-1.5"
+                className="text-xs font-bold text-qtd-700 hover:text-qtd-800 dark:text-qtd-400 dark:hover:text-qtd-300 transition-colors flex items-center gap-1.5"
               >
                 <span>تريد تجميع حزمة تقنية جاهزة لمشروعك تلقائياً؟</span>
                 <span className="underline underline-offset-4">جرب المُوجِّه التفاعلي ←</span>
@@ -1319,7 +1319,7 @@ export const QuranicRoadmapPage: React.FC = () => {
             {/* Modal Header */}
             <div className="p-5 border-b border-border flex items-center justify-between gap-3 bg-subtle/30">
               <div className="flex items-center gap-2.5">
-                <div className="w-8 h-8 rounded-xl bg-ratq-600 text-white flex items-center justify-center shadow-xs">
+                <div className="w-8 h-8 rounded-xl bg-qtd-600 text-white flex items-center justify-center shadow-xs">
                   <Sparkles className="w-4 h-4 text-amber-300" />
                 </div>
                 <div>
@@ -1395,27 +1395,27 @@ export const QuranicRoadmapPage: React.FC = () => {
                           }}
                           className={`w-full p-3.5 rounded-2xl border text-start transition-all cursor-pointer flex items-center gap-3 group ${
                             isChosen
-                              ? 'border-ratq-600 bg-ratq-50 dark:bg-ratq-950/70 shadow-xs ring-1 ring-ratq-600'
-                              : 'border-border bg-canvas hover:border-ratq-300 hover:bg-subtle'
+                              ? 'border-qtd-600 bg-qtd-50 dark:bg-qtd-950/70 shadow-xs ring-1 ring-qtd-600'
+                              : 'border-border bg-canvas hover:border-qtd-300 hover:bg-subtle'
                           }`}
                         >
                           <div
                             className={`w-9 h-9 rounded-xl border flex items-center justify-center shrink-0 ${
                               isChosen
-                                ? 'bg-ratq-600 text-white border-ratq-600'
+                                ? 'bg-qtd-600 text-white border-qtd-600'
                                 : 'bg-subtle text-fg-muted border-border-subtle group-hover:text-fg'
                             }`}
                           >
                             <Icon className="w-4 h-4" />
                           </div>
                           <div className="min-w-0 flex-1">
-                            <div className="text-xs font-bold text-fg group-hover:text-ratq-700 transition-colors">
+                            <div className="text-xs font-bold text-fg group-hover:text-qtd-700 transition-colors">
                               {opt.title}
                             </div>
                             <div className="text-[10px] text-fg-muted mt-0.5">{opt.desc}</div>
                           </div>
                           <Check
-                            className={`w-4 h-4 text-ratq-600 transition-opacity ${
+                            className={`w-4 h-4 text-qtd-600 transition-opacity ${
                               isChosen ? 'opacity-100' : 'opacity-0'
                             }`}
                           />
@@ -1472,18 +1472,18 @@ export const QuranicRoadmapPage: React.FC = () => {
                           }}
                           className={`w-full p-3.5 rounded-2xl border text-start transition-all cursor-pointer flex items-center justify-between gap-3 group ${
                             isChosen
-                              ? 'border-ratq-600 bg-ratq-50 dark:bg-ratq-950/70 shadow-xs ring-1 ring-ratq-600'
-                              : 'border-border bg-canvas hover:border-ratq-300 hover:bg-subtle'
+                              ? 'border-qtd-600 bg-qtd-50 dark:bg-qtd-950/70 shadow-xs ring-1 ring-qtd-600'
+                              : 'border-border bg-canvas hover:border-qtd-300 hover:bg-subtle'
                           }`}
                         >
                           <div className="min-w-0">
-                            <div className="text-xs font-bold text-fg group-hover:text-ratq-700 transition-colors">
+                            <div className="text-xs font-bold text-fg group-hover:text-qtd-700 transition-colors">
                               {opt.title}
                             </div>
                             <div className="text-[10px] text-fg-muted mt-0.5">{opt.desc}</div>
                           </div>
                           <Check
-                            className={`w-4 h-4 text-ratq-600 shrink-0 transition-opacity ${
+                            className={`w-4 h-4 text-qtd-600 shrink-0 transition-opacity ${
                               isChosen ? 'opacity-100' : 'opacity-0'
                             }`}
                           />
@@ -1531,18 +1531,18 @@ export const QuranicRoadmapPage: React.FC = () => {
                           }}
                           className={`w-full p-3.5 rounded-2xl border text-start transition-all cursor-pointer flex items-center justify-between gap-3 group ${
                             isChosen
-                              ? 'border-ratq-600 bg-ratq-50 dark:bg-ratq-950/70 shadow-xs ring-1 ring-ratq-600'
-                              : 'border-border bg-canvas hover:border-ratq-300 hover:bg-subtle'
+                              ? 'border-qtd-600 bg-qtd-50 dark:bg-qtd-950/70 shadow-xs ring-1 ring-qtd-600'
+                              : 'border-border bg-canvas hover:border-qtd-300 hover:bg-subtle'
                           }`}
                         >
                           <div className="min-w-0">
-                            <div className="text-xs font-bold text-fg group-hover:text-ratq-700 transition-colors">
+                            <div className="text-xs font-bold text-fg group-hover:text-qtd-700 transition-colors">
                               {opt.title}
                             </div>
                             <div className="text-[10px] text-fg-muted mt-0.5">{opt.desc}</div>
                           </div>
                           <Check
-                            className={`w-4 h-4 text-ratq-600 shrink-0 transition-opacity ${
+                            className={`w-4 h-4 text-qtd-600 shrink-0 transition-opacity ${
                               isChosen ? 'opacity-100' : 'opacity-0'
                             }`}
                           />
@@ -1556,26 +1556,26 @@ export const QuranicRoadmapPage: React.FC = () => {
               {/* Step 4: Result Card */}
               {quizStep === 4 && quizRecommendedTrack && (
                 <div className="space-y-4">
-                  <div className="p-5 rounded-2xl border-2 border-ratq-500 bg-ratq-50/70 dark:bg-ratq-950/60 space-y-3">
+                  <div className="p-5 rounded-2xl border-2 border-qtd-500 bg-qtd-50/70 dark:bg-qtd-950/60 space-y-3">
                     <div className="flex items-center justify-between gap-2">
-                      <span className="text-xs font-bold text-ratq-700 dark:text-ratq-300 flex items-center gap-1.5">
-                        <Sparkles className="w-4 h-4 text-ratq-600" />
+                      <span className="text-xs font-bold text-qtd-700 dark:text-qtd-300 flex items-center gap-1.5">
+                        <Sparkles className="w-4 h-4 text-qtd-600" />
                         <span>المسار الهندسي الموصى به لمشروعك:</span>
                       </span>
-                      <span className="text-xs font-mono font-bold px-2 py-0.5 rounded-md bg-ratq-700 text-white">
+                      <span className="text-xs font-mono font-bold px-2 py-0.5 rounded-md bg-qtd-700 text-white">
                         تطابق بنسبة 98%
                       </span>
                     </div>
 
                     <div className="flex items-start gap-3 pt-1">
-                      <div className="w-12 h-12 rounded-xl bg-ratq-600 text-white flex items-center justify-center shrink-0 shadow-xs">
+                      <div className="w-12 h-12 rounded-xl bg-qtd-600 text-white flex items-center justify-center shrink-0 shadow-xs">
                         {React.createElement(quizRecommendedTrack.icon, { className: 'w-6 h-6' })}
                       </div>
                       <div>
                         <h3 className="text-sm font-extrabold text-fg">
                           {quizRecommendedTrack.name_ar}
                         </h3>
-                        <p className="text-xs text-ratq-700 dark:text-ratq-400 font-semibold mt-0.5">
+                        <p className="text-xs text-qtd-700 dark:text-qtd-400 font-semibold mt-0.5">
                           {quizRecommendedTrack.tagline_ar}
                         </p>
                         <p className="text-xs text-fg-muted mt-1 leading-relaxed">
@@ -1584,7 +1584,7 @@ export const QuranicRoadmapPage: React.FC = () => {
                       </div>
                     </div>
 
-                    <div className="pt-2 border-t border-ratq-200 dark:border-ratq-800 flex flex-wrap items-center justify-between gap-2 text-xs text-fg-subtle">
+                    <div className="pt-2 border-t border-qtd-200 dark:border-qtd-800 flex flex-wrap items-center justify-between gap-2 text-xs text-fg-subtle">
                       <span>عدد مراحل المسار: <strong className="text-fg">{quizRecommendedTrack.stageNumbers.length} مراحل</strong></span>
                       <span>الشارة: <strong className="text-emerald-600">{quizRecommendedTrack.targetBadge}</strong></span>
                     </div>

@@ -1,5 +1,6 @@
 // src/store/useThemeStore.ts
 import { create } from 'zustand';
+import { STORAGE_KEYS } from '@/lib/storageKeys';
 import { setLanguage } from '@/i18n/config';
 
 export type ThemeMode = 'light' | 'dark';
@@ -38,24 +39,24 @@ const safeGetItem = (key: string, fallback: string) => {
   return fallback;
 };
 
-const themePresetKey = 'ratq_theme_preset_gold_v1';
+const themePresetKey = STORAGE_KEYS.themePresetGold;
 if (typeof window !== 'undefined' && typeof window.localStorage?.getItem === 'function') {
   if (window.localStorage.getItem(themePresetKey) !== 'true') {
-    window.localStorage.setItem('ratq_palette', 'gold');
-    window.localStorage.setItem('ratq_font', 'suisse');
-    window.localStorage.setItem('ratq_radius', '4px');
+    window.localStorage.setItem(STORAGE_KEYS.palette, 'gold');
+    window.localStorage.setItem(STORAGE_KEYS.font, 'suisse');
+    window.localStorage.setItem(STORAGE_KEYS.radius, '4px');
     window.localStorage.setItem(themePresetKey, 'true');
   }
 }
 
-const initialTheme = (safeGetItem('ratq_theme', 'light') as ThemeMode);
-const initialPalette = (safeGetItem('ratq_palette', 'gold') as PaletteType);
-const initialFont = (safeGetItem('ratq_font', 'suisse') as FontType);
-const initialRadius = (safeGetItem('ratq_radius', '4px') as RadiusType);
-const initialHeroLayout = (safeGetItem('ratq_hero_layout', 'third') as HeroLayoutType);
-const initialLigatures = safeGetItem('ratq_ligatures', 'true') !== 'false';
-const initialLocale = (safeGetItem('ratq_locale', 'ar') as 'ar' | 'en');
-const initialNumeral = (safeGetItem('ratq_numeral', 'western') as 'western' | 'arabic-indic');
+const initialTheme = (safeGetItem(STORAGE_KEYS.theme, 'light') as ThemeMode);
+const initialPalette = (safeGetItem(STORAGE_KEYS.palette, 'gold') as PaletteType);
+const initialFont = (safeGetItem(STORAGE_KEYS.font, 'suisse') as FontType);
+const initialRadius = (safeGetItem(STORAGE_KEYS.radius, '4px') as RadiusType);
+const initialHeroLayout = (safeGetItem(STORAGE_KEYS.heroLayout, 'third') as HeroLayoutType);
+const initialLigatures = safeGetItem(STORAGE_KEYS.ligatures, 'true') !== 'false';
+const initialLocale = (safeGetItem(STORAGE_KEYS.locale, 'ar') as 'ar' | 'en');
+const initialNumeral = (safeGetItem(STORAGE_KEYS.numeral, 'western') as 'western' | 'arabic-indic');
 
 export const applyDomAttributes = (
   theme: ThemeMode,
@@ -115,7 +116,7 @@ export const useThemeStore = create<ThemeState>((set, get) => ({
   setTheme: (theme: ThemeMode) => {
     set({ theme });
     if (typeof window !== 'undefined' && typeof window.localStorage?.setItem === 'function') {
-      window.localStorage.setItem('ratq_theme', theme);
+      window.localStorage.setItem(STORAGE_KEYS.theme, theme);
     }
     const state = get();
     applyDomAttributes(theme, state.palette, state.font, state.radius, state.ligatures);
@@ -129,7 +130,7 @@ export const useThemeStore = create<ThemeState>((set, get) => ({
   setPalette: (palette: PaletteType) => {
     set({ palette });
     if (typeof window !== 'undefined' && typeof window.localStorage?.setItem === 'function') {
-      window.localStorage.setItem('ratq_palette', palette);
+      window.localStorage.setItem(STORAGE_KEYS.palette, palette);
     }
     const state = get();
     applyDomAttributes(state.theme, palette, state.font, state.radius, state.ligatures);
@@ -138,7 +139,7 @@ export const useThemeStore = create<ThemeState>((set, get) => ({
   setFont: (font: FontType) => {
     set({ font });
     if (typeof window !== 'undefined' && typeof window.localStorage?.setItem === 'function') {
-      window.localStorage.setItem('ratq_font', font);
+      window.localStorage.setItem(STORAGE_KEYS.font, font);
     }
     const state = get();
     applyDomAttributes(state.theme, state.palette, font, state.radius, state.ligatures);
@@ -147,7 +148,7 @@ export const useThemeStore = create<ThemeState>((set, get) => ({
   setRadius: (radius: RadiusType) => {
     set({ radius });
     if (typeof window !== 'undefined' && typeof window.localStorage?.setItem === 'function') {
-      window.localStorage.setItem('ratq_radius', radius);
+      window.localStorage.setItem(STORAGE_KEYS.radius, radius);
     }
     const state = get();
     applyDomAttributes(state.theme, state.palette, state.font, radius, state.ligatures);
@@ -156,14 +157,14 @@ export const useThemeStore = create<ThemeState>((set, get) => ({
   setHeroLayout: (layout: HeroLayoutType) => {
     set({ heroLayout: layout });
     if (typeof window !== 'undefined' && typeof window.localStorage?.setItem === 'function') {
-      window.localStorage.setItem('ratq_hero_layout', layout);
+      window.localStorage.setItem(STORAGE_KEYS.heroLayout, layout);
     }
   },
 
   setLigatures: (enabled: boolean) => {
     set({ ligatures: enabled });
     if (typeof window !== 'undefined' && typeof window.localStorage?.setItem === 'function') {
-      window.localStorage.setItem('ratq_ligatures', enabled ? 'true' : 'false');
+      window.localStorage.setItem(STORAGE_KEYS.ligatures, enabled ? 'true' : 'false');
     }
     const state = get();
     applyDomAttributes(state.theme, state.palette, state.font, state.radius, enabled);
@@ -180,12 +181,12 @@ export const useThemeStore = create<ThemeState>((set, get) => ({
     };
     set(defaultState);
     if (typeof window !== 'undefined' && typeof window.localStorage?.setItem === 'function') {
-      window.localStorage.setItem('ratq_theme', 'light');
-      window.localStorage.setItem('ratq_palette', 'gold');
-      window.localStorage.setItem('ratq_font', 'suisse');
-      window.localStorage.setItem('ratq_radius', '4px');
-      window.localStorage.setItem('ratq_hero_layout', 'third');
-      window.localStorage.setItem('ratq_ligatures', 'true');
+      window.localStorage.setItem(STORAGE_KEYS.theme, 'light');
+      window.localStorage.setItem(STORAGE_KEYS.palette, 'gold');
+      window.localStorage.setItem(STORAGE_KEYS.font, 'suisse');
+      window.localStorage.setItem(STORAGE_KEYS.radius, '4px');
+      window.localStorage.setItem(STORAGE_KEYS.heroLayout, 'third');
+      window.localStorage.setItem(STORAGE_KEYS.ligatures, 'true');
     }
     applyDomAttributes('light', 'gold', 'suisse', '4px', true);
   },
@@ -201,7 +202,7 @@ export const useThemeStore = create<ThemeState>((set, get) => ({
   setNumeralSystem: (sys: 'western' | 'arabic-indic') => {
     set({ numeralSystem: sys });
     if (typeof window !== 'undefined' && typeof window.localStorage?.setItem === 'function') {
-      window.localStorage.setItem('ratq_numeral', sys);
+      window.localStorage.setItem(STORAGE_KEYS.numeral, sys);
     }
   },
 }));

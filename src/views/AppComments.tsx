@@ -69,7 +69,7 @@ export const AppCommentsPage: React.FC = () => {
               <Card key={row.review.id} className="p-4 space-y-2">
                 <div className="flex items-center justify-between gap-2">
                   {slug ? (
-                    <Link to={`/resources/${slug}`} className="font-semibold text-fg hover:text-ratq-600">{name}</Link>
+                    <Link to={`/resources/${slug}`} className="font-semibold text-fg hover:text-qtd-600">{name}</Link>
                   ) : (
                     <span className="font-semibold text-fg">{name}</span>
                   )}

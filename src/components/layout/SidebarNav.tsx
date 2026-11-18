@@ -46,7 +46,7 @@ export const SidebarNav: React.FC<SidebarNavProps> = ({ title, items }) => {
                   clsx(
                     'flex items-center justify-between px-3 py-2 rounded-lg text-xs font-semibold transition-colors',
                     isActive
-                      ? 'bg-ratq-50 text-ratq-800 dark:bg-ratq-950 dark:text-ratq-300'
+                      ? 'bg-qtd-50 text-qtd-800 dark:bg-qtd-950 dark:text-qtd-300'
                       : 'text-fg-muted hover:text-fg hover:bg-subtle'
                   )
                 }

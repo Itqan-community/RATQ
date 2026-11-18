@@ -27,7 +27,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="ar" dir="rtl" className={`${plexAr.variable} ${plexMono.variable} ${amiriQuran.variable}`} data-palette="gold" data-font="suisse" data-radius="4px" suppressHydrationWarning>
       <body
-        className="bg-canvas text-fg font-ui antialiased min-h-screen selection:bg-ratq-500 selection:text-white"
+        className="bg-canvas text-fg font-ui antialiased min-h-screen selection:bg-qtd-500 selection:text-white"
         suppressHydrationWarning
       >
         {children}

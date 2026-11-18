@@ -1,68 +1,68 @@
 /* tokens.css — رمز واحد لكل معنى، لا قيم مباشرة في المكوّنات */
 :root {
   /* هوية: زمردي هادئ (اللون الأساسي) */
-  --ratq-primary-50:  #ECFDF6;
-  --ratq-primary-100: #D1FAE8;
-  --ratq-primary-200: #A7F3D3;
-  --ratq-primary-300: #6EE7B7;
-  --ratq-primary-400: #34D399;
-  --ratq-primary-500: #10B981;
-  --ratq-primary-600: #059669;
-  --ratq-primary-700: #047857;
-  --ratq-primary-800: #065F46;
-  --ratq-primary-900: #064E3B;
-  --ratq-primary-950: #022C22;
+  --qtd-primary-50:  #ECFDF6;
+  --qtd-primary-100: #D1FAE8;
+  --qtd-primary-200: #A7F3D3;
+  --qtd-primary-300: #6EE7B7;
+  --qtd-primary-400: #34D399;
+  --qtd-primary-500: #10B981;
+  --qtd-primary-600: #059669;
+  --qtd-primary-700: #047857;
+  --qtd-primary-800: #065F46;
+  --qtd-primary-900: #064E3B;
+  --qtd-primary-950: #022C22;
 
   /* ثانوي: عمق أزرق-زمردي للمساحات الإدارية */
-  --ratq-deep-50:  #F0F7F7;
-  --ratq-deep-100: #DCEAEA;
-  --ratq-deep-300: #9EC5C5;
-  --ratq-deep-500: #3C7C7C;
-  --ratq-deep-700: #1F4E4E;
-  --ratq-deep-900: #0B2E2E;
+  --qtd-deep-50:  #F0F7F7;
+  --qtd-deep-100: #DCEAEA;
+  --qtd-deep-300: #9EC5C5;
+  --qtd-deep-500: #3C7C7C;
+  --qtd-deep-700: #1F4E4E;
+  --qtd-deep-900: #0B2E2E;
 
   /* الذهب: للشارات والتمييز (لا يُستخدم كزرّ أساسي) */
-  --ratq-gold-50:  #FFFBEB;
-  --ratq-gold-100: #FEF3C7;
-  --ratq-gold-300: #FCD34D;
-  --ratq-gold-500: #F59E0B;
-  --ratq-gold-700: #B45309;
-  --ratq-gold-900: #78350F;
+  --qtd-gold-50:  #FFFBEB;
+  --qtd-gold-100: #FEF3C7;
+  --qtd-gold-300: #FCD34D;
+  --qtd-gold-500: #F59E0B;
+  --qtd-gold-700: #B45309;
+  --qtd-gold-900: #78350F;
 
   /* محايد */
-  --ratq-neutral-0:   #FFFFFF;
-  --ratq-neutral-50:  #F8FAFC;
-  --ratq-neutral-100: #F1F5F9;
-  --ratq-neutral-200: #E2E8F0;
-  --ratq-neutral-300: #CBD5E1;
-  --ratq-neutral-400: #94A3B8;
-  --ratq-neutral-500: #64748B;
-  --ratq-neutral-600: #475569;
-  --ratq-neutral-700: #334155;
-  --ratq-neutral-800: #1E293B;
-  --ratq-neutral-900: #0F172A;
-  --ratq-neutral-950: #060B16;
+  --qtd-neutral-0:   #FFFFFF;
+  --qtd-neutral-50:  #F8FAFC;
+  --qtd-neutral-100: #F1F5F9;
+  --qtd-neutral-200: #E2E8F0;
+  --qtd-neutral-300: #CBD5E1;
+  --qtd-neutral-400: #94A3B8;
+  --qtd-neutral-500: #64748B;
+  --qtd-neutral-600: #475569;
+  --qtd-neutral-700: #334155;
+  --qtd-neutral-800: #1E293B;
+  --qtd-neutral-900: #0F172A;
+  --qtd-neutral-950: #060B16;
 
   /* دلالات */
-  --ratq-success: #059669;  --ratq-success-bg: #ECFDF5;  --ratq-success-fg: #065F46;
-  --ratq-warning: #D97706;  --ratq-warning-bg: #FFFBEB;  --ratq-warning-fg: #78350F;
-  --ratq-danger:  #DC2626;  --ratq-danger-bg:  #FEF2F2;  --ratq-danger-fg:  #7F1D1D;
-  --ratq-info:    #0284C7;  --ratq-info-bg:    #F0F9FF;  --ratq-info-fg:    #075985;
+  --qtd-success: #059669;  --qtd-success-bg: #ECFDF5;  --qtd-success-fg: #065F46;
+  --qtd-warning: #D97706;  --qtd-warning-bg: #FFFBEB;  --qtd-warning-fg: #78350F;
+  --qtd-danger:  #DC2626;  --qtd-danger-bg:  #FEF2F2;  --qtd-danger-fg:  #7F1D1D;
+  --qtd-info:    #0284C7;  --qtd-info-bg:    #F0F9FF;  --qtd-info-fg:    #075985;
 
   /* أسطح ونصوص */
-  --bg-canvas: var(--ratq-neutral-0);
-  --bg-subtle: var(--ratq-neutral-50);
-  --bg-muted:  var(--ratq-neutral-100);
-  --bg-inverse: var(--ratq-neutral-900);
-  --fg-default: var(--ratq-neutral-900);
-  --fg-muted:   var(--ratq-neutral-600);
-  --fg-subtle:  var(--ratq-neutral-500);
-  --fg-inverse: var(--ratq-neutral-0);
+  --bg-canvas: var(--qtd-neutral-0);
+  --bg-subtle: var(--qtd-neutral-50);
+  --bg-muted:  var(--qtd-neutral-100);
+  --bg-inverse: var(--qtd-neutral-900);
+  --fg-default: var(--qtd-neutral-900);
+  --fg-muted:   var(--qtd-neutral-600);
+  --fg-subtle:  var(--qtd-neutral-500);
+  --fg-inverse: var(--qtd-neutral-0);
   --fg-on-primary: #FFFFFF;
-  --border-subtle: var(--ratq-neutral-200);
-  --border-default: var(--ratq-neutral-300);
-  --border-strong: var(--ratq-neutral-400);
-  --ring-focus: var(--ratq-primary-500);
+  --border-subtle: var(--qtd-neutral-200);
+  --border-default: var(--qtd-neutral-300);
+  --border-strong: var(--qtd-neutral-400);
+  --ring-focus: var(--qtd-primary-500);
 
   /* التدرج اللوني لقسم Hero والبانرات الرئيسية */
   --hero-gradient: linear-gradient(100deg, #F6FCF9 0%, #ECFAF3 48%, #DFF5EB 100%);
@@ -71,10 +71,10 @@
   --hero-gradient-to:   #DFF5EB;
 
   /* شارات إتقان */
-  --badge-basic:    var(--ratq-neutral-500);
-  --badge-verified: var(--ratq-primary-600);
+  --badge-basic:    var(--qtd-neutral-500);
+  --badge-verified: var(--qtd-primary-600);
   --badge-certified:#0E7490;
-  --badge-gold:     var(--ratq-gold-500);
+  --badge-gold:     var(--qtd-gold-500);
 
   /* الخطوط */
   --font-ui: var(--font-plex-ar, 'IBM Plex Sans Arabic'), 'Segoe UI', 'Noto Sans Arabic', system-ui, -apple-system, sans-serif;
@@ -168,8 +168,8 @@
   --border-default: #2A3854;
   --border-strong: #3B4D73;
   --shadow-md: 0 4px 12px rgba(0,0,0,.4);
-  --ratq-primary-500: #34D399;
-  --ratq-primary-600: #10B981;
+  --qtd-primary-500: #34D399;
+  --qtd-primary-600: #10B981;
   --hero-gradient: linear-gradient(100deg, #071512 0%, #0B1F19 48%, #102B23 100%);
   --hero-gradient-from: #071512;
   --hero-gradient-via:  #0B1F19;
@@ -182,23 +182,23 @@
 
 /* ثيم أخضر زيتوني (Olive Green) */
 [data-palette="olive"] {
-  --ratq-primary-50:  #F7F8F0;
-  --ratq-primary-100: #EDF0DC;
-  --ratq-primary-200: #DCE2BC;
-  --ratq-primary-300: #C4CE93;
-  --ratq-primary-400: #A8B868;
-  --ratq-primary-500: #849643;
-  --ratq-primary-600: #6B7C33;
-  --ratq-primary-700: #546228;
-  --ratq-primary-800: #424D22;
-  --ratq-primary-900: #353D1E;
-  --ratq-primary-950: #1B210D;
-  --ratq-deep-50:     #F4F6F0;
-  --ratq-deep-100:    #E6EAD9;
-  --ratq-deep-300:    #BAC69A;
-  --ratq-deep-500:    #5C6E2E;
-  --ratq-deep-700:    #39451C;
-  --ratq-deep-900:    #1C240E;
+  --qtd-primary-50:  #F7F8F0;
+  --qtd-primary-100: #EDF0DC;
+  --qtd-primary-200: #DCE2BC;
+  --qtd-primary-300: #C4CE93;
+  --qtd-primary-400: #A8B868;
+  --qtd-primary-500: #849643;
+  --qtd-primary-600: #6B7C33;
+  --qtd-primary-700: #546228;
+  --qtd-primary-800: #424D22;
+  --qtd-primary-900: #353D1E;
+  --qtd-primary-950: #1B210D;
+  --qtd-deep-50:     #F4F6F0;
+  --qtd-deep-100:    #E6EAD9;
+  --qtd-deep-300:    #BAC69A;
+  --qtd-deep-500:    #5C6E2E;
+  --qtd-deep-700:    #39451C;
+  --qtd-deep-900:    #1C240E;
   --ring-focus: #849643;
   --hero-gradient: linear-gradient(100deg, #FAFBF6 0%, #F3F6E8 48%, #E8EED4 100%);
   --hero-gradient-from: #FAFBF6;
@@ -217,8 +217,8 @@
   --border-subtle: #242E1E;
   --border-default: #33422A;
   --border-strong: #465B39;
-  --ratq-primary-500: #A8B868;
-  --ratq-primary-600: #849643;
+  --qtd-primary-500: #A8B868;
+  --qtd-primary-600: #849643;
   --hero-gradient: linear-gradient(100deg, #0C120A 0%, #131B0F 48%, #1A2515 100%);
   --hero-gradient-from: #0C120A;
   --hero-gradient-via:  #131B0F;
@@ -227,23 +227,23 @@
 
 /* الثيم الذهبي (Golden Amber / Warm Bronze) */
 [data-palette="gold"] {
-  --ratq-primary-50:  #FAF7F2;
-  --ratq-primary-100: #F4EFE3;
-  --ratq-primary-200: #E8DEC6;
-  --ratq-primary-300: #D7C59E;
-  --ratq-primary-400: #BEA56E;
-  --ratq-primary-500: #A98547;
-  --ratq-primary-600: #946E37;
-  --ratq-primary-700: #77562A;
-  --ratq-primary-800: #5F4423;
-  --ratq-primary-900: #4C371D;
-  --ratq-primary-950: #2A1E0E;
-  --ratq-deep-50:     #FAF6ED;
-  --ratq-deep-100:    #F3E9D2;
-  --ratq-deep-300:    #DFC58E;
-  --ratq-deep-500:    #886228;
-  --ratq-deep-700:    #573E19;
-  --ratq-deep-900:    #2C1F0C;
+  --qtd-primary-50:  #FAF7F2;
+  --qtd-primary-100: #F4EFE3;
+  --qtd-primary-200: #E8DEC6;
+  --qtd-primary-300: #D7C59E;
+  --qtd-primary-400: #BEA56E;
+  --qtd-primary-500: #A98547;
+  --qtd-primary-600: #946E37;
+  --qtd-primary-700: #77562A;
+  --qtd-primary-800: #5F4423;
+  --qtd-primary-900: #4C371D;
+  --qtd-primary-950: #2A1E0E;
+  --qtd-deep-50:     #FAF6ED;
+  --qtd-deep-100:    #F3E9D2;
+  --qtd-deep-300:    #DFC58E;
+  --qtd-deep-500:    #886228;
+  --qtd-deep-700:    #573E19;
+  --qtd-deep-900:    #2C1F0C;
   --ring-focus: #946E37;
   --hero-gradient: linear-gradient(100deg, #FDFBF7 0%, #F7F2E6 48%, #EFE6D5 100%);
   --hero-gradient-from: #FDFBF7;
@@ -262,8 +262,8 @@
   --border-subtle: #2E2316;
   --border-default: #42321F;
   --border-strong: #5E472B;
-  --ratq-primary-500: #BEA56E;
-  --ratq-primary-600: #946E37;
+  --qtd-primary-500: #BEA56E;
+  --qtd-primary-600: #946E37;
   --hero-gradient: linear-gradient(100deg, #120E09 0%, #1A140D 48%, #241C12 100%);
   --hero-gradient-from: #120E09;
   --hero-gradient-via:  #1A140D;
@@ -272,23 +272,23 @@
 
 /* ثيم أسود كحلي (Midnight Navy) */
 [data-palette="navy"] {
-  --ratq-primary-50:  #F0F4FA;
-  --ratq-primary-100: #DDE7F4;
-  --ratq-primary-200: #B9CEE8;
-  --ratq-primary-300: #89ADD6;
-  --ratq-primary-400: #5489BF;
-  --ratq-primary-500: #2968A9;
-  --ratq-primary-600: #1D4F85;
-  --ratq-primary-700: #153A63;
-  --ratq-primary-800: #102B4A;
-  --ratq-primary-900: #0C1E34;
-  --ratq-primary-950: #06101D;
-  --ratq-deep-50:     #EEF4FA;
-  --ratq-deep-100:    #D8E5F4;
-  --ratq-deep-300:    #90B3DB;
-  --ratq-deep-500:    #235A94;
-  --ratq-deep-700:    #143557;
-  --ratq-deep-900:    #0A1C2E;
+  --qtd-primary-50:  #F0F4FA;
+  --qtd-primary-100: #DDE7F4;
+  --qtd-primary-200: #B9CEE8;
+  --qtd-primary-300: #89ADD6;
+  --qtd-primary-400: #5489BF;
+  --qtd-primary-500: #2968A9;
+  --qtd-primary-600: #1D4F85;
+  --qtd-primary-700: #153A63;
+  --qtd-primary-800: #102B4A;
+  --qtd-primary-900: #0C1E34;
+  --qtd-primary-950: #06101D;
+  --qtd-deep-50:     #EEF4FA;
+  --qtd-deep-100:    #D8E5F4;
+  --qtd-deep-300:    #90B3DB;
+  --qtd-deep-500:    #235A94;
+  --qtd-deep-700:    #143557;
+  --qtd-deep-900:    #0A1C2E;
   --ring-focus: #2968A9;
   --hero-gradient: linear-gradient(100deg, #F6F9FD 0%, #EDF3FA 48%, #DFEAF7 100%);
   --hero-gradient-from: #F6F9FD;
@@ -307,8 +307,8 @@
   --border-subtle: #182542;
   --border-default: #23365C;
   --border-strong: #334D82;
-  --ratq-primary-500: #5489BF;
-  --ratq-primary-600: #2968A9;
+  --qtd-primary-500: #5489BF;
+  --qtd-primary-600: #2968A9;
   --hero-gradient: linear-gradient(100deg, #060B14 0%, #0A1220 48%, #0F1A2E 100%);
   --hero-gradient-from: #060B14;
   --hero-gradient-via:  #0A1220;

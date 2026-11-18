@@ -203,13 +203,13 @@ const FAMILY_COLORS: Record<
     glow: 'rgba(6, 182, 212, 0.15)',
   },
   code: {
-    symbol: 'text-ratq-500 dark:text-ratq-400',
-    iconColor: 'text-ratq-600 dark:text-ratq-400',
-    iconBg: 'bg-ratq-50 dark:bg-ratq-950/70',
-    iconBorder: 'border-ratq-200/70 dark:border-ratq-800/60',
-    border: 'border-ratq-500/30',
-    badgeBg: 'bg-ratq-50 dark:bg-ratq-950/80',
-    badgeText: 'text-ratq-700 dark:text-ratq-300',
+    symbol: 'text-qtd-500 dark:text-qtd-400',
+    iconColor: 'text-qtd-600 dark:text-qtd-400',
+    iconBg: 'bg-qtd-50 dark:bg-qtd-950/70',
+    iconBorder: 'border-qtd-200/70 dark:border-qtd-800/60',
+    border: 'border-qtd-500/30',
+    badgeBg: 'bg-qtd-50 dark:bg-qtd-950/80',
+    badgeText: 'text-qtd-700 dark:text-qtd-300',
     glow: 'rgba(59, 130, 246, 0.15)',
   },
   data: {
@@ -276,8 +276,8 @@ export const QuranTechPeriodicCarousel: React.FC = () => {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
           {/* Right Column (in RTL): Title, Description, and CTA Button */}
           <div className="lg:col-span-5 text-start flex flex-col justify-center">
-            <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-ratq-50 dark:bg-ratq-950 text-ratq-700 dark:text-ratq-300 text-[11px] font-semibold mb-3.5 border border-ratq-200 dark:border-ratq-800 w-fit">
-              <Layers className="w-3.5 h-3.5 text-ratq-600 dark:text-ratq-400" />
+            <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-qtd-50 dark:bg-qtd-950 text-qtd-700 dark:text-qtd-300 text-[11px] font-semibold mb-3.5 border border-qtd-200 dark:border-qtd-800 w-fit">
+              <Layers className="w-3.5 h-3.5 text-qtd-600 dark:text-qtd-400" />
               <span>عرض العمق البصري • Depth Carousel</span>
             </div>
 
@@ -380,7 +380,7 @@ export const QuranTechPeriodicCarousel: React.FC = () => {
 
                       <Link
                         to={`/resources?type=${element.code}`}
-                        className="text-xs font-semibold text-ratq-700 dark:text-ratq-400 hover:underline flex items-center gap-1 group"
+                        className="text-xs font-semibold text-qtd-700 dark:text-qtd-400 hover:underline flex items-center gap-1 group"
                         onClick={(e) => {
                           // Allow navigation when clicking on the active card
                           e.stopPropagation();

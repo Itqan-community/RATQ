@@ -21,7 +21,7 @@ export const SiteFooter: React.FC = () => {
               <Link to="/" className="flex flex-col items-start group select-none" title={t('site:footer.home_title')}>
                 <BrandLogo />
                 {(!isLive() || IS_BETA) && (
-                  <span className="text-[9px] font-bold text-ratq-700 dark:text-ratq-300 bg-ratq-50 dark:bg-ratq-950/80 border border-ratq-200 dark:border-ratq-800/80 px-1.5 py-0.5 rounded leading-none mt-1">
+                  <span className="text-[9px] font-bold text-qtd-700 dark:text-qtd-300 bg-qtd-50 dark:bg-qtd-950/80 border border-qtd-200 dark:border-qtd-800/80 px-1.5 py-0.5 rounded leading-none mt-1">
                     {t('site:footer.beta')}
                   </span>
                 )}
@@ -32,7 +32,7 @@ export const SiteFooter: React.FC = () => {
               <br />
               {t('site:footer.tagline')}
             </p>
-            <div className="inline-flex items-center gap-2 px-2.5 py-1 rounded-full border border-ratq-200 bg-ratq-50 text-ratq-800 dark:border-ratq-900 dark:bg-ratq-950 dark:text-ratq-300 text-xs font-semibold">
+            <div className="inline-flex items-center gap-2 px-2.5 py-1 rounded-full border border-qtd-200 bg-qtd-50 text-qtd-800 dark:border-qtd-900 dark:bg-qtd-950 dark:text-qtd-300 text-xs font-semibold">
               <ShieldCheck className="w-3.5 h-3.5" />
               <span>{t('common:footer.supported_by')}</span>
             </div>
@@ -87,7 +87,7 @@ export const SiteFooter: React.FC = () => {
         <div className="pt-8 border-t border-border flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-fg-subtle">
           <p>{t('common:footer.rights_reserved')}</p>
           <div className="flex items-center gap-4">
-            <Link to="/ux-study" className="hover:text-fg transition-colors font-medium text-ratq-700 dark:text-ratq-400">{t('site:footer.ux_study')}</Link>
+            <Link to="/ux-study" className="hover:text-fg transition-colors font-medium text-qtd-700 dark:text-qtd-400">{t('site:footer.ux_study')}</Link>
             {!isHiddenRoute('/ux-study') && <span>•</span>}
             <Link to="/faq" className="hover:text-fg transition-colors">{t('site:footer.faq')}</Link>
             {!isHiddenRoute('/faq') && <span>•</span>}

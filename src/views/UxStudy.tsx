@@ -252,7 +252,7 @@ export const UxStudy: React.FC = () => {
 
             <Link to="/" title="الرئيسية" className="shrink-0 flex flex-col items-center group select-none">
               <BrandMark className="h-7 w-7 transition-transform duration-200 group-hover:scale-105" />
-              <span className="text-[8px] font-bold text-ratq-700 dark:text-ratq-300 bg-ratq-50 dark:bg-ratq-950/80 border border-ratq-200 dark:border-ratq-800/80 px-1.5 py-0.5 rounded leading-none mt-0.5 whitespace-nowrap">
+              <span className="text-[8px] font-bold text-qtd-700 dark:text-qtd-300 bg-qtd-50 dark:bg-qtd-950/80 border border-qtd-200 dark:border-qtd-800/80 px-1.5 py-0.5 rounded leading-none mt-0.5 whitespace-nowrap">
                 نسخة تجريبية
               </span>
             </Link>
@@ -279,7 +279,7 @@ export const UxStudy: React.FC = () => {
                 onClick={() => setActiveTab('ux')}
                 className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all whitespace-nowrap flex items-center gap-1.5 ${
                   activeTab === 'ux'
-                    ? 'bg-ratq-700 text-white shadow-xs'
+                    ? 'bg-qtd-700 text-white shadow-xs'
                     : 'text-fg-muted hover:text-fg hover:bg-subtle'
                 }`}
               >
@@ -291,7 +291,7 @@ export const UxStudy: React.FC = () => {
                 onClick={() => setActiveTab('prd')}
                 className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all whitespace-nowrap flex items-center gap-1.5 ${
                   activeTab === 'prd'
-                    ? 'bg-ratq-700 text-white shadow-xs'
+                    ? 'bg-qtd-700 text-white shadow-xs'
                     : 'text-fg-muted hover:text-fg hover:bg-subtle'
                 }`}
               >
@@ -302,7 +302,7 @@ export const UxStudy: React.FC = () => {
                 onClick={() => setActiveTab('stories')}
                 className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all whitespace-nowrap flex items-center gap-1.5 ${
                   activeTab === 'stories'
-                    ? 'bg-ratq-700 text-white shadow-xs'
+                    ? 'bg-qtd-700 text-white shadow-xs'
                     : 'text-fg-muted hover:text-fg hover:bg-subtle'
                 }`}
               >
@@ -340,7 +340,7 @@ export const UxStudy: React.FC = () => {
                       placeholder="ابحث في أقسام الدراسة..."
                       value={searchQuery}
                       onChange={(e) => setSearchQuery(e.target.value)}
-                      className="w-full text-xs ps-8 pe-3 py-1.5 rounded-lg border border-border bg-subtle/50 text-fg placeholder:text-fg-subtle focus:outline-none focus:ring-1 focus:ring-ratq-500"
+                      className="w-full text-xs ps-8 pe-3 py-1.5 rounded-lg border border-border bg-subtle/50 text-fg placeholder:text-fg-subtle focus:outline-none focus:ring-1 focus:ring-qtd-500"
                     />
                   </div>
                 </div>
@@ -348,7 +348,7 @@ export const UxStudy: React.FC = () => {
                 {/* Progress bar */}
                 <div className="w-full h-1 bg-subtle rounded-full mb-3 overflow-hidden">
                   <div
-                    className="h-full bg-ratq-600 transition-all duration-300"
+                    className="h-full bg-qtd-600 transition-all duration-300"
                     style={{ width: `${((activeIndex + 1) / SECTIONS.length) * 100}%` }}
                   />
                 </div>
@@ -374,14 +374,14 @@ export const UxStudy: React.FC = () => {
                               onClick={() => setActiveSectionId(section.id)}
                               className={`w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs transition-all text-start group ${
                                 isCurrent
-                                  ? 'bg-ratq-50 dark:bg-ratq-950/70 text-ratq-800 dark:text-ratq-300 font-bold border border-ratq-200 dark:border-ratq-800'
+                                  ? 'bg-qtd-50 dark:bg-qtd-950/70 text-qtd-800 dark:text-qtd-300 font-bold border border-qtd-200 dark:border-qtd-800'
                                   : 'text-fg-muted hover:text-fg hover:bg-subtle'
                               }`}
                             >
                               <div className="flex items-center gap-2 min-w-0">
                                 <span
                                   className={`text-[11px] font-mono shrink-0 ${
-                                    isCurrent ? 'text-ratq-600 dark:text-ratq-400 font-bold' : 'text-fg-subtle'
+                                    isCurrent ? 'text-qtd-600 dark:text-qtd-400 font-bold' : 'text-fg-subtle'
                                   }`}
                                 >
                                   {section.number}
@@ -405,7 +405,7 @@ export const UxStudy: React.FC = () => {
                 <div className="mb-8 pb-6 border-b border-border/80">
                   <div className="flex flex-wrap items-center justify-between gap-3 mb-3">
                     <div className="inline-flex items-center gap-2 px-2.5 py-1 rounded-full bg-subtle text-fg-muted text-xs font-mono border border-border">
-                      <span className="font-bold text-ratq-700 dark:text-ratq-300">القسم {activeSection.number}</span>
+                      <span className="font-bold text-qtd-700 dark:text-qtd-300">القسم {activeSection.number}</span>
                       <span>•</span>
                       <span>{activeSection.phase}</span>
                     </div>
@@ -442,13 +442,13 @@ export const UxStudy: React.FC = () => {
                   {activeIndex < SECTIONS.length - 1 ? (
                     <button
                       onClick={handleNextSection}
-                      className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl border border-ratq-200 dark:border-ratq-800 bg-ratq-50 dark:bg-ratq-950/60 hover:bg-ratq-100 dark:hover:bg-ratq-900 text-xs font-semibold text-ratq-800 dark:text-ratq-200 transition-colors group"
+                      className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl border border-qtd-200 dark:border-qtd-800 bg-qtd-50 dark:bg-qtd-950/60 hover:bg-qtd-100 dark:hover:bg-qtd-900 text-xs font-semibold text-qtd-800 dark:text-qtd-200 transition-colors group"
                     >
                       <div className="flex flex-col text-start">
-                        <span className="text-[10px] text-ratq-600 dark:text-ratq-400">القسم التالي</span>
+                        <span className="text-[10px] text-qtd-600 dark:text-qtd-400">القسم التالي</span>
                         <span className="truncate max-w-[150px] sm:max-w-xs">{SECTIONS[activeIndex + 1].title}</span>
                       </div>
-                      <ArrowLeft className="w-4 h-4 rtl:rotate-0 rotate-180 text-ratq-600 dark:text-ratq-400" />
+                      <ArrowLeft className="w-4 h-4 rtl:rotate-0 rotate-180 text-qtd-600 dark:text-qtd-400" />
                     </button>
                   ) : (
                     <div className="text-xs text-fg-subtle font-mono">
@@ -479,7 +479,7 @@ function renderSectionContent(sectionId: string) {
         <div className="space-y-6">
           <div className="p-4 rounded-xl border border-border bg-subtle/40">
             <h3 className="text-sm font-bold text-fg mb-1.5 flex items-center gap-2">
-              <Sparkles className="w-4 h-4 text-ratq-600" />
+              <Sparkles className="w-4 h-4 text-qtd-600" />
               <span>جوهر الدراسة والفرصة الاستراتيجية</span>
             </h3>
             <p className="text-xs text-fg-muted leading-relaxed">
@@ -489,7 +489,7 @@ function renderSectionContent(sectionId: string) {
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div className="p-4 rounded-xl border border-border bg-canvas">
-              <span className="text-[11px] font-bold text-ratq-700 dark:text-ratq-400 font-mono">01. المشكلة</span>
+              <span className="text-[11px] font-bold text-qtd-700 dark:text-qtd-400 font-mono">01. المشكلة</span>
               <h4 className="text-xs font-bold text-fg mt-1 mb-2">تشتت الموارد ومخاطر التحريف</h4>
               <p className="text-xs text-fg-muted leading-relaxed">
                 صعوبة العثور على أصول موثوقة، تفاوت صيغ الترميز العثماني، واستخدام نماذج توليدية قد تخترق قدسية النص القرآني.
@@ -497,7 +497,7 @@ function renderSectionContent(sectionId: string) {
             </div>
 
             <div className="p-4 rounded-xl border border-border bg-canvas">
-              <span className="text-[11px] font-bold text-ratq-700 dark:text-ratq-400 font-mono">02. الحل المقترح</span>
+              <span className="text-[11px] font-bold text-qtd-700 dark:text-qtd-400 font-mono">02. الحل المقترح</span>
               <h4 className="text-xs font-bold text-fg mt-1 mb-2">بنية تحتية حية ومحوكمة</h4>
               <p className="text-xs text-fg-muted leading-relaxed">
                 كتالوج مركزي لـ 11 نوعاً من الأصول، مسارات وصول منظمة بمفاتيح API، بيئة Sandbox للتجربة، وشارات إتقان ذات المستويات الأربعة.
@@ -505,7 +505,7 @@ function renderSectionContent(sectionId: string) {
             </div>
 
             <div className="p-4 rounded-xl border border-border bg-canvas">
-              <span className="text-[11px] font-bold text-ratq-700 dark:text-ratq-400 font-mono">03. الأثر المتوقع</span>
+              <span className="text-[11px] font-bold text-qtd-700 dark:text-qtd-400 font-mono">03. الأثر المتوقع</span>
               <h4 className="text-xs font-bold text-fg mt-1 mb-2">تسريع الإطلاق بنسبة 60%</h4>
               <p className="text-xs text-fg-muted leading-relaxed">
                 تقليص زمن تكامل المطورين من أسابيع إلى دقائق، وصفر أخطاء في نصوص المصاحف المعتمدة المنشورة.
@@ -517,19 +517,19 @@ function renderSectionContent(sectionId: string) {
             <h4 className="text-xs font-bold text-fg mb-3">أبرز توصيات تجربة المستخدم (UX Recommendations)</h4>
             <ul className="space-y-2 text-xs text-fg-muted">
               <li className="flex items-start gap-2">
-                <CheckCircle2 className="w-4 h-4 text-ratq-600 shrink-0 mt-0.5" />
+                <CheckCircle2 className="w-4 h-4 text-qtd-600 shrink-0 mt-0.5" />
                 <span><strong>تبسيط التوثيق وتوفير نماذج كود جاهزة:</strong> توفير أمثلة كود بـ 5 لغات برمجية (Dart/Flutter, JS/TS, Python, Swift, cURL) بنسخ مباشر.</span>
               </li>
               <li className="flex items-start gap-2">
-                <CheckCircle2 className="w-4 h-4 text-ratq-600 shrink-0 mt-0.5" />
+                <CheckCircle2 className="w-4 h-4 text-qtd-600 shrink-0 mt-0.5" />
                 <span><strong>إلزامية الشفافية في التراخيص والإسناد:</strong> إظهار رخصة المورد وجهة التحقيق ورقم المصحف الورقي المقابل بشكل بارز في كل بطاقة.</span>
               </li>
               <li className="flex items-start gap-2">
-                <CheckCircle2 className="w-4 h-4 text-ratq-600 shrink-0 mt-0.5" />
+                <CheckCircle2 className="w-4 h-4 text-qtd-600 shrink-0 mt-0.5" />
                 <span><strong>حظر الذكاء الاصطناعي التوليدي للنص القرآني (Zero-Hallucination Guardrail):</strong> وضع سياسة صارمة مدعومة بفحص آلي يمنع قبول أي مورد يولد نصاً قرآنياً عشوائياً.</span>
               </li>
               <li className="flex items-start gap-2">
-                <CheckCircle2 className="w-4 h-4 text-ratq-600 shrink-0 mt-0.5" />
+                <CheckCircle2 className="w-4 h-4 text-qtd-600 shrink-0 mt-0.5" />
                 <span><strong>إدارة دورة حياة المفاتيح بنقرة واحدة:</strong> إتاحة إنشاء المفتاح، تدويره (Key Rotation)، ومراقبة استهلاك الحصص اليومية بلوحة تحكم نظيفة.</span>
               </li>
             </ul>
@@ -559,19 +559,19 @@ function renderSectionContent(sectionId: string) {
             <h4 className="text-xs font-bold text-fg mb-3">مؤشرات النجاح الاستراتيجية (Core KPIs)</h4>
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-center">
               <div className="p-3 rounded-lg bg-subtle border border-border">
-                <span className="text-xl font-bold font-mono text-ratq-700 dark:text-ratq-400">{'< 3 min'}</span>
+                <span className="text-xl font-bold font-mono text-qtd-700 dark:text-qtd-400">{'< 3 min'}</span>
                 <span className="block text-[11px] text-fg-subtle mt-1 font-medium">زمن أول استدعاء API</span>
               </div>
               <div className="p-3 rounded-lg bg-subtle border border-border">
-                <span className="text-xl font-bold font-mono text-ratq-700 dark:text-ratq-400">100%</span>
+                <span className="text-xl font-bold font-mono text-qtd-700 dark:text-qtd-400">100%</span>
                 <span className="block text-[11px] text-fg-subtle mt-1 font-medium">صحة إسناد النصوص المعتمدة</span>
               </div>
               <div className="p-3 rounded-lg bg-subtle border border-border">
-                <span className="text-xl font-bold font-mono text-ratq-700 dark:text-ratq-400">92%+</span>
+                <span className="text-xl font-bold font-mono text-qtd-700 dark:text-qtd-400">92%+</span>
                 <span className="block text-[11px] text-fg-subtle mt-1 font-medium">معدل رضا المطورين CSAT</span>
               </div>
               <div className="p-3 rounded-lg bg-subtle border border-border">
-                <span className="text-xl font-bold font-mono text-ratq-700 dark:text-ratq-400">99.95%</span>
+                <span className="text-xl font-bold font-mono text-qtd-700 dark:text-qtd-400">99.95%</span>
                 <span className="block text-[11px] text-fg-subtle mt-1 font-medium">جاهزية وتوافر الـ API</span>
               </div>
             </div>
@@ -729,21 +729,21 @@ function renderSectionContent(sectionId: string) {
         <div className="space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div className="p-4 rounded-xl border border-border bg-subtle/30">
-              <span className="text-2xl font-bold font-mono text-ratq-700 dark:text-ratq-400 block mb-1">78%</span>
+              <span className="text-2xl font-bold font-mono text-qtd-700 dark:text-qtd-400 block mb-1">78%</span>
               <h5 className="text-xs font-bold text-fg mb-1">معاناة مع رسم الخط العثماني</h5>
               <p className="text-xs text-fg-muted">
                 أبلغوا عن مشاكل في تراكب علامات التشكيل وسقوط المحاذاة على شاشات الجوال.
               </p>
             </div>
             <div className="p-4 rounded-xl border border-border bg-subtle/30">
-              <span className="text-2xl font-bold font-mono text-ratq-700 dark:text-ratq-400 block mb-1">71%</span>
+              <span className="text-2xl font-bold font-mono text-qtd-700 dark:text-qtd-400 block mb-1">71%</span>
               <h5 className="text-xs font-bold text-fg mb-1">توقف مفاجئ لـ APIs غير رسمية</h5>
               <p className="text-xs text-fg-muted">
                 عانوا من تعطل تطبيقاتهم بسبب تغيير نقاط النهاية دون إشعار مسبق أو SLAs.
               </p>
             </div>
             <div className="p-4 rounded-xl border border-border bg-subtle/30">
-              <span className="text-2xl font-bold font-mono text-ratq-700 dark:text-ratq-400 block mb-1">84%</span>
+              <span className="text-2xl font-bold font-mono text-qtd-700 dark:text-qtd-400 block mb-1">84%</span>
               <h5 className="text-xs font-bold text-fg mb-1">مطالبة بشهادة إسناد موثقة</h5>
               <p className="text-xs text-fg-muted">
                 يعتبرون وجود جهة شرعية معتمدة حاسماً قبل اعتماد أي حزمة برمجية قرآنية.
@@ -790,13 +790,13 @@ function renderSectionContent(sectionId: string) {
                 <div className="flex items-center justify-between mb-3">
                   <div>
                     <h4 className="text-sm font-bold text-fg">عمر العوضي (29 عاماً)</h4>
-                    <span className="text-[11px] text-ratq-700 dark:text-ratq-300 font-mono">Senior Flutter Developer</span>
+                    <span className="text-[11px] text-qtd-700 dark:text-qtd-300 font-mono">Senior Flutter Developer</span>
                   </div>
                   <span className="text-[10px] px-2 py-0.5 rounded-full bg-subtle text-fg-muted border border-border">
                     مطور جوال مستقل
                   </span>
                 </div>
-                <p className="text-xs text-fg-muted italic mb-3 bg-subtle/40 p-2.5 rounded-lg border-s-2 border-ratq-600">
+                <p className="text-xs text-fg-muted italic mb-3 bg-subtle/40 p-2.5 rounded-lg border-s-2 border-qtd-600">
                   «أريد حزمة Dart موثوقة لمزامنة التلاوة مع الآيات بنقرة واحدة، ولا أريد قضاء أسبوعين في تصحيح أخطاء التوقيت اليدوي.»
                 </p>
                 <div className="space-y-2 text-xs">
@@ -822,13 +822,13 @@ function renderSectionContent(sectionId: string) {
                 <div className="flex items-center justify-between mb-3">
                   <div>
                     <h4 className="text-sm font-bold text-fg">د. عبد الرحمن الشهري (46 عاماً)</h4>
-                    <span className="text-[11px] text-ratq-700 dark:text-ratq-300 font-mono">مدير مركز تحكيم ومحقق قرآني</span>
+                    <span className="text-[11px] text-qtd-700 dark:text-qtd-300 font-mono">مدير مركز تحكيم ومحقق قرآني</span>
                   </div>
                   <span className="text-[10px] px-2 py-0.5 rounded-full bg-subtle text-fg-muted border border-border">
                     ناشر ومحقق معتمد
                   </span>
                 </div>
-                <p className="text-xs text-fg-muted italic mb-3 bg-subtle/40 p-2.5 rounded-lg border-s-2 border-ratq-600">
+                <p className="text-xs text-fg-muted italic mb-3 bg-subtle/40 p-2.5 rounded-lg border-s-2 border-qtd-600">
                   «بيانات المصحف أمانة شرعية عظيمة، نحتاج لتوثيق كل إصدار برقم معتمد ومتابعة دقيقة لأي خطأ محتمل في ثوانٍ معدودة.»
                 </p>
                 <div className="space-y-2 text-xs">
@@ -854,13 +854,13 @@ function renderSectionContent(sectionId: string) {
                 <div className="flex items-center justify-between mb-3">
                   <div>
                     <h4 className="text-sm font-bold text-fg">سارة الشمري (26 عاماً)</h4>
-                    <span className="text-[11px] text-ratq-700 dark:text-ratq-300 font-mono">AI & NLP Data Scientist</span>
+                    <span className="text-[11px] text-qtd-700 dark:text-qtd-300 font-mono">AI & NLP Data Scientist</span>
                   </div>
                   <span className="text-[10px] px-2 py-0.5 rounded-full bg-subtle text-fg-muted border border-border">
                     باحثة بيانات
                   </span>
                 </div>
-                <p className="text-xs text-fg-muted italic mb-3 bg-subtle/40 p-2.5 rounded-lg border-s-2 border-ratq-600">
+                <p className="text-xs text-fg-muted italic mb-3 bg-subtle/40 p-2.5 rounded-lg border-s-2 border-qtd-600">
                   «أحتاج لمجموعات بيانات قرآنية مهيكلة بصيغ Parquet/JSONL نظيفة لبحوث الاسترجاع الدلالي، مع الالتزام التام بعدم توليد النص بالذكاء الاصطناعي.»
                 </p>
                 <div className="space-y-2 text-xs">
@@ -886,13 +886,13 @@ function renderSectionContent(sectionId: string) {
                 <div className="flex items-center justify-between mb-3">
                   <div>
                     <h4 className="text-sm font-bold text-fg">طارق المنصور (34 عاماً)</h4>
-                    <span className="text-[11px] text-ratq-700 dark:text-ratq-300 font-mono">Typography & Web Engineer</span>
+                    <span className="text-[11px] text-qtd-700 dark:text-qtd-300 font-mono">Typography & Web Engineer</span>
                   </div>
                   <span className="text-[10px] px-2 py-0.5 rounded-full bg-subtle text-fg-muted border border-border">
                     مهندس خطوط وواجهات
                   </span>
                 </div>
-                <p className="text-xs text-fg-muted italic mb-3 bg-subtle/40 p-2.5 rounded-lg border-s-2 border-ratq-600">
+                <p className="text-xs text-fg-muted italic mb-3 bg-subtle/40 p-2.5 rounded-lg border-s-2 border-qtd-600">
                   «خطوط المصحف الحاسوبية ثقيلة جداً وتسبب وميضاً في المتصفحات، أحتاج خطوط WOFF2 محسنة متوافقة 100% مع معايير يونيكود.»
                 </p>
                 <div className="space-y-2 text-xs">
@@ -995,7 +995,7 @@ function renderSectionContent(sectionId: string) {
                 <thead>
                   <tr className="border-b border-border text-fg-subtle">
                     <th className="py-2.5 px-3 text-start">المعيار / المنصة</th>
-                    <th className="py-2.5 px-3 text-start font-bold text-ratq-700 dark:text-ratq-300">دليل التقنيات القرآنية</th>
+                    <th className="py-2.5 px-3 text-start font-bold text-qtd-700 dark:text-qtd-300">دليل التقنيات القرآنية</th>
                     <th className="py-2.5 px-3 text-start">Quran.com API</th>
                     <th className="py-2.5 px-3 text-start">مستودعات GitHub</th>
                     <th className="py-2.5 px-3 text-start">RapidAPI</th>
@@ -1215,21 +1215,21 @@ function renderSectionContent(sectionId: string) {
         <div className="space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div className="p-4 rounded-xl border border-border bg-canvas">
-              <span className="text-[11px] font-bold text-ratq-700 dark:text-ratq-400 font-mono">المسار 1</span>
+              <span className="text-[11px] font-bold text-qtd-700 dark:text-qtd-400 font-mono">المسار 1</span>
               <h5 className="text-xs font-bold text-fg mt-1 mb-2">وصول مفتوح (Open Access)</h5>
               <p className="text-xs text-fg-muted">
                 متاح مباشرة بدون مفتاح أو تسجيل للمكتبات والخطوط والموارد المجانية المفتوحة.
               </p>
             </div>
             <div className="p-4 rounded-xl border border-border bg-canvas">
-              <span className="text-[11px] font-bold text-ratq-700 dark:text-ratq-400 font-mono">المسار 2</span>
+              <span className="text-[11px] font-bold text-qtd-700 dark:text-qtd-400 font-mono">المسار 2</span>
               <h5 className="text-xs font-bold text-fg mt-1 mb-2">مفتاح شخصي (Key Required)</h5>
               <p className="text-xs text-fg-muted">
                 إصدار فوري بنقرة واحدة من بوابة المطور لتنظيم الحصص ومتابعة الاستهلاك ومعدل الطلب.
               </p>
             </div>
             <div className="p-4 rounded-xl border border-border bg-canvas">
-              <span className="text-[11px] font-bold text-ratq-700 dark:text-ratq-400 font-mono">المسار 3</span>
+              <span className="text-[11px] font-bold text-qtd-700 dark:text-qtd-400 font-mono">المسار 3</span>
               <h5 className="text-xs font-bold text-fg mt-1 mb-2">بالموافقة (Approval Required)</h5>
               <p className="text-xs text-fg-muted">
                 للموارد المؤسسية الحساسة، بطلب إلكتروني بسيط يوضح الغرض والـ SLA المحدد للمراجعة.
@@ -1241,15 +1241,15 @@ function renderSectionContent(sectionId: string) {
             <h4 className="text-xs font-bold text-fg mb-3">دورة حياة المفتاح الآمن (API Key Lifecycle)</h4>
             <div className="space-y-2 text-xs text-fg-muted">
               <div className="flex items-center gap-2">
-                <CheckCircle2 className="w-4 h-4 text-ratq-600 shrink-0" />
+                <CheckCircle2 className="w-4 h-4 text-qtd-600 shrink-0" />
                 <span><strong>التشفير غير القابل للعكس:</strong> تخزين تجزئة المفتاح عبر SHA-256 مع Salt، وإظهار المفتاح كاملاً مرة واحدة فقط عند الإنشاء.</span>
               </div>
               <div className="flex items-center gap-2">
-                <CheckCircle2 className="w-4 h-4 text-ratq-600 shrink-0" />
+                <CheckCircle2 className="w-4 h-4 text-qtd-600 shrink-0" />
                 <span><strong>التدوير الآمن (Zero-Downtime Key Rotation):</strong> إتاحة إنشاء مفتاح بديل مع إبقاء المفتاح القديم نشطاً لمدة 24 ساعة لضمان استمرار التطبيقات.</span>
               </div>
               <div className="flex items-center gap-2">
-                <CheckCircle2 className="w-4 h-4 text-ratq-600 shrink-0" />
+                <CheckCircle2 className="w-4 h-4 text-qtd-600 shrink-0" />
                 <span><strong>الإلغاء الفوري (Instant Revocation):</strong> إمكانية تعطيل أي مفتاح يشتبه في تسريبه فوراً بنقرة زر لحماية حصة المطور.</span>
               </div>
             </div>
@@ -1495,7 +1495,7 @@ function PrdView() {
     <div className="bg-canvas border border-border rounded-2xl p-6 sm:p-10 shadow-xs text-start space-y-8">
       {/* Page Header (بعنوان) */}
       <div className="pb-6 border-b border-border/80">
-        <div className="inline-flex items-center gap-2 px-2.5 py-1 rounded-full bg-ratq-50 dark:bg-ratq-950 text-ratq-800 dark:text-ratq-300 text-xs font-mono font-bold mb-3 border border-ratq-200 dark:border-ratq-800">
+        <div className="inline-flex items-center gap-2 px-2.5 py-1 rounded-full bg-qtd-50 dark:bg-qtd-950 text-qtd-800 dark:text-qtd-300 text-xs font-mono font-bold mb-3 border border-qtd-200 dark:border-qtd-800">
           <span>وثيقة متطلبات المنتج (PRD)</span>
         </div>
         <h1 className="text-2xl sm:text-3xl font-bold text-fg">
@@ -1509,7 +1509,7 @@ function PrdView() {
       {/* Empty State: بدون محتوى + أيقونة لا يوجد محتوى للوثيقة حالياً وسيتم تجهيزه لاحقاً */}
       <div className="flex flex-col items-center justify-center py-16 px-4 text-center rounded-2xl border border-dashed border-border bg-subtle/30 my-4">
         <div className="relative mb-4">
-          <div className="w-16 h-16 rounded-2xl bg-ratq-50 dark:bg-ratq-950/60 border border-ratq-200/80 dark:border-ratq-900/60 flex items-center justify-center text-ratq-600 dark:text-ratq-400">
+          <div className="w-16 h-16 rounded-2xl bg-qtd-50 dark:bg-qtd-950/60 border border-qtd-200/80 dark:border-qtd-900/60 flex items-center justify-center text-qtd-600 dark:text-qtd-400">
             <FileText className="w-8 h-8 opacity-80" />
           </div>
           <div className="absolute -bottom-1 -end-1 p-1 rounded-full bg-canvas border border-border text-amber-600 dark:text-amber-400 shadow-2xs">
@@ -1576,9 +1576,9 @@ function UserStoriesView() {
       dashboardName: 'لوحة المطور (Developer Dashboard)',
       route: '/dashboard',
       icon: User,
-      badgeColor: 'text-ratq-700 dark:text-ratq-300 bg-ratq-50 dark:bg-ratq-950 border-ratq-200 dark:border-ratq-800',
-      activeColor: 'bg-ratq-700 text-white',
-      accentBg: 'from-ratq-50/60 to-transparent dark:from-ratq-950/40',
+      badgeColor: 'text-qtd-700 dark:text-qtd-300 bg-qtd-50 dark:bg-qtd-950 border-qtd-200 dark:border-qtd-800',
+      activeColor: 'bg-qtd-700 text-white',
+      accentBg: 'from-qtd-50/60 to-transparent dark:from-qtd-950/40',
       description: 'المطورون المستقلون والشركات والمؤسسات الوقفية الذين يقومون بدمج نصوص القرآن الكريم وتفاسيره وتلاواته وخطوطه في تطبيقات الويب والجوال والأنظمة الذكية.',
       permissions: ['إنشاء مفاتيح API', 'اختبار Sandbox', 'تقديم طلبات الوصول', 'مراقبة الحصص وRPM', 'إدارة خطافات الويب (Webhooks)'],
       stories: [
@@ -1692,7 +1692,7 @@ function UserStoriesView() {
             'سجل بآخر 50 عملية تسليم مع تفاصيل Payload، ورمز الاستجابة، وزر لإعادة الإرسال اليدوي (Retry).'
           ],
           techRules: [
-            'كل حمولة تُرسل مع ترويسة X-Ratq-Signature تحوي توقيع HMAC-SHA256 لمنع التلاعب.',
+            'كل حمولة تُرسل مع ترويسة X-Qtd-Signature تحوي توقيع HMAC-SHA256 لمنع التلاعب.',
             'سياسة إعادة المحاولة التلقائية (Exponential Backoff): 3 محاولات على فترات 1m، 5m، 15m عند الفشل.'
           ],
           sla: 'تسليم إشعار الـ Webhook خلال أقل من ثانيتين من وقوع الحدث في المنظومة.'
@@ -2220,8 +2220,8 @@ function UserStoriesView() {
       {/* 1. Header Banner */}
       <div className="pb-6 border-b border-border/80">
         <div className="flex flex-wrap items-center justify-between gap-3 mb-3">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-ratq-50 dark:bg-ratq-950 text-ratq-800 dark:text-ratq-300 text-xs font-mono font-bold border border-ratq-200 dark:border-ratq-800">
-            <Sparkles className="w-3.5 h-3.5 text-ratq-600" />
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-qtd-50 dark:bg-qtd-950 text-qtd-800 dark:text-qtd-300 text-xs font-mono font-bold border border-qtd-200 dark:border-qtd-800">
+            <Sparkles className="w-3.5 h-3.5 text-qtd-600" />
             <span>قصص المستخدم المعتمدة (Approved User Stories Suite)</span>
           </div>
 
@@ -2246,7 +2246,7 @@ function UserStoriesView() {
           <span className="text-xs font-bold text-fg-muted uppercase tracking-wider">
             اختر لوحة التحكم والدور للاطلاع على قصصه البرمجية:
           </span>
-          <span className="text-[11px] font-mono text-ratq-700 dark:text-ratq-300">
+          <span className="text-[11px] font-mono text-qtd-700 dark:text-qtd-300">
             {currentRole.name} ({currentRole.stories.length} قصص)
           </span>
         </div>
@@ -2345,7 +2345,7 @@ function UserStoriesView() {
             placeholder={`ابحث في قصص ${currentRole.name}...`}
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full text-xs ps-8 pe-3 py-2 rounded-xl border border-border bg-subtle/30 text-fg placeholder:text-fg-subtle focus:outline-none focus:ring-1 focus:ring-ratq-500"
+            className="w-full text-xs ps-8 pe-3 py-2 rounded-xl border border-border bg-subtle/30 text-fg placeholder:text-fg-subtle focus:outline-none focus:ring-1 focus:ring-qtd-500"
           />
         </div>
 
@@ -2421,7 +2421,7 @@ function UserStoriesView() {
                 key={story.id}
                 className={`border rounded-2xl bg-canvas transition-all shadow-2xs overflow-hidden ${
                   isOpen
-                    ? 'border-ratq-300 dark:border-ratq-700/80 ring-1 ring-ratq-500/10'
+                    ? 'border-qtd-300 dark:border-qtd-700/80 ring-1 ring-qtd-500/10'
                     : 'border-border hover:border-border/80'
                 }`}
               >
@@ -2452,7 +2452,7 @@ function UserStoriesView() {
 
                     <div className="flex flex-col min-w-0 flex-1">
                       <div className="flex items-center gap-2 text-fg-subtle">
-                        <span className="text-[11px] font-semibold text-ratq-700 dark:text-ratq-400 truncate max-w-[200px]">
+                        <span className="text-[11px] font-semibold text-qtd-700 dark:text-qtd-400 truncate max-w-[200px]">
                           {story.epic}
                         </span>
                         <span className="text-[10px] hidden sm:inline">•</span>
@@ -2473,7 +2473,7 @@ function UserStoriesView() {
                     <div
                       className={`w-7 h-7 rounded-lg border border-border flex items-center justify-center text-fg-subtle transition-all duration-200 ${
                         isOpen
-                          ? 'bg-ratq-50 dark:bg-ratq-950/80 text-ratq-700 dark:text-ratq-300 rotate-180 border-ratq-300 dark:border-ratq-700'
+                          ? 'bg-qtd-50 dark:bg-qtd-950/80 text-qtd-700 dark:text-qtd-300 rotate-180 border-qtd-300 dark:border-qtd-700'
                           : 'bg-subtle/50'
                       }`}
                     >
@@ -2504,7 +2504,7 @@ function UserStoriesView() {
                     {/* Acceptance Criteria */}
                     <div className="space-y-2">
                       <strong className="text-xs font-bold text-fg flex items-center gap-1.5">
-                        <CheckCircle2 className="w-3.5 h-3.5 text-ratq-600" />
+                        <CheckCircle2 className="w-3.5 h-3.5 text-qtd-600" />
                         <span>معايير القبول والتنفيذ (Acceptance Criteria):</span>
                       </strong>
                       <ul className="grid grid-cols-1 gap-2 text-xs text-fg-muted">
@@ -2513,7 +2513,7 @@ function UserStoriesView() {
                             key={idx}
                             className="flex items-start gap-2.5 p-2 rounded-lg bg-subtle/10 border border-border-subtle"
                           >
-                            <span className="w-4 h-4 rounded-full bg-ratq-100 dark:bg-ratq-950 text-ratq-700 dark:text-ratq-300 text-[10px] font-mono font-bold flex items-center justify-center shrink-0 mt-0.5">
+                            <span className="w-4 h-4 rounded-full bg-qtd-100 dark:bg-qtd-950 text-qtd-700 dark:text-qtd-300 text-[10px] font-mono font-bold flex items-center justify-center shrink-0 mt-0.5">
                               {idx + 1}
                             </span>
                             <span className="leading-relaxed">{criterion}</span>
@@ -2540,7 +2540,7 @@ function UserStoriesView() {
                       </div>
 
                       {story.sla && (
-                        <div className="flex items-center gap-1.5 text-ratq-700 dark:text-ratq-400 font-mono text-[10px] shrink-0 bg-ratq-50/50 dark:bg-ratq-950/50 px-2 py-0.5 rounded border border-ratq-200 dark:border-ratq-900">
+                        <div className="flex items-center gap-1.5 text-qtd-700 dark:text-qtd-400 font-mono text-[10px] shrink-0 bg-qtd-50/50 dark:bg-qtd-950/50 px-2 py-0.5 rounded border border-qtd-200 dark:border-qtd-900">
                           <Clock className="w-3 h-3" />
                           <span>SLA: {story.sla}</span>
                         </div>
@@ -2557,7 +2557,7 @@ function UserStoriesView() {
       {/* 6. Document Ratification Footer Notice */}
       <div className="p-4 rounded-xl border border-border bg-subtle/20 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs text-fg-muted">
         <div className="flex items-center gap-2">
-          <Shield className="w-4 h-4 text-ratq-600 shrink-0" />
+          <Shield className="w-4 h-4 text-qtd-600 shrink-0" />
           <span>
             هذه الوثيقة تمثل المرجع الوظيفي المعتمد (Functional Specifications Baseline) لفرق التطوير البرمجي والهندسة، وتحدد متطلبات كل شاشة وعملية في لوحات التحكم الخمس بدقة متناهية.
           </span>

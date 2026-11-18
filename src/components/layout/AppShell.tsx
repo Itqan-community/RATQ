@@ -24,7 +24,7 @@ export const AppShell: React.FC<AppShellProps> = ({ children }) => {
       {/* Skip to Content Accessibility Link */}
       <a
         href="#main-content"
-        className="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:start-3 focus:z-50 focus:px-4 focus:py-2 focus:bg-ratq-700 focus:text-white focus:rounded-md focus:shadow-lg focus:outline-none"
+        className="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:start-3 focus:z-50 focus:px-4 focus:py-2 focus:bg-qtd-700 focus:text-white focus:rounded-md focus:shadow-lg focus:outline-none"
       >
         {t('header.skip_to_content')}
       </a>

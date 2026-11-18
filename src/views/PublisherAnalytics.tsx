@@ -76,7 +76,7 @@ export const PublisherAnalyticsPage: React.FC = () => {
         <Card className="p-5">
           <div className="flex items-center justify-between mb-2">
             <span className="text-xs text-fg-muted font-medium">{isAr ? 'إجمالي التنزيلات' : 'Total Downloads'}</span>
-            <Download className="w-4 h-4 text-ratq-600" />
+            <Download className="w-4 h-4 text-qtd-600" />
           </div>
           <div className="text-2xl font-extrabold font-mono text-fg">34,000</div>
           <div className="text-xs text-emerald-600 font-semibold mt-1 flex items-center gap-1">
@@ -126,7 +126,7 @@ export const PublisherAnalyticsPage: React.FC = () => {
         <Card className="p-6 lg:col-span-2">
           <div className="flex items-center justify-between mb-6">
             <h2 className="text-base font-bold text-fg flex items-center gap-2">
-              <BarChart3 className="w-5 h-5 text-ratq-600" />
+              <BarChart3 className="w-5 h-5 text-qtd-600" />
               <span>{isAr ? 'نمو التحميلات خلال الأشهر الستة الماضية' : '6-Month Download Growth'}</span>
             </h2>
             <Badge variant="primary">+{isAr ? '١٦٢٪ إجمالي' : '162% overall'}</Badge>
@@ -140,7 +140,7 @@ export const PublisherAnalyticsPage: React.FC = () => {
                 </span>
                 <div
                   style={{ height: d.height }}
-                  className="w-full max-w-[48px] rounded-t-lg bg-gradient-to-t from-ratq-700 to-ratq-500 hover:from-ratq-600 hover:to-ratq-400 transition-all cursor-pointer shadow-sm"
+                  className="w-full max-w-[48px] rounded-t-lg bg-gradient-to-t from-qtd-700 to-qtd-500 hover:from-qtd-600 hover:to-qtd-400 transition-all cursor-pointer shadow-sm"
                 />
                 <span className="text-xs font-semibold text-fg-muted mt-2">
                   {d.label}
@@ -153,7 +153,7 @@ export const PublisherAnalyticsPage: React.FC = () => {
         {/* Right 1 Col: Geo Breakdown */}
         <Card className="p-6">
           <h2 className="text-base font-bold text-fg mb-4 flex items-center gap-2">
-            <Globe className="w-5 h-5 text-ratq-600" />
+            <Globe className="w-5 h-5 text-qtd-600" />
             <span>{isAr ? 'التوزيع الجغرافي للطلبات' : 'Geographic Reach'}</span>
           </h2>
 
@@ -167,7 +167,7 @@ export const PublisherAnalyticsPage: React.FC = () => {
                 <div className="w-full h-2 rounded-full bg-canvas-subtle overflow-hidden">
                   <div
                     style={{ width: `${c.pct}%` }}
-                    className="h-full bg-ratq-600 rounded-full"
+                    className="h-full bg-qtd-600 rounded-full"
                   />
                 </div>
               </div>

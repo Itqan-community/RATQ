@@ -33,7 +33,7 @@ export const VersionTable: React.FC<VersionTableProps> = ({ versions = [] }) => 
           {versions.map((ver) => (
             <tr key={ver.id} className="hover:bg-subtle/50 transition-colors">
               <td className="py-3 px-4 font-mono font-bold text-fg flex items-center gap-2">
-                <Tag className="w-3.5 h-3.5 text-ratq-600" />
+                <Tag className="w-3.5 h-3.5 text-qtd-600" />
                 <span>v{ver.version}</span>
               </td>
               <td className="py-3 px-4 font-medium uppercase text-fg-muted">

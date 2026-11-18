@@ -32,9 +32,9 @@ const DiscoveryPill: React.FC = () => {
 
   return (
     <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-40 max-w-[92vw] sm:max-w-max animate-in fade-in slide-in-from-bottom-5 duration-300">
-      <div className="flex items-center gap-2.5 sm:gap-3.5 px-3.5 sm:px-4 py-2 sm:py-2.5 rounded-full bg-canvas/95 dark:bg-[#0c1017]/95 border border-ratq-500/50 dark:border-ratq-400/40 shadow-2xl backdrop-blur-md text-xs">
+      <div className="flex items-center gap-2.5 sm:gap-3.5 px-3.5 sm:px-4 py-2 sm:py-2.5 rounded-full bg-canvas/95 dark:bg-[#0c1017]/95 border border-qtd-500/50 dark:border-qtd-400/40 shadow-2xl backdrop-blur-md text-xs">
         {/* Glowing Wand Icon */}
-        <div className="w-6 h-6 rounded-full bg-ratq-100 dark:bg-ratq-900/80 text-ratq-700 dark:text-ratq-300 flex items-center justify-center shrink-0">
+        <div className="w-6 h-6 rounded-full bg-qtd-100 dark:bg-qtd-900/80 text-qtd-700 dark:text-qtd-300 flex items-center justify-center shrink-0">
           <Wand2 className="w-3.5 h-3.5 animate-pulse" />
         </div>
 
@@ -47,7 +47,7 @@ const DiscoveryPill: React.FC = () => {
         <button
           type="button"
           onClick={() => navigate('/resources/wizard')}
-          className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-ratq-600 hover:bg-ratq-700 text-white font-bold text-xs shadow-xs transition-colors cursor-pointer"
+          className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-qtd-600 hover:bg-qtd-700 text-white font-bold text-xs shadow-xs transition-colors cursor-pointer"
         >
           <span>{t('wizard.cta')}</span>
           <ExternalLink className="w-3 h-3 rtl:rotate-0" />

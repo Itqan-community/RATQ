@@ -120,14 +120,14 @@ export const Home: React.FC = () => {
             {/* Right Column in RTL: Content, Search Bar, CTAs */}
             <div className="lg:col-span-7 flex flex-col items-center lg:items-start text-center lg:text-start">
               {/* Badge pill */}
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-ratq-200 bg-ratq-50 dark:border-ratq-800 dark:bg-ratq-950 text-ratq-800 dark:text-ratq-300 text-xs font-semibold mb-6">
-                <Sparkles className="w-3.5 h-3.5 text-ratq-600" />
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-qtd-200 bg-qtd-50 dark:border-qtd-800 dark:bg-qtd-950 text-qtd-800 dark:text-qtd-300 text-xs font-semibold mb-6">
+                <Sparkles className="w-3.5 h-3.5 text-qtd-600" />
                 <span>{t('home.hero_badge')}</span>
               </div>
 
               <h1 className="hero-title-typography text-3xl sm:text-5xl lg:text-5xl xl:text-6xl font-bold text-fg tracking-normal leading-[1.1] sm:leading-[1.15] lg:leading-[1.2] flex flex-col items-center lg:items-start gap-2 sm:gap-3.5">
                 <span className="block">{t('home.hero_title_1')}</span>
-                <span className="text-ratq-700 dark:text-ratq-400 block pb-1">{t('home.hero_title_2')}</span>
+                <span className="text-qtd-700 dark:text-qtd-400 block pb-1">{t('home.hero_title_2')}</span>
               </h1>
 
               <p className="mt-5 text-sm sm:text-base text-fg-muted max-w-xl leading-relaxed">
@@ -136,7 +136,7 @@ export const Home: React.FC = () => {
 
               {/* Large Hero Search Bar */}
               <form onSubmit={handleHeroSearch} className="w-full max-w-xl mt-8">
-                <div className="relative flex items-center shadow-lg rounded-xl border border-slate-200/80 dark:border-border bg-white dark:bg-slate-900 overflow-hidden focus-within:ring-2 focus-within:ring-ratq-500 focus-within:border-ratq-500 transition-all">
+                <div className="relative flex items-center shadow-lg rounded-xl border border-slate-200/80 dark:border-border bg-white dark:bg-slate-900 overflow-hidden focus-within:ring-2 focus-within:ring-qtd-500 focus-within:border-qtd-500 transition-all">
                   <Search className="w-5 h-5 text-fg-subtle ms-4 shrink-0" />
                   <input
                     type="text"
@@ -173,7 +173,7 @@ export const Home: React.FC = () => {
                 {/* Card 1: Top Right */}
                 <div className="absolute -top-2 sm:-top-11 start-[-20px] sm:start-[-50px] lg:start-[-40px] z-20">
                   <div className="animate-float-1 inline-flex items-center gap-2 px-3 py-1.5 sm:px-3 sm:py-2 rounded-xl border border-slate-200/90 dark:border-slate-800 bg-white/95 dark:bg-slate-900/95 shadow-lg backdrop-blur-xs select-none transition-all duration-300 hover:scale-105 whitespace-nowrap">
-                    <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg flex items-center justify-center shrink-0 bg-ratq-50 dark:bg-ratq-950/60 text-ratq-600 dark:text-ratq-400">
+                    <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg flex items-center justify-center shrink-0 bg-qtd-50 dark:bg-qtd-950/60 text-qtd-600 dark:text-qtd-400">
                       <ShieldCheck className="w-4 h-4" />
                     </div>
                     <div className="flex flex-col text-start">
@@ -186,7 +186,7 @@ export const Home: React.FC = () => {
                 {/* Card 2: Top Left */}
                 <div className="absolute -top-20 sm:-top-4 end-[-5px] sm:end-[-20px] lg:end-[-48px] z-20">
                   <div className="animate-float-2 inline-flex items-center gap-2 px-3 py-1.5 sm:px-3 sm:py-2 rounded-xl border border-slate-200/90 dark:border-slate-800 bg-white/95 dark:bg-slate-900/95 shadow-lg backdrop-blur-xs select-none transition-all duration-300 hover:scale-105 whitespace-nowrap">
-                    <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg flex items-center justify-center shrink-0 bg-ratq-50 dark:bg-ratq-950/60 text-ratq-600 dark:text-ratq-400">
+                    <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg flex items-center justify-center shrink-0 bg-qtd-50 dark:bg-qtd-950/60 text-qtd-600 dark:text-qtd-400">
                       <Database className="w-4 h-4" />
                     </div>
                     <div className="flex flex-col text-start">
@@ -250,14 +250,14 @@ export const Home: React.FC = () => {
             {/* Right Column in RTL: Content, Search Bar, CTAs */}
             <div className="lg:col-span-6 flex flex-col items-center lg:items-start text-center lg:text-start">
               {/* Badge pill */}
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-ratq-200 bg-ratq-50 dark:border-ratq-800 dark:bg-ratq-950 text-ratq-800 dark:text-ratq-300 text-xs font-semibold mb-6 animate-in fade-in slide-in-from-top-3">
-                <Sparkles className="w-3.5 h-3.5 text-ratq-600" />
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-qtd-200 bg-qtd-50 dark:border-qtd-800 dark:bg-qtd-950 text-qtd-800 dark:text-qtd-300 text-xs font-semibold mb-6 animate-in fade-in slide-in-from-top-3">
+                <Sparkles className="w-3.5 h-3.5 text-qtd-600" />
                 <span>{t('home.hero_badge')}</span>
               </div>
 
               <h1 className="hero-title-typography text-3xl sm:text-5xl lg:text-5xl xl:text-6xl font-bold text-fg tracking-normal leading-[1.1] sm:leading-[1.15] lg:leading-[1.2] flex flex-col items-center lg:items-start gap-2 sm:gap-3.5">
                 <span className="block">{t('home.hero_title_1')}</span>
-                <span className="text-ratq-700 dark:text-ratq-400 block pb-1">{t('home.hero_title_2')}</span>
+                <span className="text-qtd-700 dark:text-qtd-400 block pb-1">{t('home.hero_title_2')}</span>
               </h1>
 
               <p className="mt-5 text-sm sm:text-base text-fg-muted max-w-xl leading-relaxed">
@@ -266,7 +266,7 @@ export const Home: React.FC = () => {
 
               {/* Large Hero Search Bar */}
               <form onSubmit={handleHeroSearch} className="w-full max-w-xl mt-8">
-                <div className="relative flex items-center shadow-lg rounded-xl border border-slate-200/80 dark:border-border bg-white dark:bg-slate-900 overflow-hidden focus-within:ring-2 focus-within:ring-ratq-500 focus-within:border-ratq-500 transition-all">
+                <div className="relative flex items-center shadow-lg rounded-xl border border-slate-200/80 dark:border-border bg-white dark:bg-slate-900 overflow-hidden focus-within:ring-2 focus-within:ring-qtd-500 focus-within:border-qtd-500 transition-all">
                   <Search className="w-5 h-5 text-fg-subtle ms-4 shrink-0" />
                   <input
                     type="text"
@@ -300,14 +300,14 @@ export const Home: React.FC = () => {
         ) : (
           <div className="max-w-4xl mx-auto flex flex-col items-center animate-in fade-in duration-300">
             {/* Badge pill */}
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-ratq-200 bg-ratq-50 dark:border-ratq-800 dark:bg-ratq-950 text-ratq-800 dark:text-ratq-300 text-xs font-semibold mb-6 animate-in fade-in slide-in-from-top-3">
-              <Sparkles className="w-3.5 h-3.5 text-ratq-600" />
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-qtd-200 bg-qtd-50 dark:border-qtd-800 dark:bg-qtd-950 text-qtd-800 dark:text-qtd-300 text-xs font-semibold mb-6 animate-in fade-in slide-in-from-top-3">
+              <Sparkles className="w-3.5 h-3.5 text-qtd-600" />
               <span>{t('home.hero_badge')}</span>
             </div>
 
             <h1 className="hero-title-typography text-3xl sm:text-5xl lg:text-6xl font-bold text-fg tracking-normal leading-[1.1] sm:leading-[1.15] lg:leading-[1.2] flex flex-col items-center gap-2.5 sm:gap-4">
               <span className="block">{t('home.hero_title_1')}</span>
-              <span className="text-ratq-700 dark:text-ratq-400 block pb-1">{t('home.hero_title_2')}</span>
+              <span className="text-qtd-700 dark:text-qtd-400 block pb-1">{t('home.hero_title_2')}</span>
             </h1>
 
             <p className="mt-5 text-sm sm:text-base text-fg-muted max-w-2xl leading-relaxed">
@@ -316,7 +316,7 @@ export const Home: React.FC = () => {
 
             {/* Large Hero Search Bar */}
             <form onSubmit={handleHeroSearch} className="w-full max-w-2xl mt-8">
-              <div className="relative flex items-center shadow-lg rounded-xl border border-slate-200/80 dark:border-border bg-white dark:bg-slate-900 overflow-hidden focus-within:ring-2 focus-within:ring-ratq-500 focus-within:border-ratq-500 transition-all">
+              <div className="relative flex items-center shadow-lg rounded-xl border border-slate-200/80 dark:border-border bg-white dark:bg-slate-900 overflow-hidden focus-within:ring-2 focus-within:ring-qtd-500 focus-within:border-qtd-500 transition-all">
                 <Search className="w-5 h-5 text-fg-subtle ms-4 shrink-0" />
                 <input
                   type="text"
@@ -350,7 +350,7 @@ export const Home: React.FC = () => {
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
             {trustMetrics.map((metric, i) => (
               <div key={i} className="flex flex-col items-center">
-                <span className="text-2xl sm:text-4xl font-bold font-mono text-ratq-700 dark:text-ratq-400">
+                <span className="text-2xl sm:text-4xl font-bold font-mono text-qtd-700 dark:text-qtd-400">
                   {metric.value.toLocaleString()}
                 </span>
                 <span className="text-xs text-fg-subtle mt-1 font-medium">{metric.label}</span>
@@ -379,7 +379,7 @@ export const Home: React.FC = () => {
             </div>
             <Link
               to="/resources"
-              className="text-xs font-bold text-ratq-700 hover:underline flex items-center gap-1"
+              className="text-xs font-bold text-qtd-700 hover:underline flex items-center gap-1"
             >
               <span>{t('home.view_catalog')}</span>
               <ArrowLeft className="w-3.5 h-3.5 rtl:rotate-0 rotate-180" />
@@ -450,7 +450,7 @@ export const Home: React.FC = () => {
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-start">
             <div className="p-6 rounded-xl border border-border bg-canvas/85 backdrop-blur-sm relative shadow-xs">
-              <div className="w-10 h-10 rounded-xl bg-ratq-50 text-ratq-700 flex items-center justify-center font-bold text-sm mb-4">
+              <div className="w-10 h-10 rounded-xl bg-qtd-50 text-qtd-700 flex items-center justify-center font-bold text-sm mb-4">
                 {t('home.step1_n')}
               </div>
               <h3 className="text-sm font-bold text-fg mb-1">{t('home.step1_t')}</h3>
@@ -483,7 +483,7 @@ export const Home: React.FC = () => {
       </section>
 
       {/* 6. Itqan Standard Highlight */}
-      <section className="py-16 border-b border-border bg-ratq-950 text-white text-start relative overflow-hidden">
+      <section className="py-16 border-b border-border bg-qtd-950 text-white text-start relative overflow-hidden">
         {/* Interactive DotField Background from React Bits */}
         <div className="absolute inset-0 pointer-events-none select-none overflow-hidden">
           <DotField
@@ -502,7 +502,7 @@ export const Home: React.FC = () => {
         <div className="max-w-container mx-auto px-4 sm:px-6 relative z-10">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
             <div>
-              <span className="text-xs font-semibold text-ratq-400 uppercase tracking-wider block mb-2">
+              <span className="text-xs font-semibold text-qtd-400 uppercase tracking-wider block mb-2">
                 {t('home.std_kicker')}
               </span>
               <h2 className="text-2xl sm:text-3xl font-bold leading-snug mb-4">
@@ -516,26 +516,26 @@ export const Home: React.FC = () => {
                 <Button variant="primary" size="md" onClick={() => navigate('/standards')}>
                   {t('home.std_cta')}
                 </Button>
-                {!isHiddenRoute('/standards/checklist') && <Button variant="outline" size="md" onClick={() => navigate('/standards/checklist')} className="border-ratq-700 text-white hover:bg-ratq-900">
+                {!isHiddenRoute('/standards/checklist') && <Button variant="outline" size="md" onClick={() => navigate('/standards/checklist')} className="border-qtd-700 text-white hover:bg-qtd-900">
                   {t('home.std_checklist')}
                 </Button>}
               </div>
             </div>
 
             <div className="grid grid-cols-2 gap-4">
-              <div className="p-4 rounded-xl bg-ratq-900 border border-ratq-800 hover:border-ratq-700 transition-colors shadow-xs">
+              <div className="p-4 rounded-xl bg-qtd-900 border border-qtd-800 hover:border-qtd-700 transition-colors shadow-xs">
                 <ItqanBadge level="basic" size="sm" />
                 <p className="text-2xs text-gray-300 mt-2">{t('home.lvl_basic')}</p>
               </div>
-              <div className="p-4 rounded-xl bg-ratq-900 border border-ratq-800 hover:border-ratq-700 transition-colors shadow-xs">
+              <div className="p-4 rounded-xl bg-qtd-900 border border-qtd-800 hover:border-qtd-700 transition-colors shadow-xs">
                 <ItqanBadge level="verified" size="sm" />
                 <p className="text-2xs text-gray-300 mt-2">{t('home.lvl_verified')}</p>
               </div>
-              <div className="p-4 rounded-xl bg-ratq-900 border border-ratq-800 hover:border-ratq-700 transition-colors shadow-xs">
+              <div className="p-4 rounded-xl bg-qtd-900 border border-qtd-800 hover:border-qtd-700 transition-colors shadow-xs">
                 <ItqanBadge level="certified" size="sm" />
                 <p className="text-2xs text-gray-300 mt-2">{t('home.lvl_certified')}</p>
               </div>
-              <div className="p-4 rounded-xl bg-ratq-900 border border-ratq-800 hover:border-ratq-700 transition-colors shadow-xs">
+              <div className="p-4 rounded-xl bg-qtd-900 border border-qtd-800 hover:border-qtd-700 transition-colors shadow-xs">
                 <ItqanBadge level="gold" size="sm" />
                 <p className="text-2xs text-gray-300 mt-2">{t('home.lvl_gold')}</p>
               </div>
@@ -580,11 +580,11 @@ export const Home: React.FC = () => {
       </section>
 
       {/* 8. Final CTA */}
-      <section className="py-16 sm:py-20 px-4 sm:px-6 bg-gradient-to-t from-ratq-50/50 to-canvas dark:from-ratq-950/20 relative overflow-hidden">
+      <section className="py-16 sm:py-20 px-4 sm:px-6 bg-gradient-to-t from-qtd-50/50 to-canvas dark:from-qtd-950/20 relative overflow-hidden">
         {/* Repeating small squares grid background pattern */}
         <div className="absolute inset-0 pointer-events-none select-none overflow-hidden opacity-[0.10] dark:opacity-[0.08]">
           <svg
-            className="w-full h-full text-ratq-600 dark:text-ratq-400"
+            className="w-full h-full text-qtd-600 dark:text-qtd-400"
             xmlns="http://www.w3.org/2000/svg"
             aria-hidden="true"
           >

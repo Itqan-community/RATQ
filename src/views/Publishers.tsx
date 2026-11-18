@@ -40,7 +40,7 @@ export const Publishers: React.FC = () => {
             >
               <div>
                 <div className="flex items-center gap-3 mb-4">
-                  <div className="w-12 h-12 rounded-xl bg-ratq-100 dark:bg-ratq-900 text-ratq-700 dark:text-ratq-300 flex items-center justify-center font-bold text-base shrink-0">
+                  <div className="w-12 h-12 rounded-xl bg-qtd-100 dark:bg-qtd-900 text-qtd-700 dark:text-qtd-300 flex items-center justify-center font-bold text-base shrink-0">
                     {pub.name_ar.charAt(0)}
                   </div>
                   <div>
@@ -63,7 +63,7 @@ export const Publishers: React.FC = () => {
 
                 <Link
                   to={`/publishers/${pub.slug}`}
-                  className="inline-flex items-center gap-1 text-ratq-700 font-bold hover:underline"
+                  className="inline-flex items-center gap-1 text-qtd-700 font-bold hover:underline"
                 >
                   <span>{t('publishers.p03')}</span>
                   <ArrowLeft className="w-3.5 h-3.5 rtl:rotate-0 rotate-180" />

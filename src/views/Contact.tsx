@@ -69,7 +69,7 @@ export const ContactPage: React.FC = () => {
         <div className="space-y-6">
           <Card className="p-6">
             <h3 className="font-bold text-fg mb-4 flex items-center gap-2">
-              <MessageSquare className="w-5 h-5 text-ratq-600" />
+              <MessageSquare className="w-5 h-5 text-qtd-600" />
               {isAr ? 'قنوات المجتمع' : 'Community Hubs'}
             </h3>
             <ul className="space-y-3 text-sm">
@@ -103,18 +103,18 @@ export const ContactPage: React.FC = () => {
               </li>
               <li>
                 <a href={`mailto:${CHANNELS.email}`} className="p-2 text-fg-muted hover:text-fg flex items-center gap-2 transition-colors">
-                  <ShieldCheck className="w-4 h-4 text-ratq-600" />
+                  <ShieldCheck className="w-4 h-4 text-qtd-600" />
                   <span>{CHANNELS.email}</span>
                 </a>
               </li>
             </ul>
           </Card>
 
-          <Card className="p-6 bg-ratq-50/50 dark:bg-ratq-950/20 border-ratq-200 dark:border-ratq-800">
-            <h4 className="font-bold text-ratq-900 dark:text-ratq-100 text-sm mb-2">
+          <Card className="p-6 bg-qtd-50/50 dark:bg-qtd-950/20 border-qtd-200 dark:border-qtd-800">
+            <h4 className="font-bold text-qtd-900 dark:text-qtd-100 text-sm mb-2">
               {isAr ? 'ملاحظة حول مراجعات المصحف' : 'Sacred Review Inquiries'}
             </h4>
-            <p className="text-xs text-ratq-800 dark:text-ratq-300 leading-relaxed">
+            <p className="text-xs text-qtd-800 dark:text-qtd-300 leading-relaxed">
               {isAr
                 ? 'البلاغات المتعلقة بنصوص الآيات أو قراءاتها تُحال فورياً للجنة التدقيق العلمي ويتم الرد عليها خلال 24 ساعة كحد أقصى.'
                 : 'Reports concerning Quranic text accuracy are routed to the Scholarly Audit Committee within 24 hours.'}

@@ -45,7 +45,7 @@ export const Standards: React.FC = () => {
       <div className="mb-12 pb-6 border-b border-border">
         <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
           <div>
-            <span className="text-xs font-bold text-ratq-700 uppercase tracking-wider block mb-1">
+            <span className="text-xs font-bold text-qtd-700 uppercase tracking-wider block mb-1">
               {t('standards.s00')}
             </span>
             <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-fg leading-tight">
@@ -90,11 +90,11 @@ export const Standards: React.FC = () => {
         </div>
 
         {/* Verified */}
-        <div className="p-6 rounded-2xl border border-ratq-200 bg-ratq-50/30 dark:bg-ratq-950/20 dark:border-ratq-900 flex flex-col justify-between">
+        <div className="p-6 rounded-2xl border border-qtd-200 bg-qtd-50/30 dark:bg-qtd-950/20 dark:border-qtd-900 flex flex-col justify-between">
           <div>
             <div className="flex items-center justify-between mb-3">
               <ItqanBadge level="verified" size="md" />
-              <span className="text-2xs font-bold text-ratq-700 dark:text-ratq-400">{t('standards.s08')}</span>
+              <span className="text-2xs font-bold text-qtd-700 dark:text-qtd-400">{t('standards.s08')}</span>
             </div>
             <h3 className="text-base font-bold text-fg mb-2">{t('standards.s09')}</h3>
             <p className="text-xs text-fg-muted leading-relaxed mb-4">
@@ -152,7 +152,7 @@ export const Standards: React.FC = () => {
         </p>
         <Link
           to="/standards/revocations"
-          className="text-xs font-bold text-ratq-700 hover:underline inline-flex items-center gap-1"
+          className="text-xs font-bold text-qtd-700 hover:underline inline-flex items-center gap-1"
         >
           <span>{t('standards.s22')}</span>
           <ArrowLeft className="w-3.5 h-3.5 rtl:rotate-0 rotate-180" />
@@ -179,11 +179,11 @@ export const Standards: React.FC = () => {
             {/* Drawer Header */}
             <div className="p-5 sm:p-6 border-b border-border flex items-center justify-between gap-4 bg-canvas/95 backdrop-blur-xs sticky top-0 z-20">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-xl bg-ratq-50 dark:bg-ratq-950 text-ratq-700 dark:text-ratq-300 flex items-center justify-center shrink-0 border border-ratq-200 dark:border-ratq-800 shadow-2xs">
+                <div className="w-10 h-10 rounded-xl bg-qtd-50 dark:bg-qtd-950 text-qtd-700 dark:text-qtd-300 flex items-center justify-center shrink-0 border border-qtd-200 dark:border-qtd-800 shadow-2xs">
                   <FileText className="w-5 h-5" />
                 </div>
                 <div>
-                  <span className="text-2xs font-bold text-ratq-700 dark:text-ratq-400 uppercase tracking-wider block font-mono">
+                  <span className="text-2xs font-bold text-qtd-700 dark:text-qtd-400 uppercase tracking-wider block font-mono">
                     {t('standards.s24')}
                   </span>
                   <h2 className="text-base sm:text-lg font-bold text-fg leading-tight">
@@ -220,12 +220,12 @@ export const Standards: React.FC = () => {
               <div className="p-4 rounded-xl bg-subtle/70 border border-border">
                 <div className="flex items-center justify-between text-xs font-bold text-fg mb-2.5">
                   <span>{t('standards.s28')}</span>
-                  <span className="text-ratq-700 dark:text-ratq-400 font-mono">{t('standards.s29')}</span>
+                  <span className="text-qtd-700 dark:text-qtd-400 font-mono">{t('standards.s29')}</span>
                 </div>
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-center text-xs">
-                  <div className="p-2 rounded-lg bg-canvas border border-ratq-200 dark:border-ratq-900">
+                  <div className="p-2 rounded-lg bg-canvas border border-qtd-200 dark:border-qtd-900">
                     <span className="text-2xs text-fg-subtle block">{t('standards.s30')}</span>
-                    <span className="font-bold text-ratq-700 dark:text-ratq-400 font-mono">35%</span>
+                    <span className="font-bold text-qtd-700 dark:text-qtd-400 font-mono">35%</span>
                   </div>
                   <div className="p-2 rounded-lg bg-canvas border border-cyan-200 dark:border-cyan-900">
                     <span className="text-2xs text-fg-subtle block">{t('standards.s31')}</span>
@@ -245,33 +245,33 @@ export const Standards: React.FC = () => {
               {/* Section 1 */}
               <div className="p-5 rounded-xl border border-border bg-canvas shadow-2xs">
                 <div className="flex items-center gap-2 mb-3 pb-2.5 border-b border-border-subtle">
-                  <Code2 className="w-4 h-4 text-ratq-600 dark:text-ratq-400" />
+                  <Code2 className="w-4 h-4 text-qtd-600 dark:text-qtd-400" />
                   <h3 className="text-sm font-bold text-fg">{t('standards.s34')}</h3>
-                  <span className="ms-auto text-xs font-bold font-mono px-2 py-0.5 rounded bg-ratq-100/70 text-ratq-800 dark:bg-ratq-950 dark:text-ratq-300">
+                  <span className="ms-auto text-xs font-bold font-mono px-2 py-0.5 rounded bg-qtd-100/70 text-qtd-800 dark:bg-qtd-950 dark:text-qtd-300">
                     35%
                   </span>
                 </div>
                 <ul className="space-y-3 text-xs leading-relaxed text-fg-muted">
                   <li className="flex items-start gap-2.5">
-                    <CheckCircle2 className="w-4 h-4 text-ratq-600 shrink-0 mt-0.5" />
+                    <CheckCircle2 className="w-4 h-4 text-qtd-600 shrink-0 mt-0.5" />
                     <div>
                       <strong className="text-fg font-semibold">{t('standards.s35')}</strong> {t('standards.s35d')}
                     </div>
                   </li>
                   <li className="flex items-start gap-2.5">
-                    <CheckCircle2 className="w-4 h-4 text-ratq-600 shrink-0 mt-0.5" />
+                    <CheckCircle2 className="w-4 h-4 text-qtd-600 shrink-0 mt-0.5" />
                     <div>
                       <strong className="text-fg font-semibold">{t('standards.s36')}</strong> {t('standards.s36d')}
                     </div>
                   </li>
                   <li className="flex items-start gap-2.5">
-                    <CheckCircle2 className="w-4 h-4 text-ratq-600 shrink-0 mt-0.5" />
+                    <CheckCircle2 className="w-4 h-4 text-qtd-600 shrink-0 mt-0.5" />
                     <div>
                       <strong className="text-fg font-semibold">{t('standards.s37')}</strong> {t('standards.s37d')}
                     </div>
                   </li>
                   <li className="flex items-start gap-2.5">
-                    <CheckCircle2 className="w-4 h-4 text-ratq-600 shrink-0 mt-0.5" />
+                    <CheckCircle2 className="w-4 h-4 text-qtd-600 shrink-0 mt-0.5" />
                     <div>
                       <strong className="text-fg font-semibold">{t('standards.s38')}</strong> {t('standards.s38d')}
                     </div>
@@ -378,8 +378,8 @@ export const Standards: React.FC = () => {
               </div>
 
               {/* Standards Levels Correlation Note */}
-              <div className="p-4 rounded-xl bg-ratq-50/50 dark:bg-ratq-950/30 border border-ratq-200 dark:border-ratq-900 flex items-start gap-3">
-                <Info className="w-4 h-4 text-ratq-600 dark:text-ratq-400 shrink-0 mt-0.5" />
+              <div className="p-4 rounded-xl bg-qtd-50/50 dark:bg-qtd-950/30 border border-qtd-200 dark:border-qtd-900 flex items-start gap-3">
+                <Info className="w-4 h-4 text-qtd-600 dark:text-qtd-400 shrink-0 mt-0.5" />
                 <p className="text-2xs sm:text-xs text-fg-muted leading-relaxed">
                   {t('standards.s52')}
                 </p>

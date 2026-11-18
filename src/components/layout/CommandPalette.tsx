@@ -90,7 +90,7 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({ isOpen, onClose 
                   className="w-full flex items-center justify-between px-3 py-2 text-xs rounded-lg hover:bg-subtle transition-colors text-start cursor-pointer"
                 >
                   <div className="flex items-center gap-2.5">
-                    <BookOpen className="w-4 h-4 text-ratq-600 shrink-0" />
+                    <BookOpen className="w-4 h-4 text-qtd-600 shrink-0" />
                     <div>
                       <p dir={loc.titleDir} className="font-bold text-fg">{loc.title}</p>
                       <p dir={loc.descriptionDir} className="text-2xs text-fg-subtle">{loc.summary.slice(0, 50)}...</p>

@@ -131,7 +131,7 @@ export const FaqPage: React.FC = () => {
                 onClick={() => setSelectedCategory(cat.id)}
                 className={`inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-sm font-medium transition-all ${
                   active
-                    ? 'bg-ratq-600 text-white shadow-sm'
+                    ? 'bg-qtd-600 text-white shadow-sm'
                     : 'bg-canvas-card border border-border text-fg-muted hover:text-fg'
                 }`}
               >
@@ -167,7 +167,7 @@ export const FaqPage: React.FC = () => {
                   </span>
                   <ChevronDown
                     className={`w-5 h-5 text-fg-muted shrink-0 transition-transform duration-200 ${
-                      isExpanded ? 'rotate-180 text-ratq-600' : ''
+                      isExpanded ? 'rotate-180 text-qtd-600' : ''
                     }`}
                   />
                 </button>

@@ -4,11 +4,12 @@ import { render, screen, fireEvent } from '@testing-library/react';
 import { ThemeCustomizerFloatingButton } from '@/components/theme/ThemeCustomizerFloatingButton';
 import { ThemeCustomizerModal } from '@/components/theme/ThemeCustomizerModal';
 import { useThemeStore } from '@/store/useThemeStore';
+import { STORAGE_KEYS } from '@/lib/storageKeys';
 
 describe('Theme Customizer Component & Store', () => {
   beforeEach(() => {
     useThemeStore.getState().resetDefaults();
-    localStorage.setItem('ratq_theme_customizer_first_visit_v1', 'true');
+    localStorage.setItem(STORAGE_KEYS.themeCustomizerFirstVisit, 'true');
   });
 
   it('renders floating button and opens modal when clicked', () => {
@@ -23,10 +24,10 @@ describe('Theme Customizer Component & Store', () => {
   });
 
   it('opens modal automatically on first visit when not previously seen', () => {
-    localStorage.removeItem('ratq_theme_customizer_first_visit_v1');
+    localStorage.removeItem(STORAGE_KEYS.themeCustomizerFirstVisit);
     render(<ThemeCustomizerFloatingButton />);
     expect(screen.getByRole('dialog')).toBeInTheDocument();
-    expect(localStorage.getItem('ratq_theme_customizer_first_visit_v1')).toBe('true');
+    expect(localStorage.getItem(STORAGE_KEYS.themeCustomizerFirstVisit)).toBe('true');
   });
 
   it('switches between light and dark modes', () => {

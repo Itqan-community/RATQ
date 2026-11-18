@@ -6,8 +6,8 @@ export const BETA_PUBLISHERS: Publisher[] = [
   {
     "id": "pub_ratq",
     "slug": "ratq",
-    "name_ar": "مجتمع رتق",
-    "name_en": "RATQ Community",
+    "name_ar": "مجتمع دليل التقنيات القرآنية",
+    "name_en": "Quran Tech Directory Community",
     "kind": "organization",
     "description_ar": "المجتمع الرسمي لتطوير ونشر البنية التحتية البرمجية القرآنية.",
     "verification_status": "verified",
@@ -1062,13 +1062,13 @@ export const BETA_RESOURCES: Resource[] = [
     ],
     "tags": [
       "tafsir",
-      "مجتمع رتق",
+      "مجتمع دليل التقنيات القرآنية",
       "قرآن"
     ],
     "docs_url": "https://cms.itqan.dev/gallery/asset/7",
     "homepage_url": "https://cms.itqan.dev/gallery/asset/7",
     "contains_quranic_text": true,
-    "quran_source_authority": "مجتمع رتق",
+    "quran_source_authority": "مجتمع دليل التقنيات القرآنية",
     "quran_source_url": "https://cms.itqan.dev/gallery/asset/7",
     "created_at": "2025-06-01T10:00:00Z",
     "updated_at": "2026-01-15T10:00:00Z"
@@ -1646,13 +1646,13 @@ export const BETA_RESOURCES: Resource[] = [
     ],
     "tags": [
       "tafsir",
-      "مجتمع رتق",
+      "مجتمع دليل التقنيات القرآنية",
       "قرآن"
     ],
     "docs_url": "https://cms.itqan.dev/gallery/asset/4",
     "homepage_url": "https://cms.itqan.dev/gallery/asset/4",
     "contains_quranic_text": true,
-    "quran_source_authority": "مجتمع رتق",
+    "quran_source_authority": "مجتمع دليل التقنيات القرآنية",
     "quran_source_url": "https://cms.itqan.dev/gallery/asset/4",
     "created_at": "2025-06-01T10:00:00Z",
     "updated_at": "2026-01-15T10:00:00Z"
@@ -1791,13 +1791,13 @@ export const BETA_RESOURCES: Resource[] = [
     ],
     "tags": [
       "tafsir",
-      "مجتمع رتق",
+      "مجتمع دليل التقنيات القرآنية",
       "قرآن"
     ],
     "docs_url": "https://cms.itqan.dev/gallery/asset/6",
     "homepage_url": "https://cms.itqan.dev/gallery/asset/6",
     "contains_quranic_text": true,
-    "quran_source_authority": "مجتمع رتق",
+    "quran_source_authority": "مجتمع دليل التقنيات القرآنية",
     "quran_source_url": "https://cms.itqan.dev/gallery/asset/6",
     "created_at": "2025-06-01T10:00:00Z",
     "updated_at": "2026-01-15T10:00:00Z"
@@ -1889,13 +1889,13 @@ export const BETA_RESOURCES: Resource[] = [
     ],
     "tags": [
       "tafsir",
-      "مجتمع رتق",
+      "مجتمع دليل التقنيات القرآنية",
       "قرآن"
     ],
     "docs_url": "https://cms.itqan.dev/gallery/asset/5",
     "homepage_url": "https://cms.itqan.dev/gallery/asset/5",
     "contains_quranic_text": true,
-    "quran_source_authority": "مجتمع رتق",
+    "quran_source_authority": "مجتمع دليل التقنيات القرآنية",
     "quran_source_url": "https://cms.itqan.dev/gallery/asset/5",
     "created_at": "2025-06-01T10:00:00Z",
     "updated_at": "2026-01-15T10:00:00Z"
@@ -2085,13 +2085,13 @@ export const BETA_RESOURCES: Resource[] = [
     ],
     "tags": [
       "tafsir",
-      "مجتمع رتق",
+      "مجتمع دليل التقنيات القرآنية",
       "قرآن"
     ],
     "docs_url": "https://cms.itqan.dev/gallery/asset/8",
     "homepage_url": "https://cms.itqan.dev/gallery/asset/8",
     "contains_quranic_text": true,
-    "quran_source_authority": "مجتمع رتق",
+    "quran_source_authority": "مجتمع دليل التقنيات القرآنية",
     "quran_source_url": "https://cms.itqan.dev/gallery/asset/8",
     "created_at": "2025-06-01T10:00:00Z",
     "updated_at": "2026-01-15T10:00:00Z"
@@ -4941,7 +4941,7 @@ export const BETA_RESOURCES: Resource[] = [
     ],
     "tags": [
       "program",
-      "مجتمع رتق",
+      "مجتمع دليل التقنيات القرآنية",
       "قرآن"
     ],
     "repo_url": "https://github.com/quran/quran.com-frontend-next",
@@ -4987,7 +4987,7 @@ export const BETA_RESOURCES: Resource[] = [
     ],
     "tags": [
       "program",
-      "مجتمع رتق",
+      "مجتمع دليل التقنيات القرآنية",
       "قرآن"
     ],
     "repo_url": "https://github.com/ya27hw/equran_app",
@@ -5032,7 +5032,7 @@ export const BETA_RESOURCES: Resource[] = [
     ],
     "tags": [
       "program",
-      "مجتمع رتق",
+      "مجتمع دليل التقنيات القرآنية",
       "قرآن"
     ],
     "repo_url": "https://github.com/Waqar144/quran_memorization_helper",
@@ -5077,7 +5077,7 @@ export const BETA_RESOURCES: Resource[] = [
     ],
     "tags": [
       "program",
-      "مجتمع رتق",
+      "مجتمع دليل التقنيات القرآنية",
       "قرآن"
     ],
     "repo_url": "https://github.com/mirfatif/NoorUlHuda",
@@ -5122,7 +5122,7 @@ export const BETA_RESOURCES: Resource[] = [
     ],
     "tags": [
       "search",
-      "مجتمع رتق",
+      "مجتمع دليل التقنيات القرآنية",
       "قرآن"
     ],
     "repo_url": "https://github.com/kyb3r/quranic",
@@ -5167,7 +5167,7 @@ export const BETA_RESOURCES: Resource[] = [
     ],
     "tags": [
       "search",
-      "مجتمع رتق",
+      "مجتمع دليل التقنيات القرآنية",
       "قرآن"
     ],
     "repo_url": "https://github.com/ahr9n/quranic-search-v2",
@@ -5212,7 +5212,7 @@ export const BETA_RESOURCES: Resource[] = [
     ],
     "tags": [
       "search",
-      "مجتمع رتق",
+      "مجتمع دليل التقنيات القرآنية",
       "قرآن"
     ],
     "repo_url": "https://github.com/ojuba-org/othman.git",
@@ -5257,7 +5257,7 @@ export const BETA_RESOURCES: Resource[] = [
     ],
     "tags": [
       "search",
-      "مجتمع رتق",
+      "مجتمع دليل التقنيات القرآنية",
       "قرآن"
     ],
     "repo_url": "https://github.com/Alfanous-team/alfanous.git",
@@ -5302,7 +5302,7 @@ export const BETA_RESOURCES: Resource[] = [
     ],
     "tags": [
       "search",
-      "مجتمع رتق",
+      "مجتمع دليل التقنيات القرآنية",
       "قرآن"
     ],
     "repo_url": "https://github.com/karimouda/qurananalysis/",
@@ -5349,7 +5349,7 @@ export const BETA_RESOURCES: Resource[] = [
     ],
     "tags": [
       "library",
-      "مجتمع رتق",
+      "مجتمع دليل التقنيات القرآنية",
       "قرآن"
     ],
     "repo_url": "https://github.com/ibo2001/MushafImad",
@@ -5394,7 +5394,7 @@ export const BETA_RESOURCES: Resource[] = [
     ],
     "tags": [
       "search",
-      "مجتمع رتق",
+      "مجتمع دليل التقنيات القرآنية",
       "قرآن"
     ],
     "docs_url": "https://www.kalimat.dev/",
@@ -5441,13 +5441,13 @@ export const BETA_RESOURCES: Resource[] = [
     ],
     "tags": [
       "mushaf",
-      "مجتمع رتق",
+      "مجتمع دليل التقنيات القرآنية",
       "قرآن"
     ],
     "docs_url": "https://tanzil.net/",
     "homepage_url": "https://tanzil.net/",
     "contains_quranic_text": true,
-    "quran_source_authority": "مجتمع رتق",
+    "quran_source_authority": "مجتمع دليل التقنيات القرآنية",
     "created_at": "2026-08-02T13:08:08.065Z",
     "updated_at": "2026-10-05T07:45:56.313Z"
   },
@@ -5489,7 +5489,7 @@ export const BETA_RESOURCES: Resource[] = [
     ],
     "tags": [
       "audio",
-      "مجتمع رتق",
+      "مجتمع دليل التقنيات القرآنية",
       "قرآن"
     ],
     "contains_quranic_text": false,
@@ -5533,7 +5533,7 @@ export const BETA_RESOURCES: Resource[] = [
     ],
     "tags": [
       "dataset",
-      "مجتمع رتق",
+      "مجتمع دليل التقنيات القرآنية",
       "قرآن"
     ],
     "contains_quranic_text": false,
@@ -5578,7 +5578,7 @@ export const BETA_RESOURCES: Resource[] = [
     ],
     "tags": [
       "api",
-      "مجتمع رتق",
+      "مجتمع دليل التقنيات القرآنية",
       "قرآن"
     ],
     "repo_url": "https://github.com/quran/quran.com-api",
@@ -5624,7 +5624,7 @@ export const BETA_RESOURCES: Resource[] = [
     ],
     "tags": [
       "json",
-      "مجتمع رتق",
+      "مجتمع دليل التقنيات القرآنية",
       "قرآن"
     ],
     "repo_url": "https://github.com/risan/quran-json",
@@ -5669,7 +5669,7 @@ export const BETA_RESOURCES: Resource[] = [
     ],
     "tags": [
       "translation",
-      "مجتمع رتق",
+      "مجتمع دليل التقنيات القرآنية",
       "قرآن"
     ],
     "docs_url": "https://quranenc.com/en/home/api",
@@ -5715,7 +5715,7 @@ export const BETA_RESOURCES: Resource[] = [
     ],
     "tags": [
       "dataset",
-      "مجتمع رتق",
+      "مجتمع دليل التقنيات القرآنية",
       "قرآن"
     ],
     "docs_url": "https://huggingface.co/datasets/nazimali/quran-question-answer-context",
@@ -5760,7 +5760,7 @@ export const BETA_RESOURCES: Resource[] = [
     ],
     "tags": [
       "dataset",
-      "مجتمع رتق",
+      "مجتمع دليل التقنيات القرآنية",
       "قرآن"
     ],
     "docs_url": "https://archive.researchdata.leeds.ac.uk/464/",

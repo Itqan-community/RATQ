@@ -69,7 +69,7 @@ export const BadgeChecklist: React.FC<BadgeChecklistProps> = ({
     <div className="flex flex-col gap-6 text-start p-6 rounded-xl border border-border bg-canvas">
       <div>
         <h3 className="text-base font-bold text-fg flex items-center gap-2">
-          <ShieldCheck className="w-5 h-5 text-ratq-700" />
+          <ShieldCheck className="w-5 h-5 text-qtd-700" />
           <span>قائمة التحقق الموزونة لمعيار إتقان (إصدار 1.0)</span>
         </h3>
         <p className="text-xs text-fg-subtle mt-1">

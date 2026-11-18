@@ -68,8 +68,8 @@ export const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(
               clsx(
                 'w-4 h-4 rounded border transition-colors flex items-center justify-center shrink-0',
                 checked
-                  ? 'bg-ratq-700 border-ratq-700 text-white'
-                  : 'border-border bg-canvas hover:border-ratq-500',
+                  ? 'bg-qtd-700 border-qtd-700 text-white'
+                  : 'border-border bg-canvas hover:border-qtd-500',
                 className
               )
             )}
