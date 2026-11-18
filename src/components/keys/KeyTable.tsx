@@ -44,7 +44,7 @@ export const KeyTable: React.FC<KeyTableProps> = ({ keys, onRotate, onRevoke }) 
           {keys.map((k) => (
             <tr key={k.id} className="hover:bg-subtle/50 transition-colors">
               <td className="py-3 px-4 font-bold text-fg flex items-center gap-2">
-                <Key className="w-3.5 h-3.5 text-ratq-600" />
+                <Key className="w-3.5 h-3.5 text-qtd-600" />
                 <span>{k.name_ar}</span>
               </td>
               <td className="py-3 px-4 text-fg-muted font-medium">

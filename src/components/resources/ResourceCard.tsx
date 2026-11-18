@@ -67,7 +67,7 @@ const ResourceCardTitle: React.FC<ResourceCardTitleProps> = ({
     >
       <Link
         to={`/resources/${slug}`}
-        className="block group-hover:text-ratq-700 transition-colors truncate"
+        className="block group-hover:text-qtd-700 transition-colors truncate"
         title={isTruncated ? titleAr : undefined}
       >
         <h3
@@ -76,7 +76,7 @@ const ResourceCardTitle: React.FC<ResourceCardTitleProps> = ({
             isCompact ? 'text-sm gap-1.5' : 'text-base gap-2'
           )}
         >
-          <Package className="w-4 h-4 text-ratq-600 shrink-0" />
+          <Package className="w-4 h-4 text-qtd-600 shrink-0" />
           <span ref={titleSpanRef} dir={titleDir} className="truncate">
             {titleAr}
           </span>
@@ -120,7 +120,7 @@ export const ResourceCard: React.FC<ResourceCardProps> = ({
       <article
         className={clsx(
           'group rounded-xl border border-border bg-canvas p-3.5 sm:p-4 transition-all duration-200 text-start',
-          'hover:border-ratq-400 hover:shadow-xs dark:hover:border-ratq-700 flex flex-col justify-between gap-2.5',
+          'hover:border-qtd-400 hover:shadow-xs dark:hover:border-qtd-700 flex flex-col justify-between gap-2.5',
           isList && 'sm:flex-row sm:items-center sm:gap-4'
         )}
       >
@@ -161,7 +161,7 @@ export const ResourceCard: React.FC<ResourceCardProps> = ({
 
           <Link
             to={`/resources/${resource.slug}`}
-            className="inline-flex items-center gap-1 font-semibold text-xs text-ratq-700 hover:text-ratq-800 transition-colors shrink-0"
+            className="inline-flex items-center gap-1 font-semibold text-xs text-qtd-700 hover:text-qtd-800 transition-colors shrink-0"
           >
             <span>{t('card.details')}</span>
             <ArrowLeft className="w-3.5 h-3.5 rtl:rotate-0 rotate-180 transition-transform group-hover:-translate-x-0.5" />
@@ -175,7 +175,7 @@ export const ResourceCard: React.FC<ResourceCardProps> = ({
     <article
       className={clsx(
         'group rounded-xl border border-border bg-canvas p-5 transition-all duration-200 text-start',
-        'hover:border-ratq-300 hover:shadow-md dark:hover:border-ratq-800 flex flex-col justify-between',
+        'hover:border-qtd-300 hover:shadow-md dark:hover:border-qtd-800 flex flex-col justify-between',
         isList && 'sm:flex-row sm:items-center sm:gap-6'
       )}
     >
@@ -257,7 +257,7 @@ export const ResourceCard: React.FC<ResourceCardProps> = ({
 
         <Link
           to={`/resources/${resource.slug}`}
-          className="inline-flex items-center gap-1 font-semibold text-xs text-ratq-700 hover:text-ratq-800 transition-colors"
+          className="inline-flex items-center gap-1 font-semibold text-xs text-qtd-700 hover:text-qtd-800 transition-colors"
         >
           <span>{t('card.details')}</span>
           <ArrowLeft className="w-3.5 h-3.5 rtl:rotate-0 rotate-180 transition-transform group-hover:-translate-x-0.5" />

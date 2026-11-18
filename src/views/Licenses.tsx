@@ -76,8 +76,8 @@ export const Licenses: React.FC = () => {
     <div className="max-w-4xl mx-auto px-4 sm:px-6 py-10 w-full text-start">
       {/* Page Header */}
       <div className="mb-10 text-start">
-        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-ratq-200 bg-ratq-50 dark:border-ratq-800 dark:bg-ratq-950 text-ratq-800 dark:text-ratq-300 text-xs font-semibold mb-3">
-          <Sparkles className="w-3.5 h-3.5 text-ratq-600" />
+        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-qtd-200 bg-qtd-50 dark:border-qtd-800 dark:bg-qtd-950 text-qtd-800 dark:text-qtd-300 text-xs font-semibold mb-3">
+          <Sparkles className="w-3.5 h-3.5 text-qtd-600" />
           <span>{t('licenses.l16')}</span>
         </div>
         <h1 className="text-2xl sm:text-3xl font-bold text-fg">
@@ -91,7 +91,7 @@ export const Licenses: React.FC = () => {
         {/* Informative Guidance Banner */}
         <div className="mt-6 p-4 rounded-xl border border-border bg-subtle/60 flex items-start sm:items-center justify-between gap-4 text-xs">
           <div className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-lg bg-ratq-500/10 text-ratq-600 flex items-center justify-center shrink-0">
+            <div className="w-8 h-8 rounded-lg bg-qtd-500/10 text-qtd-600 flex items-center justify-center shrink-0">
               <Info className="w-4 h-4" />
             </div>
             <div>
@@ -126,7 +126,7 @@ export const Licenses: React.FC = () => {
 
         {/* Continuous Spine Line */}
         <div
-          className="absolute top-10 bottom-12 start-[17px] w-0.5 bg-gradient-to-b from-emerald-500 via-ratq-500 to-rose-500 -translate-x-1/2 z-0"
+          className="absolute top-10 bottom-12 start-[17px] w-0.5 bg-gradient-to-b from-emerald-500 via-qtd-500 to-rose-500 -translate-x-1/2 z-0"
           aria-hidden="true"
         />
 
@@ -141,17 +141,17 @@ export const Licenses: React.FC = () => {
               <div key={lic.id} className="relative group flex items-start gap-4 sm:gap-6">
                 {/* Milestone Node on the Spine */}
                 <div className="shrink-0 flex items-center justify-center">
-                  <div className="w-9 h-9 rounded-full bg-canvas border-2 border-ratq-500 text-ratq-700 dark:text-ratq-300 font-mono font-bold text-xs flex items-center justify-center shadow-sm group-hover:scale-110 group-hover:bg-ratq-500 group-hover:text-white group-hover:border-ratq-600 transition-all duration-200 z-10">
+                  <div className="w-9 h-9 rounded-full bg-canvas border-2 border-qtd-500 text-qtd-700 dark:text-qtd-300 font-mono font-bold text-xs flex items-center justify-center shadow-sm group-hover:scale-110 group-hover:bg-qtd-500 group-hover:text-white group-hover:border-qtd-600 transition-all duration-200 z-10">
                     {stepNumber}
                   </div>
                 </div>
 
                 {/* License Content Card */}
-                <div className="flex-1 p-5 sm:p-6 rounded-2xl border border-border bg-canvas shadow-2xs group-hover:shadow-md group-hover:border-ratq-500/50 transition-all duration-200">
+                <div className="flex-1 p-5 sm:p-6 rounded-2xl border border-border bg-canvas shadow-2xs group-hover:shadow-md group-hover:border-qtd-500/50 transition-all duration-200">
                   {/* Card Header */}
                   <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 mb-3">
                     <div className="flex flex-wrap items-center gap-2">
-                      <Scale className="w-5 h-5 text-ratq-700 dark:text-ratq-400 shrink-0" />
+                      <Scale className="w-5 h-5 text-qtd-700 dark:text-qtd-400 shrink-0" />
                       <h3 className="text-base sm:text-lg font-bold text-fg">{en ? (lic.name_en || lic.name_ar) : lic.name_ar}</h3>
                       <span className="text-xs font-mono font-bold text-fg-subtle uppercase px-2 py-0.5 rounded bg-subtle border border-border">
                         {lic.name_en || lic.id}
@@ -270,7 +270,7 @@ export const Licenses: React.FC = () => {
 
                     <Link
                       to={licenseRowHref(lic.id)}
-                      className="text-ratq-700 dark:text-ratq-400 font-bold hover:underline inline-flex items-center gap-1.5 transition-colors"
+                      className="text-qtd-700 dark:text-qtd-400 font-bold hover:underline inline-flex items-center gap-1.5 transition-colors"
                     >
                       <span>{t('licenses.l35')}</span>
                       <ArrowLeft className="w-3.5 h-3.5 rtl:rotate-0 rotate-180" />

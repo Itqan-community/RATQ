@@ -43,7 +43,7 @@ export const PublisherDetails: React.FC = () => {
       <div className="p-6 sm:p-8 rounded-2xl border border-border hero-gradient-bg transition-colors shadow-xs mb-10">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
           <div className="flex items-start gap-4">
-            <div className="w-16 h-16 rounded-2xl bg-white/90 dark:bg-slate-900/90 text-ratq-700 dark:text-ratq-300 flex items-center justify-center font-bold text-xl shrink-0 border border-slate-200/80 dark:border-slate-800 shadow-2xs overflow-hidden">
+            <div className="w-16 h-16 rounded-2xl bg-white/90 dark:bg-slate-900/90 text-qtd-700 dark:text-qtd-300 flex items-center justify-center font-bold text-xl shrink-0 border border-slate-200/80 dark:border-slate-800 shadow-2xs overflow-hidden">
               {publisher.logo_url ? (
                 <img src={publisher.logo_url} alt={publisher.name_ar} className="w-full h-full object-cover" />
               ) : (
@@ -53,7 +53,7 @@ export const PublisherDetails: React.FC = () => {
             <div>
               <div className="flex items-center gap-2 mb-1">
                 <h1 className="text-xl sm:text-2xl font-bold text-fg">{en ? publisher.name_en || publisher.name_ar : publisher.name_ar}</h1>
-                <span className="text-xs text-ratq-600 dark:text-ratq-400 font-semibold flex items-center gap-1">
+                <span className="text-xs text-qtd-600 dark:text-qtd-400 font-semibold flex items-center gap-1">
                   <CheckCircle2 className="w-4 h-4" /> {t('publisher_details.verified')}
                 </span>
               </div>

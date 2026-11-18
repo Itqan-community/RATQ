@@ -69,7 +69,7 @@ export const BranchedMenu: React.FC<BranchedMenuProps> = ({
   onSelect,
   onToggle,
   color = 'var(--fg-default, #0f172a)',
-  accentColor = 'var(--ratq-primary-600, #059669)',
+  accentColor = 'var(--qtd-primary-600, #059669)',
   lineColor = 'var(--border-default, #cbd5e1)',
   width = '100%',
   rowHeight = 34,

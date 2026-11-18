@@ -43,7 +43,7 @@ import {
 const BADGE_FILTER_OPTIONS = [
   { id: 'gold', label: 'إتقان ذهبي', icon: Crown, color: 'text-amber-500' },
   { id: 'certified', label: 'معتمد', icon: Award, color: 'text-cyan-600 dark:text-cyan-400' },
-  { id: 'verified', label: 'موثّق تقنياً', icon: ShieldCheck, color: 'text-ratq-600 dark:text-ratq-400' },
+  { id: 'verified', label: 'موثّق تقنياً', icon: ShieldCheck, color: 'text-qtd-600 dark:text-qtd-400' },
   { id: 'basic', label: 'إتقان أساسي', icon: Shield, color: 'text-fg-subtle' },
 ];
 
@@ -386,7 +386,7 @@ export const TreeExplorerPreviewPage: React.FC = () => {
     <div className="max-w-container mx-auto px-4 sm:px-6 py-6 w-full text-start">
       {/* Page Header (Matching Catalog.tsx clean style) */}
       <div className="mb-6 space-y-2">
-        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-ratq-100 dark:bg-ratq-900/60 text-ratq-800 dark:text-ratq-200 text-xs font-semibold">
+        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-qtd-100 dark:bg-qtd-900/60 text-qtd-800 dark:text-qtd-200 text-xs font-semibold">
           <FolderTree className="w-3.5 h-3.5" />
           <span>مستكشف المجلدات الهرمي (VS Code Collapsible Directory Tree)</span>
         </div>
@@ -406,7 +406,7 @@ export const TreeExplorerPreviewPage: React.FC = () => {
           <div className="p-3.5 border-b border-border/80 bg-canvas space-y-2">
             <div className="flex items-center justify-between text-xs font-bold text-fg-subtle">
               <span className="flex items-center gap-1.5 font-semibold text-fg">
-                <FolderTree className="w-4 h-4 text-ratq-600" />
+                <FolderTree className="w-4 h-4 text-qtd-600" />
                 <span>مستكشف المجلدات</span>
               </span>
               <span className="text-[10px] bg-subtle px-2 py-0.5 rounded text-fg-subtle">
@@ -419,7 +419,7 @@ export const TreeExplorerPreviewPage: React.FC = () => {
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="تصفية المجلدات..."
-                className="w-full pl-3 pr-8 py-1.5 rounded-lg border border-border bg-canvas text-xs placeholder:text-fg-subtle focus:outline-none focus:border-ratq-500"
+                className="w-full pl-3 pr-8 py-1.5 rounded-lg border border-border bg-canvas text-xs placeholder:text-fg-subtle focus:outline-none focus:border-qtd-500"
               />
               <Search className="w-3.5 h-3.5 text-fg-subtle absolute right-2.5 top-2.5" />
             </div>
@@ -462,7 +462,7 @@ export const TreeExplorerPreviewPage: React.FC = () => {
               <span>/</span>
               <span className="text-fg font-bold truncate">{activeNode.labelAr}</span>
               <span>/</span>
-              <span className="text-ratq-600 font-semibold shrink-0">({nodeResources.length} مورد متوافق)</span>
+              <span className="text-qtd-600 font-semibold shrink-0">({nodeResources.length} مورد متوافق)</span>
             </div>
 
             <div className="flex items-center gap-2 flex-wrap">
@@ -472,15 +472,15 @@ export const TreeExplorerPreviewPage: React.FC = () => {
                 onClick={() => setIsFilterDrawerOpen(true)}
                 className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl border text-xs font-semibold transition-all cursor-pointer ${
                   drawerFiltersCount > 0
-                    ? 'border-ratq-500 bg-ratq-600 text-white shadow-xs hover:bg-ratq-700'
-                    : 'border-border bg-canvas hover:bg-subtle text-fg hover:border-ratq-300'
+                    ? 'border-qtd-500 bg-qtd-600 text-white shadow-xs hover:bg-qtd-700'
+                    : 'border-border bg-canvas hover:bg-subtle text-fg hover:border-qtd-300'
                 }`}
                 title="فتح نافذة الفلاتر المتقدمة للمكتبة"
               >
                 <SlidersHorizontal className="w-3.5 h-3.5" />
                 <span>الفلاتر المتقدمة</span>
                 {drawerFiltersCount > 0 && (
-                  <span className="w-4 h-4 rounded-full bg-white text-ratq-700 text-[10px] font-mono flex items-center justify-center font-bold">
+                  <span className="w-4 h-4 rounded-full bg-white text-qtd-700 text-[10px] font-mono flex items-center justify-center font-bold">
                     {drawerFiltersCount}
                   </span>
                 )}
@@ -496,15 +496,15 @@ export const TreeExplorerPreviewPage: React.FC = () => {
                   }}
                   className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl border text-xs font-semibold transition-all cursor-pointer ${
                     selectedBadges.length > 0
-                      ? 'border-ratq-500 bg-ratq-50 dark:bg-ratq-950/70 text-ratq-800 dark:text-ratq-200 font-bold shadow-2xs'
-                      : 'border-border bg-canvas hover:bg-subtle text-fg hover:border-ratq-300'
+                      ? 'border-qtd-500 bg-qtd-50 dark:bg-qtd-950/70 text-qtd-800 dark:text-qtd-200 font-bold shadow-2xs'
+                      : 'border-border bg-canvas hover:bg-subtle text-fg hover:border-qtd-300'
                   }`}
                   title="تصفية الموارد حسب شارة إتقان"
                 >
-                  <ShieldCheck className="w-3.5 h-3.5 text-ratq-600" />
+                  <ShieldCheck className="w-3.5 h-3.5 text-qtd-600" />
                   <span>شارة إتقان</span>
                   {selectedBadges.length > 0 && (
-                    <span className="w-4 h-4 rounded-full bg-ratq-700 text-white text-[10px] font-mono flex items-center justify-center font-bold">
+                    <span className="w-4 h-4 rounded-full bg-qtd-700 text-white text-[10px] font-mono flex items-center justify-center font-bold">
                       {selectedBadges.length}
                     </span>
                   )}
@@ -526,7 +526,7 @@ export const TreeExplorerPreviewPage: React.FC = () => {
                           onClick={() => {
                             selectedBadges.forEach((b: string) => toggleBadge(b));
                           }}
-                          className="text-[10px] text-ratq-700 dark:text-ratq-300 hover:underline cursor-pointer font-medium"
+                          className="text-[10px] text-qtd-700 dark:text-qtd-300 hover:underline cursor-pointer font-medium"
                         >
                           مسح التحديد
                         </button>
@@ -544,7 +544,7 @@ export const TreeExplorerPreviewPage: React.FC = () => {
                             onClick={() => toggleBadge(opt.id)}
                             className={`w-full flex items-center justify-between px-2.5 py-1.5 rounded-xl text-xs transition-colors cursor-pointer text-start ${
                               isChecked
-                                ? 'bg-ratq-50 dark:bg-ratq-950/60 text-ratq-800 dark:text-ratq-200 font-semibold'
+                                ? 'bg-qtd-50 dark:bg-qtd-950/60 text-qtd-800 dark:text-qtd-200 font-semibold'
                                 : 'hover:bg-subtle text-fg'
                             }`}
                           >
@@ -552,7 +552,7 @@ export const TreeExplorerPreviewPage: React.FC = () => {
                               <div
                                 className={`w-4 h-4 rounded-md border flex items-center justify-center shrink-0 transition-colors ${
                                   isChecked
-                                    ? 'bg-ratq-700 border-ratq-700 text-white'
+                                    ? 'bg-qtd-700 border-qtd-700 text-white'
                                     : 'border-border bg-canvas'
                                 }`}
                               >
@@ -579,15 +579,15 @@ export const TreeExplorerPreviewPage: React.FC = () => {
                   }}
                   className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl border text-xs font-semibold transition-all cursor-pointer ${
                     selectedAccess.length > 0
-                      ? 'border-ratq-500 bg-ratq-50 dark:bg-ratq-950/70 text-ratq-800 dark:text-ratq-200 font-bold shadow-2xs'
-                      : 'border-border bg-canvas hover:bg-subtle text-fg hover:border-ratq-300'
+                      ? 'border-qtd-500 bg-qtd-50 dark:bg-qtd-950/70 text-qtd-800 dark:text-qtd-200 font-bold shadow-2xs'
+                      : 'border-border bg-canvas hover:bg-subtle text-fg hover:border-qtd-300'
                   }`}
                   title="تصفية الموارد حسب مستوى الوصول"
                 >
-                  <Unlock className="w-3.5 h-3.5 text-ratq-600" />
+                  <Unlock className="w-3.5 h-3.5 text-qtd-600" />
                   <span>مستوى الوصول</span>
                   {selectedAccess.length > 0 && (
-                    <span className="w-4 h-4 rounded-full bg-ratq-700 text-white text-[10px] font-mono flex items-center justify-center font-bold">
+                    <span className="w-4 h-4 rounded-full bg-qtd-700 text-white text-[10px] font-mono flex items-center justify-center font-bold">
                       {selectedAccess.length}
                     </span>
                   )}
@@ -609,7 +609,7 @@ export const TreeExplorerPreviewPage: React.FC = () => {
                           onClick={() => {
                             selectedAccess.forEach((a: string) => toggleAccess(a));
                           }}
-                          className="text-[10px] text-ratq-700 dark:text-ratq-300 hover:underline cursor-pointer font-medium"
+                          className="text-[10px] text-qtd-700 dark:text-qtd-300 hover:underline cursor-pointer font-medium"
                         >
                           مسح التحديد
                         </button>
@@ -627,7 +627,7 @@ export const TreeExplorerPreviewPage: React.FC = () => {
                             onClick={() => toggleAccess(opt.id)}
                             className={`w-full flex items-center justify-between px-2.5 py-1.5 rounded-xl text-xs transition-colors cursor-pointer text-start ${
                               isChecked
-                                ? 'bg-ratq-50 dark:bg-ratq-950/60 text-ratq-800 dark:text-ratq-200 font-semibold'
+                                ? 'bg-qtd-50 dark:bg-qtd-950/60 text-qtd-800 dark:text-qtd-200 font-semibold'
                                 : 'hover:bg-subtle text-fg'
                             }`}
                           >
@@ -635,13 +635,13 @@ export const TreeExplorerPreviewPage: React.FC = () => {
                               <div
                                 className={`w-4 h-4 rounded-md border flex items-center justify-center shrink-0 transition-colors ${
                                   isChecked
-                                    ? 'bg-ratq-700 border-ratq-700 text-white'
+                                    ? 'bg-qtd-700 border-qtd-700 text-white'
                                     : 'border-border bg-canvas'
                                 }`}
                               >
                                 {isChecked && <Check className="w-3 h-3 stroke-[3]" />}
                               </div>
-                              <Icon className="w-3.5 h-3.5 text-ratq-600 shrink-0" />
+                              <Icon className="w-3.5 h-3.5 text-qtd-600 shrink-0" />
                               <div className="flex flex-col min-w-0">
                                 <span className="font-medium">{opt.label}</span>
                                 <span className="text-[10px] text-fg-subtle font-normal truncate">{opt.desc}</span>
@@ -673,7 +673,7 @@ export const TreeExplorerPreviewPage: React.FC = () => {
                     onClick={() => setSelectedResource(res)}
                     className={`w-full p-3.5 rounded-2xl border text-start transition-all cursor-pointer block ${
                       isCurrent
-                        ? 'border-ratq-500 bg-ratq-50/70 dark:bg-ratq-950/70 shadow-2xs'
+                        ? 'border-qtd-500 bg-qtd-50/70 dark:bg-qtd-950/70 shadow-2xs'
                         : 'border-border bg-canvas hover:bg-subtle'
                     }`}
                   >
@@ -750,7 +750,7 @@ export const TreeExplorerPreviewPage: React.FC = () => {
                         <span className="font-bold text-fg block text-[11px]">
                           تطبيقات تعتمد على المورد:
                         </span>
-                        <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-ratq-50 dark:bg-ratq-950 text-ratq-700 dark:text-ratq-300 border border-ratq-200 dark:border-ratq-800">
+                        <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-qtd-50 dark:bg-qtd-950 text-qtd-700 dark:text-qtd-300 border border-qtd-200 dark:border-qtd-800">
                           {selectedResourceApps.length}
                         </span>
                       </div>
@@ -782,7 +782,7 @@ export const TreeExplorerPreviewPage: React.FC = () => {
                   </span>
                   <Link
                     to={`/resources/${selectedResource.slug}`}
-                    className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-ratq-700 hover:bg-ratq-800 text-white text-xs font-bold transition-all shadow-2xs"
+                    className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-qtd-700 hover:bg-qtd-800 text-white text-xs font-bold transition-all shadow-2xs"
                   >
                     <span>فتح صفحة التوثيق</span>
                     <ExternalLink className="w-3.5 h-3.5" />
@@ -809,7 +809,7 @@ export const TreeExplorerPreviewPage: React.FC = () => {
               {/* Drawer Header */}
               <div className="flex items-center justify-between pb-4 border-b border-border">
                 <div className="flex items-center gap-2">
-                  <div className="w-8 h-8 rounded-xl bg-ratq-100 dark:bg-ratq-900/60 text-ratq-700 dark:text-ratq-300 flex items-center justify-center">
+                  <div className="w-8 h-8 rounded-xl bg-qtd-100 dark:bg-qtd-900/60 text-qtd-700 dark:text-qtd-300 flex items-center justify-center">
                     <SlidersHorizontal className="w-4 h-4" />
                   </div>
                   <div>
@@ -845,7 +845,7 @@ export const TreeExplorerPreviewPage: React.FC = () => {
                 <button
                   type="button"
                   onClick={() => setIsFilterDrawerOpen(false)}
-                  className="flex-1 px-4 py-2.5 rounded-xl bg-ratq-700 hover:bg-ratq-800 text-white text-xs font-bold transition-colors cursor-pointer shadow-xs text-center"
+                  className="flex-1 px-4 py-2.5 rounded-xl bg-qtd-700 hover:bg-qtd-800 text-white text-xs font-bold transition-colors cursor-pointer shadow-xs text-center"
                 >
                   تطبيق وعرض ({nodeResources.length} مورد)
                 </button>

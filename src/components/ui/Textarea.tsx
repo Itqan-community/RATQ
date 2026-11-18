@@ -29,7 +29,7 @@ export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
           className={twMerge(
             clsx(
               'w-full rounded-md border border-border bg-canvas px-3 py-2 text-sm text-fg placeholder:text-fg-subtle transition-colors',
-              'focus:outline-none focus:ring-2 focus:ring-ratq-500 focus:border-ratq-500',
+              'focus:outline-none focus:ring-2 focus:ring-qtd-500 focus:border-qtd-500',
               'disabled:cursor-not-allowed disabled:opacity-50',
               error && 'border-red-500 focus:ring-red-500',
               className

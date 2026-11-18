@@ -31,10 +31,10 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
   ) => {
     const isSpinning = isLoading || loading;
     const baseStyles =
-      'inline-flex flex-row flex-nowrap items-center justify-center whitespace-nowrap font-medium rounded-md transition-all duration-150 focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-ratq-500 disabled:opacity-50 disabled:pointer-events-none select-none shrink-0 [&>svg]:shrink-0';
+      'inline-flex flex-row flex-nowrap items-center justify-center whitespace-nowrap font-medium rounded-md transition-all duration-150 focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-qtd-500 disabled:opacity-50 disabled:pointer-events-none select-none shrink-0 [&>svg]:shrink-0';
 
     const variants = {
-      primary: 'bg-ratq-700 text-white hover:bg-ratq-800 shadow-sm active:bg-ratq-900',
+      primary: 'bg-qtd-700 text-white hover:bg-qtd-800 shadow-sm active:bg-qtd-900',
       secondary: 'bg-subtle text-fg border border-border hover:bg-muted active:bg-border-subtle',
       outline: 'border border-border text-fg hover:bg-subtle hover:border-border-strong active:bg-muted',
       ghost: 'text-fg-muted hover:text-fg hover:bg-subtle',

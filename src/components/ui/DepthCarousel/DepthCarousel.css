@@ -104,7 +104,7 @@
 
 .depth-carousel__dot.is-active {
   width: 20px;
-  background: var(--ratq-primary-500, #10b981);
+  background: var(--qtd-primary-500, #10b981);
 }
 
 .depth-carousel__arrows {

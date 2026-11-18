@@ -4,7 +4,7 @@ import React from 'react';
 import { SITE_NAME, SITE_NAME_AR } from '@/lib/seoMeta';
 
 export const BrandMark: React.FC<{ className?: string }> = ({ className = '' }) => (
-  <svg viewBox="0 0 48 48" aria-hidden="true" className={`shrink-0 text-ratq-600 dark:text-ratq-400 ${className}`} fill="currentColor">
+  <svg viewBox="0 0 48 48" aria-hidden="true" className={`shrink-0 text-qtd-600 dark:text-qtd-400 ${className}`} fill="currentColor">
     <rect x="5" y="5" width="17" height="17" rx="3" opacity=".35" />
     <rect x="26" y="26" width="17" height="17" rx="3" opacity=".35" />
     <rect x="5" y="26" width="17" height="17" rx="3" opacity=".6" />

@@ -39,14 +39,14 @@ const AppIconItem: React.FC<AppIconItemProps> = ({ app, dimensionPx, linkToTechS
   const content = hasError ? (
     <div
       style={boxStyle}
-      className="rounded-lg bg-ratq-500/10 border border-ratq-500/30 text-ratq-700 dark:text-ratq-300 font-bold flex items-center justify-center text-xs shadow-2xs select-none"
+      className="rounded-lg bg-qtd-500/10 border border-qtd-500/30 text-qtd-700 dark:text-qtd-300 font-bold flex items-center justify-center text-xs shadow-2xs select-none"
     >
       {app.name_ar.trim().charAt(0)}
     </div>
   ) : (
     <div
       style={boxStyle}
-      className="rounded-lg overflow-hidden ring-1 ring-black/10 dark:ring-white/15 bg-canvas shadow-2xs hover:scale-105 hover:ring-ratq-500 hover:shadow-xs transition-transform duration-150 inline-flex items-center justify-center cursor-pointer shrink-0"
+      className="rounded-lg overflow-hidden ring-1 ring-black/10 dark:ring-white/15 bg-canvas shadow-2xs hover:scale-105 hover:ring-qtd-500 hover:shadow-xs transition-transform duration-150 inline-flex items-center justify-center cursor-pointer shrink-0"
     >
       <img
         src={app.icon_url}
@@ -152,7 +152,7 @@ export const ResourceAppBadges: React.FC<ResourceAppBadgesProps> = ({
     >
       {showLabel && (
         <span className="text-[11px] font-medium text-fg-subtle shrink-0 flex items-center gap-1 select-none">
-          <CheckCircle2 className="w-3.5 h-3.5 text-ratq-600 dark:text-ratq-400 shrink-0" />
+          <CheckCircle2 className="w-3.5 h-3.5 text-qtd-600 dark:text-qtd-400 shrink-0" />
           <span>{t('detail.adopted_in')}</span>
         </span>
       )}

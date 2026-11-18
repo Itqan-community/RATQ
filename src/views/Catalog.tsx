@@ -64,7 +64,7 @@ const CATEGORY_ICONS: Record<string, React.ElementType> = {
 const BADGE_FILTER_OPTIONS = [
   { id: 'gold', icon: Crown, color: 'text-amber-500' },
   { id: 'certified', icon: Award, color: 'text-cyan-600 dark:text-cyan-400' },
-  { id: 'verified', icon: ShieldCheck, color: 'text-ratq-600 dark:text-ratq-400' },
+  { id: 'verified', icon: ShieldCheck, color: 'text-qtd-600 dark:text-qtd-400' },
   { id: 'basic', icon: Shield, color: 'text-fg-subtle' },
 ];
 
@@ -107,14 +107,14 @@ const CATEGORY_THEMES: Record<string, CategoryTheme> = {
     cardBorderHover: 'hover:border-amber-300/80 dark:hover:border-amber-800',
   },
   cat_dev: {
-    topGradient: 'from-ratq-500/10 via-ratq-500/2 to-transparent dark:from-ratq-400/12 dark:via-ratq-400/2 to-transparent',
-    topBorder: 'via-ratq-500/40 dark:via-ratq-400/40',
-    glowBg: 'bg-ratq-500',
-    iconBg: 'bg-ratq-50 dark:bg-ratq-950/70',
-    iconBorder: 'border-ratq-200/80 dark:border-ratq-800/70',
-    iconColor: 'text-ratq-700 dark:text-ratq-300',
-    badgeBg: 'bg-ratq-50/80 dark:bg-ratq-950/60 text-ratq-800 dark:text-ratq-300 border-ratq-200 dark:border-ratq-800',
-    cardBorderHover: 'hover:border-ratq-300/80 dark:hover:border-ratq-800',
+    topGradient: 'from-qtd-500/10 via-qtd-500/2 to-transparent dark:from-qtd-400/12 dark:via-qtd-400/2 to-transparent',
+    topBorder: 'via-qtd-500/40 dark:via-qtd-400/40',
+    glowBg: 'bg-qtd-500',
+    iconBg: 'bg-qtd-50 dark:bg-qtd-950/70',
+    iconBorder: 'border-qtd-200/80 dark:border-qtd-800/70',
+    iconColor: 'text-qtd-700 dark:text-qtd-300',
+    badgeBg: 'bg-qtd-50/80 dark:bg-qtd-950/60 text-qtd-800 dark:text-qtd-300 border-qtd-200 dark:border-qtd-800',
+    cardBorderHover: 'hover:border-qtd-300/80 dark:hover:border-qtd-800',
   },
   cat_fonts: {
     topGradient: 'from-purple-500/10 via-purple-500/2 to-transparent dark:from-purple-400/12 dark:via-purple-400/2 to-transparent',
@@ -159,14 +159,14 @@ const CATEGORY_THEMES: Record<string, CategoryTheme> = {
 };
 
 const DEFAULT_CATEGORY_THEME: CategoryTheme = {
-  topGradient: 'from-ratq-500/10 via-ratq-500/2 to-transparent dark:from-ratq-400/12 dark:via-ratq-400/2 to-transparent',
-  topBorder: 'via-ratq-500/40 dark:via-ratq-400/40',
-  glowBg: 'bg-ratq-500',
-  iconBg: 'bg-ratq-50 dark:bg-ratq-950/70',
-  iconBorder: 'border-ratq-200/80 dark:border-ratq-800/70',
-  iconColor: 'text-ratq-700 dark:text-ratq-300',
-  badgeBg: 'bg-ratq-50/80 dark:bg-ratq-950/60 text-ratq-800 dark:text-ratq-300 border-ratq-200 dark:border-ratq-800',
-  cardBorderHover: 'hover:border-ratq-300/80 dark:hover:border-ratq-800',
+  topGradient: 'from-qtd-500/10 via-qtd-500/2 to-transparent dark:from-qtd-400/12 dark:via-qtd-400/2 to-transparent',
+  topBorder: 'via-qtd-500/40 dark:via-qtd-400/40',
+  glowBg: 'bg-qtd-500',
+  iconBg: 'bg-qtd-50 dark:bg-qtd-950/70',
+  iconBorder: 'border-qtd-200/80 dark:border-qtd-800/70',
+  iconColor: 'text-qtd-700 dark:text-qtd-300',
+  badgeBg: 'bg-qtd-50/80 dark:bg-qtd-950/60 text-qtd-800 dark:text-qtd-300 border-qtd-200 dark:border-qtd-800',
+  cardBorderHover: 'hover:border-qtd-300/80 dark:hover:border-qtd-800',
 };
 
 export const Catalog: React.FC = () => {
@@ -411,11 +411,11 @@ export const Catalog: React.FC = () => {
       {/* Breadcrumb & Page Header */}
       <div className="mb-6 space-y-2">
         <div className="flex items-center gap-2 text-xs text-fg-subtle mb-3">
-          <Link to="/" className="hover:text-ratq-700 transition-colors">
+          <Link to="/" className="hover:text-qtd-700 transition-colors">
             {t('catalog.home')}
           </Link>
           <span>/</span>
-          <span className="text-ratq-700 font-bold">{t('catalog.library')}</span>
+          <span className="text-qtd-700 font-bold">{t('catalog.library')}</span>
         </div>
 
         <h1 className="text-2xl sm:text-3xl font-bold text-fg">
@@ -445,7 +445,7 @@ export const Catalog: React.FC = () => {
             }}
             placeholder={t('catalog.search_placeholder')}
             aria-label={t('catalog.search_aria')}
-            className="w-full ps-9 pe-8 py-2 rounded-xl border border-border bg-subtle/50 text-xs sm:text-sm placeholder:text-fg-subtle focus:outline-none focus:border-ratq-500 focus:bg-canvas transition-all"
+            className="w-full ps-9 pe-8 py-2 rounded-xl border border-border bg-subtle/50 text-xs sm:text-sm placeholder:text-fg-subtle focus:outline-none focus:border-qtd-500 focus:bg-canvas transition-all"
           />
           {searchDraft && (
             <button
@@ -466,7 +466,7 @@ export const Catalog: React.FC = () => {
             <button
               type="button"
               onClick={resetFilters}
-              className="inline-flex items-center gap-1.5 px-2.5 py-2 rounded-xl bg-ratq-50 dark:bg-ratq-950/80 border border-ratq-200 dark:border-ratq-800 text-ratq-700 dark:text-ratq-300 text-xs font-semibold hover:bg-ratq-100 transition-colors cursor-pointer"
+              className="inline-flex items-center gap-1.5 px-2.5 py-2 rounded-xl bg-qtd-50 dark:bg-qtd-950/80 border border-qtd-200 dark:border-qtd-800 text-qtd-700 dark:text-qtd-300 text-xs font-semibold hover:bg-qtd-100 transition-colors cursor-pointer"
               title={t('catalog.clear_all_filters')}
             >
               <RotateCcw className="w-3 h-3" />
@@ -480,15 +480,15 @@ export const Catalog: React.FC = () => {
             onClick={() => setIsFilterDrawerOpen(true)}
             className={`inline-flex items-center gap-2 px-3.5 py-2 rounded-xl border text-xs font-semibold transition-all cursor-pointer ${
               drawerFiltersCount > 0
-                ? 'border-ratq-500 bg-ratq-600 text-white shadow-xs hover:bg-ratq-700'
-                : 'border-border bg-canvas hover:bg-subtle text-fg hover:border-ratq-300'
+                ? 'border-qtd-500 bg-qtd-600 text-white shadow-xs hover:bg-qtd-700'
+                : 'border-border bg-canvas hover:bg-subtle text-fg hover:border-qtd-300'
             }`}
             title={t('catalog.open_filters')}
           >
             <SlidersHorizontal className="w-3.5 h-3.5" />
             <span>{t('catalog.advanced_filters')}</span>
             {drawerFiltersCount > 0 && (
-              <span className="w-4 h-4 rounded-full bg-white text-ratq-700 text-[10px] font-mono flex items-center justify-center font-bold">
+              <span className="w-4 h-4 rounded-full bg-white text-qtd-700 text-[10px] font-mono flex items-center justify-center font-bold">
                 {drawerFiltersCount}
               </span>
             )}
@@ -504,15 +504,15 @@ export const Catalog: React.FC = () => {
               }}
               className={`inline-flex items-center gap-1.5 px-3 py-2 rounded-xl border text-xs font-semibold transition-all cursor-pointer ${
                 selectedBadges.length > 0
-                  ? 'border-ratq-500 bg-ratq-50 dark:bg-ratq-950/70 text-ratq-800 dark:text-ratq-200 font-bold shadow-2xs'
-                  : 'border-border bg-canvas hover:bg-subtle text-fg hover:border-ratq-300'
+                  ? 'border-qtd-500 bg-qtd-50 dark:bg-qtd-950/70 text-qtd-800 dark:text-qtd-200 font-bold shadow-2xs'
+                  : 'border-border bg-canvas hover:bg-subtle text-fg hover:border-qtd-300'
               }`}
               title={t('catalog.filter_by_badge')}
             >
-              <ShieldCheck className="w-3.5 h-3.5 text-ratq-600" />
+              <ShieldCheck className="w-3.5 h-3.5 text-qtd-600" />
               <span>{t('catalog.badge')}</span>
               {selectedBadges.length > 0 && (
-                <span className="w-4 h-4 rounded-full bg-ratq-700 text-white text-[10px] font-mono flex items-center justify-center font-bold">
+                <span className="w-4 h-4 rounded-full bg-qtd-700 text-white text-[10px] font-mono flex items-center justify-center font-bold">
                   {selectedBadges.length}
                 </span>
               )}
@@ -534,7 +534,7 @@ export const Catalog: React.FC = () => {
                       onClick={() => {
                         selectedBadges.forEach((b) => toggleBadge(b));
                       }}
-                      className="text-[10px] text-ratq-700 dark:text-ratq-300 hover:underline cursor-pointer font-medium"
+                      className="text-[10px] text-qtd-700 dark:text-qtd-300 hover:underline cursor-pointer font-medium"
                     >
                       {t('catalog.clear_selection')}
                     </button>
@@ -552,7 +552,7 @@ export const Catalog: React.FC = () => {
                         onClick={() => toggleBadge(opt.id)}
                         className={`w-full flex items-center justify-between px-2.5 py-1.5 rounded-xl text-xs transition-colors cursor-pointer text-start ${
                           isChecked
-                            ? 'bg-ratq-50 dark:bg-ratq-950/60 text-ratq-800 dark:text-ratq-200 font-semibold'
+                            ? 'bg-qtd-50 dark:bg-qtd-950/60 text-qtd-800 dark:text-qtd-200 font-semibold'
                             : 'hover:bg-subtle text-fg'
                         }`}
                       >
@@ -563,7 +563,7 @@ export const Catalog: React.FC = () => {
                         <div
                           className={`w-4 h-4 rounded border flex items-center justify-center transition-colors ${
                             isChecked
-                              ? 'bg-ratq-600 border-ratq-600 text-white'
+                              ? 'bg-qtd-600 border-qtd-600 text-white'
                               : 'border-border bg-canvas'
                           }`}
                         >
@@ -587,15 +587,15 @@ export const Catalog: React.FC = () => {
               }}
               className={`inline-flex items-center gap-1.5 px-3 py-2 rounded-xl border text-xs font-semibold transition-all cursor-pointer ${
                 selectedAccess.length > 0
-                  ? 'border-ratq-500 bg-ratq-50 dark:bg-ratq-950/70 text-ratq-800 dark:text-ratq-200 font-bold shadow-2xs'
-                  : 'border-border bg-canvas hover:bg-subtle text-fg hover:border-ratq-300'
+                  ? 'border-qtd-500 bg-qtd-50 dark:bg-qtd-950/70 text-qtd-800 dark:text-qtd-200 font-bold shadow-2xs'
+                  : 'border-border bg-canvas hover:bg-subtle text-fg hover:border-qtd-300'
               }`}
               title={t('catalog.filter_by_access')}
             >
-              <Unlock className="w-3.5 h-3.5 text-ratq-600" />
+              <Unlock className="w-3.5 h-3.5 text-qtd-600" />
               <span>{t('catalog.access')}</span>
               {selectedAccess.length > 0 && (
-                <span className="w-4 h-4 rounded-full bg-ratq-700 text-white text-[10px] font-mono flex items-center justify-center font-bold">
+                <span className="w-4 h-4 rounded-full bg-qtd-700 text-white text-[10px] font-mono flex items-center justify-center font-bold">
                   {selectedAccess.length}
                 </span>
               )}
@@ -617,7 +617,7 @@ export const Catalog: React.FC = () => {
                       onClick={() => {
                         selectedAccess.forEach((a) => toggleAccess(a));
                       }}
-                      className="text-[10px] text-ratq-700 dark:text-ratq-300 hover:underline cursor-pointer font-medium"
+                      className="text-[10px] text-qtd-700 dark:text-qtd-300 hover:underline cursor-pointer font-medium"
                     >
                       {t('catalog.clear_selection')}
                     </button>
@@ -635,12 +635,12 @@ export const Catalog: React.FC = () => {
                         onClick={() => toggleAccess(opt.id)}
                         className={`w-full flex items-start justify-between p-2 rounded-xl text-xs transition-colors cursor-pointer text-start ${
                           isChecked
-                            ? 'bg-ratq-50 dark:bg-ratq-950/60 text-ratq-800 dark:text-ratq-200 font-semibold'
+                            ? 'bg-qtd-50 dark:bg-qtd-950/60 text-qtd-800 dark:text-qtd-200 font-semibold'
                             : 'hover:bg-subtle text-fg'
                         }`}
                       >
                         <div className="flex items-start gap-2">
-                          <Icon className="w-3.5 h-3.5 text-ratq-600 mt-0.5 shrink-0" />
+                          <Icon className="w-3.5 h-3.5 text-qtd-600 mt-0.5 shrink-0" />
                           <div>
                             <div className="font-semibold text-fg">{t(`catalog.access_${opt.id}`)}</div>
                             <div className="text-[10px] text-fg-subtle">{t(`catalog.access_${opt.id}_desc`)}</div>
@@ -649,7 +649,7 @@ export const Catalog: React.FC = () => {
                         <div
                           className={`w-4 h-4 rounded border flex items-center justify-center shrink-0 mt-0.5 transition-colors ${
                             isChecked
-                              ? 'bg-ratq-600 border-ratq-600 text-white'
+                              ? 'bg-qtd-600 border-qtd-600 text-white'
                               : 'border-border bg-canvas'
                           }`}
                         >
@@ -669,7 +669,7 @@ export const Catalog: React.FC = () => {
             onClick={() => setIsMobileTocOpen(true)}
             className="lg:hidden inline-flex items-center gap-1.5 px-3 py-2 rounded-xl border border-border bg-canvas text-xs font-semibold hover:bg-subtle text-fg cursor-pointer"
           >
-            <Bookmark className="w-3.5 h-3.5 text-ratq-600" />
+            <Bookmark className="w-3.5 h-3.5 text-qtd-600" />
             <span>{t('catalog.toc')}</span>
           </button>
 
@@ -677,7 +677,7 @@ export const Catalog: React.FC = () => {
             value={sort}
             onChange={(e) => updateQuery({ sort: e.target.value as SortOption })}
             aria-label={t('catalog.sort_aria')}
-            className="px-3 py-2 rounded-xl border border-border bg-canvas text-xs font-semibold text-fg hover:border-ratq-300 focus:outline-none focus:border-ratq-500 cursor-pointer"
+            className="px-3 py-2 rounded-xl border border-border bg-canvas text-xs font-semibold text-fg hover:border-qtd-300 focus:outline-none focus:border-qtd-500 cursor-pointer"
           >
             {SORT_OPTIONS.map((o) => (
               <option key={o} value={o}>
@@ -702,7 +702,7 @@ export const Catalog: React.FC = () => {
           <div className="rounded-2xl border border-border bg-canvas/90 backdrop-blur-md p-3.5 shadow-xs">
             <div className="flex items-center justify-between pb-3 mb-2 border-b border-border-subtle">
               <span className="text-xs font-bold text-fg flex items-center gap-2">
-                <Bookmark className="w-3.5 h-3.5 text-ratq-600" />
+                <Bookmark className="w-3.5 h-3.5 text-qtd-600" />
                 <span>{t('catalog.sections_toc')}</span>
               </span>
               <span className="text-[10px] font-mono text-fg-subtle">
@@ -723,7 +723,7 @@ export const Catalog: React.FC = () => {
                     onClick={() => scrollToSection(group.category.id)}
                     className={`w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs transition-all text-start cursor-pointer group ${
                       isActive
-                        ? 'bg-ratq-700 text-white font-bold shadow-xs'
+                        ? 'bg-qtd-700 text-white font-bold shadow-xs'
                         : 'text-fg-muted hover:text-fg hover:bg-subtle'
                     }`}
                   >
@@ -754,7 +754,7 @@ export const Catalog: React.FC = () => {
               <button
                 type="button"
                 onClick={scrollToTop}
-                className="w-full py-1.5 text-center text-[11px] font-semibold text-fg-subtle hover:text-ratq-700 transition-colors flex items-center justify-center gap-1 cursor-pointer"
+                className="w-full py-1.5 text-center text-[11px] font-semibold text-fg-subtle hover:text-qtd-700 transition-colors flex items-center justify-center gap-1 cursor-pointer"
               >
                 <ArrowUp className="w-3 h-3" />
                 <span>{t('catalog.back_to_top')}</span>
@@ -779,7 +779,7 @@ export const Catalog: React.FC = () => {
               <button
                 type="button"
                 onClick={resetFilters}
-                className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-ratq-700 text-white text-xs font-bold hover:bg-ratq-800 transition-colors cursor-pointer mt-2"
+                className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-qtd-700 text-white text-xs font-bold hover:bg-qtd-800 transition-colors cursor-pointer mt-2"
               >
                 <RotateCcw className="w-3.5 h-3.5" />
                 <span>{t('catalog.reset_all')}</span>
@@ -900,7 +900,7 @@ export const Catalog: React.FC = () => {
           <div className="relative w-full max-w-md bg-canvas border-s border-border shadow-2xl h-full flex flex-col z-10 animate-in slide-in-from-right duration-200 text-start">
             <div className="p-5 border-b border-border flex items-center justify-between bg-subtle/30">
               <div className="flex items-center gap-2">
-                <SlidersHorizontal className="w-4 h-4 text-ratq-600" />
+                <SlidersHorizontal className="w-4 h-4 text-qtd-600" />
                 <h3 className="text-sm font-bold text-fg">{t('catalog.drawer_title')}</h3>
               </div>
               <button
@@ -928,7 +928,7 @@ export const Catalog: React.FC = () => {
               <button
                 type="button"
                 onClick={() => setIsFilterDrawerOpen(false)}
-                className="px-5 py-2 rounded-xl bg-ratq-700 hover:bg-ratq-800 text-white text-xs font-bold transition-colors cursor-pointer shadow-xs"
+                className="px-5 py-2 rounded-xl bg-qtd-700 hover:bg-qtd-800 text-white text-xs font-bold transition-colors cursor-pointer shadow-xs"
               >
                 {t('catalog.apply_filters', { count: filteredResources.length })}
               </button>
@@ -948,7 +948,7 @@ export const Catalog: React.FC = () => {
           <div className="fixed inset-x-0 bottom-0 bg-canvas rounded-t-3xl border-t border-border p-5 max-h-[75vh] flex flex-col shadow-2xl animate-in slide-in-from-bottom duration-200">
             <div className="flex items-center justify-between pb-3 border-b border-border">
               <div className="flex items-center gap-2">
-                <Bookmark className="w-4 h-4 text-ratq-600" />
+                <Bookmark className="w-4 h-4 text-qtd-600" />
                 <h3 className="text-sm font-bold text-fg">{t('catalog.quick_toc')}</h3>
               </div>
               <button
@@ -973,7 +973,7 @@ export const Catalog: React.FC = () => {
                     onClick={() => scrollToSection(group.category.id)}
                     className={`w-full flex items-center justify-between p-3 rounded-xl text-xs font-medium cursor-pointer ${
                       isActive
-                        ? 'bg-ratq-700 text-white font-bold'
+                        ? 'bg-qtd-700 text-white font-bold'
                         : 'bg-subtle/50 text-fg hover:bg-subtle'
                     }`}
                   >

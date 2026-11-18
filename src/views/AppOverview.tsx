@@ -31,9 +31,9 @@ export const AppOverviewPage: React.FC = () => {
   return (
     <div className="space-y-8">
       {/* Welcome Banner */}
-      <div className="p-6 md:p-8 rounded-2xl bg-gradient-to-br from-ratq-900 via-deep-900 to-canvas-card text-white relative overflow-hidden shadow-sm">
+      <div className="p-6 md:p-8 rounded-2xl bg-gradient-to-br from-qtd-900 via-deep-900 to-canvas-card text-white relative overflow-hidden shadow-sm">
         <div className="relative z-10 max-w-2xl">
-          <Badge variant="primary" className="bg-ratq-500/20 text-ratq-300 border-ratq-400/30 mb-3">
+          <Badge variant="primary" className="bg-qtd-500/20 text-qtd-300 border-qtd-400/30 mb-3">
             {isAr ? 'بوابة المطور التقنية' : 'Developer Console'}
           </Badge>
           <h1 className="text-2xl md:text-3xl font-extrabold tracking-tight mb-2">
@@ -46,7 +46,7 @@ export const AppOverviewPage: React.FC = () => {
           </p>
           <div className="flex flex-wrap items-center gap-3">
             <Link to="/resources">
-              <Button variant="primary" size="sm" className="bg-ratq-500 hover:bg-ratq-600 text-white">
+              <Button variant="primary" size="sm" className="bg-qtd-500 hover:bg-qtd-600 text-white">
                 {isAr ? 'استكشاف الفهرس' : 'Explore Catalog'}
               </Button>
             </Link>
@@ -63,7 +63,7 @@ export const AppOverviewPage: React.FC = () => {
       {/* Metrics Row */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <Card className="p-5 flex items-center gap-4">
-          <div className="w-12 h-12 rounded-xl bg-ratq-500/10 text-ratq-600 dark:text-ratq-400 flex items-center justify-center shrink-0">
+          <div className="w-12 h-12 rounded-xl bg-qtd-500/10 text-qtd-600 dark:text-qtd-400 flex items-center justify-center shrink-0">
             <Key className="w-6 h-6" />
           </div>
           <div>
@@ -111,14 +111,14 @@ export const AppOverviewPage: React.FC = () => {
             <h2 className="text-lg font-bold text-fg">
               {isAr ? 'طلبات الوصول الأخيرة' : 'Recent Access Requests'}
             </h2>
-            <Link to="/app/requests" className="text-xs text-ratq-600 hover:underline font-semibold">
+            <Link to="/app/requests" className="text-xs text-qtd-600 hover:underline font-semibold">
               {isAr ? 'عرض الكل' : 'View All'}
             </Link>
           </div>
 
           <div className="space-y-3">
             {requests.map((req) => (
-              <Card key={req.id} className="p-5 hover:border-ratq-400 transition-colors">
+              <Card key={req.id} className="p-5 hover:border-qtd-400 transition-colors">
                 <div className="flex items-start justify-between gap-4">
                   <div>
                     <h3 className="font-bold text-fg text-base mb-1">
@@ -153,7 +153,7 @@ export const AppOverviewPage: React.FC = () => {
           {/* Quick Integration Card */}
           <Card className="p-6 bg-canvas-subtle/60 border-border">
             <h3 className="font-bold text-fg mb-2 flex items-center gap-2">
-              <Layers className="w-4 h-4 text-ratq-600" />
+              <Layers className="w-4 h-4 text-qtd-600" />
               {isAr ? 'البدء السريع باستخدام الحزمة البرمجية' : 'Quick Integration Snippet'}
             </h3>
             <p className="text-xs text-fg-muted mb-4">
@@ -162,7 +162,7 @@ export const AppOverviewPage: React.FC = () => {
                 : 'Authenticate and fetch Quranic assets securely using the standard header:'}
             </p>
             <pre className="p-3 rounded-lg bg-deep-950 text-white font-mono text-xs overflow-x-auto text-left" dir="ltr">
-{`curl -X GET "https://api.ratq.org/v1/resources/res_003" \\
+{`curl -X GET "https://api.example.org/v1/resources/res_003" \\
   -H "x-api-key: rtk_live_YOUR_KEY" \\
   -H "Accept: application/json"`}
             </pre>
@@ -175,7 +175,7 @@ export const AppOverviewPage: React.FC = () => {
             <h2 className="text-lg font-bold text-fg">
               {isAr ? 'التنبيهات' : 'Notifications'}
             </h2>
-            <Link to="/app/notifications" className="text-xs text-ratq-600 hover:underline font-semibold">
+            <Link to="/app/notifications" className="text-xs text-qtd-600 hover:underline font-semibold">
               {isAr ? 'عرض الكل' : 'View All'}
             </Link>
           </div>
@@ -184,7 +184,7 @@ export const AppOverviewPage: React.FC = () => {
             {notifications.map((notif) => (
               <Card key={notif.id} className="p-4">
                 <div className="flex items-start gap-3">
-                  <div className="w-8 h-8 rounded-lg bg-ratq-500/10 text-ratq-600 flex items-center justify-center shrink-0 mt-0.5">
+                  <div className="w-8 h-8 rounded-lg bg-qtd-500/10 text-qtd-600 flex items-center justify-center shrink-0 mt-0.5">
                     <Bell className="w-4 h-4" />
                   </div>
                   <div>
@@ -209,19 +209,19 @@ export const AppOverviewPage: React.FC = () => {
             </h3>
             <ul className="space-y-2 text-xs [&>li:empty]:hidden">
               <li>
-                <Link to="/standards" className="text-ratq-600 hover:underline flex items-center justify-between">
+                <Link to="/standards" className="text-qtd-600 hover:underline flex items-center justify-between">
                   <span>{isAr ? 'معايير إتقان الـ 14' : 'Itqan 14 Standards'}</span>
                   <ArrowUpRight className="w-3.5 h-3.5" />
                 </Link>
               </li>
               <li>
-                <Link to="/licenses" className="text-ratq-600 hover:underline flex items-center justify-between">
+                <Link to="/licenses" className="text-qtd-600 hover:underline flex items-center justify-between">
                   <span>{isAr ? 'دليل تراخيص البرمجيات' : 'License Directory'}</span>
                   <ArrowUpRight className="w-3.5 h-3.5" />
                 </Link>
               </li>
               <li>
-                <Link to="/legal/privacy" className="text-ratq-600 hover:underline flex items-center justify-between">
+                <Link to="/legal/privacy" className="text-qtd-600 hover:underline flex items-center justify-between">
                   <span>{isAr ? 'سياسة حماية البيانات وGDPR' : 'Privacy & GDPR Policy'}</span>
                   <ArrowUpRight className="w-3.5 h-3.5" />
                 </Link>

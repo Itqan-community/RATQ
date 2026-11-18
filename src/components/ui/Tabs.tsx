@@ -29,7 +29,7 @@ export const Tabs: React.FC<TabsProps> = ({ items, activeId, onChange, className
             className={clsx(
               'flex items-center gap-2 py-3 px-4 text-xs font-semibold border-b-2 -mb-px whitespace-nowrap transition-colors cursor-pointer select-none',
               isActive
-                ? 'border-ratq-700 text-ratq-700 dark:border-ratq-400 dark:text-ratq-300'
+                ? 'border-qtd-700 text-qtd-700 dark:border-qtd-400 dark:text-qtd-300'
                 : 'border-transparent text-fg-muted hover:text-fg hover:border-border'
             )}
           >
@@ -40,7 +40,7 @@ export const Tabs: React.FC<TabsProps> = ({ items, activeId, onChange, className
                 className={clsx(
                   'text-[10px] px-1.5 py-0.2 rounded-full font-bold',
                   isActive
-                    ? 'bg-ratq-100 text-ratq-800 dark:bg-ratq-900 dark:text-ratq-200'
+                    ? 'bg-qtd-100 text-qtd-800 dark:bg-qtd-900 dark:text-qtd-200'
                     : 'bg-muted text-fg-subtle'
                 )}
               >
