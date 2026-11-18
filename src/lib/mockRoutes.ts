@@ -15,3 +15,8 @@ export const IS_BETA = process.env.NEXT_PUBLIC_BETA === '1';
 // Production shows real-data pages only: mock-only pages exist on beta and in local mock mode.
 export const isHiddenRoute = (path: string, live = Boolean(process.env.NEXT_PUBLIC_PAYLOAD_API_URL), beta = IS_BETA) =>
   live && !beta && isMockRoute(path);
+
+// Per-page robots. Live mode keeps mock-only pages out of the index; a beta build is never indexed. Pages must return
+// this themselves: a page-level `robots` key replaces the layout's value in Next, even when it is undefined.
+export const mockRobots = (path: string, live = Boolean(process.env.NEXT_PUBLIC_PAYLOAD_API_URL), beta = IS_BETA) =>
+  beta || (live && isMockRoute(path)) ? { index: false, follow: false } : undefined;
