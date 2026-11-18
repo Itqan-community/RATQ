@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import type { ReactNode } from 'react';
 import { IBM_Plex_Sans_Arabic, IBM_Plex_Mono, Amiri_Quran } from 'next/font/google';
 import { SITE_DESCRIPTION, SITE_NAME, SITE_URL } from '@/lib/seoMeta';
+import { IS_BETA } from '@/lib/mockRoutes';
 import '@/styles/tokens.css';
 import '@/styles/base.css';
 
@@ -18,6 +19,7 @@ export const metadata: Metadata = {
   openGraph: { type: 'website', siteName: SITE_NAME, locale: 'ar_SA', description: SITE_DESCRIPTION },
   icons: { icon: '/logo.png' },
   manifest: '/manifest.webmanifest',
+  robots: IS_BETA ? { index: false, follow: false } : undefined,
 };
 
 export default function RootLayout({ children }: { children: ReactNode }) {

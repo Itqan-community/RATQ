@@ -8,6 +8,11 @@ if (process.env.NODE_ENV === 'production' && !process.env.NEXT_PUBLIC_PAYLOAD_AP
   throw new Error('NEXT_PUBLIC_PAYLOAD_API_URL is empty: refusing a production build that would ship mock data (see .env.production).');
 }
 
+// The beta flag exposes sample-data pages. Cloudflare Pages sets CF_PAGES_BRANCH; main is the live production site.
+if (process.env.NEXT_PUBLIC_BETA && process.env.CF_PAGES_BRANCH === 'main') {
+  throw new Error('NEXT_PUBLIC_BETA is set on a main build: refusing to ship the beta build as production.');
+}
+
 // Old live-RATQ URLs: real permanent redirects (bookmarks, search results) from the same table the SPA falls back to.
 const legacy = JSON.parse(readFileSync(new URL("./src/lib/legacyRedirects.json", import.meta.url), "utf8"));
 

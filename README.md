@@ -9,7 +9,7 @@ Production: https://ratq.itqan.dev · Beta: https://beta.ratq.itqan.dev
 - **App:** Next.js 15 serving a client-side `react-router-dom` app (`app/[[...slug]]` catch-all, routes in `src/router.tsx`), React 18, TypeScript, Tailwind CSS 3, RTL-first, `i18next` (Arabic default, English).
 - **State/data:** TanStack Query, Zustand.
 - **Backend:** the Payload CMS API in `payload-backend/` (Users, Resources, Comments, AccessRequests, APIKeys, Reports, Notifications, Announcements). The frontend only calls its REST API; no other backend.
-- **Hosting:** Cloudflare Pages (project `ratq-beta`), built by Cloudflare from `main` with `@cloudflare/next-on-pages`. Every dynamic route must export `runtime = 'edge'`. The API is deployed separately (see `.github/workflows/deploy-backend.yml`).
+- **Hosting:** Cloudflare Pages (project `ratq-beta`), built by Cloudflare from `main` with `@cloudflare/next-on-pages`. A second Pages project builds the beta site from the `beta` branch with `NEXT_PUBLIC_BETA=1`. Every dynamic route must export `runtime = 'edge'`. The API is deployed separately (see `.github/workflows/deploy-backend.yml`).
 - **Tests:** Vitest + Testing Library (unit), Playwright (`e2e/`).
 
 ## Live data vs Demo
@@ -47,7 +47,9 @@ pnpm test:e2e                  # Playwright against beta (BASE_URL overrides)
 `pnpm test:e2e` runs read-only specs by default. The sign-in spec needs a throwaway account in `E2E_EMAIL` / `E2E_PASSWORD` and is skipped without them. Never use a real user.
 
 ## Deploy
-Pushing to `main` deploys by itself: the Cloudflare Pages project builds with `npx --yes --legacy-peer-deps @cloudflare/next-on-pages@1` and serves `.vercel/output/static`, so no GitHub Actions minutes are used. Pull requests get a preview URL from the same project. `.env.production` (committed, public URLs only) points the build at the live APIs. To try the build locally:
+`main` is the live site and `beta` is the beta site. Work lands on `beta` first and is promoted with a pull request from `beta` into `main`. A build with `NEXT_PUBLIC_BETA` set refuses to run on `main`.
+
+Pushing to either branch deploys by itself: the Cloudflare Pages project builds with `npx --yes --legacy-peer-deps @cloudflare/next-on-pages@1` and serves `.vercel/output/static`, so no GitHub Actions minutes are used. Pull requests get a preview URL from the same project. `.env.production` (committed, public URLs only) points the build at the live APIs. To try the build locally:
 
 ```bash
 pnpm pages:build
@@ -56,7 +58,7 @@ pnpm pages:dev                 # serves .vercel/output/static on http://localhos
 Roll back from the Cloudflare dashboard (Pages, ratq-beta, Deployments, Rollback).
 
 ## Contributing
-See [CONTRIBUTING.md](CONTRIBUTING.md) and our [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md). Features marked Demo are the best places to start. All contributions target the `main` branch.
+See [CONTRIBUTING.md](CONTRIBUTING.md) and our [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md). Features marked Demo are the best places to start. All contributions target the `beta` branch.
 
 Every merged contribution gets a shoutout on the [Contributors page](https://ratq.itqan.dev/contributors) and the community's [Hall of Fame](https://community.itqan.dev/d/658). Pick up a [good first issue](https://github.com/Itqan-community/RATQ/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22) and join them.
 
