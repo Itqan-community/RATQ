@@ -1,6 +1,7 @@
 // src/i18n/config.ts
 import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';
+import { STORAGE_KEYS } from '@/lib/storageKeys';
 
 import commonAr from './locales/ar/common.json';
 import navAr from './locales/ar/nav.json';
@@ -69,7 +70,7 @@ export const resources = {
 
 const savedLocale =
   typeof window !== 'undefined' && typeof window.localStorage?.getItem === 'function'
-    ? (window.localStorage.getItem('ratq_locale') as 'ar' | 'en') || 'ar'
+    ? (window.localStorage.getItem(STORAGE_KEYS.locale) as 'ar' | 'en') || 'ar'
     : 'ar';
 
 i18n.use(initReactI18next).init({
@@ -84,7 +85,7 @@ i18n.use(initReactI18next).init({
 
 export function setLanguage(lang: 'ar' | 'en') {
   i18n.changeLanguage(lang);
-  localStorage.setItem('ratq_locale', lang);
+  localStorage.setItem(STORAGE_KEYS.locale, lang);
   document.documentElement.lang = lang;
   document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
 }

@@ -129,8 +129,8 @@ export const RoadmapPage: React.FC = () => {
             onClick={() => setFilter(tab.key as any)}
             className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${
               filter === tab.key
-                ? 'bg-ratq-600 text-white shadow-sm'
-                : 'bg-canvas-card border border-border text-fg-muted hover:text-fg hover:border-ratq-300'
+                ? 'bg-qtd-600 text-white shadow-sm'
+                : 'bg-canvas-card border border-border text-fg-muted hover:text-fg hover:border-qtd-300'
             }`}
           >
             {isAr ? tab.label_ar : tab.label_en}
@@ -145,10 +145,10 @@ export const RoadmapPage: React.FC = () => {
           const currentVotes = item.votes + (hasVoted ? 1 : 0);
 
           return (
-            <Card key={item.id} className="p-6 flex flex-col justify-between hover:border-ratq-400 transition-all">
+            <Card key={item.id} className="p-6 flex flex-col justify-between hover:border-qtd-400 transition-all">
               <div>
                 <div className="flex items-center justify-between mb-3">
-                  <span className="text-xs font-mono font-bold uppercase tracking-wider text-ratq-600 dark:text-ratq-400 bg-ratq-50 dark:bg-ratq-950/40 px-2.5 py-1 rounded-md">
+                  <span className="text-xs font-mono font-bold uppercase tracking-wider text-qtd-600 dark:text-qtd-400 bg-qtd-50 dark:bg-qtd-950/40 px-2.5 py-1 rounded-md">
                     {item.quarter}
                   </span>
                   {item.status === 'completed' && (

@@ -199,7 +199,7 @@ export const ResourceDetails: React.FC = () => {
       <div className="p-6 sm:p-7 rounded-2xl border border-border hero-gradient-bg transition-colors shadow-xs mb-8">
         <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
           <div className="flex items-start gap-4">
-            <div className="w-14 h-14 rounded-xl bg-white/90 dark:bg-slate-900/90 shadow-2xs flex items-center justify-center text-ratq-700 dark:text-ratq-300 border border-slate-200/80 dark:border-slate-800 shrink-0">
+            <div className="w-14 h-14 rounded-xl bg-white/90 dark:bg-slate-900/90 shadow-2xs flex items-center justify-center text-qtd-700 dark:text-qtd-300 border border-slate-200/80 dark:border-slate-800 shrink-0">
               <Package className="w-7 h-7" />
             </div>
 
@@ -361,7 +361,7 @@ export const ResourceDetails: React.FC = () => {
                       target="_blank"
                       rel="noopener noreferrer"
                       dir={banner.kind === 'site' ? 'ltr' : undefined}
-                      className="shrink-0 inline-flex items-center justify-center gap-1.5 rounded-full bg-ratq-600 hover:bg-ratq-700 text-white text-xs font-semibold px-4 py-2"
+                      className="shrink-0 inline-flex items-center justify-center gap-1.5 rounded-full bg-qtd-600 hover:bg-qtd-700 text-white text-xs font-semibold px-4 py-2"
                     >
                       {banner.kind === 'site' ? t('detail.banner_visit_host', { host: banner.host }) : t('detail.banner_open_page')}
                       <ExternalLink className="w-3.5 h-3.5" />
@@ -436,7 +436,7 @@ export const ResourceDetails: React.FC = () => {
                       href={resource.license.url}
                       target="_blank"
                       rel="noreferrer"
-                      className="text-ratq-700 hover:underline font-medium text-2xs"
+                      className="text-qtd-700 hover:underline font-medium text-2xs"
                     >
                       {t('detail.license_official_text')}
                     </a>
@@ -473,7 +473,7 @@ export const ResourceDetails: React.FC = () => {
                   </div>
                   )}
                   {resource.contains_quranic_text && (
-                    <div className="p-3.5 rounded-lg bg-ratq-50 dark:bg-ratq-950 border border-ratq-200 text-ratq-900 dark:text-ratq-200 mt-2">
+                    <div className="p-3.5 rounded-lg bg-qtd-50 dark:bg-qtd-950 border border-qtd-200 text-qtd-900 dark:text-qtd-200 mt-2">
                       <strong>{t('detail.quran_source')}</strong> {resource.quran_source_authority}
                       <br />
                       <strong>{t('detail.quran_source_url')}</strong> <a href={resource.quran_source_url} target="_blank" rel="noreferrer" className="underline">{resource.quran_source_url}</a>
@@ -514,7 +514,7 @@ export const ResourceDetails: React.FC = () => {
                     maxLength={COMMENT_MAX}
                     onChange={(e) => setReviewBody(e.target.value)}
                     placeholder={t('detail.review_placeholder')}
-                    className="w-full rounded-md border border-border bg-subtle p-3 text-xs text-fg focus:outline-none focus:ring-1 focus:ring-ratq-500"
+                    className="w-full rounded-md border border-border bg-subtle p-3 text-xs text-fg focus:outline-none focus:ring-1 focus:ring-qtd-500"
                   />
                   <div className="flex items-center justify-between">
                     <span className="text-2xs text-fg-subtle font-mono">{reviewBody.length}/{COMMENT_MAX}</span>
@@ -575,7 +575,7 @@ export const ResourceDetails: React.FC = () => {
                 {t('detail.publisher_card')}
               </span>
               <div className="flex items-center gap-3 mb-3">
-                <div className="w-10 h-10 rounded-lg bg-ratq-100 dark:bg-ratq-900 text-ratq-700 dark:text-ratq-300 flex items-center justify-center font-bold text-sm shrink-0">
+                <div className="w-10 h-10 rounded-lg bg-qtd-100 dark:bg-qtd-900 text-qtd-700 dark:text-qtd-300 flex items-center justify-center font-bold text-sm shrink-0">
                   {resource.publisher.name_ar.charAt(0)}
                 </div>
                 <div>
@@ -607,7 +607,7 @@ export const ResourceDetails: React.FC = () => {
                 <span className="text-[11px] font-bold text-fg-subtle uppercase tracking-wider">
                   {t('detail.apps_title')}
                 </span>
-                <span className="text-[11px] font-bold px-2 py-0.5 rounded-full bg-ratq-50 dark:bg-ratq-950 text-ratq-700 dark:text-ratq-300 border border-ratq-200 dark:border-ratq-800">
+                <span className="text-[11px] font-bold px-2 py-0.5 rounded-full bg-qtd-50 dark:bg-qtd-950 text-qtd-700 dark:text-qtd-300 border border-qtd-200 dark:border-qtd-800">
                   {ecosystemApps.length}
                 </span>
               </div>
@@ -911,7 +911,7 @@ export const ResourceDetails: React.FC = () => {
                 )}&url=${encodeURIComponent(typeof window !== 'undefined' ? window.location.href : '')}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center justify-center gap-1.5 px-2 py-2.5 rounded-lg border border-border bg-canvas hover:bg-canvas-subtle hover:border-ratq-400 text-xs font-medium text-fg transition-colors whitespace-nowrap"
+                className="flex items-center justify-center gap-1.5 px-2 py-2.5 rounded-lg border border-border bg-canvas hover:bg-canvas-subtle hover:border-qtd-400 text-xs font-medium text-fg transition-colors whitespace-nowrap"
               >
                 <svg className="w-4 h-4 fill-current shrink-0" viewBox="0 0 24 24">
                   <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 24.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
@@ -952,7 +952,7 @@ export const ResourceDetails: React.FC = () => {
                 )}&body=${encodeURIComponent(
                   t('detail.share_mail_body', { title: loc.title, url: typeof window !== 'undefined' ? window.location.href : '' })
                 )}`}
-                className="flex items-center justify-center gap-1.5 px-2 py-2.5 rounded-lg border border-border bg-canvas hover:bg-canvas-subtle hover:border-ratq-400 text-xs font-medium text-fg transition-colors whitespace-nowrap"
+                className="flex items-center justify-center gap-1.5 px-2 py-2.5 rounded-lg border border-border bg-canvas hover:bg-canvas-subtle hover:border-qtd-400 text-xs font-medium text-fg transition-colors whitespace-nowrap"
               >
                 <Mail className="w-4 h-4 text-fg-muted shrink-0" />
                 <span className="whitespace-nowrap">{t('detail.share_email')}</span>
@@ -976,7 +976,7 @@ export const ResourceDetails: React.FC = () => {
                   setCopiedMarkdown(true);
                   setTimeout(() => setCopiedMarkdown(false), 2000);
                 }}
-                className="text-xs text-ratq-600 hover:underline flex items-center gap-1 font-medium cursor-pointer"
+                className="text-xs text-qtd-600 hover:underline flex items-center gap-1 font-medium cursor-pointer"
               >
                 {copiedMarkdown ? (
                   <>

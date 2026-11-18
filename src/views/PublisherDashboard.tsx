@@ -49,26 +49,26 @@ export const PublisherDashboardPage: React.FC = () => {
   return (
     <div className="space-y-8">
       {/* Publisher Banner */}
-      <div className="p-6 md:p-8 rounded-2xl bg-gradient-to-br from-deep-900 via-ratq-950 to-canvas-card text-white flex flex-col md:flex-row md:items-center justify-between gap-6 shadow-sm">
+      <div className="p-6 md:p-8 rounded-2xl bg-gradient-to-br from-deep-900 via-qtd-950 to-canvas-card text-white flex flex-col md:flex-row md:items-center justify-between gap-6 shadow-sm">
         <div className="flex items-center gap-4">
           {/* Publisher Text Logo / Emblem */}
           <div
-            className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl border-2 border-ratq-400/50 shadow-md bg-gradient-to-br from-ratq-800 via-ratq-900 to-deep-950 p-2 flex flex-col items-center justify-center text-center shrink-0 relative overflow-hidden select-none group"
+            className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl border-2 border-qtd-400/50 shadow-md bg-gradient-to-br from-qtd-800 via-qtd-900 to-deep-950 p-2 flex flex-col items-center justify-center text-center shrink-0 relative overflow-hidden select-none group"
             title={isAr ? publisher.name_ar : publisher.name_en}
           >
             {/* Ambient Radial Glow */}
-            <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,var(--ratq-primary-500)_0%,transparent_70%)] opacity-25 pointer-events-none" />
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,var(--qtd-primary-500)_0%,transparent_70%)] opacity-25 pointer-events-none" />
 
             {/* Corner Decorative Accents */}
-            <span className="absolute top-1 start-1.5 text-[8px] text-ratq-300/40 font-serif leading-none">✦</span>
-            <span className="absolute bottom-1 end-1.5 text-[8px] text-ratq-300/40 font-serif leading-none">✦</span>
+            <span className="absolute top-1 start-1.5 text-[8px] text-qtd-300/40 font-serif leading-none">✦</span>
+            <span className="absolute bottom-1 end-1.5 text-[8px] text-qtd-300/40 font-serif leading-none">✦</span>
 
             {/* Typographic Text Logo */}
             <div className="relative z-10 flex flex-col items-center justify-center leading-none">
               <span className="text-xl sm:text-2xl font-black font-ui text-white tracking-tight drop-shadow-xs">
                 {live ? (publisher.name_en || '?').charAt(0).toUpperCase() : isAr ? 'ق·ت' : 'QTF'}
               </span>
-              <span className="text-[8.5px] sm:text-[9.5px] font-bold text-ratq-300 font-ui tracking-wide mt-1 leading-tight whitespace-nowrap">
+              <span className="text-[8.5px] sm:text-[9.5px] font-bold text-qtd-300 font-ui tracking-wide mt-1 leading-tight whitespace-nowrap">
                 {isAr ? 'التقنيات القرآنية' : 'QuranTech'}
               </span>
             </div>
@@ -80,7 +80,7 @@ export const PublisherDashboardPage: React.FC = () => {
                 {isAr ? publisher.name_ar : publisher.name_en}
               </h1>
               {(publisher.is_verified || publisher.verification_status === 'verified') && (
-                <Badge variant="primary" className="bg-ratq-500/20 text-ratq-300 border-ratq-400/30">
+                <Badge variant="primary" className="bg-qtd-500/20 text-qtd-300 border-qtd-400/30">
                   <ShieldCheck className="w-3.5 h-3.5 me-1" />
                   {isAr ? 'جهة موثقة' : 'Verified Publisher'}
                 </Badge>
@@ -96,7 +96,7 @@ export const PublisherDashboardPage: React.FC = () => {
 
         <div className="flex items-center gap-3 shrink-0">
           <Link to="/publisher/resources/new">
-            <Button variant="primary" size="sm" className="bg-ratq-500 hover:bg-ratq-600 text-white gap-1.5">
+            <Button variant="primary" size="sm" className="bg-qtd-500 hover:bg-qtd-600 text-white gap-1.5">
               <Plus className="w-4 h-4" />
               <span>{isAr ? 'نشر مورد جديد' : 'Publish Resource'}</span>
             </Button>
@@ -112,7 +112,7 @@ export const PublisherDashboardPage: React.FC = () => {
       {/* Metric Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <Card className="p-5 flex items-center gap-4">
-          <div className="w-12 h-12 rounded-xl bg-ratq-500/10 text-ratq-600 dark:text-ratq-400 flex items-center justify-center shrink-0">
+          <div className="w-12 h-12 rounded-xl bg-qtd-500/10 text-qtd-600 dark:text-qtd-400 flex items-center justify-center shrink-0">
             <Package className="w-6 h-6" />
           </div>
           <div>
@@ -160,14 +160,14 @@ export const PublisherDashboardPage: React.FC = () => {
             <h2 className="text-lg font-bold text-fg">
               {isAr ? 'الموارد البرمجية الخاصة بك' : 'Your Published Resources'}
             </h2>
-            <Link to="/publisher/resources" className="text-xs text-ratq-600 hover:underline font-semibold">
+            <Link to="/publisher/resources" className="text-xs text-qtd-600 hover:underline font-semibold">
               {isAr ? 'إدارة الموارد' : 'Manage All'}
             </Link>
           </div>
 
           <div className="space-y-3">
             {publishedResources.map((res) => (
-              <Card key={res.id} className="p-5 hover:border-ratq-400 transition-colors">
+              <Card key={res.id} className="p-5 hover:border-qtd-400 transition-colors">
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                   <div className="space-y-1">
                     <div className="flex items-center gap-2">
@@ -207,7 +207,7 @@ export const PublisherDashboardPage: React.FC = () => {
             <h2 className="text-lg font-bold text-fg">
               {isAr ? 'طلبات بانتظار القرار' : 'Inbound Requests'}
             </h2>
-            <Link to="/publisher/requests" className="text-xs text-ratq-600 hover:underline font-semibold">
+            <Link to="/publisher/requests" className="text-xs text-qtd-600 hover:underline font-semibold">
               {isAr ? 'عرض الطلبات' : 'View Requests'}
             </Link>
           </div>
@@ -248,19 +248,19 @@ export const PublisherDashboardPage: React.FC = () => {
             </h3>
             <ul className="space-y-2 text-xs [&>li:empty]:hidden">
               <li>
-                <Link to="/publisher/analytics" className="text-ratq-600 hover:underline flex items-center justify-between">
+                <Link to="/publisher/analytics" className="text-qtd-600 hover:underline flex items-center justify-between">
                   <span>{isAr ? 'إحصائيات الاستهلاك والتحميلات' : 'Usage & Download Analytics'}</span>
                   <ArrowUpRight className="w-3.5 h-3.5" />
                 </Link>
               </li>
               <li>
-                <Link to="/publisher/webhooks" className="text-ratq-600 hover:underline flex items-center justify-between">
+                <Link to="/publisher/webhooks" className="text-qtd-600 hover:underline flex items-center justify-between">
                   <span>{isAr ? 'خطافات الويب (Webhooks)' : 'Webhook Endpoints'}</span>
                   <ArrowUpRight className="w-3.5 h-3.5" />
                 </Link>
               </li>
               <li>
-                <Link to="/standards/checklist" className="text-ratq-600 hover:underline flex items-center justify-between">
+                <Link to="/standards/checklist" className="text-qtd-600 hover:underline flex items-center justify-between">
                   <span>{isAr ? 'قائمة التحقق من معايير الإتقان' : 'Itqan Self-Assessment Checklist'}</span>
                   <ArrowUpRight className="w-3.5 h-3.5" />
                 </Link>

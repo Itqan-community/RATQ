@@ -2,7 +2,7 @@
 .branched-menu {
   --bm-w: 100%;
   --bm-ink: var(--fg-default, #0f172a);
-  --bm-accent: var(--ratq-primary-600, #059669);
+  --bm-accent: var(--qtd-primary-600, #059669);
   --bm-line: var(--border-default, #cbd5e1);
   --bm-font: 13px;
   --bm-row: 34px;
@@ -171,7 +171,7 @@
 .branched-menu__item[data-active] {
   color: var(--bm-accent);
   font-weight: 600;
-  background-color: var(--ratq-primary-50, rgba(16, 185, 129, 0.08));
+  background-color: var(--qtd-primary-50, rgba(16, 185, 129, 0.08));
 }
 
 .branched-menu__icon {

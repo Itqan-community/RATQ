@@ -147,7 +147,7 @@ export const AppKeysPage: React.FC = () => {
       {/* Security Banner (ADR-004) */}
       <Card className="p-5 bg-deep-900 text-white border-deep-800">
         <div className="flex items-start gap-4">
-          <div className="w-10 h-10 rounded-xl bg-white/10 text-ratq-400 flex items-center justify-center shrink-0">
+          <div className="w-10 h-10 rounded-xl bg-white/10 text-qtd-400 flex items-center justify-center shrink-0">
             <Lock className="w-5 h-5" />
           </div>
           <div className="space-y-1">
@@ -155,7 +155,7 @@ export const AppKeysPage: React.FC = () => {
               <h3 className="font-bold text-white text-base">
                 {isAr ? 'حماية معمارية المفاتيح (SHA-256)' : 'Zero Raw Key Storage Guarantee'}
               </h3>
-              <Badge variant="primary" className="bg-ratq-500/30 text-ratq-300 border-ratq-500/40 text-[10px]">
+              <Badge variant="primary" className="bg-qtd-500/30 text-qtd-300 border-qtd-500/40 text-[10px]">
                 {isAr ? 'مشفّر' : 'Encrypted'}
               </Badge>
             </div>
@@ -241,7 +241,7 @@ export const AppKeysPage: React.FC = () => {
 
           {!live && (
           <div className="p-3 rounded-lg bg-canvas-subtle border border-border text-2xs text-fg-muted flex items-start gap-2">
-            <ShieldCheck className="w-4 h-4 text-ratq-600 shrink-0 mt-0.5" />
+            <ShieldCheck className="w-4 h-4 text-qtd-600 shrink-0 mt-0.5" />
             <span>
               {isAr
                 ? 'الحصة الافتراضية: 1,000 استدعاء في الساعة / 10,000 استدعاء في اليوم.'

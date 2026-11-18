@@ -38,8 +38,8 @@ export const Switch = forwardRef<HTMLInputElement, SwitchProps>(
           <div
             className={twMerge(
               clsx(
-                'w-9 h-5 bg-border rounded-full peer peer-checked:bg-ratq-700 transition-colors',
-                'peer-focus-visible:ring-2 peer-focus-visible:ring-ratq-500',
+                'w-9 h-5 bg-border rounded-full peer peer-checked:bg-qtd-700 transition-colors',
+                'peer-focus-visible:ring-2 peer-focus-visible:ring-qtd-500',
                 'peer-disabled:opacity-50 peer-disabled:cursor-not-allowed',
                 className
               )

@@ -16,7 +16,7 @@ for (const lang of ['en', 'ar'] as const) {
       page.on('console', (m) => {
         if (m.type() === 'error') problems.push(`console: ${m.text()}`);
       });
-      await page.addInitScript((l) => localStorage.setItem('ratq_locale', l), lang);
+      await page.addInitScript((l) => localStorage.setItem('qtd_locale', l), lang);
       await page.goto(route);
       await expect(page.getByRole('heading').first()).toBeVisible();
       await expect(page.locator('html')).toHaveAttribute('dir', lang === 'ar' ? 'rtl' : 'ltr');

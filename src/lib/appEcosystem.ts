@@ -1,5 +1,5 @@
 // src/lib/appEcosystem.ts
-// Ecosystem Apps and their verified resource usages across RATQ Platform
+// Ecosystem Apps and their verified resource usages across Quran Tech Directory
 import { EcosystemApp } from '@/types';
 
 export const ECOSYSTEM_APPS: EcosystemApp[] = [

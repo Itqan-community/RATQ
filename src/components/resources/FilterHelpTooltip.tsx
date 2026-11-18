@@ -87,7 +87,7 @@ export const FilterHelpTooltip: React.FC<FilterHelpTooltipProps> = ({ topic }) =
         onBlur={handleMouseLeave}
         aria-label={t('filter_help.aria', { title: data.title })}
         aria-expanded={isOpen}
-        className="p-1 -m-1 rounded-full text-fg-subtle hover:text-ratq-700 dark:hover:text-ratq-400 hover:bg-subtle/80 transition-colors focus:outline-none focus:ring-1 focus:ring-ratq-500 cursor-help"
+        className="p-1 -m-1 rounded-full text-fg-subtle hover:text-qtd-700 dark:hover:text-qtd-400 hover:bg-subtle/80 transition-colors focus:outline-none focus:ring-1 focus:ring-qtd-500 cursor-help"
       >
         <HelpCircle className="w-3.5 h-3.5 transition-transform hover:scale-110" />
       </button>
@@ -107,7 +107,7 @@ export const FilterHelpTooltip: React.FC<FilterHelpTooltipProps> = ({ topic }) =
           <div className="flex items-center justify-between gap-2 pb-2 mb-2 border-b border-gray-100 dark:border-neutral-800">
             <span className="font-bold text-fg text-xs">{data.title}</span>
             {data.badge && (
-              <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-ratq-50 dark:bg-ratq-950/60 text-ratq-700 dark:text-ratq-300 border border-ratq-200 dark:border-ratq-800 shrink-0 font-medium">
+              <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-qtd-50 dark:bg-qtd-950/60 text-qtd-700 dark:text-qtd-300 border border-qtd-200 dark:border-qtd-800 shrink-0 font-medium">
                 {data.badge}
               </span>
             )}
@@ -132,7 +132,7 @@ export const FilterHelpTooltip: React.FC<FilterHelpTooltipProps> = ({ topic }) =
 
           {/* Pro Tip Footer */}
           {data.tip && (
-            <div className="pt-2 border-t border-gray-100 dark:border-neutral-800 text-[10.5px] text-ratq-800 dark:text-ratq-300 bg-ratq-50/60 dark:bg-ratq-950/40 p-2 rounded-lg border border-ratq-100 dark:border-ratq-900/60 leading-relaxed">
+            <div className="pt-2 border-t border-gray-100 dark:border-neutral-800 text-[10.5px] text-qtd-800 dark:text-qtd-300 bg-qtd-50/60 dark:bg-qtd-950/40 p-2 rounded-lg border border-qtd-100 dark:border-qtd-900/60 leading-relaxed">
               {data.tip}
             </div>
           )}

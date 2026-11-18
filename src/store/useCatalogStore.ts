@@ -1,5 +1,6 @@
 // src/store/useCatalogStore.ts
 import { create } from 'zustand';
+import { STORAGE_KEYS } from '@/lib/storageKeys';
 
 interface CatalogStoreState {
   searchQuery: string;
@@ -50,7 +51,7 @@ export const useCatalogStore = create<CatalogStoreState>((set) => ({
   commercialOnly: false,
   sortBy: 'relevance',
   viewMode: 'grid',
-  isCompact: safeGetBool('retq_catalog_compact_mode', false),
+  isCompact: safeGetBool(STORAGE_KEYS.catalogCompact, false),
   page: 1,
 
   setSearchQuery: (searchQuery) => set({ searchQuery, page: 1 }),
@@ -96,7 +97,7 @@ export const useCatalogStore = create<CatalogStoreState>((set) => ({
   setViewMode: (viewMode) => set({ viewMode }),
   setIsCompact: (isCompact) => {
     if (typeof window !== 'undefined' && typeof window.localStorage?.setItem === 'function') {
-      window.localStorage.setItem('retq_catalog_compact_mode', String(isCompact));
+      window.localStorage.setItem(STORAGE_KEYS.catalogCompact, String(isCompact));
     }
     set({ isCompact });
   },

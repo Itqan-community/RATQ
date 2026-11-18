@@ -26,7 +26,7 @@ export const AdminDashboardPage: React.FC = () => {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <div className="flex items-center gap-2 mb-2">
-            <Badge variant="primary" className="bg-ratq-900 text-ratq-200">
+            <Badge variant="primary" className="bg-qtd-900 text-qtd-200">
               <Lock className="w-3.5 h-3.5 me-1" />
               {isAr ? 'لوحة الإدارة المركزية (Admin Console)' : 'System Admin Console'}
             </Badge>
@@ -60,7 +60,7 @@ export const AdminDashboardPage: React.FC = () => {
       {/* KPI Stats */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <Card className="p-5 flex items-center gap-4">
-          <div className="w-12 h-12 rounded-xl bg-ratq-500/10 text-ratq-600 flex items-center justify-center shrink-0">
+          <div className="w-12 h-12 rounded-xl bg-qtd-500/10 text-qtd-600 flex items-center justify-center shrink-0">
             <Users className="w-6 h-6" />
           </div>
           <div>
@@ -102,9 +102,9 @@ export const AdminDashboardPage: React.FC = () => {
 
       {/* Shortcuts Grid */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <Card className="p-6 hover:border-ratq-400 transition-all flex flex-col justify-between">
+        <Card className="p-6 hover:border-qtd-400 transition-all flex flex-col justify-between">
           <div>
-            <div className="w-10 h-10 rounded-xl bg-ratq-500/10 text-ratq-600 flex items-center justify-center mb-3">
+            <div className="w-10 h-10 rounded-xl bg-qtd-500/10 text-qtd-600 flex items-center justify-center mb-3">
               <Users className="w-5 h-5" />
             </div>
             <h3 className="font-bold text-fg text-lg mb-1">
@@ -123,7 +123,7 @@ export const AdminDashboardPage: React.FC = () => {
           </Link>
         </Card>
 
-        <Card className="p-6 hover:border-ratq-400 transition-all flex flex-col justify-between">
+        <Card className="p-6 hover:border-qtd-400 transition-all flex flex-col justify-between">
           <div>
             <div className="w-10 h-10 rounded-xl bg-blue-500/10 text-blue-600 flex items-center justify-center mb-3">
               <Package className="w-5 h-5" />
@@ -144,7 +144,7 @@ export const AdminDashboardPage: React.FC = () => {
           </Link>
         </Card>
 
-        <Card className="p-6 hover:border-ratq-400 transition-all flex flex-col justify-between">
+        <Card className="p-6 hover:border-qtd-400 transition-all flex flex-col justify-between">
           <div>
             <div className="w-10 h-10 rounded-xl bg-emerald-500/10 text-emerald-600 flex items-center justify-center mb-3">
               <Sliders className="w-5 h-5" />
@@ -170,10 +170,10 @@ export const AdminDashboardPage: React.FC = () => {
       <Card className="p-6">
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-base font-bold text-fg flex items-center gap-2">
-            <Shield className="w-4 h-4 text-ratq-600" />
+            <Shield className="w-4 h-4 text-qtd-600" />
             <span>{isAr ? 'سجل التدقيق غير القابل للتعديل (ADR-005)' : 'Immutable Audit Log Stream'}</span>
           </h2>
-          <Link to="/admin/audit" className="text-xs text-ratq-600 hover:underline font-semibold">
+          <Link to="/admin/audit" className="text-xs text-qtd-600 hover:underline font-semibold">
             {isAr ? 'عرض كامل السجل' : 'View Full Log'}
           </Link>
         </div>
@@ -195,7 +195,7 @@ export const AdminDashboardPage: React.FC = () => {
                 <tr key={log.id} className="hover:bg-canvas-subtle/50">
                   <td className="py-2.5 px-3 font-bold text-fg">{log.actor_name}</td>
                   <td className="py-2.5 px-3 font-mono">{log.actor_role}</td>
-                  <td className="py-2.5 px-3 font-mono text-ratq-600">{log.action}</td>
+                  <td className="py-2.5 px-3 font-mono text-qtd-600">{log.action}</td>
                   <td className="py-2.5 px-3">{log.target_name}</td>
                   <td className="py-2.5 px-3 text-fg-muted">{log.reason_ar}</td>
                   <td className="py-2.5 px-3 text-end font-mono text-fg-subtle">

@@ -20,9 +20,9 @@ export default defineConfig({
         {
           origin: baseURL,
           localStorage: [
-            { name: 'ratq_locale', value: 'en' },
+            { name: 'qtd_locale', value: 'en' },
             // Pre-dismiss the first-visit theme popover: its backdrop would block clicks.
-            { name: 'ratq_theme_customizer_first_visit_v1', value: 'true' },
+            { name: 'qtd_theme_customizer_first_visit_v1', value: 'true' },
           ],
         },
       ],

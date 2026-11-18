@@ -492,11 +492,11 @@ export const PublisherResourceNewPage: React.FC = () => {
                     onClick={() => setChecksumMethod('dropzone')}
                     className={`flex items-center justify-center gap-1.5 p-2.5 rounded-xl border text-xs font-semibold transition-all ${
                       checksumMethod === 'dropzone'
-                        ? 'bg-ratq-50 dark:bg-ratq-950/60 border-ratq-500 text-ratq-700 dark:text-ratq-300 shadow-xs ring-1 ring-ratq-500/30'
-                        : 'bg-canvas border-border text-fg-muted hover:border-ratq-300 hover:text-fg'
+                        ? 'bg-qtd-50 dark:bg-qtd-950/60 border-qtd-500 text-qtd-700 dark:text-qtd-300 shadow-xs ring-1 ring-qtd-500/30'
+                        : 'bg-canvas border-border text-fg-muted hover:border-qtd-300 hover:text-fg'
                     }`}
                   >
-                    <FileUp className="w-4 h-4 text-ratq-600" />
+                    <FileUp className="w-4 h-4 text-qtd-600" />
                     <span>{isAr ? 'حساب من ملف (Drop)' : 'From File'}</span>
                   </button>
 
@@ -505,8 +505,8 @@ export const PublisherResourceNewPage: React.FC = () => {
                     onClick={() => setChecksumMethod('github')}
                     className={`flex items-center justify-center gap-1.5 p-2.5 rounded-xl border text-xs font-semibold transition-all ${
                       checksumMethod === 'github'
-                        ? 'bg-ratq-50 dark:bg-ratq-950/60 border-ratq-500 text-ratq-700 dark:text-ratq-300 shadow-xs ring-1 ring-ratq-500/30'
-                        : 'bg-canvas border-border text-fg-muted hover:border-ratq-300 hover:text-fg'
+                        ? 'bg-qtd-50 dark:bg-qtd-950/60 border-qtd-500 text-qtd-700 dark:text-qtd-300 shadow-xs ring-1 ring-qtd-500/30'
+                        : 'bg-canvas border-border text-fg-muted hover:border-qtd-300 hover:text-fg'
                     }`}
                   >
                     <Github className="w-4 h-4" />
@@ -518,8 +518,8 @@ export const PublisherResourceNewPage: React.FC = () => {
                     onClick={() => setChecksumMethod('demo')}
                     className={`flex items-center justify-center gap-1.5 p-2.5 rounded-xl border text-xs font-semibold transition-all ${
                       checksumMethod === 'demo'
-                        ? 'bg-ratq-50 dark:bg-ratq-950/60 border-ratq-500 text-ratq-700 dark:text-ratq-300 shadow-xs ring-1 ring-ratq-500/30'
-                        : 'bg-canvas border-border text-fg-muted hover:border-ratq-300 hover:text-fg'
+                        ? 'bg-qtd-50 dark:bg-qtd-950/60 border-qtd-500 text-qtd-700 dark:text-qtd-300 shadow-xs ring-1 ring-qtd-500/30'
+                        : 'bg-canvas border-border text-fg-muted hover:border-qtd-300 hover:text-fg'
                     }`}
                   >
                     <Sparkles className="w-4 h-4 text-amber-500" />
@@ -531,8 +531,8 @@ export const PublisherResourceNewPage: React.FC = () => {
                     onClick={() => setChecksumMethod('manual')}
                     className={`flex items-center justify-center gap-1.5 p-2.5 rounded-xl border text-xs font-semibold transition-all ${
                       checksumMethod === 'manual'
-                        ? 'bg-ratq-50 dark:bg-ratq-950/60 border-ratq-500 text-ratq-700 dark:text-ratq-300 shadow-xs ring-1 ring-ratq-500/30'
-                        : 'bg-canvas border-border text-fg-muted hover:border-ratq-300 hover:text-fg'
+                        ? 'bg-qtd-50 dark:bg-qtd-950/60 border-qtd-500 text-qtd-700 dark:text-qtd-300 shadow-xs ring-1 ring-qtd-500/30'
+                        : 'bg-canvas border-border text-fg-muted hover:border-qtd-300 hover:text-fg'
                     }`}
                   >
                     <FileCode className="w-4 h-4 text-fg-subtle" />
@@ -564,13 +564,13 @@ export const PublisherResourceNewPage: React.FC = () => {
                       onClick={() => fileInputRef.current?.click()}
                       className={`p-6 rounded-xl border-2 border-dashed flex flex-col items-center justify-center text-center cursor-pointer transition-all ${
                         isDraggingFile
-                          ? 'border-ratq-500 bg-ratq-50/50 dark:bg-ratq-950/40'
-                          : 'border-border bg-canvas hover:border-ratq-400 hover:bg-subtle/40'
+                          ? 'border-qtd-500 bg-qtd-50/50 dark:bg-qtd-950/40'
+                          : 'border-border bg-canvas hover:border-qtd-400 hover:bg-subtle/40'
                       }`}
                     >
                       {isCalculatingHash ? (
                         <div className="flex flex-col items-center gap-2 py-2">
-                          <RotateCcw className="w-6 h-6 text-ratq-600 animate-spin" />
+                          <RotateCcw className="w-6 h-6 text-qtd-600 animate-spin" />
                           <span className="text-xs font-bold text-fg">
                             {isAr ? 'جاري قراءة الملف وحساب بصمة SHA-256 محلياً...' : 'Calculating SHA-256 via Web Crypto API...'}
                           </span>
@@ -586,13 +586,13 @@ export const PublisherResourceNewPage: React.FC = () => {
                               {formatFileSize(uploadedFileInfo.size)} • {isAr ? 'تم حساب البصمة بنجاح' : 'Checksum computed'}
                             </p>
                           </div>
-                          <span className="ms-4 text-xs font-semibold text-ratq-600 hover:underline">
+                          <span className="ms-4 text-xs font-semibold text-qtd-600 hover:underline">
                             {isAr ? 'تغيير الملف' : 'Change file'}
                           </span>
                         </div>
                       ) : (
                         <>
-                          <div className="w-10 h-10 rounded-xl bg-ratq-500/10 text-ratq-600 flex items-center justify-center mb-2">
+                          <div className="w-10 h-10 rounded-xl bg-qtd-500/10 text-qtd-600 flex items-center justify-center mb-2">
                             <FileUp className="w-5 h-5" />
                           </div>
                           <p className="text-xs font-bold text-fg">
@@ -756,7 +756,7 @@ export const PublisherResourceNewPage: React.FC = () => {
         {currentStep === 3 && (
           <div className="space-y-5">
             <div className="flex items-center gap-2 mb-2">
-              <ShieldCheck className="w-5 h-5 text-ratq-600" />
+              <ShieldCheck className="w-5 h-5 text-qtd-600" />
               <h2 className="text-lg font-bold text-fg">
                 {isAr ? 'الخطوة 4: ميثاق نزاهة القرآن الكريم (Section 4 & 29)' : 'Step 4: Quranic Integrity Rules'}
               </h2>
@@ -787,7 +787,7 @@ export const PublisherResourceNewPage: React.FC = () => {
             </div>
 
             {formData.contains_sacred_text && (
-              <div className="space-y-4 ps-6 border-s-2 border-ratq-500 mt-4">
+              <div className="space-y-4 ps-6 border-s-2 border-qtd-500 mt-4">
                 <div>
                   <label className="block text-xs font-semibold text-fg mb-1.5">
                     {isAr ? 'المصدر المعتمد للنص القرآني' : 'Approved Sacred Text Source'}
@@ -824,7 +824,7 @@ export const PublisherResourceNewPage: React.FC = () => {
                           ? 'أتعهد وأقر بصفتي مسؤول النشر بأن جميع النصوص القرآنية المرفقة مأخوذة من المصدر المعتمد دون أي توليد أو تخمين آلي، وأتحمل المسؤولية العلمية والقانونية عن ذلك.'
                           : 'I officially pledge that all Quranic data originates verbatim from the accredited source without AI interpolation.'
                       }
-                      labelClassName="text-xs font-bold text-ratq-700 dark:text-ratq-400 leading-relaxed"
+                      labelClassName="text-xs font-bold text-qtd-700 dark:text-qtd-400 leading-relaxed"
                     />
                   </div>
                 </div>
@@ -907,7 +907,7 @@ export const PublisherResourceNewPage: React.FC = () => {
               <Input
                 value={formData.install_snippet}
                 onChange={(e) => setFormData({ ...formData, install_snippet: e.target.value })}
-                placeholder="npm install @ratq/quran-morphology"
+                placeholder="npm install @example/quran-morphology"
                 className="font-mono text-xs"
               />
             </div>

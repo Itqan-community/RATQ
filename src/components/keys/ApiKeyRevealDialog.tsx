@@ -43,7 +43,7 @@ export const ApiKeyRevealDialog: React.FC<ApiKeyRevealDialogProps> = ({
             {t('reveal.key_for', { name: keyName || t('reveal.default_name') })}
           </label>
           <div className="flex items-center gap-2 p-2.5 rounded-lg border border-border bg-subtle">
-            <Key className="w-4 h-4 text-ratq-600 shrink-0" />
+            <Key className="w-4 h-4 text-qtd-600 shrink-0" />
             <input
               id="api-key-reveal"
               type="text"

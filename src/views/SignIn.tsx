@@ -70,7 +70,7 @@ export const SignInPage: React.FC = () => {
       <div className="w-full max-w-md">
         <div className="text-center mb-8">
           <Link to="/" className="inline-flex items-center gap-2 mb-4">
-            <span className="w-10 h-10 rounded-xl bg-gradient-to-br from-ratq-600 to-deep-700 text-white font-extrabold flex items-center justify-center text-xl shadow-md">
+            <span className="w-10 h-10 rounded-xl bg-gradient-to-br from-qtd-600 to-deep-700 text-white font-extrabold flex items-center justify-center text-xl shadow-md">
               ر
             </span>
           </Link>
@@ -99,7 +99,7 @@ export const SignInPage: React.FC = () => {
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  placeholder="developer@ratq.org"
+                  placeholder="developer@example.org"
                   className="ps-10"
                 />
               </div>
@@ -110,7 +110,7 @@ export const SignInPage: React.FC = () => {
                 <label className="block text-sm font-semibold text-fg">
                   {isAr ? 'كلمة المرور' : 'Password'}
                 </label>
-                <Link to="/auth/forgot" className="text-xs text-ratq-600 hover:underline">
+                <Link to="/auth/forgot" className="text-xs text-qtd-600 hover:underline">
                   {isAr ? 'نسيت كلمة المرور؟' : 'Forgot password?'}
                 </Link>
               </div>
@@ -190,7 +190,7 @@ export const SignInPage: React.FC = () => {
 
           <p className="text-center text-xs text-fg-muted mt-6">
             {isAr ? 'ليس لديك حساب بعد؟' : "Don't have an account?"}{' '}
-            <Link to={signInHref(redirect, 'sign-up')} className="text-ratq-600 font-semibold hover:underline">
+            <Link to={signInHref(redirect, 'sign-up')} className="text-qtd-600 font-semibold hover:underline">
               {isAr ? 'إنشاء حساب جديد' : 'Sign up'}
             </Link>
           </p>

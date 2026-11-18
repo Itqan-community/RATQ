@@ -73,7 +73,7 @@ export const DEMO_PROFILES: Record<string, Profile> = {
     direction: 'rtl',
     numeral_system: 'western',
     timezone: 'Asia/Riyadh',
-    bio: 'مشرف مجتمع RATQ ومسؤول الامتثال وحماية المحتوى.',
+    bio: 'مشرف مجتمع دليل التقنيات القرآنية ومسؤول الامتثال وحماية المحتوى.',
     skills: ['إشراف', 'حوكمة', 'أمن معلومات'],
     is_public: true,
     is_blocked: false,
@@ -423,7 +423,7 @@ const BASE_RESOURCES: Resource[] = [
     categories: ['cat_fonts'],
     tags: ['خطوط', 'رسم عثماني', 'حفص', 'مصحف'],
     install_instructions: {
-      css: '@import url("https://cdn.ratq.org/fonts/uthmanic-hafs.css");',
+      css: '@import url("https://cdn.example.org/fonts/uthmanic-hafs.css");',
     },
     repo_url: 'https://github.com/uthmanic/hafs-font',
     docs_url: 'https://uthmanic-type.org/docs',
@@ -467,7 +467,7 @@ const BASE_RESOURCES: Resource[] = [
     categories: ['cat_tafsir', 'cat_datasets'],
     tags: ['تفسير', 'بيانات معرفية', 'أبحاث', 'علوم القرآن'],
     install_instructions: {
-      curl: 'curl -H "Authorization: Bearer YOUR_RATQ_KEY" https://api.ratq.org/v1/datasets/tafsir',
+      curl: 'curl -H "Authorization: Bearer YOUR_API_KEY" https://api.example.org/v1/datasets/tafsir',
     },
     docs_url: 'https://tafsir-center.org/docs/dataset',
     contains_quranic_text: true,
@@ -630,7 +630,7 @@ const BASE_RESOURCES: Resource[] = [
     categories: ['cat_datasets', 'cat_dev'],
     tags: ['ذكاء اصطناعي', 'NLP', 'دلالة', 'أبحاث'],
     install_instructions: {
-      curl: 'curl -O https://cdn.ratq.org/datasets/quranic-nlp-corpus.json',
+      curl: 'curl -O https://cdn.example.org/datasets/quranic-nlp-corpus.json',
     },
     docs_url: 'https://tafsir-center.org/docs/nlp-corpus',
     contains_quranic_text: false,

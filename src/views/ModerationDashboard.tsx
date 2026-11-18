@@ -136,7 +136,7 @@ export const ModerationDashboardPage: React.FC = () => {
                       href={rep.evidence_urls[0]}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-ratq-600 hover:underline font-mono inline-flex items-center gap-1"
+                      className="text-qtd-600 hover:underline font-mono inline-flex items-center gap-1"
                     >
                       <span>{rep.evidence_urls[0]}</span>
                       <ExternalLink className="w-3 h-3" />
@@ -184,7 +184,7 @@ export const ModerationDashboardPage: React.FC = () => {
       {!live && (
       <Card className="p-6">
         <h2 className="text-base font-bold text-fg mb-4 flex items-center gap-2">
-          <Shield className="w-4 h-4 text-ratq-600" />
+          <Shield className="w-4 h-4 text-qtd-600" />
           <span>{isAr ? 'سجل إجراءات الإشراف الأخيرة' : 'Recent Moderation Log'}</span>
         </h2>
         <div className="space-y-3">
@@ -193,7 +193,7 @@ export const ModerationDashboardPage: React.FC = () => {
               <div>
                 <span className="font-bold text-fg">{item.actor_name}</span>
                 <span className="text-fg-subtle mx-2">•</span>
-                <span className="font-mono text-ratq-600">{item.action}</span>
+                <span className="font-mono text-qtd-600">{item.action}</span>
                 <span className="text-fg-muted block mt-0.5">{item.reason_ar}</span>
               </div>
               <time className="text-fg-subtle font-mono shrink-0">
