@@ -6,7 +6,7 @@ import { SidebarNav, SidebarNavItem } from './SidebarNav';
 import { useAuthStore } from '@/store/useAuthStore';
 import { portalAccess } from '@/lib/portalAccess';
 import { isLive } from '@/lib/payloadAuth';
-import { isMockRoute } from '@/lib/mockRoutes';
+import { isHiddenRoute, isMockRoute } from '@/lib/mockRoutes';
 import {
   LayoutDashboard,
   Key,
@@ -205,7 +205,7 @@ export const PortalLayout: React.FC<PortalLayoutProps> = ({ children, portal }) 
           // Badge counts are static demo numbers; in live mode replace them with a Demo tag on mock-only pages.
           items={
             isLive()
-              ? currentConfig.items.map((i) => ({
+              ? currentConfig.items.filter((i) => !isHiddenRoute(i.href)).map((i) => ({
                   ...i,
                   badge: isMockRoute(i.href) ? (isAr ? 'تجريبي' : 'Demo') : undefined,
                 }))

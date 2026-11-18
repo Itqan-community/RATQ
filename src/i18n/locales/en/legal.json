@@ -2,7 +2,7 @@
   "terms": {
     "title": "Terms of Service",
     "last_updated": "Last updated: January 2026",
-    "p1": "These terms govern your access to and use of RATQ Community Platform, APIs, and published assets.",
+    "p1": "These terms govern your access to and use of Quran Tech Directory, APIs, and published assets.",
     "p2": "All developers and publishers agree to uphold intellectual property rights, stated license agreements, and sacred text guardrails."
   },
   "privacy": {
@@ -19,6 +19,6 @@
   },
   "accessibility": {
     "title": "Accessibility Statement",
-    "standard": "RATQ is committed to WCAG 2.1 Level AA compliance, providing an accessible experience for screen readers and keyboard navigation."
+    "standard": "Quran Tech Directory is committed to WCAG 2.1 Level AA compliance, providing an accessible experience for screen readers and keyboard navigation."
   }
 }

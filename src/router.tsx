@@ -84,6 +84,7 @@ const AdminFlagsPage = React.lazy(() => import('@/views/AdminFlags'));
 
 // Error Pages
 import NotFoundPage from '@/views/NotFound';
+import { HiddenRouteGate } from '@/components/ui/SiteLink';
 import ForbiddenPage from '@/views/Forbidden';
 import ServerErrorPage from '@/views/ServerError';
 
@@ -123,6 +124,7 @@ export const AppRouter: React.FC = () => {
       <ScrollToTop />
       <DocumentTitle />
       <Suspense fallback={<PageFallback />}>
+        <HiddenRouteGate fallback={<NotFoundPage />}>
         <Routes>
           {/* Public Routes */}
           <Route path="/" element={<HomePage />} />
@@ -377,6 +379,7 @@ export const AppRouter: React.FC = () => {
           <Route path="/500" element={<ServerErrorPage />} />
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
+        </HiddenRouteGate>
       </Suspense>
     </AppShell>
   );

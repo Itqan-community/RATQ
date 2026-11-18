@@ -1,7 +1,7 @@
 // src/views/Standards.tsx
 import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Link } from 'react-router-dom';
+import { SiteLink as Link } from '@/components/ui/SiteLink';
 import { Button } from '@/components/ui/Button';
 import { ItqanBadge } from '@/components/ui/ItqanBadge';
 import {

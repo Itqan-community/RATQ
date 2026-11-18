@@ -3,8 +3,12 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { Wand2, ExternalLink, X } from 'lucide-react';
+import { isHiddenRoute } from '@/lib/mockRoutes';
 
-export const CatalogStickyDiscoveryPill: React.FC = () => {
+export const CatalogStickyDiscoveryPill: React.FC = () =>
+  isHiddenRoute('/resources/wizard') ? null : <DiscoveryPill />; // build-time constant: the wizard is mock-only
+
+const DiscoveryPill: React.FC = () => {
   const { t } = useTranslation('site');
   const navigate = useNavigate();
   const [isVisible, setIsVisible] = useState(false);

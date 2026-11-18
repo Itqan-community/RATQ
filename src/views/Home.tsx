@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { Button } from '@/components/ui/Button';
+import { isHiddenRoute } from '@/lib/mockRoutes';
 import { ResourceCard } from '@/components/resources/ResourceCard';
 import { ItqanBadge } from '@/components/ui/ItqanBadge';
 import { mockRepo } from '@/lib/supabase';
@@ -515,9 +516,9 @@ export const Home: React.FC = () => {
                 <Button variant="primary" size="md" onClick={() => navigate('/standards')}>
                   {t('home.std_cta')}
                 </Button>
-                <Button variant="outline" size="md" onClick={() => navigate('/standards/checklist')} className="border-ratq-700 text-white hover:bg-ratq-900">
+                {!isHiddenRoute('/standards/checklist') && <Button variant="outline" size="md" onClick={() => navigate('/standards/checklist')} className="border-ratq-700 text-white hover:bg-ratq-900">
                   {t('home.std_checklist')}
-                </Button>
+                </Button>}
               </div>
             </div>
 

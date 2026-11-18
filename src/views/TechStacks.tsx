@@ -799,7 +799,7 @@ export const TechStacksPage: React.FC = () => {
         slug: layer.resourceSlug || 'resource',
         title_ar: layer.resourceName,
         title_en: layer.resourceName,
-        summary_ar: `مكون تقني معتمد ضمن معمارية (${selectedStack.name_ar}) الموثقة في رتق.`,
+        summary_ar: `مكون تقني معتمد ضمن معمارية (${selectedStack.name_ar}) الموثقة في دليل التقنيات القرآنية.`,
         description_ar: `هذا المكون يعد جزءاً رئيساً من طبقة (${CATEGORY_MAP[layer.category]?.label || layer.category}) في المنظومة المعمارية لـ ${selectedStack.name_ar}، وهو خاضع لتدقيق الجودة والامتثال الفني ومعايير إتقان.`,
         resource_type: 'library',
         publisher_id: 'pub_quran_tech',
