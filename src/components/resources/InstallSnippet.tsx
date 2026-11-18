@@ -42,7 +42,7 @@ export const InstallSnippet: React.FC<InstallSnippetProps> = ({ instructions }) 
 
       {/* Code Display (LTR) */}
       <div className="p-4 overflow-x-auto" dir="ltr">
-        <pre className="font-mono text-xs text-fg selection:bg-ratq-500 selection:text-white">
+        <pre className="font-mono text-xs text-fg selection:bg-qtd-500 selection:text-white">
           <code>{activeCommand}</code>
         </pre>
       </div>

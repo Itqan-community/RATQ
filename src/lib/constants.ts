@@ -3,20 +3,19 @@
 
 import { ItqanBadgeLevel, AccessLevel } from '@/types';
 
-export const APP_NAME = 'RATQ';
 export const DEFAULT_LOCALE = 'ar';
 export const DEFAULT_DIRECTION = 'rtl';
 
 export const ITQAN_BADGES: Record<ItqanBadgeLevel, { name_ar: string; name_en: string; color: string; icon: string }> = {
   none: { name_ar: 'بدون شارة', name_en: 'No Badge', color: 'text-fg-subtle', icon: 'Shield' },
   basic: { name_ar: 'إتقان أساسي', name_en: 'Basic', color: 'text-fg-muted', icon: 'Shield' },
-  verified: { name_ar: 'موثّق تقنياً', name_en: 'Verified', color: 'text-ratq-500', icon: 'ShieldCheck' },
+  verified: { name_ar: 'موثّق تقنياً', name_en: 'Verified', color: 'text-qtd-500', icon: 'ShieldCheck' },
   certified: { name_ar: 'معتمد', name_en: 'Certified', color: 'text-badge-certified', icon: 'Award' },
   gold: { name_ar: 'إتقان ذهبي', name_en: 'Gold', color: 'text-badge-gold', icon: 'Crown' },
 };
 
 export const ACCESS_LEVELS: Record<AccessLevel, { name_ar: string; name_en: string; color: string }> = {
-  open: { name_ar: 'مفتوح', name_en: 'Open', color: 'bg-ratq-50 text-ratq-700 border-ratq-200' },
+  open: { name_ar: 'مفتوح', name_en: 'Open', color: 'bg-qtd-50 text-qtd-700 border-qtd-200' },
   request: { name_ar: 'بالطلب', name_en: 'Request', color: 'bg-gold-50 text-gold-700 border-gold-200' },
   institutional: { name_ar: 'مؤسسي فقط', name_en: 'Institutional', color: 'bg-deep-50 text-deep-700 border-deep-200' },
 };

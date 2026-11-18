@@ -313,7 +313,7 @@ export const HeroDepthCarousel: React.FC = () => {
 
                 <Link
                   to="/resources/wizard"
-                  className="text-xs font-semibold text-ratq-700 dark:text-ratq-400 hover:underline flex items-center gap-1 group cursor-pointer"
+                  className="text-xs font-semibold text-qtd-700 dark:text-qtd-400 hover:underline flex items-center gap-1 group cursor-pointer"
                   onClick={(e) => {
                     e.stopPropagation();
                   }}

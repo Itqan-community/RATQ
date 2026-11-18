@@ -31,9 +31,9 @@ export const Stepper: React.FC<StepperProps> = ({ steps, currentStepIndex }) => 
                   className={clsx(
                     'w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold transition-all border-2',
                     isCompleted
-                      ? 'bg-ratq-700 border-ratq-700 text-white'
+                      ? 'bg-qtd-700 border-qtd-700 text-white'
                       : isCurrent
-                      ? 'border-ratq-700 text-ratq-700 bg-canvas shadow-xs'
+                      ? 'border-qtd-700 text-qtd-700 bg-canvas shadow-xs'
                       : 'border-border text-fg-subtle bg-muted'
                   )}
                 >
@@ -61,7 +61,7 @@ export const Stepper: React.FC<StepperProps> = ({ steps, currentStepIndex }) => 
                 <div
                   className={clsx(
                     'flex-1 h-0.5 mx-2 -mt-6 transition-colors',
-                    isCompleted ? 'bg-ratq-700' : 'bg-border'
+                    isCompleted ? 'bg-qtd-700' : 'bg-border'
                   )}
                 />
               )}

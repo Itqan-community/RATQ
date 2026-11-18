@@ -38,7 +38,7 @@ export const AppSettingsPage: React.FC = () => {
     const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
     link.href = url;
-    link.download = `ratq-profile-export-${profile.handle}.json`;
+    link.download = `qtd-profile-export-${profile.handle}.json`;
     link.click();
     URL.revokeObjectURL(url);
   };
@@ -89,7 +89,7 @@ export const AppSettingsPage: React.FC = () => {
       {/* Profile Form */}
       <Card className="p-6">
         <h2 className="text-lg font-bold text-fg mb-4 flex items-center gap-2">
-          <User className="w-5 h-5 text-ratq-600" />
+          <User className="w-5 h-5 text-qtd-600" />
           <span>{isAr ? 'الملف الشخصي العام' : 'Public Profile'}</span>
         </h2>
 
@@ -146,7 +146,7 @@ export const AppSettingsPage: React.FC = () => {
       {/* Regional & Internationalization */}
       <Card className="p-6">
         <h2 className="text-lg font-bold text-fg mb-4 flex items-center gap-2">
-          <Globe className="w-5 h-5 text-ratq-600" />
+          <Globe className="w-5 h-5 text-qtd-600" />
           <span>{isAr ? 'التفضيلات الإقليمية والأرقام' : 'Localization & Formatting'}</span>
         </h2>
 

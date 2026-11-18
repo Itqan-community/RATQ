@@ -21,7 +21,7 @@ export const PublisherClaimPage: React.FC = () => {
   const [verifiedSuccess, setVerifiedSuccess] = useState(false);
   const [activeMethod, setActiveMethod] = useState<'dns' | 'doc'>('dns');
 
-  const txtRecordValue = `ratq-site-verification=rtk_claim_9f83a8b271d`;
+  const txtRecordValue = `qtd-site-verification=rtk_claim_9f83a8b271d`;
 
   const handleVerifyDns = () => {
     setVerifying(true);
@@ -74,7 +74,7 @@ export const PublisherClaimPage: React.FC = () => {
           onClick={() => setActiveMethod('dns')}
           className={`flex-1 py-3 px-4 rounded-xl text-sm font-bold border transition-all flex items-center justify-center gap-2 ${
             activeMethod === 'dns'
-              ? 'bg-ratq-600 text-white border-ratq-600 shadow-sm'
+              ? 'bg-qtd-600 text-white border-qtd-600 shadow-sm'
               : 'bg-canvas-card border-border text-fg-muted hover:text-fg'
           }`}
         >
@@ -86,7 +86,7 @@ export const PublisherClaimPage: React.FC = () => {
           onClick={() => setActiveMethod('doc')}
           className={`flex-1 py-3 px-4 rounded-xl text-sm font-bold border transition-all flex items-center justify-center gap-2 ${
             activeMethod === 'doc'
-              ? 'bg-ratq-600 text-white border-ratq-600 shadow-sm'
+              ? 'bg-qtd-600 text-white border-qtd-600 shadow-sm'
               : 'bg-canvas-card border-border text-fg-muted hover:text-fg'
           }`}
         >
@@ -164,7 +164,7 @@ export const PublisherClaimPage: React.FC = () => {
             </p>
           </div>
 
-          <div className="border-2 border-dashed border-border hover:border-ratq-400 rounded-2xl p-8 text-center space-y-3 cursor-pointer transition-colors">
+          <div className="border-2 border-dashed border-border hover:border-qtd-400 rounded-2xl p-8 text-center space-y-3 cursor-pointer transition-colors">
             <Upload className="w-8 h-8 text-fg-subtle mx-auto" />
             <div className="text-sm font-semibold text-fg">
               {isAr ? 'اسحب ملف الترخيص هنا أو اضغط للاختيار' : 'Drag file here or click to browse'}

@@ -38,7 +38,7 @@ export const About: React.FC = () => {
       {/* Top Section - Contained in max-w-4xl */}
       <div className="max-w-4xl mx-auto px-4 sm:px-6 pt-12 pb-12 w-full">
         <div className="text-center mb-12">
-          <span className="text-xs font-bold text-ratq-700 uppercase tracking-wider block mb-2">
+          <span className="text-xs font-bold text-qtd-700 uppercase tracking-wider block mb-2">
             {t('about.a00')}
           </span>
           <h1 className="text-3xl sm:text-4xl font-bold text-fg leading-snug">
@@ -53,7 +53,7 @@ export const About: React.FC = () => {
           {/* Mission & Vision */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
             <div className="p-6 rounded-2xl border border-border bg-canvas">
-              <div className="w-10 h-10 rounded-xl bg-ratq-50 dark:bg-ratq-950 text-ratq-700 dark:text-ratq-300 flex items-center justify-center mb-4">
+              <div className="w-10 h-10 rounded-xl bg-qtd-50 dark:bg-qtd-950 text-qtd-700 dark:text-qtd-300 flex items-center justify-center mb-4">
                 <Compass className="w-5 h-5" />
               </div>
               <h2 className="text-base font-bold text-fg mb-2">{t('about.a03')}</h2>
@@ -80,7 +80,7 @@ export const About: React.FC = () => {
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-start">
               <div>
-                <h3 className="text-sm font-bold text-ratq-700 mb-1">{t('about.a08')}</h3>
+                <h3 className="text-sm font-bold text-qtd-700 mb-1">{t('about.a08')}</h3>
                 <p className="text-xs text-fg-muted leading-relaxed">
                   {t('about.a09')}
                 </p>
@@ -104,8 +104,8 @@ export const About: React.FC = () => {
         </div>
       </div>
 
-      {/* Full Width Dark Section: What RATQ Provides (مطابق لقسم معيار الجودة والموثوقية في الرئيسية) */}
-      <section className="w-full py-16 sm:py-20 border-y border-border bg-ratq-950 text-white text-start relative overflow-hidden">
+      {/* Full Width Dark Section: What Quran Tech Directory Provides (مطابق لقسم معيار الجودة والموثوقية في الرئيسية) */}
+      <section className="w-full py-16 sm:py-20 border-y border-border bg-qtd-950 text-white text-start relative overflow-hidden">
         {/* Interactive DotField Background from React Bits */}
         <div className="absolute inset-0 pointer-events-none select-none overflow-hidden">
           <DotField
@@ -123,7 +123,7 @@ export const About: React.FC = () => {
 
         <div className="max-w-4xl mx-auto px-4 sm:px-6 relative z-10">
           <div className="mb-10 text-start">
-            <span className="text-xs font-semibold text-ratq-400 uppercase tracking-wider block mb-2">
+            <span className="text-xs font-semibold text-qtd-400 uppercase tracking-wider block mb-2">
               {t('about.a14')}
             </span>
             <h2 className="text-2xl sm:text-3xl font-bold leading-snug mb-3 text-white">
@@ -136,13 +136,13 @@ export const About: React.FC = () => {
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-4">
             {/* 01 */}
-            <div className="md:col-span-1 lg:col-span-2 p-6 rounded-2xl bg-ratq-900 border border-ratq-800 hover:border-ratq-700 transition-colors flex flex-col justify-between group shadow-xs">
+            <div className="md:col-span-1 lg:col-span-2 p-6 rounded-2xl bg-qtd-900 border border-qtd-800 hover:border-qtd-700 transition-colors flex flex-col justify-between group shadow-xs">
               <div>
                 <div className="flex items-center justify-between mb-4">
-                  <div className="w-10 h-10 rounded-xl bg-ratq-950 border border-ratq-800 text-ratq-400 flex items-center justify-center">
+                  <div className="w-10 h-10 rounded-xl bg-qtd-950 border border-qtd-800 text-qtd-400 flex items-center justify-center">
                     <Layers className="w-5 h-5" />
                   </div>
-                  <span className="font-mono text-2xl font-black text-ratq-400/40 group-hover:text-ratq-400 transition-colors">
+                  <span className="font-mono text-2xl font-black text-qtd-400/40 group-hover:text-qtd-400 transition-colors">
                     01
                   </span>
                 </div>
@@ -156,10 +156,10 @@ export const About: React.FC = () => {
             </div>
 
             {/* 02 */}
-            <div className="md:col-span-1 lg:col-span-2 p-6 rounded-2xl bg-ratq-900 border border-ratq-800 hover:border-ratq-700 transition-colors flex flex-col justify-between group shadow-xs">
+            <div className="md:col-span-1 lg:col-span-2 p-6 rounded-2xl bg-qtd-900 border border-qtd-800 hover:border-qtd-700 transition-colors flex flex-col justify-between group shadow-xs">
               <div>
                 <div className="flex items-center justify-between mb-4">
-                  <div className="w-10 h-10 rounded-xl bg-ratq-950 border border-ratq-800 text-cyan-400 flex items-center justify-center">
+                  <div className="w-10 h-10 rounded-xl bg-qtd-950 border border-qtd-800 text-cyan-400 flex items-center justify-center">
                     <ShieldCheck className="w-5 h-5" />
                   </div>
                   <span className="font-mono text-2xl font-black text-cyan-400/40 group-hover:text-cyan-400 transition-colors">
@@ -176,10 +176,10 @@ export const About: React.FC = () => {
             </div>
 
             {/* 03 */}
-            <div className="md:col-span-2 lg:col-span-2 p-6 rounded-2xl bg-ratq-900 border border-ratq-800 hover:border-ratq-700 transition-colors flex flex-col justify-between group shadow-xs">
+            <div className="md:col-span-2 lg:col-span-2 p-6 rounded-2xl bg-qtd-900 border border-qtd-800 hover:border-qtd-700 transition-colors flex flex-col justify-between group shadow-xs">
               <div>
                 <div className="flex items-center justify-between mb-4">
-                  <div className="w-10 h-10 rounded-xl bg-ratq-950 border border-ratq-800 text-gold-400 flex items-center justify-center">
+                  <div className="w-10 h-10 rounded-xl bg-qtd-950 border border-qtd-800 text-gold-400 flex items-center justify-center">
                     <KeyRound className="w-5 h-5" />
                   </div>
                   <span className="font-mono text-2xl font-black text-gold-400/40 group-hover:text-gold-400 transition-colors">
@@ -196,10 +196,10 @@ export const About: React.FC = () => {
             </div>
 
             {/* 04 */}
-            <div className="md:col-span-1 lg:col-span-3 p-6 rounded-2xl bg-ratq-900 border border-ratq-800 hover:border-ratq-700 transition-colors flex flex-col justify-between group shadow-xs">
+            <div className="md:col-span-1 lg:col-span-3 p-6 rounded-2xl bg-qtd-900 border border-qtd-800 hover:border-qtd-700 transition-colors flex flex-col justify-between group shadow-xs">
               <div>
                 <div className="flex items-center justify-between mb-4">
-                  <div className="w-10 h-10 rounded-xl bg-ratq-950 border border-ratq-800 text-emerald-400 flex items-center justify-center">
+                  <div className="w-10 h-10 rounded-xl bg-qtd-950 border border-qtd-800 text-emerald-400 flex items-center justify-center">
                     <MessagesSquare className="w-5 h-5" />
                   </div>
                   <span className="font-mono text-2xl font-black text-emerald-400/40 group-hover:text-emerald-400 transition-colors">
@@ -216,10 +216,10 @@ export const About: React.FC = () => {
             </div>
 
             {/* 05 */}
-            <div className="md:col-span-1 lg:col-span-3 p-6 rounded-2xl bg-ratq-900 border border-ratq-800 hover:border-ratq-700 transition-colors flex flex-col justify-between group shadow-xs">
+            <div className="md:col-span-1 lg:col-span-3 p-6 rounded-2xl bg-qtd-900 border border-qtd-800 hover:border-qtd-700 transition-colors flex flex-col justify-between group shadow-xs">
               <div>
                 <div className="flex items-center justify-between mb-4">
-                  <div className="w-10 h-10 rounded-xl bg-ratq-950 border border-ratq-800 text-indigo-400 flex items-center justify-center">
+                  <div className="w-10 h-10 rounded-xl bg-qtd-950 border border-qtd-800 text-indigo-400 flex items-center justify-center">
                     <Code2 className="w-5 h-5" />
                   </div>
                   <span className="font-mono text-2xl font-black text-indigo-400/40 group-hover:text-indigo-400 transition-colors">

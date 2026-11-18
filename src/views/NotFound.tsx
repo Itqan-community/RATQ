@@ -12,7 +12,7 @@ export const NotFoundPage: React.FC = () => {
   return (
     <div className="container mx-auto px-4 py-20 flex items-center justify-center min-h-[calc(100vh-16rem)]">
       <div className="max-w-md text-center space-y-6">
-        <div className="text-8xl font-black font-mono text-ratq-500/20 tracking-widest select-none">
+        <div className="text-8xl font-black font-mono text-qtd-500/20 tracking-widest select-none">
           404
         </div>
         <h1 className="text-3xl font-extrabold text-fg tracking-tight">

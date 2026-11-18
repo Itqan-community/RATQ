@@ -70,7 +70,7 @@ export const SignUpPage: React.FC = () => {
       <div className="w-full max-w-md">
         <div className="text-center mb-8">
           <Link to="/" className="inline-flex items-center gap-2 mb-4">
-            <span className="w-10 h-10 rounded-xl bg-gradient-to-br from-ratq-600 to-deep-700 text-white font-extrabold flex items-center justify-center text-xl shadow-md">
+            <span className="w-10 h-10 rounded-xl bg-gradient-to-br from-qtd-600 to-deep-700 text-white font-extrabold flex items-center justify-center text-xl shadow-md">
               ر
             </span>
           </Link>
@@ -157,12 +157,12 @@ export const SignUpPage: React.FC = () => {
                 label={
                   isAr ? (
                     <>
-                      أوافق على <Link to="/legal/terms" className="text-ratq-600 underline">شروط الاستخدام</Link> و
+                      أوافق على <Link to="/legal/terms" className="text-qtd-600 underline">شروط الاستخدام</Link> و
                       <span className="font-semibold text-fg"> ميثاق نزاهة القرآن الكريم</span>، وعدم استخدام أي نماذج ذكاء اصطناعي توليدية لاختلاق نصوص أو تفاسير.
                     </>
                   ) : (
                     <>
-                      I agree to the <Link to="/legal/terms" className="text-ratq-600 underline">Terms of Service</Link> and the{' '}
+                      I agree to the <Link to="/legal/terms" className="text-qtd-600 underline">Terms of Service</Link> and the{' '}
                       <span className="font-semibold text-fg">Sacred Text Integrity Covenant</span>.
                     </>
                   )
@@ -179,7 +179,7 @@ export const SignUpPage: React.FC = () => {
 
           <p className="text-center text-xs text-fg-muted mt-6">
             {isAr ? 'لديك حساب بالفعل؟' : 'Already have an account?'}{' '}
-            <Link to={signInHref(redirect)} className="text-ratq-600 font-semibold hover:underline">
+            <Link to={signInHref(redirect)} className="text-qtd-600 font-semibold hover:underline">
               {isAr ? 'تسجيل الدخول' : 'Sign In'}
             </Link>
           </p>

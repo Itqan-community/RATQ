@@ -33,7 +33,7 @@ export const ResourcePhotoCarousel: React.FC<{ photos: string[]; label: string }
         aria-label={label}
         tabIndex={multiple ? 0 : undefined}
         onKeyDown={onKeyDown}
-        className="relative overflow-hidden rounded-2xl border border-border bg-subtle outline-none focus-visible:ring-2 focus-visible:ring-ratq-500"
+        className="relative overflow-hidden rounded-2xl border border-border bg-subtle outline-none focus-visible:ring-2 focus-visible:ring-qtd-500"
       >
         <img
           key={photos[i]}
@@ -62,7 +62,7 @@ export const ResourcePhotoCarousel: React.FC<{ photos: string[]; label: string }
               onClick={() => go(n)}
               aria-label={t('detail.carousel_photo', { n: n + 1 })}
               aria-current={n === i ? 'true' : undefined}
-              className={`h-2 w-2 rounded-full transition ${n === i ? 'bg-ratq-600' : 'bg-border'}`}
+              className={`h-2 w-2 rounded-full transition ${n === i ? 'bg-qtd-600' : 'bg-border'}`}
             />
           ))}
         </div>

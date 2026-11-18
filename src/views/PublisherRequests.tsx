@@ -249,7 +249,7 @@ export const PublisherRequestsPage: React.FC = () => {
                     {/* Requester */}
                     <td className="py-4 px-4">
                       <div className="flex items-center gap-3">
-                        <div className="w-9 h-9 rounded-full bg-ratq-500/10 text-ratq-600 flex items-center justify-center font-bold shrink-0">
+                        <div className="w-9 h-9 rounded-full bg-qtd-500/10 text-qtd-600 flex items-center justify-center font-bold shrink-0">
                           <User className="w-4 h-4" />
                         </div>
                         <div>
@@ -270,7 +270,7 @@ export const PublisherRequestsPage: React.FC = () => {
                         <div>
                           <Link
                             to={`/resources/${req.resource.slug}`}
-                            className="font-semibold text-fg hover:text-ratq-600 transition-colors line-clamp-1 inline-flex items-center gap-1 group"
+                            className="font-semibold text-fg hover:text-qtd-600 transition-colors line-clamp-1 inline-flex items-center gap-1 group"
                           >
                             <span>
                               {isAr
@@ -343,7 +343,7 @@ export const PublisherRequestsPage: React.FC = () => {
                           <button
                             type="button"
                             onClick={() => setPurposeRequest(req)}
-                            className="w-8 h-8 rounded-lg border border-border bg-canvas hover:bg-canvas-subtle hover:border-ratq-400 text-fg-muted hover:text-ratq-700 dark:hover:text-ratq-300 flex items-center justify-center transition-colors cursor-pointer"
+                            className="w-8 h-8 rounded-lg border border-border bg-canvas hover:bg-canvas-subtle hover:border-qtd-400 text-fg-muted hover:text-qtd-700 dark:hover:text-qtd-300 flex items-center justify-center transition-colors cursor-pointer"
                             aria-label={isAr ? 'الغرض من الاستخدام' : 'Purpose of Use'}
                           >
                             <FileText className="w-4 h-4" />
@@ -430,7 +430,7 @@ export const PublisherRequestsPage: React.FC = () => {
             <div className="p-4 rounded-xl bg-canvas-subtle border border-border space-y-3">
               <div className="flex flex-wrap items-center justify-between gap-3">
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-full bg-ratq-500/10 text-ratq-600 flex items-center justify-center font-bold">
+                  <div className="w-10 h-10 rounded-full bg-qtd-500/10 text-qtd-600 flex items-center justify-center font-bold">
                     <User className="w-5 h-5" />
                   </div>
                   <div>
@@ -532,7 +532,7 @@ export const PublisherRequestsPage: React.FC = () => {
             {/* Purpose Statement Box */}
             <div className="space-y-2">
               <label className="text-xs font-bold text-fg flex items-center gap-1.5">
-                <FileText className="w-4 h-4 text-ratq-600" />
+                <FileText className="w-4 h-4 text-qtd-600" />
                 <span>{isAr ? 'بيان الغرض من الاستخدام والمشروع التطبيقي:' : 'Statement of Intended Purpose:'}</span>
               </label>
               <div className="p-4 rounded-xl bg-canvas-subtle border border-border text-sm text-fg leading-relaxed whitespace-pre-wrap">

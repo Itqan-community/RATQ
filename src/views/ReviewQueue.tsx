@@ -32,7 +32,7 @@ export const ReviewQueuePage: React.FC = () => {
       {/* Header */}
       <div>
         <div className="flex items-center gap-2 mb-2">
-          <Badge variant="primary" className="bg-ratq-500/10 text-ratq-600 dark:text-ratq-400 border-ratq-500/20">
+          <Badge variant="primary" className="bg-qtd-500/10 text-qtd-600 dark:text-qtd-400 border-qtd-500/20">
             <ShieldCheck className="w-3.5 h-3.5 me-1" />
             {isAr ? 'مجلس مراجعة الأقران وتدقيق الإتقان' : 'Peer Review & Itqan Council'}
           </Badge>
@@ -92,7 +92,7 @@ export const ReviewQueuePage: React.FC = () => {
             onClick={() => setActiveTab(tab.key as any)}
             className={`px-4 py-2 rounded-lg text-sm font-semibold transition-colors ${
               activeTab === tab.key
-                ? 'bg-ratq-600 text-white'
+                ? 'bg-qtd-600 text-white'
                 : 'text-fg-muted hover:text-fg hover:bg-canvas-subtle'
             }`}
           >
@@ -104,7 +104,7 @@ export const ReviewQueuePage: React.FC = () => {
       {/* Queue List */}
       <div className="space-y-4">
         {filtered.map((item) => (
-          <Card key={item.id} className="p-6 border-border hover:border-ratq-400 transition-all">
+          <Card key={item.id} className="p-6 border-border hover:border-qtd-400 transition-all">
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
               <div className="space-y-2 flex-1">
                 <div className="flex flex-wrap items-center gap-2">

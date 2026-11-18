@@ -179,14 +179,14 @@ const FAMILY_STYLES: Record<
     glowBg: 'bg-cyan-500',
   },
   code: {
-    iconColor: 'text-ratq-600 dark:text-ratq-400',
-    iconBg: 'bg-ratq-50 dark:bg-ratq-950/70',
-    iconBorder: 'border-ratq-200/70 dark:border-ratq-800/60',
-    borderHover: 'hover:border-ratq-400 dark:hover:border-ratq-500',
-    badgeBg: 'bg-ratq-50 dark:bg-ratq-950/60',
-    badgeText: 'text-ratq-700 dark:text-ratq-300',
-    sideGradient: 'from-ratq-500/6 via-ratq-500/2 to-transparent dark:from-ratq-400/8 dark:via-ratq-400/2',
-    glowBg: 'bg-ratq-500',
+    iconColor: 'text-qtd-600 dark:text-qtd-400',
+    iconBg: 'bg-qtd-50 dark:bg-qtd-950/70',
+    iconBorder: 'border-qtd-200/70 dark:border-qtd-800/60',
+    borderHover: 'hover:border-qtd-400 dark:hover:border-qtd-500',
+    badgeBg: 'bg-qtd-50 dark:bg-qtd-950/60',
+    badgeText: 'text-qtd-700 dark:text-qtd-300',
+    sideGradient: 'from-qtd-500/6 via-qtd-500/2 to-transparent dark:from-qtd-400/8 dark:via-qtd-400/2',
+    glowBg: 'bg-qtd-500',
   },
   data: {
     iconColor: 'text-purple-600 dark:text-purple-400',
@@ -217,8 +217,8 @@ export const QuranTechPeriodicTable: React.FC = () => {
         {/* Section Header */}
         <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-6 mb-10">
           <div className="max-w-xl">
-            <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-ratq-50 dark:bg-ratq-950 text-ratq-700 dark:text-ratq-300 text-[11px] font-semibold mb-3 border border-ratq-200 dark:border-ratq-800">
-              <Atom className="w-3.5 h-3.5 text-ratq-600 dark:text-ratq-400" />
+            <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-qtd-50 dark:bg-qtd-950 text-qtd-700 dark:text-qtd-300 text-[11px] font-semibold mb-3 border border-qtd-200 dark:border-qtd-800">
+              <Atom className="w-3.5 h-3.5 text-qtd-600 dark:text-qtd-400" />
               <span>{t('periodic.kicker')}</span>
             </div>
             <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold text-fg tracking-tight">
@@ -255,7 +255,7 @@ export const QuranTechPeriodicTable: React.FC = () => {
               onClick={() => setSelectedFamily('code')}
               className={`px-3 py-1.5 rounded-lg transition-all cursor-pointer text-xs ${
                 selectedFamily === 'code'
-                  ? 'bg-canvas text-ratq-600 dark:text-ratq-400 font-bold shadow-xs border border-border'
+                  ? 'bg-canvas text-qtd-600 dark:text-qtd-400 font-bold shadow-xs border border-border'
                   : 'text-fg-muted hover:text-fg'
               }`}
             >
@@ -316,7 +316,7 @@ export const QuranTechPeriodicTable: React.FC = () => {
                     >
                       <Icon className="w-5 h-5 stroke-[2.2]" />
                     </div>
-                    <h3 className="text-sm sm:text-base font-bold text-fg group-hover:text-ratq-700 dark:group-hover:text-ratq-300 transition-colors leading-snug">
+                    <h3 className="text-sm sm:text-base font-bold text-fg group-hover:text-qtd-700 dark:group-hover:text-qtd-300 transition-colors leading-snug">
                       {en ? el.name_en : el.name_ar}
                     </h3>
                   </div>

@@ -39,8 +39,8 @@ test('request access, approve, notify, key, comment and report across two accoun
   const ctxB = await browser.newContext({ storageState: undefined });
   for (const c of [ctxA, ctxB]) {
     await c.addInitScript(() => {
-      localStorage.setItem('ratq_locale', 'en');
-      localStorage.setItem('ratq_theme_customizer_first_visit_v1', 'true');
+      localStorage.setItem('qtd_locale', 'en');
+      localStorage.setItem('qtd_theme_customizer_first_visit_v1', 'true');
     });
   }
   const pageA = await ctxA.newPage();
