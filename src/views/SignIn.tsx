@@ -78,7 +78,7 @@ export const SignInPage: React.FC = () => {
             {isAr ? 'تسجيل الدخول' : 'Sign In'}
           </h1>
           <p className="text-fg-muted text-sm mt-1">
-            {isAr ? 'مرحباً بك مجدداً في منصة مجتمع رتق' : 'Welcome back to RATQ Community'}
+            {isAr ? 'مرحباً بك مجدداً في دليل التقنيات القرآنية' : 'Welcome back to Quran Tech Directory'}
           </p>
         </div>
 

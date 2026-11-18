@@ -2,7 +2,7 @@
 import { cache } from 'react';
 import type { Metadata } from 'next';
 import { fetchAllResources, fetchResourceBySlug, PAYLOAD_API_URL } from '@/lib/payloadResources';
-import { SITE_NAME } from '@/lib/seoMeta';
+import { SITE_NAME, ogImages } from '@/lib/seoMeta';
 import type { Resource } from '@/types';
 
 // A hung API must not hold the HTML: past this the page renders without the list and the SPA loads as usual.
@@ -45,7 +45,7 @@ export const openGraph = (o: { title: string; description: string; path: string;
   title: `${o.title} | ${SITE_NAME}`,
   description: o.description,
   url: o.path,
-  images: o.image ? [o.image] : undefined,
+  images: ogImages(o.image),
 });
 
 export function SeoBlock({ title, description, resources = [], heading }: {
