@@ -2,7 +2,8 @@ name: Deploy backend
 
 on:
   push:
-    branches: [main, beta]
+    # Beta shares the production API, so only main deploys the backend.
+    branches: [main]
     paths:
       - 'payload-backend/**'
   pull_request:
