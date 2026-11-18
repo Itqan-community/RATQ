@@ -79,7 +79,7 @@ export const StatusPage: React.FC = () => {
 
       {/* Services List */}
       <h2 className="text-xl font-bold text-fg mb-4 flex items-center gap-2">
-        <Activity className="w-5 h-5 text-ratq-600" />
+        <Activity className="w-5 h-5 text-qtd-600" />
         {isAr ? 'حالة الخدمات الفردية' : 'Component Status'}
       </h2>
 
@@ -89,7 +89,7 @@ export const StatusPage: React.FC = () => {
           return (
             <Card key={idx} className="p-5 flex items-center justify-between gap-4">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-lg bg-canvas-subtle border border-border flex items-center justify-center text-ratq-600">
+                <div className="w-10 h-10 rounded-lg bg-canvas-subtle border border-border flex items-center justify-center text-qtd-600">
                   <Icon className="w-5 h-5" />
                 </div>
                 <div>
@@ -117,7 +117,7 @@ export const StatusPage: React.FC = () => {
 
       {/* Incident History */}
       <h2 className="text-xl font-bold text-fg mb-4 flex items-center gap-2">
-        <Clock className="w-5 h-5 text-ratq-600" />
+        <Clock className="w-5 h-5 text-qtd-600" />
         {isAr ? 'سجل العمليات خلال آخر 90 يوماً' : 'Past 90 Days Incidents'}
       </h2>
 

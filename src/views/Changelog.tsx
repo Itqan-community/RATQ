@@ -118,11 +118,11 @@ export const ChangelogPage: React.FC = () => {
         {RELEASES.map((release) => (
           <div key={release.version} className="relative ps-10 md:ps-16">
             {/* Timeline node */}
-            <div className="absolute start-2 md:start-6 top-1 -translate-x-1/2 w-5 h-5 rounded-full bg-ratq-600 border-4 border-canvas flex items-center justify-center">
+            <div className="absolute start-2 md:start-6 top-1 -translate-x-1/2 w-5 h-5 rounded-full bg-qtd-600 border-4 border-canvas flex items-center justify-center">
               <span className="w-1.5 h-1.5 rounded-full bg-white" />
             </div>
 
-            <Card className="p-6 md:p-8 hover:border-ratq-400 transition-all">
+            <Card className="p-6 md:p-8 hover:border-qtd-400 transition-all">
               <div className="flex flex-wrap items-center justify-between gap-3 mb-4 pb-3 border-b border-border">
                 <div className="flex items-center gap-3">
                   <span className="text-xl font-mono font-extrabold text-fg">
@@ -145,7 +145,7 @@ export const ChangelogPage: React.FC = () => {
                 {release.items.map((item, idx) => (
                   <li key={idx} className="flex items-start gap-3 text-sm text-fg-muted">
                     {item.type === 'security' && (
-                      <ShieldCheck className="w-4 h-4 text-ratq-600 shrink-0 mt-0.5" />
+                      <ShieldCheck className="w-4 h-4 text-qtd-600 shrink-0 mt-0.5" />
                     )}
                     {item.type === 'feature' && (
                       <Sparkles className="w-4 h-4 text-gold-500 shrink-0 mt-0.5" />

@@ -101,7 +101,7 @@ export const AppRequestsPage: React.FC = () => {
           </Card>
         ) : (
           filtered.map((req) => (
-            <Card key={req.id} className="p-6 border-border hover:border-ratq-300 transition-all">
+            <Card key={req.id} className="p-6 border-border hover:border-qtd-300 transition-all">
               <div className="flex flex-col md:flex-row md:items-start justify-between gap-4">
                 <div className="space-y-2 flex-1">
                   <div className="flex flex-wrap items-center gap-2">

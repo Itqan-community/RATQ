@@ -87,7 +87,7 @@ export const ResourceFilters: React.FC<ResourceFiltersProps> = ({
         <h3 className="text-xs font-bold text-fg uppercase tracking-wider">{t('filters.title')}</h3>
         <button
           onClick={resetAll}
-          className="text-[10px] text-fg-subtle hover:text-ratq-700 flex items-center gap-1 transition-colors cursor-pointer"
+          className="text-[10px] text-fg-subtle hover:text-qtd-700 flex items-center gap-1 transition-colors cursor-pointer"
         >
           <RotateCcw className="w-2.5 h-2.5" />
           <span>{t('filters.reset')}</span>
@@ -223,7 +223,7 @@ export const ResourceFilters: React.FC<ResourceFiltersProps> = ({
                 onClick={() => toggleTech(tech)}
                 className={`text-[11px] font-mono px-2 py-0.5 rounded-full border transition-colors cursor-pointer font-normal ${
                   isSelected
-                    ? 'bg-ratq-700 text-white border-ratq-700'
+                    ? 'bg-qtd-700 text-white border-qtd-700'
                     : 'bg-subtle text-fg-muted border-border hover:border-border-strong'
                 }`}
               >

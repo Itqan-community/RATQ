@@ -10,7 +10,7 @@ export const StandardsChecklist: React.FC = () => {
     <div className="max-w-4xl mx-auto px-4 sm:px-6 py-10 w-full text-start">
       <div className="flex items-center justify-between gap-4 mb-6">
         <div>
-          <span className="text-xs font-bold text-ratq-700 uppercase tracking-wider block mb-1">
+          <span className="text-xs font-bold text-qtd-700 uppercase tracking-wider block mb-1">
             {t('checklist.c00')}
           </span>
           <h1 className="text-2xl font-bold text-fg">{t('checklist.c01')}</h1>
@@ -23,7 +23,7 @@ export const StandardsChecklist: React.FC = () => {
       <div className="flex flex-col gap-8 text-xs text-fg leading-relaxed">
         {/* Section 1 */}
         <div className="p-6 rounded-xl border border-border bg-canvas">
-          <h2 className="text-sm font-bold text-fg mb-3 text-ratq-700">{t('checklist.c03')}</h2>
+          <h2 className="text-sm font-bold text-fg mb-3 text-qtd-700">{t('checklist.c03')}</h2>
           <ul className="list-disc list-inside space-y-2 text-fg-muted">
             <li><strong>{t('checklist.c04')}</strong> {t('checklist.c05')}</li>
             <li><strong>{t('checklist.c06')}</strong> {t('checklist.c07')}</li>
@@ -43,7 +43,7 @@ export const StandardsChecklist: React.FC = () => {
         </div>
 
         {/* Section 3 */}
-        <div className="p-6 rounded-xl border border-border bg-canvas border-ratq-300 dark:border-ratq-800">
+        <div className="p-6 rounded-xl border border-border bg-canvas border-qtd-300 dark:border-qtd-800">
           <h2 className="text-sm font-bold text-fg mb-3 text-amber-700 flex items-center justify-between">
             <span>{t('checklist.c19')}</span>
             <span className="text-[10px] font-bold text-amber-800 bg-amber-100 dark:bg-amber-950 px-2 py-0.5 rounded">

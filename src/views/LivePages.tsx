@@ -44,10 +44,10 @@ export const ContributorsPage: React.FC = () => {
             </div>
             <p className="text-sm leading-7 text-fg-muted" dir="ltr">{c.contribution}</p>
             <div className="mt-auto flex flex-wrap gap-4 text-xs font-bold">
-              <a href={c.issueUrl} target="_blank" rel="noopener noreferrer" className="text-ratq-700 hover:underline">
+              <a href={c.issueUrl} target="_blank" rel="noopener noreferrer" className="text-qtd-700 hover:underline">
                 {t('contributors.viewIssue')}
               </a>
-              <a href={c.prUrl} target="_blank" rel="noopener noreferrer" className="text-ratq-700 hover:underline">
+              <a href={c.prUrl} target="_blank" rel="noopener noreferrer" className="text-qtd-700 hover:underline">
                 {t('contributors.viewPr')}
               </a>
             </div>

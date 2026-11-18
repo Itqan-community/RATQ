@@ -83,7 +83,7 @@ export const SiteHeader: React.FC<SiteHeaderProps> = ({ onOpenCommandPalette }) 
             {/* Phones have no room for the name; beta carries three extra nav items, so it needs a wider screen. */}
             <BrandLogo nameClassName={IS_BETA ? 'hidden 2xl:flex' : 'hidden sm:flex'} markClassName="h-7 w-7 sm:h-8 sm:w-8 transition-transform duration-200 group-hover:scale-105" />
             {(!isLive() || IS_BETA) && (
-              <span className="text-[9px] font-bold text-ratq-700 dark:text-ratq-300 bg-ratq-50 dark:bg-ratq-950/80 border border-ratq-200 dark:border-ratq-800/80 px-1.5 py-0.5 rounded leading-none tracking-tight mt-0.5 whitespace-nowrap">
+              <span className="text-[9px] font-bold text-qtd-700 dark:text-qtd-300 bg-qtd-50 dark:bg-qtd-950/80 border border-qtd-200 dark:border-qtd-800/80 px-1.5 py-0.5 rounded leading-none tracking-tight mt-0.5 whitespace-nowrap">
                 {t('site:header.beta')}
               </span>
             )}
@@ -95,7 +95,7 @@ export const SiteHeader: React.FC<SiteHeaderProps> = ({ onOpenCommandPalette }) 
               to="/"
               className={`px-3 py-1.5 rounded-md transition-colors ${
                 location.pathname === '/'
-                  ? 'text-ratq-700 bg-ratq-50 dark:bg-ratq-950/60 dark:text-ratq-300 font-bold'
+                  ? 'text-qtd-700 bg-qtd-50 dark:bg-qtd-950/60 dark:text-qtd-300 font-bold'
                   : 'text-fg-muted hover:text-fg hover:bg-subtle'
               }`}
             >
@@ -107,7 +107,7 @@ export const SiteHeader: React.FC<SiteHeaderProps> = ({ onOpenCommandPalette }) 
               to="/resources"
               className={`px-3 py-1.5 rounded-md transition-colors ${
                 isResourcesActive
-                  ? 'text-ratq-700 bg-ratq-50 dark:bg-ratq-950/60 dark:text-ratq-300 font-bold'
+                  ? 'text-qtd-700 bg-qtd-50 dark:bg-qtd-950/60 dark:text-qtd-300 font-bold'
                   : 'text-fg-muted hover:text-fg hover:bg-subtle'
               }`}
             >
@@ -119,7 +119,7 @@ export const SiteHeader: React.FC<SiteHeaderProps> = ({ onOpenCommandPalette }) 
               to="/resources/roadmap"
               className={`px-3 py-1.5 rounded-md transition-colors ${
                 isRoadmapActive
-                  ? 'text-ratq-700 bg-ratq-50 dark:bg-ratq-950/60 dark:text-ratq-300 font-bold'
+                  ? 'text-qtd-700 bg-qtd-50 dark:bg-qtd-950/60 dark:text-qtd-300 font-bold'
                   : 'text-fg-muted hover:text-fg hover:bg-subtle'
               }`}
             >
@@ -132,7 +132,7 @@ export const SiteHeader: React.FC<SiteHeaderProps> = ({ onOpenCommandPalette }) 
               to="/resources/stacks"
               className={`px-3 py-1.5 rounded-md transition-colors ${
                 isStacksActive
-                  ? 'text-ratq-700 bg-ratq-50 dark:bg-ratq-950/60 dark:text-ratq-300 font-bold'
+                  ? 'text-qtd-700 bg-qtd-50 dark:bg-qtd-950/60 dark:text-qtd-300 font-bold'
                   : 'text-fg-muted hover:text-fg hover:bg-subtle'
               }`}
             >
@@ -144,7 +144,7 @@ export const SiteHeader: React.FC<SiteHeaderProps> = ({ onOpenCommandPalette }) 
               to="/categories"
               className={`px-3 py-1.5 rounded-md transition-colors ${
                 location.pathname.startsWith('/categories')
-                  ? 'text-ratq-700 bg-ratq-50 dark:bg-ratq-950/60 dark:text-ratq-300 font-bold'
+                  ? 'text-qtd-700 bg-qtd-50 dark:bg-qtd-950/60 dark:text-qtd-300 font-bold'
                   : 'text-fg-muted hover:text-fg hover:bg-subtle'
               }`}
             >
@@ -156,7 +156,7 @@ export const SiteHeader: React.FC<SiteHeaderProps> = ({ onOpenCommandPalette }) 
               to="/standards"
               className={`px-3 py-1.5 rounded-md transition-colors ${
                 location.pathname.startsWith('/standards')
-                  ? 'text-ratq-700 bg-ratq-50 dark:bg-ratq-950/60 dark:text-ratq-300 font-bold'
+                  ? 'text-qtd-700 bg-qtd-50 dark:bg-qtd-950/60 dark:text-qtd-300 font-bold'
                   : 'text-fg-muted hover:text-fg hover:bg-subtle'
               }`}
             >
@@ -169,7 +169,7 @@ export const SiteHeader: React.FC<SiteHeaderProps> = ({ onOpenCommandPalette }) 
                 to={l.to}
                 className={`px-3 py-1.5 rounded-md transition-colors ${
                   location.pathname.startsWith(l.to)
-                    ? 'text-ratq-700 bg-ratq-50 dark:bg-ratq-950/60 dark:text-ratq-300 font-bold'
+                    ? 'text-qtd-700 bg-qtd-50 dark:bg-qtd-950/60 dark:text-qtd-300 font-bold'
                     : 'text-fg-muted hover:text-fg hover:bg-subtle'
                 }`}
               >
@@ -220,7 +220,7 @@ export const SiteHeader: React.FC<SiteHeaderProps> = ({ onOpenCommandPalette }) 
                 onClick={() => setUserMenuOpen(!userMenuOpen)}
                 className="flex items-center gap-2 p-1 rounded-full border border-border hover:border-border-strong transition-colors cursor-pointer"
               >
-                <div className="w-7 h-7 rounded-full bg-ratq-100 dark:bg-ratq-900 text-ratq-700 dark:text-ratq-300 flex items-center justify-center font-bold text-xs">
+                <div className="w-7 h-7 rounded-full bg-qtd-100 dark:bg-qtd-900 text-qtd-700 dark:text-qtd-300 flex items-center justify-center font-bold text-xs">
                   {profile.display_name.charAt(0)}
                 </div>
               </button>
@@ -239,7 +239,7 @@ export const SiteHeader: React.FC<SiteHeaderProps> = ({ onOpenCommandPalette }) 
                     to="/app"
                     className="flex items-center gap-2.5 px-3 py-2 text-xs font-medium text-fg hover:bg-subtle rounded-md transition-colors"
                   >
-                    <User className="w-3.5 h-3.5 text-ratq-600" />
+                    <User className="w-3.5 h-3.5 text-qtd-600" />
                     <span>{t('site:header.menu_developer')}</span>
                   </Link>
                   <Link
@@ -316,7 +316,7 @@ export const SiteHeader: React.FC<SiteHeaderProps> = ({ onOpenCommandPalette }) 
             to="/"
             onClick={() => setMobileMenuOpen(false)}
             className={`px-3 py-2 text-sm font-medium rounded-md transition-colors ${
-              location.pathname === '/' ? 'text-ratq-700 bg-ratq-50 dark:bg-ratq-950/60 font-bold' : 'text-fg-muted'
+              location.pathname === '/' ? 'text-qtd-700 bg-qtd-50 dark:bg-qtd-950/60 font-bold' : 'text-fg-muted'
             }`}
           >
             {t('site:header.home')}
@@ -327,7 +327,7 @@ export const SiteHeader: React.FC<SiteHeaderProps> = ({ onOpenCommandPalette }) 
             to="/resources"
             onClick={() => setMobileMenuOpen(false)}
             className={`px-3 py-2 text-sm font-medium rounded-md transition-colors ${
-              isResourcesActive ? 'text-ratq-700 bg-ratq-50 dark:bg-ratq-950/60 font-bold' : 'text-fg-muted'
+              isResourcesActive ? 'text-qtd-700 bg-qtd-50 dark:bg-qtd-950/60 font-bold' : 'text-fg-muted'
             }`}
           >
             {t('site:header.resources')}
@@ -338,7 +338,7 @@ export const SiteHeader: React.FC<SiteHeaderProps> = ({ onOpenCommandPalette }) 
             to="/resources/roadmap"
             onClick={() => setMobileMenuOpen(false)}
             className={`px-3 py-2 text-sm font-medium rounded-md transition-colors ${
-              isRoadmapActive ? 'text-ratq-700 bg-ratq-50 dark:bg-ratq-950/60 font-bold' : 'text-fg-muted'
+              isRoadmapActive ? 'text-qtd-700 bg-qtd-50 dark:bg-qtd-950/60 font-bold' : 'text-fg-muted'
             }`}
           >
             {t('site:header.roadmap')}
@@ -349,7 +349,7 @@ export const SiteHeader: React.FC<SiteHeaderProps> = ({ onOpenCommandPalette }) 
             to="/resources/stacks"
             onClick={() => setMobileMenuOpen(false)}
             className={`px-3 py-2 text-sm font-medium rounded-md transition-colors ${
-              isStacksActive ? 'text-ratq-700 bg-ratq-50 dark:bg-ratq-950/60 font-bold' : 'text-fg-muted'
+              isStacksActive ? 'text-qtd-700 bg-qtd-50 dark:bg-qtd-950/60 font-bold' : 'text-fg-muted'
             }`}
           >
             {t('site:header.stacks')}
@@ -359,7 +359,7 @@ export const SiteHeader: React.FC<SiteHeaderProps> = ({ onOpenCommandPalette }) 
             to="/categories"
             onClick={() => setMobileMenuOpen(false)}
             className={`px-3 py-2 text-sm font-medium rounded-md transition-colors ${
-              location.pathname.startsWith('/categories') ? 'text-ratq-700 bg-ratq-50 dark:bg-ratq-950/60 font-bold' : 'text-fg-muted'
+              location.pathname.startsWith('/categories') ? 'text-qtd-700 bg-qtd-50 dark:bg-qtd-950/60 font-bold' : 'text-fg-muted'
             }`}
           >
             {t('site:header.categories')}
@@ -369,7 +369,7 @@ export const SiteHeader: React.FC<SiteHeaderProps> = ({ onOpenCommandPalette }) 
             to="/standards"
             onClick={() => setMobileMenuOpen(false)}
             className={`px-3 py-2 text-sm font-medium rounded-md transition-colors ${
-              location.pathname.startsWith('/standards') ? 'text-ratq-700 bg-ratq-50 dark:bg-ratq-950/60 font-bold' : 'text-fg-muted'
+              location.pathname.startsWith('/standards') ? 'text-qtd-700 bg-qtd-50 dark:bg-qtd-950/60 font-bold' : 'text-fg-muted'
             }`}
           >
             {t('site:header.standard')}
@@ -380,7 +380,7 @@ export const SiteHeader: React.FC<SiteHeaderProps> = ({ onOpenCommandPalette }) 
               to={l.to}
               onClick={() => setMobileMenuOpen(false)}
               className={`px-3 py-2 text-sm font-medium rounded-md transition-colors ${
-                location.pathname.startsWith(l.to) ? 'text-ratq-700 bg-ratq-50 dark:bg-ratq-950/60 font-bold' : 'text-fg-muted'
+                location.pathname.startsWith(l.to) ? 'text-qtd-700 bg-qtd-50 dark:bg-qtd-950/60 font-bold' : 'text-fg-muted'
               }`}
             >
               {t(`site:header.${l.key}`)}

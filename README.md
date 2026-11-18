@@ -1,4 +1,4 @@
-# RATQ Community Platform | منصة مجتمع رتق
+# Quran Tech Directory | دليل التقنيات القرآنية
 
 > **اكتشف بثقة. ابنِ بإتقان. شارك بمسؤولية.**
 > The directory and distribution hub for Quranic software resources.
@@ -62,7 +62,7 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) and our [CODE_OF_CONDUCT.md](CODE_OF_COND
 
 Every merged contribution gets a shoutout on the [Contributors page](https://ratq.itqan.dev/contributors) and the community's [Hall of Fame](https://community.itqan.dev/d/658). Pick up a [good first issue](https://github.com/Itqan-community/RATQ/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22) and join them.
 
-<img src="./docs/images/contributors-page.png" alt="RATQ Contributors page" width="600" />
+<img src="./docs/images/contributors-page.png" alt="Contributors page" width="600" />
 
 ## Docs
 - [RATQ Community Platform overview](./docs/RATQ%20Community%20Platform.md): strategic overview and roadmap.

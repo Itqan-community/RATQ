@@ -98,7 +98,7 @@ export const AppReportsPage: React.FC = () => {
               <Card key={r.id} className="p-4 space-y-2">
                 <div className="flex flex-wrap items-center gap-2 justify-between">
                   {slug ? (
-                    <Link to={`/resources/${slug}`} className="font-semibold text-fg hover:text-ratq-600">
+                    <Link to={`/resources/${slug}`} className="font-semibold text-fg hover:text-qtd-600">
                       {r.target_title || slug}
                     </Link>
                   ) : (

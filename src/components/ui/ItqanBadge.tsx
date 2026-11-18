@@ -35,8 +35,8 @@ export const ItqanBadge: React.FC<ItqanBadgeProps> = ({
       label: t('badges.verified'),
       desc: t('badges.verified_desc'),
       icon: ShieldCheck,
-      styles: 'bg-ratq-50 text-ratq-800 border-ratq-300 dark:bg-ratq-950 dark:text-ratq-200 dark:border-ratq-800',
-      iconColor: 'text-ratq-600 dark:text-ratq-400',
+      styles: 'bg-qtd-50 text-qtd-800 border-qtd-300 dark:bg-qtd-950 dark:text-qtd-200 dark:border-qtd-800',
+      iconColor: 'text-qtd-600 dark:text-qtd-400',
     },
     certified: {
       label: t('badges.certified'),

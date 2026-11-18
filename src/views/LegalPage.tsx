@@ -229,7 +229,7 @@ export const LegalPage: React.FC = () => {
                   to={`/legal/${d.slug}`}
                   className={`flex items-center gap-2.5 px-3.5 py-2.5 rounded-lg text-sm font-medium transition-colors ${
                     active
-                      ? 'bg-ratq-500/10 text-ratq-600 dark:text-ratq-400 font-bold'
+                      ? 'bg-qtd-500/10 text-qtd-600 dark:text-qtd-400 font-bold'
                       : 'text-fg-muted hover:text-fg hover:bg-canvas-subtle'
                   }`}
                 >
@@ -245,7 +245,7 @@ export const LegalPage: React.FC = () => {
         <main className="flex-1 min-w-0">
           <Card className="p-8 md:p-10 border-border">
             <div className="border-b border-border pb-6 mb-8">
-              <span className="text-xs font-mono text-ratq-600 dark:text-ratq-400 uppercase tracking-widest block mb-2">
+              <span className="text-xs font-mono text-qtd-600 dark:text-qtd-400 uppercase tracking-widest block mb-2">
                 {isAr ? 'دليل التقنيات القرآنية • الشفافية والامتثال' : 'Quran Tech Directory • Governance & Compliance'}
               </span>
               <h1 className="text-2xl md:text-4xl font-extrabold text-fg tracking-tight">

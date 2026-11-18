@@ -1,5 +1,5 @@
 // Tiny event bus: the Payload error helper raises it, the auth store listens. Mirrors live's session-expiry.ts.
-const SESSION_EXPIRED_EVENT = 'ratq:session-expired';
+const SESSION_EXPIRED_EVENT = 'qtd:session-expired';
 
 export function notifySessionExpired(): void {
   if (typeof window === 'undefined') return;

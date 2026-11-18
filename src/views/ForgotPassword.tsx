@@ -66,7 +66,7 @@ export const ForgotPasswordPage: React.FC = () => {
       <div className="w-full max-w-md">
         <div className="text-center mb-8">
           <Link to="/" className="inline-flex items-center gap-2 mb-4">
-            <span className="w-10 h-10 rounded-xl bg-gradient-to-br from-ratq-600 to-deep-700 text-white font-extrabold flex items-center justify-center text-xl shadow-md">
+            <span className="w-10 h-10 rounded-xl bg-gradient-to-br from-qtd-600 to-deep-700 text-white font-extrabold flex items-center justify-center text-xl shadow-md">
               ر
             </span>
           </Link>

@@ -100,7 +100,7 @@ export const AppNotificationsPage: React.FC = () => {
               <Card
                 key={item.id}
                 className={`p-5 transition-all ${
-                  isUnread ? 'border-ratq-400 bg-ratq-50/10 dark:bg-ratq-950/10' : 'border-border'
+                  isUnread ? 'border-qtd-400 bg-qtd-50/10 dark:bg-qtd-950/10' : 'border-border'
                 }`}
               >
                 <div className="flex items-start justify-between gap-4">
@@ -127,7 +127,7 @@ export const AppNotificationsPage: React.FC = () => {
                           {isAr ? item.title_ar : item.title_ar}
                         </h4>
                         {isUnread && (
-                          <span className="w-2 h-2 rounded-full bg-ratq-500 animate-pulse" />
+                          <span className="w-2 h-2 rounded-full bg-qtd-500 animate-pulse" />
                         )}
                       </div>
                       <p className="text-sm text-fg-muted leading-relaxed mb-3">
@@ -141,7 +141,7 @@ export const AppNotificationsPage: React.FC = () => {
                           <Link
                             to={item.link_url}
                             onClick={() => markItemAsRead(item.id)}
-                            className="text-ratq-600 hover:underline font-semibold flex items-center gap-1"
+                            className="text-qtd-600 hover:underline font-semibold flex items-center gap-1"
                           >
                             <span>{isAr ? 'عرض التفاصيل' : 'View details'}</span>
                             <ArrowUpRight className="w-3.5 h-3.5" />

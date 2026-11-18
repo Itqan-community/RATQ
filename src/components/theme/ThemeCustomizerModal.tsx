@@ -142,7 +142,7 @@ export const ThemeCustomizerModal: React.FC<ThemeCustomizerModalProps> = ({
         {/* Header — clean and quiet */}
         <div className="flex items-center justify-between px-4 py-3 border-b border-border/80 bg-subtle/40">
           <div className="flex items-center gap-2">
-            <div className="w-7 h-7 rounded-lg bg-ratq-600/10 dark:bg-ratq-400/10 text-ratq-700 dark:text-ratq-300 flex items-center justify-center">
+            <div className="w-7 h-7 rounded-lg bg-qtd-600/10 dark:bg-qtd-400/10 text-qtd-700 dark:text-qtd-300 flex items-center justify-center">
               <Palette className="w-4 h-4" />
             </div>
             <div>
@@ -204,7 +204,7 @@ export const ThemeCustomizerModal: React.FC<ThemeCustomizerModalProps> = ({
           <div>
             <div className="flex items-center justify-between mb-1.5">
               <div className="flex items-center gap-1.5 text-[10px] font-bold text-fg-muted uppercase tracking-wider">
-                <LayoutTemplate className="w-3 h-3 text-ratq-500" />
+                <LayoutTemplate className="w-3 h-3 text-qtd-500" />
                 <span>{isAr ? 'خيار الهيرو سكشن' : 'Hero Layout'}</span>
               </div>
             </div>
@@ -252,7 +252,7 @@ export const ThemeCustomizerModal: React.FC<ThemeCustomizerModalProps> = ({
           <div>
             <div className="flex items-center justify-between mb-1.5">
               <div className="flex items-center gap-1.5 text-[10px] font-bold text-fg-muted uppercase tracking-wider">
-                <Sparkles className="w-3 h-3 text-ratq-500" />
+                <Sparkles className="w-3 h-3 text-qtd-500" />
                 <span>{isAr ? 'طابع الألوان' : 'Color Palette'}</span>
               </div>
             </div>
@@ -267,7 +267,7 @@ export const ThemeCustomizerModal: React.FC<ThemeCustomizerModalProps> = ({
                     onClick={() => setPalette(p.id)}
                     className={`flex flex-col items-center justify-center p-2.5 rounded-xl border text-center transition-all relative cursor-pointer ${
                       isSelected
-                        ? 'border-ratq-500 bg-ratq-50/50 dark:bg-ratq-950/30 ring-1 ring-ratq-500 shadow-xs'
+                        ? 'border-qtd-500 bg-qtd-50/50 dark:bg-qtd-950/30 ring-1 ring-qtd-500 shadow-xs'
                         : 'border-border bg-subtle/50 hover:bg-muted/70 hover:border-border-strong'
                     }`}
                   >
@@ -288,7 +288,7 @@ export const ThemeCustomizerModal: React.FC<ThemeCustomizerModalProps> = ({
                     </span>
 
                     {isSelected && (
-                      <div className="absolute top-1.5 end-1.5 w-3 h-3 rounded-full bg-ratq-600 text-white flex items-center justify-center">
+                      <div className="absolute top-1.5 end-1.5 w-3 h-3 rounded-full bg-qtd-600 text-white flex items-center justify-center">
                         <Check className="w-2 h-2 stroke-[3]" />
                       </div>
                     )}
@@ -301,7 +301,7 @@ export const ThemeCustomizerModal: React.FC<ThemeCustomizerModalProps> = ({
           {/* Section 3: Platform Font (Quiet 2-column segmented layout) */}
           <div>
             <div className="flex items-center gap-1.5 text-[10px] font-bold text-fg-muted uppercase tracking-wider mb-1.5">
-              <Type className="w-3 h-3 text-ratq-500" />
+              <Type className="w-3 h-3 text-qtd-500" />
               <span>{isAr ? 'خط المنصة' : 'Platform Font'}</span>
             </div>
 
@@ -315,7 +315,7 @@ export const ThemeCustomizerModal: React.FC<ThemeCustomizerModalProps> = ({
                     onClick={() => setFont(f.id)}
                     className={`flex flex-col items-center justify-center p-2 rounded-xl border text-center transition-all relative ${
                       isSelected
-                        ? 'border-ratq-500 bg-ratq-50/50 dark:bg-ratq-950/30 ring-1 ring-ratq-500 shadow-xs'
+                        ? 'border-qtd-500 bg-qtd-50/50 dark:bg-qtd-950/30 ring-1 ring-qtd-500 shadow-xs'
                         : 'border-border bg-subtle/50 hover:bg-muted/70 hover:border-border-strong'
                     }`}
                   >
@@ -330,7 +330,7 @@ export const ThemeCustomizerModal: React.FC<ThemeCustomizerModalProps> = ({
                     </span>
 
                     {isSelected && (
-                      <div className="absolute top-1.5 end-1.5 w-3 h-3 rounded-full bg-ratq-600 text-white flex items-center justify-center">
+                      <div className="absolute top-1.5 end-1.5 w-3 h-3 rounded-full bg-qtd-600 text-white flex items-center justify-center">
                         <Check className="w-2 h-2 stroke-[3]" />
                       </div>
                     )}
@@ -344,7 +344,7 @@ export const ThemeCustomizerModal: React.FC<ThemeCustomizerModalProps> = ({
           <div>
             <div className="flex items-center justify-between mb-1.5">
               <div className="flex items-center gap-1.5 text-[10px] font-bold text-fg-muted uppercase tracking-wider">
-                <Box className="w-3 h-3 text-ratq-500" />
+                <Box className="w-3 h-3 text-qtd-500" />
                 <span>{isAr ? 'استدارة الحواف' : 'Border Radius'}</span>
               </div>
               <span className="text-[10px] font-mono font-medium text-fg-muted px-1.5 py-0.2 rounded bg-subtle border border-border/60">
@@ -387,7 +387,7 @@ export const ThemeCustomizerModal: React.FC<ThemeCustomizerModalProps> = ({
           </button>
 
           <div className="flex items-center gap-1 text-[10px] text-fg-muted font-medium">
-            <CheckCircle2 className="w-3 h-3 text-ratq-500" />
+            <CheckCircle2 className="w-3 h-3 text-qtd-500" />
             <span>{isAr ? 'يحفظ تلقائياً' : 'Auto-saved'}</span>
           </div>
         </div>

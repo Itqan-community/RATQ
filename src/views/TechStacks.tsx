@@ -848,11 +848,11 @@ export const TechStacksPage: React.FC = () => {
       {/* Top Header: Breadcrumbs */}
       <div className="mb-6">
         <div className="flex items-center gap-2 text-xs text-fg-subtle">
-          <Link to="/" className="hover:text-ratq-700 transition-colors">
+          <Link to="/" className="hover:text-qtd-700 transition-colors">
             الرئيسية
           </Link>
           <span>/</span>
-          <h1 className="text-ratq-700 font-bold text-xs inline">حزم التطبيقات</h1>
+          <h1 className="text-qtd-700 font-bold text-xs inline">حزم التطبيقات</h1>
         </div>
       </div>
 
@@ -866,7 +866,7 @@ export const TechStacksPage: React.FC = () => {
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="ابحث عن تطبيق، حزمة معتمدة، أو طبقة معمارية..."
-            className="w-full ps-9 pe-3 py-2 rounded-xl border border-border bg-subtle/50 text-xs sm:text-sm placeholder:text-fg-subtle focus:outline-none focus:border-ratq-500 focus:bg-canvas transition-all"
+            className="w-full ps-9 pe-3 py-2 rounded-xl border border-border bg-subtle/50 text-xs sm:text-sm placeholder:text-fg-subtle focus:outline-none focus:border-qtd-500 focus:bg-canvas transition-all"
           />
         </div>
 
@@ -885,7 +885,7 @@ export const TechStacksPage: React.FC = () => {
                 onClick={() => setSelectedCategory(key)}
                 className={`h-9 px-3 rounded-xl border text-xs font-semibold flex items-center gap-1.5 transition-all cursor-pointer shrink-0 ${
                   isSelected
-                    ? 'border-ratq-600 bg-ratq-700 text-white shadow-xs font-bold dark:bg-ratq-600 dark:border-ratq-500'
+                    ? 'border-qtd-600 bg-qtd-700 text-white shadow-xs font-bold dark:bg-qtd-600 dark:border-qtd-500'
                     : 'border-border/80 bg-canvas text-fg-muted hover:text-fg hover:border-border hover:bg-subtle'
                 }`}
               >
@@ -911,7 +911,7 @@ export const TechStacksPage: React.FC = () => {
           <div className="p-3.5 sm:p-4 rounded-2xl border border-border bg-canvas shadow-xs">
             <div className="flex items-center justify-between text-xs font-bold text-fg mb-3 px-1">
               <span className="flex items-center gap-1.5">
-                <Layers className="w-4 h-4 text-ratq-600" />
+                <Layers className="w-4 h-4 text-qtd-600" />
                 <span>اختر التطبيق لاستعراض جدول مواصفاته:</span>
               </span>
               <span className="text-[11px] font-mono text-fg-subtle">
@@ -1021,7 +1021,7 @@ export const TechStacksPage: React.FC = () => {
             {/* Table Header Controls */}
             <div className="p-4 border-b border-border bg-subtle/30 flex items-center justify-between gap-3">
               <div className="flex items-center gap-2">
-                <Table className="w-4 h-4 text-ratq-600" />
+                <Table className="w-4 h-4 text-qtd-600" />
                 <h3 className="text-xs font-bold text-fg">
                   جدول المواصفات البرمجية والطبقات المعمارية ({selectedStack.layers.length} مكونات معتمدة)
                 </h3>
@@ -1080,7 +1080,7 @@ export const TechStacksPage: React.FC = () => {
                             <button
                               type="button"
                               onClick={() => handleOpenResource(layer)}
-                              className="font-bold text-fg hover:text-ratq-700 dark:hover:text-ratq-300 hover:underline transition-colors text-start cursor-pointer block"
+                              className="font-bold text-fg hover:text-qtd-700 dark:hover:text-qtd-300 hover:underline transition-colors text-start cursor-pointer block"
                             >
                               {layer.resourceName}
                             </button>

@@ -1,5 +1,5 @@
 // src/types/index.ts
-// Comprehensive TypeScript Data Types for RATQ Platform
+// Comprehensive TypeScript Data Types for Quran Tech Directory
 
 export type UserRole =
   | 'guest'

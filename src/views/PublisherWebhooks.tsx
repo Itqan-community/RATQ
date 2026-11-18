@@ -25,7 +25,7 @@ export const PublisherWebhooksPage: React.FC = () => {
   const [endpoints, setEndpoints] = useState<WebhookEndpoint[]>([
     {
       id: 'wh_001',
-      url: 'https://qurantech.org/api/webhooks/ratq-events',
+      url: 'https://qurantech.org/api/webhooks/qtd-events',
       events: ['access_request.created', 'package.downloaded'],
       status: 'active',
       lastStatus: 200,
@@ -104,7 +104,7 @@ export const PublisherWebhooksPage: React.FC = () => {
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
               <div className="space-y-2">
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-xl bg-ratq-500/10 text-ratq-600 flex items-center justify-center shrink-0">
+                  <div className="w-10 h-10 rounded-xl bg-qtd-500/10 text-qtd-600 flex items-center justify-center shrink-0">
                     <Webhook className="w-5 h-5" />
                   </div>
                   <div>
@@ -182,11 +182,11 @@ export const PublisherWebhooksPage: React.FC = () => {
           </div>
 
           <div className="p-3 rounded-lg bg-canvas-subtle border border-border text-2xs text-fg-muted flex items-start gap-2">
-            <Shield className="w-4 h-4 text-ratq-600 shrink-0 mt-0.5" />
+            <Shield className="w-4 h-4 text-qtd-600 shrink-0 mt-0.5" />
             <span>
               {isAr
-                ? 'يتم توقيع كل حمولة مرسلة عبر ترويسة x-ratq-signature باستخدام خوارزمية HMAC-SHA256 لضمان أصالة الرسالة.'
-                : 'All payloads are signed with HMAC-SHA256 via x-ratq-signature header.'}
+                ? 'يتم توقيع كل حمولة مرسلة عبر ترويسة x-qtd-signature باستخدام خوارزمية HMAC-SHA256 لضمان أصالة الرسالة.'
+                : 'All payloads are signed with HMAC-SHA256 via x-qtd-signature header.'}
             </span>
           </div>
 

@@ -91,7 +91,7 @@ export const LicenseBadge: React.FC<LicenseBadgeProps> = ({
       {showIcon && <Scale className="w-3 h-3 opacity-75 shrink-0" />}
       <span>{label}</span>
       {allowsCommercial && (
-        <span className="text-[10px] text-ratq-700 bg-ratq-100 dark:bg-ratq-900 dark:text-ratq-300 px-1 rounded">
+        <span className="text-[10px] text-qtd-700 bg-qtd-100 dark:bg-qtd-900 dark:text-qtd-300 px-1 rounded">
           {t('ui.commercial_ok')}
         </span>
       )}
