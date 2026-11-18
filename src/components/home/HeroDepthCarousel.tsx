@@ -1,6 +1,6 @@
 // src/components/home/HeroDepthCarousel.tsx
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { SiteLink as Link } from '@/components/ui/SiteLink';
 import { useTranslation } from 'react-i18next';
 import { ArrowLeft, CheckCircle2, Sparkles } from 'lucide-react';
 import { DepthCarousel } from '@/components/ui/DepthCarousel/DepthCarousel';

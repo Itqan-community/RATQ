@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
+import { SiteLink as Link } from '@/components/ui/SiteLink';
+import { BrandLogo } from '@/components/ui/BrandLogo';
+import { IS_BETA } from '@/lib/mockRoutes';
 import { useTranslation } from 'react-i18next';
 import { useAuthStore } from '@/store/useAuthStore';
 import { isLive } from '@/lib/payloadAuth';
@@ -77,12 +80,9 @@ export const SiteHeader: React.FC<SiteHeaderProps> = ({ onOpenCommandPalette }) 
             className="flex flex-col items-center justify-center group py-0.5 select-none"
             title={t('site:header.home_title')}
           >
-            <img
-              src="/logo.png"
-              alt={t('site:header.logo_alt')}
-              className="h-7 sm:h-8 w-auto max-w-[90px] object-contain dark:invert transition-transform duration-200 group-hover:scale-105"
-            />
-            {!isLive() && (
+            {/* Phones have no room for the name; beta carries three extra nav items, so it needs a wider screen. */}
+            <BrandLogo nameClassName={IS_BETA ? 'hidden 2xl:flex' : 'hidden sm:flex'} markClassName="h-7 w-7 sm:h-8 sm:w-8 transition-transform duration-200 group-hover:scale-105" />
+            {(!isLive() || IS_BETA) && (
               <span className="text-[9px] font-bold text-ratq-700 dark:text-ratq-300 bg-ratq-50 dark:bg-ratq-950/80 border border-ratq-200 dark:border-ratq-800/80 px-1.5 py-0.5 rounded leading-none tracking-tight mt-0.5 whitespace-nowrap">
                 {t('site:header.beta')}
               </span>

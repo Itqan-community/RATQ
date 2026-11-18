@@ -4,13 +4,17 @@ import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { Button } from '@/components/ui/Button';
 import { mockRepo } from '@/lib/supabase';
+import { isHiddenRoute } from '@/lib/mockRoutes';
 import { Wand2, ArrowLeft, X } from 'lucide-react';
 
 interface CatalogWizardHelperProps {
   className?: string;
 }
 
-export const CatalogWizardHelper: React.FC<CatalogWizardHelperProps> = ({ className = '' }) => {
+export const CatalogWizardHelper: React.FC<CatalogWizardHelperProps> = (props) =>
+  isHiddenRoute('/resources/wizard') ? null : <WizardHelper {...props} />; // build-time constant: the wizard is mock-only
+
+const WizardHelper: React.FC<CatalogWizardHelperProps> = ({ className = '' }) => {
   const { t } = useTranslation('site');
   const navigate = useNavigate();
   const [dismissed, setDismissed] = useState(false);

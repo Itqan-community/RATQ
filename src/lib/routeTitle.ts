@@ -8,7 +8,7 @@ const TITLES: [string, string, string][] = [
   ['/publishers', 'الناشرون', 'Publishers'],
   ['/standards', 'معيار إتقان', 'Itqan Standard'],
   ['/licenses', 'التراخيص', 'Licenses'],
-  ['/about', 'عن رتق', 'About'],
+  ['/about', 'عن دليل التقنيات القرآنية', 'About'],
   ['/contributors', 'المساهمون', 'Contributors'],
   ['/docs', 'الوثائق', 'Docs'],
   ['/faq', 'الأسئلة الشائعة', 'FAQ'],
@@ -23,7 +23,9 @@ const TITLES: [string, string, string][] = [
   ['/moderation', 'لوحة الإشراف', 'Moderation'],
   ['/admin', 'لوحة الإدارة', 'Admin'],
 ];
-const SITE = { ar: 'منصة مجتمع RATQ', en: 'RATQ Community Platform' } as const;
+import { SITE_NAME, SITE_NAME_AR } from './seoMeta';
+
+const SITE = { ar: SITE_NAME_AR, en: SITE_NAME } as const;
 const RESOURCE = { ar: 'مورد', en: 'Resource' } as const;
 
 export function routeTitle(pathname: string, lang: 'ar' | 'en'): string {

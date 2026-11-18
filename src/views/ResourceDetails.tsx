@@ -6,6 +6,7 @@ import { signInHref } from '@/lib/authFlow';
 import { mockRepo } from '@/lib/supabase';
 import { Tabs, TabItem } from '@/components/ui/Tabs';
 import { Button } from '@/components/ui/Button';
+import { SiteLink } from '@/components/ui/SiteLink';
 import { ItqanBadge } from '@/components/ui/ItqanBadge';
 import { AccessBadge } from '@/components/ui/AccessBadge';
 import { LicenseBadge } from '@/components/ui/LicenseBadge';
@@ -591,11 +592,11 @@ export const ResourceDetails: React.FC = () => {
                   {resource.publisher.description_ar}
                 </p>
               )}
-              <Link to={`/publishers/${resource.publisher.slug}`}>
+              <SiteLink to={`/publishers/${resource.publisher.slug}`}>
                 <Button variant="outline" size="sm" className="w-full">
                   {t('detail.view_publisher')}
                 </Button>
-              </Link>
+              </SiteLink>
             </div>
           )}
 
@@ -968,7 +969,7 @@ export const ResourceDetails: React.FC = () => {
               <button
                 type="button"
                 onClick={() => {
-                  const md = `[![رتق - ${resource.title_ar}](https://img.shields.io/badge/رتق-${encodeURIComponent(
+                  const md = `[![دليل التقنيات القرآنية - ${resource.title_ar}](https://img.shields.io/badge/دليل_التقنيات_القرآنية-${encodeURIComponent(
                     resource.title_ar
                   )}-0d9488)](${typeof window !== 'undefined' ? window.location.href : ''})`;
                   navigator.clipboard.writeText(md);
@@ -991,7 +992,7 @@ export const ResourceDetails: React.FC = () => {
               </button>
             </div>
             <div className="p-2.5 rounded-lg bg-canvas-card border border-border font-mono text-[11px] text-fg-muted overflow-x-auto select-all">
-              {`[![رتق - ${resource.title_ar}](https://img.shields.io/badge/رتق-${encodeURIComponent(
+              {`[![دليل التقنيات القرآنية - ${resource.title_ar}](https://img.shields.io/badge/دليل_التقنيات_القرآنية-${encodeURIComponent(
                 resource.title_ar
               )}-0d9488)](${typeof window !== 'undefined' ? window.location.href : ''})`}
             </div>

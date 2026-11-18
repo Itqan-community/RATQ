@@ -76,8 +76,8 @@ export const ThemeCustomizerModal: React.FC<ThemeCustomizerModalProps> = ({
     },
     {
       id: 'default',
-      nameAr: isAr ? 'ثيم رتق (زمردي)' : 'Ratq (Emerald)',
-      nameEn: 'Ratq (Emerald)',
+      nameAr: isAr ? 'الثيم الزمردي' : 'Emerald',
+      nameEn: 'Emerald',
       colors: { primary: '#059669', secondary: '#1F4E4E' },
     },
     {

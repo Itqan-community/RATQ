@@ -78,7 +78,7 @@ export const SignUpPage: React.FC = () => {
             {isAr ? 'إنشاء حساب جديد' : 'Create an Account'}
           </h1>
           <p className="text-fg-muted text-sm mt-1">
-            {isAr ? 'انضم إلى مجتمع رتق لخدمة البرمجيات والبيانات القرآنية' : 'Join the RATQ community of QuranTech developers'}
+            {isAr ? 'انضم إلى مجتمع دليل التقنيات القرآنية لخدمة البرمجيات والبيانات القرآنية' : 'Join the Quran Tech Directory community of QuranTech developers'}
           </p>
         </div>
 
