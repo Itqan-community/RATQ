@@ -27,6 +27,10 @@ describe('isKnownPath (drives the server 404)', () => {
     '/publisher/analytics', '/publisher/webhooks'])('isKnownPath_ProductionMockRoute_False (%s)', async (p) =>
     expect((await load(PROD)).known.isKnownPath(p)).toBe(false));
 
+  // react-router matches paths case-insensitively, so a different letter case must not slip past the hiding.
+  it.each(['/FAQ', '/Admin/users', '/Publishers/x', '/Resources/Roadmap'])('isKnownPath_ProductionMockRouteOtherCase_False (%s)', async (p) =>
+    expect((await load(PROD)).known.isKnownPath(p)).toBe(false));
+
   it.each(['/', '/resources', '/resources/some-real-slug', '/standards', '/about', '/contributors', '/moderation', '/app',
     '/app/keys', '/publisher', '/publisher/resources', '/auth/sign-in'])('isKnownPath_ProductionRealRoute_True (%s)', async (p) =>
     expect((await load(PROD)).known.isKnownPath(p)).toBe(true));
