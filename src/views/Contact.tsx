@@ -55,7 +55,7 @@ export const ContactPage: React.FC = () => {
           {isAr ? 'التواصل والدعم' : 'Contact & Support'}
         </Badge>
         <h1 className="text-3xl md:text-5xl font-extrabold text-fg tracking-tight mb-4">
-          {isAr ? 'نسعد بتواصلك مع فريق رتق' : 'Get in Touch with RATQ Team'}
+          {isAr ? 'نسعد بتواصلك مع فريق دليل التقنيات القرآنية' : 'Get in Touch with the Quran Tech Directory Team'}
         </h1>
         <p className="text-fg-muted text-lg max-w-2xl mx-auto">
           {isAr
@@ -130,8 +130,8 @@ export const ContactPage: React.FC = () => {
                 <h3 className="text-xl font-bold text-fg">{isAr ? 'كيف تتواصل معنا' : 'How to reach us'}</h3>
                 <p className="text-fg-muted">
                   {isAr
-                    ? 'رَتْق مشروع مفتوح المصدر تديره المجتمع، وكل من يعمل عليه يبدأ من نفس قائمة المهام المفتوحة على GitHub.'
-                    : 'RATQ is a community-run open-source project. Everyone working on it starts from the same open queue on GitHub.'}
+                    ? 'دليل التقنيات القرآنية مشروع مفتوح المصدر تديره المجتمع، وكل من يعمل عليه يبدأ من نفس قائمة المهام المفتوحة على GitHub.'
+                    : 'Quran Tech Directory is a community-run open-source project. Everyone working on it starts from the same open queue on GitHub.'}
                 </p>
                 <ul className="space-y-3 text-fg-muted">
                   <li>

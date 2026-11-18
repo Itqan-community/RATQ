@@ -1,5 +1,6 @@
 // src/components/layout/CommandPalette.tsx
 import React, { useState, useEffect } from 'react';
+import { isHiddenRoute } from '@/lib/mockRoutes';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { Search, X, Layers, BookOpen, Shield, Code2, ArrowLeft } from 'lucide-react';
@@ -45,7 +46,7 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({ isOpen, onClose 
     { label: t('palette.publishers'), path: '/publishers', icon: Layers },
     { label: t('palette.standard'), path: '/standards', icon: Shield },
     { label: t('palette.developer'), path: '/app', icon: Code2 },
-  ];
+  ].filter((l) => !isHiddenRoute(l.path));
 
   return (
     <div className="fixed inset-0 z-50 flex items-start justify-center pt-20 p-4">

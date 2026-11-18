@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import type { ReactNode } from 'react';
 import { IBM_Plex_Sans_Arabic, IBM_Plex_Mono, Amiri_Quran } from 'next/font/google';
-import { SITE_DESCRIPTION, SITE_NAME, SITE_URL } from '@/lib/seoMeta';
+import { DEFAULT_OG_IMAGE, SITE_DESCRIPTION, SITE_NAME, SITE_NAME_AR, SITE_URL, ogImages } from '@/lib/seoMeta';
 import { IS_BETA } from '@/lib/mockRoutes';
 import '@/styles/tokens.css';
 import '@/styles/base.css';
@@ -14,10 +14,11 @@ const amiriQuran = Amiri_Quran({ variable: '--font-amiri-quran', subsets: ['arab
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   // Same suffix as live's layout.tsx title template.
-  title: { default: 'منصة مجتمع RATQ — مرجعك الموثوق لتطوير البرمجيات القرآنية', template: `%s | ${SITE_NAME}` },
+  title: { default: `${SITE_NAME_AR} — مرجعك الموثوق لتطوير البرمجيات القرآنية`, template: `%s | ${SITE_NAME}` },
   description: SITE_DESCRIPTION,
-  openGraph: { type: 'website', siteName: SITE_NAME, locale: 'ar_SA', description: SITE_DESCRIPTION },
-  icons: { icon: '/logo.png' },
+  openGraph: { type: 'website', siteName: SITE_NAME, locale: 'ar_SA', description: SITE_DESCRIPTION, images: ogImages() },
+  twitter: { card: 'summary_large_image', images: [DEFAULT_OG_IMAGE] },
+  icons: { icon: [{ url: '/favicon.svg', type: 'image/svg+xml' }, { url: '/icon-192.png', sizes: '192x192', type: 'image/png' }], apple: '/icon-192.png' },
   manifest: '/manifest.webmanifest',
   robots: IS_BETA ? { index: false, follow: false } : undefined,
 };

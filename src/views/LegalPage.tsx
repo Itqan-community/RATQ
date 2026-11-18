@@ -30,7 +30,7 @@ export const LegalPage: React.FC = () => {
           <section>
             <h3 className="text-lg font-bold text-fg mb-2">1. المقدمة ونطاق التطبيق</h3>
             <p className="text-fg-muted">
-              تنظم هذه الشروط استخدام منصة "رتق" (RATQ). باستخدامك للمنصة أو التسجيل فيها، فإنك توافق التزاماً تاماً على جميع الأحكام المذكورة هنا وميثاق التعامل مع النص القرآني الشريف.
+              تنظم هذه الشروط استخدام دليل التقنيات القرآنية. باستخدامك للمنصة أو التسجيل فيها، فإنك توافق التزاماً تاماً على جميع الأحكام المذكورة هنا وميثاق التعامل مع النص القرآني الشريف.
             </p>
           </section>
           <section>
@@ -52,7 +52,7 @@ export const LegalPage: React.FC = () => {
           <section>
             <h3 className="text-lg font-bold text-fg mb-2">1. Scope and Acceptance</h3>
             <p className="text-fg-muted">
-              These terms govern access and usage of the RATQ Community Platform. By accessing or using the platform, you agree to be bound by these terms and the Sacred Text Integrity Covenant.
+              These terms govern access and usage of Quran Tech Directory. By accessing or using the platform, you agree to be bound by these terms and the Sacred Text Integrity Covenant.
             </p>
           </section>
           <section>
@@ -78,7 +78,7 @@ export const LegalPage: React.FC = () => {
       // Copied from live ratq.itqan.dev (messages en/ar "privacy"); en item3 follows the ar wording since beta uses a cookie session.
       content_ar: (
         <div className="space-y-6 leading-relaxed">
-          <p className="text-fg-muted">هذه الصفحة تشرح البيانات التي تجمعها منصة رَتْق ولماذا.</p>
+          <p className="text-fg-muted">هذه الصفحة تشرح البيانات التي يجمعها دليل التقنيات القرآنية ولماذا.</p>
           <section>
             <h3 className="text-lg font-bold text-fg mb-2">ما الذي نجمعه</h3>
             <ul className="list-disc ps-6 space-y-2 text-fg-muted">
@@ -105,7 +105,7 @@ export const LegalPage: React.FC = () => {
       ),
       content_en: (
         <div className="space-y-6 leading-relaxed">
-          <p className="text-fg-muted">This page explains what data RATQ collects and why.</p>
+          <p className="text-fg-muted">This page explains what data Quran Tech Directory collects and why.</p>
           <section>
             <h3 className="text-lg font-bold text-fg mb-2">What we collect</h3>
             <ul className="list-disc ps-6 space-y-2 text-fg-muted">
@@ -141,7 +141,7 @@ export const LegalPage: React.FC = () => {
           <section>
             <h3 className="text-lg font-bold text-fg mb-2">1. احترام حقوق المصنفات البرمجية والعلمية</h3>
             <p className="text-fg-muted">
-              تحترم منصة رتق حقوق المؤلفين والمطورين والمؤسسات العلمية. يجب أن يلتزم كل ناشر بشروط تراخيص المشاع الإبداعي المعتمدة (Creative Commons: CC0, CC BY, CC BY-SA, CC BY-ND, CC BY-NC إلخ).
+              يحترم دليل التقنيات القرآنية حقوق المؤلفين والمطورين والمؤسسات العلمية. يجب أن يلتزم كل ناشر بشروط تراخيص المشاع الإبداعي المعتمدة (Creative Commons: CC0, CC BY, CC BY-SA, CC BY-ND, CC BY-NC إلخ).
             </p>
           </section>
           <section>
@@ -157,7 +157,7 @@ export const LegalPage: React.FC = () => {
           <section>
             <h3 className="text-lg font-bold text-fg mb-2">1. Respect for Intellectual Property</h3>
             <p className="text-fg-muted">
-              RATQ respects the intellectual property rights of authors, open-source maintainers, and academic bodies. Packages must respect defined Creative Commons licenses (CC0, CC BY, CC BY-SA, CC BY-ND, CC BY-NC, etc.).
+              Quran Tech Directory respects the intellectual property rights of authors, open-source maintainers, and academic bodies. Packages must respect defined Creative Commons licenses (CC0, CC BY, CC BY-SA, CC BY-ND, CC BY-NC, etc.).
             </p>
           </section>
           <section>
@@ -179,7 +179,7 @@ export const LegalPage: React.FC = () => {
           <section>
             <h3 className="text-lg font-bold text-fg mb-2">1. معايير WCAG 2.1 AA</h3>
             <p className="text-fg-muted">
-              صُممت منصة رتق لتكون متاحة لجميع المستخدمين وفق معايير إتاحة محتوى الويب (WCAG 2.1 AA)، مع تباين لوني مدروس، وتنقل كامل عبر لوحة المفاتيح، وتوافق تام مع برامج قراءة الشاشة باللغة العربية.
+              صُمم دليل التقنيات القرآنية ليكون متاحاً لجميع المستخدمين وفق معايير إتاحة محتوى الويب (WCAG 2.1 AA)، مع تباين لوني مدروس، وتنقل كامل عبر لوحة المفاتيح، وتوافق تام مع برامج قراءة الشاشة باللغة العربية.
             </p>
           </section>
           <section>
@@ -195,7 +195,7 @@ export const LegalPage: React.FC = () => {
           <section>
             <h3 className="text-lg font-bold text-fg mb-2">1. WCAG 2.1 AA Compliance</h3>
             <p className="text-fg-muted">
-              RATQ is engineered to comply with WCAG 2.1 Level AA standards, featuring high-contrast themes, full keyboard navigability, semantic ARIA landmarks, and robust screen-reader support.
+              Quran Tech Directory is engineered to comply with WCAG 2.1 Level AA standards, featuring high-contrast themes, full keyboard navigability, semantic ARIA landmarks, and robust screen-reader support.
             </p>
           </section>
           <section>
@@ -246,7 +246,7 @@ export const LegalPage: React.FC = () => {
           <Card className="p-8 md:p-10 border-border">
             <div className="border-b border-border pb-6 mb-8">
               <span className="text-xs font-mono text-ratq-600 dark:text-ratq-400 uppercase tracking-widest block mb-2">
-                {isAr ? 'رتق • الشفافية والامتثال' : 'RATQ • Governance & Compliance'}
+                {isAr ? 'دليل التقنيات القرآنية • الشفافية والامتثال' : 'Quran Tech Directory • Governance & Compliance'}
               </span>
               <h1 className="text-2xl md:text-4xl font-extrabold text-fg tracking-tight">
                 {isAr ? currentDoc.title_ar : currentDoc.title_en}

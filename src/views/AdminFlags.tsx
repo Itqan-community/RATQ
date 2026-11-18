@@ -53,7 +53,7 @@ export const AdminFlagsPage: React.FC = () => {
       key: 'flarum_sso_bridge',
       name_ar: 'جسر الدخول الموحد لمنتدى Flarum',
       name_en: 'Flarum SSO Forum Bridge',
-      desc_ar: 'مزامنة جلسات المصادقة بين منصة رتق ومجتمع النقاش الفني الخارجي.',
+      desc_ar: 'مزامنة جلسات المصادقة بين دليل التقنيات القرآنية ومجتمع النقاش الفني الخارجي.',
       desc_en: 'Synchronize JWT authentication sessions with external discussion forums.',
       enabled: false,
       category: 'core',

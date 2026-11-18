@@ -1,5 +1,6 @@
 // src/views/UxStudy.tsx
 import React, { useState, useMemo, useEffect } from 'react';
+import { BrandMark } from '@/components/ui/BrandLogo';
 import { Link } from 'react-router-dom';
 import {
   Compass,
@@ -57,7 +58,7 @@ const SECTIONS: UxSection[] = [
     title: 'سياق المشروع وأهدافه',
     phase: 'الرؤية والاستراتيجية',
     phaseNumber: 1,
-    summary: 'الرؤية الاستراتيجية، المشكلات التي تحلها رَتْق، مؤشرات الأداء الأساسية (KPIs)، ونطاق الدراسة.',
+    summary: 'الرؤية الاستراتيجية، المشكلات التي يحلها دليل التقنيات القرآنية، مؤشرات الأداء الأساسية (KPIs)، ونطاق الدراسة.',
   },
   {
     id: 'methodology',
@@ -250,11 +251,7 @@ export const UxStudy: React.FC = () => {
             </Link>
 
             <Link to="/" title="الرئيسية" className="shrink-0 flex flex-col items-center group select-none">
-              <img
-                src="/logo.png"
-                alt="شعار رَتْق"
-                className="h-7 w-auto max-w-[85px] object-contain dark:invert transition-transform duration-200 group-hover:scale-105"
-              />
+              <BrandMark className="h-7 w-7 transition-transform duration-200 group-hover:scale-105" />
               <span className="text-[8px] font-bold text-ratq-700 dark:text-ratq-300 bg-ratq-50 dark:bg-ratq-950/80 border border-ratq-200 dark:border-ratq-800/80 px-1.5 py-0.5 rounded leading-none mt-0.5 whitespace-nowrap">
                 نسخة تجريبية
               </span>
@@ -270,7 +267,7 @@ export const UxStudy: React.FC = () => {
                 </span>
               </div>
               <p className="text-[11px] text-fg-subtle mt-0.5">
-                مشروع البنية التحتية المعتمدة للبرمجيات القرآنية • رَتْق
+                مشروع البنية التحتية المعتمدة للبرمجيات القرآنية • دليل التقنيات القرآنية
               </p>
             </div>
           </div>
@@ -486,7 +483,7 @@ function renderSectionContent(sectionId: string) {
               <span>جوهر الدراسة والفرصة الاستراتيجية</span>
             </h3>
             <p className="text-xs text-fg-muted leading-relaxed">
-              تعاني بيئة تطوير البرمجيات الإسلامية من غياب بنية تحتية حوكمية موحدة وموثوقة، حيث يعتمد المطورون على مستودعات متفرقة أو نصوص قرآنية مجهولة الإسناد والتخريج، مع مخاطر وقوع أخطاء في علامات الضبط والتشكيل أو التوليد غير المنضبط بواسطة الذكاء الاصطناعي. منصة «رَتْق» تُشكل أول كتالوج معياري موحد ومُدار لمكتبات وحزم وتطبيقات القرآن الكريم وخطوطه وبياناته خاضع لمعايير «إتقان» الصارمة.
+              تعاني بيئة تطوير البرمجيات الإسلامية من غياب بنية تحتية حوكمية موحدة وموثوقة، حيث يعتمد المطورون على مستودعات متفرقة أو نصوص قرآنية مجهولة الإسناد والتخريج، مع مخاطر وقوع أخطاء في علامات الضبط والتشكيل أو التوليد غير المنضبط بواسطة الذكاء الاصطناعي. منصة «دليل التقنيات القرآنية» تُشكل أول كتالوج معياري موحد ومُدار لمكتبات وحزم وتطبيقات القرآن الكريم وخطوطه وبياناته خاضع لمعايير «إتقان» الصارمة.
             </p>
           </div>
 
@@ -547,11 +544,11 @@ function renderSectionContent(sectionId: string) {
             <div className="p-4 rounded-xl border border-border bg-subtle/30">
               <h4 className="text-xs font-bold text-fg mb-2">الرؤية الاستراتيجية</h4>
               <p className="text-xs text-fg-muted leading-relaxed">
-                أن تكون منصة «رَتْق» البنية التحتية البرمجية والمعيار المرجعي الموثوق عالمياً لكل مطور وباحث ومؤسسة تسعى لبناء حلول رقمية تخدم كتاب الله تعالى بكفاءة وأمان ومصداقية تامة.
+                أن يكون «دليل التقنيات القرآنية» البنية التحتية البرمجية والمعيار المرجعي الموثوق عالمياً لكل مطور وباحث ومؤسسة تسعى لبناء حلول رقمية تخدم كتاب الله تعالى بكفاءة وأمان ومصداقية تامة.
               </p>
             </div>
             <div className="p-4 rounded-xl border border-border bg-subtle/30">
-              <h4 className="text-xs font-bold text-fg mb-2">المشكلات التي تحلها رَتْق</h4>
+              <h4 className="text-xs font-bold text-fg mb-2">المشكلات التي يحلها دليل التقنيات القرآنية</h4>
               <p className="text-xs text-fg-muted leading-relaxed">
                 غياب جهة موثقة تمنح اعتمادات للمكتبات، تشتت صيغ البيانات (JSON, SQLite, Parquet, XML)، صعوبة التواصل مع دور النشر لحفظ الحقوق، وتوقف واجهات الـ API غير الرسمية فجأة.
               </p>
@@ -583,7 +580,7 @@ function renderSectionContent(sectionId: string) {
           <div className="p-4 rounded-xl border border-border bg-canvas">
             <h4 className="text-xs font-bold text-fg mb-2">نطاق الدراسة وحدودها (Scope & Boundaries)</h4>
             <p className="text-xs text-fg-muted leading-relaxed">
-              تغطي هذه الدراسة تجربة الاستخدام لكافة بوابات «رَتْق»: بوابة المستكشف العامة، كتالوج الموارد وتفاصيل الأصول، بوابة المطورين وإدارة المفاتيح، بوابة الناشرين لإدارة الموارد، ودليل معيار إتقان. ولا تشمل الدراسة بناء تطبيقات المصاحف النهائية للمستهلك، بل تركز على تجربة «المطور والمؤسسة» (B2D & B2B).
+              تغطي هذه الدراسة تجربة الاستخدام لكافة بوابات «دليل التقنيات القرآنية»: بوابة المستكشف العامة، كتالوج الموارد وتفاصيل الأصول، بوابة المطورين وإدارة المفاتيح، بوابة الناشرين لإدارة الموارد، ودليل معيار إتقان. ولا تشمل الدراسة بناء تطبيقات المصاحف النهائية للمستهلك، بل تركز على تجربة «المطور والمؤسسة» (B2D & B2B).
             </p>
           </div>
         </div>
@@ -606,7 +603,7 @@ function renderSectionContent(sectionId: string) {
                   </span>
                 </div>
                 <p className="text-xs text-fg-muted leading-relaxed">
-                  هذه الدراسة هي <strong>دراسة افتراضية قائمة على النمذجة والمحاكاة وليست دراسة ميدانية واقعية</strong>؛ أُعدّت بغرض <strong>تقريب الصورة العملية</strong> وتوضيح الرؤية أمام أصحاب المصلحة والمطورين، وبيان كيفية هندسة تجربة المستخدم (UX) وتجربة المطور (DX) لمنصة «رَتْق» كبنية تحتية رقمية قبل الدخول في مرحلة الاستثمار البرمجي والتنفيذ الفعلي.
+                  هذه الدراسة هي <strong>دراسة افتراضية قائمة على النمذجة والمحاكاة وليست دراسة ميدانية واقعية</strong>؛ أُعدّت بغرض <strong>تقريب الصورة العملية</strong> وتوضيح الرؤية أمام أصحاب المصلحة والمطورين، وبيان كيفية هندسة تجربة المستخدم (UX) وتجربة المطور (DX) لمنصة «دليل التقنيات القرآنية» كبنية تحتية رقمية قبل الدخول في مرحلة الاستثمار البرمجي والتنفيذ الفعلي.
                 </p>
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-1 text-[11px]">
                   <div className="p-2.5 rounded-lg bg-canvas border border-border/80">
@@ -927,7 +924,7 @@ function renderSectionContent(sectionId: string) {
               {[
                 {
                   step: '01. الاكتشاف (Discovery)',
-                  action: 'يبحث المطور في كتالوج رَتْق عن أصل برمجي (مثلاً: حزمة مزامنة تلاوات صوتية ورش).',
+                  action: 'يبحث المطور في كتالوج دليل التقنيات القرآنية عن أصل برمجي (مثلاً: حزمة مزامنة تلاوات صوتية ورش).',
                   friction: 'التخوف من عدم توفر روايات غير حفص.',
                   solution: 'فلترة دقيقة حسب الرواية، نوع الأصل، والتراخيص مع بحث فوري ذكي.',
                 },
@@ -957,7 +954,7 @@ function renderSectionContent(sectionId: string) {
                 },
                 {
                   step: '06. الاستخدام في الإنتاج (Production Usage)',
-                  action: 'يطلق تطبيقه ويتابع استهلاك الحصة ومعدل الطلبات في لوحة تحكم رَتْق.',
+                  action: 'يطلق تطبيقه ويتابع استهلاك الحصة ومعدل الطلبات في لوحة تحكم دليل التقنيات القرآنية.',
                   friction: 'تجاوز الحصة فجأة وتوقف التطبيق.',
                   solution: 'تنبيهات استباقية بالبريد عند بلوغ 80% من الحصة مع خيار طلب ترقية سلس.',
                 },
@@ -978,7 +975,7 @@ function renderSectionContent(sectionId: string) {
                     <span className="text-amber-800 dark:text-amber-300">{item.friction}</span>
                   </div>
                   <div className="sm:w-1/3 bg-emerald-50 dark:bg-emerald-950/40 p-2.5 rounded-md border border-emerald-200/60 dark:border-emerald-800/60">
-                    <span className="text-[10px] font-bold text-emerald-700 dark:text-emerald-400 block mb-0.5">حل رَتْق المصمم</span>
+                    <span className="text-[10px] font-bold text-emerald-700 dark:text-emerald-400 block mb-0.5">حل دليل التقنيات القرآنية المصمم</span>
                     <span className="text-emerald-800 dark:text-emerald-300">{item.solution}</span>
                   </div>
                 </div>
@@ -998,7 +995,7 @@ function renderSectionContent(sectionId: string) {
                 <thead>
                   <tr className="border-b border-border text-fg-subtle">
                     <th className="py-2.5 px-3 text-start">المعيار / المنصة</th>
-                    <th className="py-2.5 px-3 text-start font-bold text-ratq-700 dark:text-ratq-300">منصة رَتْق</th>
+                    <th className="py-2.5 px-3 text-start font-bold text-ratq-700 dark:text-ratq-300">دليل التقنيات القرآنية</th>
                     <th className="py-2.5 px-3 text-start">Quran.com API</th>
                     <th className="py-2.5 px-3 text-start">مستودعات GitHub</th>
                     <th className="py-2.5 px-3 text-start">RapidAPI</th>
@@ -1046,9 +1043,9 @@ function renderSectionContent(sectionId: string) {
           </div>
 
           <div className="p-4 rounded-xl border border-border bg-subtle/30">
-            <h4 className="text-xs font-bold text-fg mb-1.5">الفجوة والفرصة السوقية لـ «رَتْق»</h4>
+            <h4 className="text-xs font-bold text-fg mb-1.5">الفجوة والفرصة السوقية لـ «دليل التقنيات القرآنية»</h4>
             <p className="text-xs text-fg-muted leading-relaxed">
-              تنفرد رَتْق بسد الفجوة بين عالم الحوكمة الشرعية والعلمية الرصينة وعالم تجربة المطور البرمجية الحديثة (Developer Experience). لا توجد منصة عالمية تجمع التحقق الشرعي، وتوفير الخطوط العثمانية، وحزم SDK، وبيئات التجربة في واجهة عربية واحدة تحمي قدسية النص القرآني وتمكّن المطورين.
+              ينفرد دليل التقنيات القرآنية بسد الفجوة بين عالم الحوكمة الشرعية والعلمية الرصينة وعالم تجربة المطور البرمجية الحديثة (Developer Experience). لا توجد منصة عالمية تجمع التحقق الشرعي، وتوفير الخطوط العثمانية، وحزم SDK، وبيئات التجربة في واجهة عربية واحدة تحمي قدسية النص القرآني وتمكّن المطورين.
             </p>
           </div>
         </div>
@@ -1502,7 +1499,7 @@ function PrdView() {
           <span>وثيقة متطلبات المنتج (PRD)</span>
         </div>
         <h1 className="text-2xl sm:text-3xl font-bold text-fg">
-          وثيقة متطلبات مشروع «رَتْق» (Product Requirements Document)
+          وثيقة متطلبات مشروع «دليل التقنيات القرآنية» (Product Requirements Document)
         </h1>
         <p className="mt-2 text-sm text-fg-muted max-w-3xl leading-relaxed">
           المرجع الهندسي والتنفيذي الشامل للبنية التحتية البرمجية القرآنية، والمواصفات الفنية ومتطلبات الحوكمة والاعتماد.
@@ -1595,7 +1592,7 @@ function UserStoriesView() {
           priorityLabel: 'إلزامي (Must-Have)',
           asA: 'مطور تطبيقات قرآنية ويب وجوال',
           iWant: 'توليد مفاتيح API جديدة لبيئتي التجربة (Sandbox) والإنتاج (Production) مع تسمية كل مفتاح وتحديد نطاق الصلاحيات المقروءة وقيود النطاق',
-          soThat: 'أتمكن من استدعاء خدمات رتق البرمجية في تطبيقي بأمان وفصل بيئة التطوير عن بيئة المستخدمين النهائيين دون تسريب الاعتمادات.',
+          soThat: 'أتمكن من استدعاء خدمات دليل التقنيات القرآنية البرمجية في تطبيقي بأمان وفصل بيئة التطوير عن بيئة المستخدمين النهائيين دون تسريب الاعتمادات.',
           acceptance: [
             'توليد مفتاح آمن ببادئة دلالية (rq_test_ للتجربة و rq_live_ للإنتاج) يظهر كاملاً لمرة واحدة فقط للمطور مع زر نسخ فوري.',
             'تشفير وتجزئة المفتاح في قاعدة البيانات بـ Salted SHA-256، بحيث يظهر لاحقاً بالصيغة المقنعة (مثل: rq_live_••••••••3f8a).',
@@ -1617,7 +1614,7 @@ function UserStoriesView() {
           title: 'مراقبة معدلات الاستهلاك والحصص اللحظية ومعدل الطلب (RPM)',
           priority: 'must',
           priorityLabel: 'إلزامي (Must-Have)',
-          asA: 'مطور يدمج واجهات رتق في تطبيق واسع الانتشار',
+          asA: 'مطور يدمج واجهات دليل التقنيات القرآنية في تطبيق واسع الانتشار',
           iWant: 'لوحة استهلاك بصرية تعرض حجم الطلبات المستهلكة اليومية والشهرية، ومعدل الطلب بالدقيقة (RPM)، والحصة المتبقية',
           soThat: 'أضمن عدم تجاوز سقف الحصة المجانية أو الشريكة وتجنب تلقي مستخدمي تطبيقي لخطأ 429 (Too Many Requests).',
           acceptance: [
@@ -1919,7 +1916,7 @@ function UserStoriesView() {
           title: 'تقييم مصفوفة معايير وسام «إتقان» واحتساب النسبة المئوية آلياً',
           priority: 'must',
           priorityLabel: 'إلزامي (Must-Have)',
-          asA: 'محكم معتمد لمنظومة رتق',
+          asA: 'محكم معتمد لدليل التقنيات القرآنية',
           iWant: 'نموذج تدقيق رقمي موحد يحتوي على معايير أوسمة إتقان الموزونة مقسمة حسب الفئات (النص، التوثيق، الاستقرار، التراخيص)',
           soThat: 'أقوم بتقييم كل معيار على حدة وحساب النسبة المئوية المكتسبة آلياً لتحديد الوسام المستحق بموضوعية وشفافية.',
           acceptance: [
@@ -2171,7 +2168,7 @@ function UserStoriesView() {
           title: 'ضبط السياسات العامة وأوزان منظومة «إتقان» وإدارة شرائح الحصص',
           priority: 'could',
           priorityLabel: 'تحسيني (Could-Have)',
-          asA: 'مسؤول الحوكمة والسياسات في رتق',
+          asA: 'مسؤول الحوكمة والسياسات في دليل التقنيات القرآنية',
           iWant: 'واجهة إدارية مرنة لتعديل معايير النظام العامة: سقف الحصص المجانية والشريكة، أوزان معايير أوسمة إتقان، وتحديث قائمة التراخيص المعتمدة',
           soThat: 'تتكيف المنصة مع المستجدات التشريعية والتنظيمية دون الحاجة لإعادة بناء أو نشر شفرة المصدر.',
           acceptance: [
@@ -2236,7 +2233,7 @@ function UserStoriesView() {
         </div>
 
         <h1 className="text-2xl sm:text-3xl font-bold text-fg">
-          قصص المستخدم وتفاصيل لوحات التحكم الخمس لمشروع «رَتْق»
+          قصص المستخدم وتفاصيل لوحات التحكم الخمس لمشروع «دليل التقنيات القرآنية»
         </h1>
         <p className="mt-2 text-xs sm:text-sm text-fg-muted max-w-4xl leading-relaxed">
           وثيقة مواصفات وظيفية معتمدة تحدد بدقة متناهية متطلبات كل شاشة وعملية في لوحات التحكم الخمس وفق المعيار القياسي الدولي (بصفتي ... أريد ... حتى ...)، مع معايير القبول والتنفيذ (Acceptance Criteria) والقواعد البرمجية واتفاقيات مستوى الخدمة (SLAs).

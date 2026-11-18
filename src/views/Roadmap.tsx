@@ -107,7 +107,7 @@ export const RoadmapPage: React.FC = () => {
           {isAr ? 'خارطة طريق المنتج' : 'Product Roadmap'}
         </Badge>
         <h1 className="text-3xl md:text-5xl font-extrabold text-fg tracking-tight mb-4">
-          {isAr ? 'مسار بناء منظومة رتق' : 'The Path Forward for RATQ'}
+          {isAr ? 'مسار بناء دليل التقنيات القرآنية' : 'The Path Forward for Quran Tech Directory'}
         </h1>
         <p className="text-fg-muted text-lg leading-relaxed">
           {isAr
