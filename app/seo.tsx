@@ -3,7 +3,6 @@ import { cache } from 'react';
 import type { Metadata } from 'next';
 import { fetchAllResources, fetchResourceBySlug, PAYLOAD_API_URL } from '@/lib/payloadResources';
 import { SITE_NAME } from '@/lib/seoMeta';
-import { isMockRoute } from '@/lib/mockRoutes';
 import type { Resource } from '@/types';
 
 // A hung API must not hold the HTML: past this the page renders without the list and the SPA loads as usual.
@@ -11,9 +10,7 @@ const SERVER_TIMEOUT_MS = 6_000;
 const within = <T,>(p: Promise<T>): Promise<T> =>
   Promise.race([p, new Promise<never>((_, rej) => setTimeout(() => rej(new Error('server fetch timeout')), SERVER_TIMEOUT_MS))]);
 
-// Live mode only: mock-only pages stay reachable (with a sample-data banner) but must not be indexed.
-export const mockRobots = (path: string): Metadata['robots'] | undefined =>
-  PAYLOAD_API_URL && isMockRoute(path) ? { index: false, follow: false } : undefined;
+export { mockRobots } from '@/lib/mockRoutes';
 
 export const decodeSlug = (s: string): string => {
   try { return decodeURIComponent(s); } catch { return s; }

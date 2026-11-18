@@ -45,6 +45,23 @@ describe('beta build flag', () => {
     expect(robots.sitemap).toBeUndefined();
   });
 
+  // A page that returns a `robots` key replaces the layout's value (even with undefined), so pages must carry it too.
+  const loadMockRobots = async (beta: string | undefined) => {
+    vi.resetModules();
+    vi.stubEnv('NEXT_PUBLIC_BETA', beta as string);
+    vi.stubEnv('NEXT_PUBLIC_PAYLOAD_API_URL', 'https://api.example.test/api');
+    return (await import('@/lib/mockRoutes')).mockRobots;
+  };
+
+  it.each(['/about', '/contributors', '/categories'])('mockRobots_BetaBuild_NoindexOnEveryPage (%s)', async (p) =>
+    expect((await loadMockRobots('1'))(p)).toEqual({ index: false, follow: false }));
+
+  it('mockRobots_ProductionBuildRealPage_LeavesIndexingAlone', async () =>
+    expect((await loadMockRobots(undefined))('/about')).toBeUndefined());
+
+  it('mockRobots_ProductionBuildMockPage_Noindex', async () =>
+    expect((await loadMockRobots(undefined))('/categories')).toEqual({ index: false, follow: false }));
+
   it('robots_ProductionBuild_AllowsSiteAndListsSitemap', async () => {
     const { robots } = await load(undefined);
     expect(robots.rules).toMatchObject({ userAgent: '*', allow: '/' });
