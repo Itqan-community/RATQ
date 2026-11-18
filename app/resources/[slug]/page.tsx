@@ -15,6 +15,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const raw = (await params).slug;
   const slug = decodeSlug(raw);
   // Static SPA pages that live under /resources (roadmap, wizard, ...) keep their route title.
+  if (isReservedResourceSlug(slug) && !isKnownPath(`/resources/${slug}`)) return { title: 'Page Not Found', robots: { index: false, follow: false } };
   if (isReservedResourceSlug(slug)) return { title: { absolute: routeTitle(`/resources/${slug}`, 'ar') }, robots: mockRobots(`/resources/${slug}`) };
   const resource = await getResource(slug);
   if (resource === null) return { title: 'Resource Not Found', robots: { index: false, follow: false } };
