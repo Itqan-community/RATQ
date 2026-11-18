@@ -3,7 +3,7 @@
 // Pure (no DOM, no fs): runs in the Cloudflare Worker.
 import { matchPath } from 'react-router-dom';
 import legacy from './legacyRedirects.json';
-import { isMockRoute } from './mockRoutes';
+import { isHiddenRoute, isMockRoute } from './mockRoutes';
 
 // Static pages under /resources that must win over the /resources/:slug detail route.
 const RESERVED_RESOURCE_SLUGS = ['roadmap', 'wizard', 'stacks', 'preview-sections', 'preview-tree-explorer'];
@@ -38,5 +38,6 @@ export const PUBLIC_PATHS = [
   '/contact', '/legal',
 ].filter((p) => !isMockRoute(p));
 
+// Hidden (mock-only on production) paths count as unknown, so the server answers them with a real 404.
 export const isKnownPath = (pathname: string): boolean =>
-  PATTERNS.some((p) => matchPath({ path: p, end: true }, pathname) !== null);
+  !isHiddenRoute(pathname) && PATTERNS.some((p) => matchPath({ path: p, end: true }, pathname) !== null);

@@ -1,6 +1,6 @@
 // src/views/PublisherDashboard.tsx
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { SiteLink as Link } from '@/components/ui/SiteLink';
 import { useTranslation } from 'react-i18next';
 import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
@@ -246,7 +246,7 @@ export const PublisherDashboardPage: React.FC = () => {
             <h3 className="font-bold text-fg text-sm mb-3">
               {isAr ? 'أدوات الناشر' : 'Publisher Tools'}
             </h3>
-            <ul className="space-y-2 text-xs">
+            <ul className="space-y-2 text-xs [&>li:empty]:hidden">
               <li>
                 <Link to="/publisher/analytics" className="text-ratq-600 hover:underline flex items-center justify-between">
                   <span>{isAr ? 'إحصائيات الاستهلاك والتحميلات' : 'Usage & Download Analytics'}</span>

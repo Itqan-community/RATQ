@@ -70,8 +70,8 @@ const RELEASES: Release[] = [
   {
     version: 'v1.0.0',
     date: '2026-01-01',
-    title_ar: 'إطلاق المنصة الأولية لمجتمع رتق (RATQ Community)',
-    title_en: 'Initial Production Release of RATQ Community Platform',
+    title_ar: 'الإطلاق الأولي لدليل التقنيات القرآنية',
+    title_en: 'Initial Production Release of Quran Tech Directory',
     tag: 'major',
     items: [
       {
@@ -105,7 +105,7 @@ export const ChangelogPage: React.FC = () => {
           {isAr ? 'سجل التحديثات' : 'System Changelog'}
         </Badge>
         <h1 className="text-3xl md:text-5xl font-extrabold text-fg tracking-tight mb-4">
-          {isAr ? 'تطورات منصة رتق' : 'Platform Changelog & Releases'}
+          {isAr ? 'تطورات دليل التقنيات القرآنية' : 'Platform Changelog & Releases'}
         </h1>
         <p className="text-fg-muted text-lg max-w-2xl mx-auto">
           {isAr

@@ -1,18 +1,16 @@
 {
-  "name": "RATQ Community Platform — منصة مجتمع إتقان",
-  "short_name": "RATQ",
+  "name": "Quran Tech Directory — دليل التقنيات القرآنية",
+  "short_name": "Quran Tech",
   "description": "مرجعك الموثوق لتطوير البرمجيات القرآنية",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#FFFFFF",
-  "theme_color": "#047857",
+  "background_color": "#FAF7F2",
+  "theme_color": "#946E37",
   "dir": "rtl",
   "lang": "ar",
   "icons": [
-    {
-      "src": "/favicon.svg",
-      "sizes": "any",
-      "type": "image/svg+xml"
-    }
+    { "src": "/favicon.svg", "sizes": "any", "type": "image/svg+xml" },
+    { "src": "/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable" },
+    { "src": "/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
   ]
 }

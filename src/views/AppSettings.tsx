@@ -191,7 +191,7 @@ export const AppSettingsPage: React.FC = () => {
         </h2>
         <p className="text-xs text-fg-muted mb-6">
           {isAr
-            ? 'تلتزم رتق بالشفافية الكاملة وحق المستخدم في الوصول إلى بياناته وحذفها متى شاء.'
+            ? 'يلتزم دليل التقنيات القرآنية بالشفافية الكاملة وحق المستخدم في الوصول إلى بياناته وحذفها متى شاء.'
             : 'Export your entire profile metadata or request permanent deletion.'}
         </p>
 

@@ -1,6 +1,8 @@
 // src/components/layout/SiteFooter.tsx
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { SiteLink as Link } from '@/components/ui/SiteLink';
+import { IS_BETA, isHiddenRoute } from '@/lib/mockRoutes';
+import { BrandLogo } from '@/components/ui/BrandLogo';
 import { useTranslation } from 'react-i18next';
 import { ShieldCheck, Activity } from 'lucide-react';
 import { DemoBadge } from '@/components/ui/DemoBadge';
@@ -17,12 +19,8 @@ export const SiteFooter: React.FC = () => {
           <div className="col-span-2">
             <div className="flex items-center gap-2 mb-3">
               <Link to="/" className="flex flex-col items-start group select-none" title={t('site:footer.home_title')}>
-                <img
-                  src="/logo.png"
-                  alt={t('site:footer.logo_alt')}
-                  className="h-8 w-auto max-w-[90px] object-contain dark:invert"
-                />
-                {!isLive() && (
+                <BrandLogo />
+                {(!isLive() || IS_BETA) && (
                   <span className="text-[9px] font-bold text-ratq-700 dark:text-ratq-300 bg-ratq-50 dark:bg-ratq-950/80 border border-ratq-200 dark:border-ratq-800/80 px-1.5 py-0.5 rounded leading-none mt-1">
                     {t('site:footer.beta')}
                   </span>
@@ -43,7 +41,7 @@ export const SiteFooter: React.FC = () => {
           {/* Col 1: Platform */}
           <div>
             <h4 className="text-xs font-bold text-fg uppercase tracking-wider mb-3">{t('site:footer.platform')}</h4>
-            <ul className="flex flex-col gap-2 text-xs text-fg-muted">
+            <ul className="flex flex-col gap-2 text-xs text-fg-muted [&>li:empty]:hidden">
               <li><Link to="/about" className="hover:text-fg transition-colors font-semibold text-fg">{t('site:footer.about')}</Link></li>
               <li><Link to="/contributors" className="hover:text-fg transition-colors">{t('site:footer.contributors')}</Link></li>
               <li><Link to="/docs" className="hover:text-fg transition-colors">{t('site:footer.docs')}</Link></li>
@@ -57,7 +55,7 @@ export const SiteFooter: React.FC = () => {
           {/* Col 2: Standards & Dev */}
           <div>
             <h4 className="text-xs font-bold text-fg uppercase tracking-wider mb-3">{t('site:footer.standard')}</h4>
-            <ul className="flex flex-col gap-2 text-xs text-fg-muted">
+            <ul className="flex flex-col gap-2 text-xs text-fg-muted [&>li:empty]:hidden">
               <li><Link to="/standards" className="hover:text-fg transition-colors">{t('site:footer.standard_guide')}</Link></li>
               <li><Link to="/standards/checklist" className="hover:text-fg transition-colors">{t('site:footer.checklist')}<DemoBadge to="/standards/checklist" /></Link></li>
               <li><Link to="/standards/revocations" className="hover:text-fg transition-colors">{t('site:footer.revocations')}<DemoBadge to="/standards/revocations" /></Link></li>
@@ -69,7 +67,7 @@ export const SiteFooter: React.FC = () => {
           {/* Col 3: Legal & Status */}
           <div>
             <h4 className="text-xs font-bold text-fg uppercase tracking-wider mb-3">{t('site:footer.legal')}</h4>
-            <ul className="flex flex-col gap-2 text-xs text-fg-muted">
+            <ul className="flex flex-col gap-2 text-xs text-fg-muted [&>li:empty]:hidden">
               <li><Link to="/legal/terms" className="hover:text-fg transition-colors">{t('site:footer.terms')}</Link></li>
               <li><Link to="/legal/privacy" className="hover:text-fg transition-colors">{t('site:footer.privacy')}</Link></li>
               <li><Link to="/legal/dmca" className="hover:text-fg transition-colors">{t('site:footer.dmca')}</Link></li>
@@ -90,9 +88,9 @@ export const SiteFooter: React.FC = () => {
           <p>{t('common:footer.rights_reserved')}</p>
           <div className="flex items-center gap-4">
             <Link to="/ux-study" className="hover:text-fg transition-colors font-medium text-ratq-700 dark:text-ratq-400">{t('site:footer.ux_study')}</Link>
-            <span>•</span>
+            {!isHiddenRoute('/ux-study') && <span>•</span>}
             <Link to="/faq" className="hover:text-fg transition-colors">{t('site:footer.faq')}</Link>
-            <span>•</span>
+            {!isHiddenRoute('/faq') && <span>•</span>}
             <Link to="/contact" className="hover:text-fg transition-colors">{t('site:footer.contact')}</Link>
             <span>•</span>
             <a href="mailto:connect@itqan.dev" className="hover:text-fg transition-colors" dir="ltr">connect@itqan.dev</a>

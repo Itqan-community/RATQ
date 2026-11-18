@@ -7,7 +7,11 @@ export const MOCK_ROUTES = [
   '/app/saved', '/status', '/changelog', '/roadmap', '/faq', '/ux-study',
 ];
 
-export const isMockRoute = (path: string) => MOCK_ROUTES.some((r) => path === r || path.startsWith(`${r}/`));
+// Lowercased first: react-router matches paths case-insensitively, so /FAQ serves the same page as /faq.
+export const isMockRoute = (path: string) => {
+  const p = path.toLowerCase();
+  return MOCK_ROUTES.some((r) => p === r || p.startsWith(`${r}/`));
+};
 
 // Set only on the beta Pages project (built from the `beta` branch). Build-time, so it never depends on the host.
 export const IS_BETA = process.env.NEXT_PUBLIC_BETA === '1';
