@@ -14,19 +14,13 @@ import { Media } from './collections/Media'
 import { Reports } from './collections/Reports'
 import { Resources } from './collections/Resources'
 import { Users } from './collections/Users'
+import { corsOrigins } from './lib/siteOrigins'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
 
 export default buildConfig({
-  cors: [
-    'https://beta.ratq.itqan.dev',
-    'https://ratq.itqan.dev',
-    'https://admin.ratq.itqan.dev',
-    // quran.tech serves the same frontend (read-only browsing); sign-in redirects to ratq.itqan.dev because the session cookie is SameSite=Lax on .ratq.itqan.dev
-    'https://quran.tech',
-    'http://localhost:3000',
-  ],
+  cors: corsOrigins,
   admin: {
     user: Users.slug,
     importMap: {

@@ -23,15 +23,8 @@ describe('next.config redirects', () => {
     }
   });
 
-  it('nextConfigRedirects_QuranTechAuthPages_GoToCanonicalHostOnly', () => {
-    const hostRules = loadRules().filter((r) => r.has);
-    expect(hostRules.map((r) => r.source).sort()).toEqual(
-      ['/admin/:path*', '/app/:path*', '/auth/:path*', '/moderation/:path*', '/oauth/:path*', '/publisher/:path*', '/review/:path*'],
-    );
-    for (const r of hostRules) {
-      expect(r.has).toEqual([{ type: 'host', value: 'quran.tech' }]);
-      expect(r.destination.startsWith('https://ratq.itqan.dev/')).toBe(true);
-      expect(r.permanent).toBe(false);
-    }
+  // quran.tech is the canonical host (cookie on .quran.tech), so no host-based redirect may bounce sign-in elsewhere.
+  it('nextConfigRedirects_NoHostRules_AuthStaysOnQuranTech', () => {
+    expect(loadRules().filter((r) => r.has)).toEqual([]);
   });
 });
