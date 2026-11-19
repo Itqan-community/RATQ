@@ -2,7 +2,7 @@
 import { isHttpUrl } from './resourceMapping';
 import type { Resource } from '@/types';
 
-export const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL || 'https://ratq.itqan.dev').replace(/\/$/, '');
+export const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL || 'https://quran.tech').replace(/\/$/, '');
 export const SITE_NAME = 'Quran Tech Directory';
 export const SITE_NAME_AR = 'دليل التقنيات القرآنية';
 export const SITE_DESCRIPTION =
