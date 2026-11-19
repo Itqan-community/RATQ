@@ -83,7 +83,7 @@ interface PayloadDoc {
 }
 
 const CMS_GALLERY_BASE = () => process.env.NEXT_PUBLIC_CMS_GALLERY_URL || 'https://cms.itqan.dev/gallery/asset';
-const PAYLOAD_BASE = () => process.env.NEXT_PUBLIC_PAYLOAD_API_URL || 'https://api.ratq.itqan.dev/api';
+const PAYLOAD_BASE = () => process.env.NEXT_PUBLIC_PAYLOAD_API_URL || 'https://api.quran.tech/api';
 const PAYLOAD_PAGE_SIZE = 100;
 const PAYLOAD_MAX_PAGES = 50;
 const TIMEOUT_MS = 15_000;
