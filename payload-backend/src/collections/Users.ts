@@ -1,5 +1,6 @@
 import type { Access, CollectionConfig, FieldAccess } from 'payload'
 import { passwordValidation } from './hooks/validate-password'
+import { sessionCookieDomain } from '../lib/siteOrigins'
 
 // Users carry email addresses, so a signed-in account may only read its own
 // record (admins read all). Other people's names reach the UI through
@@ -37,9 +38,8 @@ export const Users: CollectionConfig = {
       // 'Lax' protects against CSRF while allowing top-level link navigations
       sameSite: 'Lax',
 
-      // // Shares the cookie across all *.itqan.dev subdomains in production
-      // // Omitted in development so localhost cookies are not scoped improperly
-      domain: process.env.NODE_ENV === 'production' ? '.ratq.itqan.dev'  : undefined,
+      // Shared across the site's subdomains in production (COOKIE_DOMAIN), omitted in development
+      domain: sessionCookieDomain(),
     },
   },
   hooks: {

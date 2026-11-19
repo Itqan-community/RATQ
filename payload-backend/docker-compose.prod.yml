@@ -26,6 +26,7 @@ services:
       GITHUB_CLIENT_ID: ${GITHUB_CLIENT_ID}
       GITHUB_CLIENT_SECRET: ${GITHUB_CLIENT_SECRET}
       FRONTEND_URL: ${FRONTEND_URL}
+      COOKIE_DOMAIN: ${COOKIE_DOMAIN:-}
       OAUTH_CALLBACK_URL: ${OAUTH_CALLBACK_URL}
     volumes:
       - payload_media:/app/media

@@ -4,6 +4,7 @@ import { getPayload } from 'payload'
 
 import config from '@payload-config'
 import { signSessionJWT, verifyExchangeToken } from '@/lib/oauth/github'
+import { sessionCookieDomain } from '@/lib/siteOrigins'
 
 // Redeems the one-time ticket the GitHub callback put in the redirect
 // fragment for the real session token (issue #229). The session token is
@@ -126,7 +127,7 @@ export async function POST(request: Request) {
       path: '/',
       maxAge: tokenExpiration,
       expires: expiresAt,
-      domain: process.env.NODE_ENV === 'production' ? '.ratq.itqan.dev' : undefined,
+      domain: sessionCookieDomain(),
     })
 
   return response;

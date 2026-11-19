@@ -87,7 +87,7 @@ describe('payloadToApi', () => {
 
   it('resolves a relative upload url against the API origin and falls back to detected language', () => {
     const r = payloadToApi(doc(1, { image: { url: '/media/a.png' }, description: 'وصف عربي' }) as never);
-    expect(r.image_url).toBe('https://api.ratq.itqan.dev/media/a.png');
+    expect(r.image_url).toBe('https://api.quran.tech/media/a.png');
     expect(r.content_language).toBe('ar');
   });
 });
