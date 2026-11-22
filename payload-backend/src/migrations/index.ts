@@ -15,6 +15,7 @@ import * as migration_20260830_080003_add_access_requests_revoked_status from '.
 import * as migration_20260921_095316_add_resources_website_url from './20260921_095316_add_resources_website_url';
 import * as migration_20260923_105027_add_resources_audio_preview_fields from './20260923_105027_add_resources_audio_preview_fields';
 import * as migration_20261004_120000_add_resources_content_language from './20261004_120000_add_resources_content_language';
+import * as migration_20261122_081736_add_resources_sheet_fields from './20261122_081736_add_resources_sheet_fields';
 
 export const migrations = [
   {
@@ -101,5 +102,10 @@ export const migrations = [
     up: migration_20261004_120000_add_resources_content_language.up,
     down: migration_20261004_120000_add_resources_content_language.down,
     name: '20261004_120000_add_resources_content_language',
+  },
+  {
+    up: migration_20261122_081736_add_resources_sheet_fields.up,
+    down: migration_20261122_081736_add_resources_sheet_fields.down,
+    name: '20261122_081736_add_resources_sheet_fields'
   },
 ];

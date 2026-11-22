@@ -22,8 +22,10 @@ import { Select } from '@/components/ui/Select';
 import { Report, Review } from '@/types';
 import { useAuthStore } from '@/store/useAuthStore';
 import { deleteComment, fetchComments, postComment } from '@/lib/payloadComments';
-import { formatDate } from '@/lib/format';
+import { formatDate, versionLabel } from '@/lib/format';
 import { localizeResource } from '@/lib/localizeResource';
+import { hasLicenseBadge, isHttpUrl, licenseLabel } from '@/lib/resourceMapping';
+import { sourceRows } from '@/lib/sourceDetails';
 import { isLive } from '@/lib/payloadAuth';
 import { resourceMeta, SITE_NAME } from '@/lib/seoMeta';
 import { useResourceDetail } from '@/lib/useResourceDetail';
@@ -215,10 +217,10 @@ export const ResourceDetails: React.FC = () => {
 
               <div className="flex flex-wrap items-center gap-2">
                 <AccessBadge level={resource.access_level} />
-                <LicenseBadge licenseId={resource.license_id} spdx={resource.license_spdx} />
+                {hasLicenseBadge(resource) && <LicenseBadge licenseId={resource.license_id} spdx={resource.license_spdx} />}
                 {resource.latest_version && (
                   <span className="text-xs font-mono text-fg-subtle bg-white/80 dark:bg-slate-900/80 border border-border/70 px-2 py-0.5 rounded shadow-2xs">
-                    v{resource.latest_version}
+                    {versionLabel(resource.latest_version)}
                   </span>
                 )}
                 {headerHost && (
@@ -444,7 +446,9 @@ export const ResourceDetails: React.FC = () => {
                 </div>
                 <div className="flex flex-col gap-2.5 text-fg leading-relaxed">
                   <p>
-                    <strong>{t('detail.license_applied')}</strong> {resource.license?.name_ar || resource.license_id} ({resource.license_spdx || resource.license?.name_en || resource.license_id})
+                    <strong>{t('detail.license_applied')}</strong> {hasLicenseBadge(resource)
+                      ? `${resource.license?.name_ar || resource.license_id} (${resource.license_spdx || resource.license?.name_en || resource.license_id})`
+                      : licenseLabel(resource, locale === 'en') ?? t('detail.src_not_stated')}
                   </p>
                   {resource.license?.notes_ar && (
                     <p className="text-fg-subtle bg-subtle p-3 rounded-lg border border-border-subtle">
@@ -663,12 +667,27 @@ export const ResourceDetails: React.FC = () => {
             {([
               [t('detail.tech_publisher'), resource.publisher?.name_ar],
               [t('detail.tech_type'), resource.resource_type],
-              [t('detail.tech_version'), resource.latest_version && `v${resource.latest_version}`],
+              [t('detail.tech_version'), resource.latest_version && versionLabel(resource.latest_version)],
               [t('detail.tech_published'), resource.created_at && formatDate(resource.created_at)],
-              [t('detail.tech_license'), resource.license_spdx || resource.license?.name_en],
+              [t('detail.tech_license'), licenseLabel(resource, locale === 'en') ?? (resource.sheet_id ? <span className="text-fg-subtle font-normal">{t('detail.src_not_stated')}</span> : undefined)],
               [t('detail.tech_status'), resource.status === 'published' ? t('detail.status_published') : resource.status],
               [t('detail.tech_badge'), resource.itqan_level === 'none' ? t('detail.no') : t('detail.yes')],
-            ] as const).map(([label, value]) =>
+              // Sheet-imported rows: a missing value reads "Not stated" rather than vanishing.
+              ...sourceRows(resource, locale === 'en').map((r): [string, React.ReactNode] => [
+                t(`detail.src_${r.key}`),
+                !r.value ? (
+                  <span className="text-fg-subtle font-normal">{t('detail.src_not_stated')}</span>
+                ) : r.url && isHttpUrl(r.value) ? (
+                  <a href={r.value} target="_blank" rel="noopener noreferrer" dir="ltr" className="text-qtd-700 hover:underline">
+                    {r.value}
+                  </a>
+                ) : r.key === 'has_api' ? (
+                  t(`detail.src_api_${r.value}`)
+                ) : (
+                  r.value
+                ),
+              ]),
+            ] as [string, React.ReactNode][]).map(([label, value]) =>
               value ? (
                 <div key={label} className="flex justify-between gap-3 py-1.5 border-b border-border-subtle last:border-0">
                   <span className="text-fg-subtle shrink-0">{label}:</span>
@@ -849,7 +868,7 @@ export const ResourceDetails: React.FC = () => {
               <h4 dir={loc.titleDir} className="font-bold text-fg text-sm">{loc.title}</h4>
               <div className="flex items-center gap-1.5 shrink-0">
                 <ItqanBadge level={resource.itqan_level} />
-                <LicenseBadge licenseId={resource.license_id} spdx={resource.license_spdx} />
+                {hasLicenseBadge(resource) && <LicenseBadge licenseId={resource.license_id} spdx={resource.license_spdx} />}
               </div>
             </div>
             <p dir={loc.descriptionDir} className="text-xs text-fg-muted line-clamp-2 leading-relaxed">

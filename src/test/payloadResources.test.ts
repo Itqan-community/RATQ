@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { toDesignResource, type PayloadResourceDoc } from '@/lib/payloadResources';
+import { hasLicenseBadge, licenseLabel } from '@/lib/resourceMapping';
 
 const doc: PayloadResourceDoc = {
   id: 7,
@@ -44,6 +45,48 @@ describe('toDesignResource', () => {
     expect(r.license?.id).not.toMatch(/^cc/);
     expect(r.license?.name_en).toBe('MIT');
     expect(r.license_spdx).toBe('MIT');
+  });
+
+  it.each([null, '', '  '])('toDesignResource_EmptyLicense_%j_MapsToUnspecifiedWithoutThrowing', (license) => {
+    const r = toDesignResource({ ...doc, license });
+    expect(r.license?.name_en).toBe('Unspecified');
+    expect(r.license?.id).toMatch(/^spdx-/);
+    expect(r.license_spdx).toBeUndefined();
+    expect(hasLicenseBadge(r)).toBe(false);
+  });
+
+  describe('license ids versus free text', () => {
+    const arabic = 'الترخيص مفتوح للاستخدام غير التجاري مع ذكر المصدر، ويرجى مراجعة الشروط الكاملة على موقع الجهة المالكة.';
+    const english = 'Free for non-commercial use with attribution; see the owner site for the full terms.';
+
+    it.each(['MIT', 'CC-BY-4.0', 'Apache-2.0'])('toDesignResource_License_%s_KeepsIdAndBadge', (license) => {
+      const r = toDesignResource({ ...doc, license });
+      expect(r.license_spdx).toBe(license);
+      expect(r.license_custom_text).toBeUndefined();
+      expect(hasLicenseBadge(r)).toBe(true);
+    });
+
+    it.each([arabic, english])('toDesignResource_FreeTextLicense_IsPlainTextNotAPill', (license) => {
+      const r = toDesignResource({ ...doc, license, sheet_id: 's1', license_en: english });
+      expect(r.license_spdx).toBeUndefined();
+      expect(r.license_custom_text).toBe(license);
+      expect(hasLicenseBadge(r)).toBe(false);
+      expect(licenseLabel(r, false)).toBe(license);
+      expect(licenseLabel(r, true)).toBe(english);
+    });
+
+    it('licenseLabel_ArabicOnlyInEnglishLocale_FallsBackToArabic', () => {
+      const r = toDesignResource({ ...doc, license: arabic, sheet_id: 's1' });
+      expect(licenseLabel(r, true)).toBe(arabic);
+    });
+
+    it('licenseLabel_SheetRowWithoutLicense_IsUndefinedSoTheViewShowsNotStated', () => {
+      expect(licenseLabel(toDesignResource({ ...doc, license: null, sheet_id: 's1' }), true)).toBeUndefined();
+    });
+
+    it('licenseLabel_NonSheetIdLicense_Unchanged', () => {
+      expect(licenseLabel(toDesignResource({ ...doc, license: 'MIT' }), true)).toBe('MIT');
+    });
   });
 
   it.each([
@@ -106,5 +149,36 @@ describe('toDesignResource', () => {
     expect(r.itqan_level).toBe('none');
     expect(r.repo_url).toBeUndefined();
     expect(r.latest_version).toBeUndefined();
+  });
+
+  it('toDesignResource_SheetFields_MapsBilingualApiAndLists', () => {
+    const r = toDesignResource({
+      ...doc, sheet_id: 'S1', name_en: ' English name ', short_description_en: 'Short en', description_en: 'Long en',
+      content_domain: 'تفسير', content_domain_en: 'Tafsir', riwayah: 'حفص', riwayah_en: '',
+      languages: ['Arabic', 5, ' '], tags: ['a', 'b'], has_api: 'yes',
+      base_url: 'https://api.test', api_key_url: 'javascript:1', authentication: 'Key', rate_limits_en: '10/s',
+      data_formats: ['JSON'], download_url: 'https://d.test', repository: 'ftp://x', license_en: 'CC BY',
+      attribution: 'attr', scholarly_review_en: 'reviewed', source_status: 'Active', verified_on: '2026-01-01',
+    });
+    expect([r.sheet_id, r.title_en, r.summary_en, r.description_en]).toEqual(['S1', 'English name', 'Short en', 'Long en']);
+    expect(r.content_domain).toEqual({ ar: 'تفسير', en: 'Tafsir' });
+    expect(r.riwayah).toEqual({ ar: 'حفص', en: undefined });
+    expect(r.source_languages).toEqual(['Arabic']);
+    expect(r.tags).toEqual(['a', 'b']);
+    expect(r.has_api).toBe('yes');
+    expect(r.api).toEqual({
+      base_url: 'https://api.test', api_key_url: undefined, playground_url: undefined, sample_request: undefined,
+      authentication: { ar: 'Key', en: undefined }, rate_limits: { ar: undefined, en: '10/s' }, data_formats: ['JSON'],
+    });
+    expect([r.download_url, r.repository_url]).toEqual(['https://d.test', undefined]); // non-http(s) dropped
+    expect([r.license_en, r.source_status, r.verified_on]).toEqual(['CC BY', 'Active', '2026-01-01']);
+    expect(r.attribution).toEqual({ ar: 'attr', en: undefined });
+    expect(r.scholarly_review).toEqual({ ar: undefined, en: 'reviewed' });
+  });
+
+  it('toDesignResource_NoSheetFieldsOrJunkValues_LeavesThemUndefined', () => {
+    const r = toDesignResource({ ...doc, has_api: 'bogus' as never, languages: 'Arabic', tags: null, base_url: null });
+    expect([r.sheet_id, r.has_api, r.api, r.source_languages, r.content_domain, r.title_en]).toEqual([undefined, undefined, undefined, undefined, undefined, undefined]);
+    expect(r.tags).toEqual([]);
   });
 });

@@ -1,7 +1,8 @@
 // Catalog URL state and filter semantics, ported from live (?search,type,license xN,publisher xN,sort) so
 // bookmarked links keep working. Pure functions only; the Catalog view owns the router wiring.
 import { normalizeArabic } from './format';
-import type { Resource } from '@/types';
+import { pickText } from './localizeResource';
+import type { Bilingual, Resource } from '@/types';
 
 export const SORT_OPTIONS = ['relevance', 'downloads', 'newest', 'oldest', 'name_asc', 'name_desc'] as const;
 export type SortOption = (typeof SORT_OPTIONS)[number];
@@ -11,6 +12,10 @@ export interface CatalogQuery {
   types: string[];
   licenses: string[];
   publishers: string[];
+  domains: string[];
+  riwayat: string[];
+  languages: string[];
+  hasApi: string[];
   sort: SortOption;
 }
 
@@ -22,6 +27,10 @@ export function parseCatalogQuery(p: URLSearchParams): CatalogQuery {
     types: p.getAll('type'),
     licenses: p.getAll('license'),
     publishers: p.getAll('publisher'),
+    domains: p.getAll('domain'),
+    riwayat: p.getAll('riwayah'),
+    languages: p.getAll('language'),
+    hasApi: p.getAll('has_api'),
     sort: SORT_OPTIONS.includes(sort as SortOption) ? (sort as SortOption) : 'relevance',
   };
 }
@@ -35,7 +44,9 @@ export function withQuery(prev: URLSearchParams, patch: Partial<CatalogQuery>): 
     p.delete('search');
     if (patch.search) p.set('search', patch.search);
   }
-  const repeated: [keyof CatalogQuery, string][] = [['types', 'type'], ['licenses', 'license'], ['publishers', 'publisher']];
+  const repeated: [keyof CatalogQuery, string][] = [['types', 'type'], ['licenses', 'license'], ['publishers', 'publisher'],
+    ['domains', 'domain'], ['riwayat', 'riwayah'], ['languages', 'language'], ['hasApi', 'has_api'],
+  ];
   for (const [field, key] of repeated) {
     const v = patch[field] as string[] | undefined;
     if (!v) continue;
@@ -132,3 +143,38 @@ export function publisherOptions(list: Resource[]): PublisherOption[] {
   }
   return [...byKey.values()].sort((a, b) => a.name.localeCompare(b.name, 'ar'));
 }
+
+// Sources-sheet facets. The URL and the match carry the stored value (Arabic first), so a bookmark survives a language
+// switch; only the option label follows the UI language.
+export interface FacetOption { key: string; label: string; count: number }
+
+const bilingualKey = (b?: Bilingual) => (b?.ar || b?.en ? [(b.ar || b.en)!] : []);
+export const domainKeys = (r: Resource) => bilingualKey(r.content_domain);
+export const riwayahKeys = (r: Resource) => bilingualKey(r.riwayah);
+export const languageKeys = (r: Resource) => r.source_languages ?? [];
+export const hasApiKeys = (r: Resource) => (r.has_api ? [r.has_api] : []);
+
+export const matchesFacet = (keys: string[], selected: string[]) => selected.length === 0 || keys.some((k) => selected.includes(k));
+
+function facetOptions(list: Resource[], keysOf: (r: Resource) => string[], labelOf: (r: Resource, key: string) => string, en: boolean): FacetOption[] {
+  const byKey = new Map<string, FacetOption>();
+  for (const r of list) {
+    for (const key of keysOf(r)) {
+      const o = byKey.get(key) ?? { key, label: labelOf(r, key), count: 0 };
+      o.count += 1;
+      byKey.set(key, o);
+    }
+  }
+  return [...byKey.values()].sort((a, b) => a.label.localeCompare(b.label, en ? 'en' : 'ar'));
+}
+
+export const domainOptions = (list: Resource[], en: boolean) => facetOptions(list, domainKeys, (r, k) => pickText(r.content_domain, en) ?? k, en);
+export const riwayahOptions = (list: Resource[], en: boolean) => facetOptions(list, riwayahKeys, (r, k) => pickText(r.riwayah, en) ?? k, en);
+export const languageOptions = (list: Resource[], en: boolean) => facetOptions(list, languageKeys, (_, k) => k, en);
+
+// Yes/No/Planned only ('iframe' is an embed detail, not something a visitor filters by); label is the translation key suffix.
+const HAS_API_FILTER = ['yes', 'no', 'planned'];
+export const hasApiOptions = (list: Resource[]) =>
+  facetOptions(list, hasApiKeys, (_, k) => k, false)
+    .filter((o) => HAS_API_FILTER.includes(o.key))
+    .sort((a, b) => HAS_API_FILTER.indexOf(a.key) - HAS_API_FILTER.indexOf(b.key));

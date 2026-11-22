@@ -1,6 +1,6 @@
 This is the RATQ Payload CMS backend, a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
-Deploys automatically to the droplet on push to `beta` via `.github/workflows/deploy-backend.yml`.
+Deploys automatically on push: `main` goes to the production droplet via `.github/workflows/deploy-backend.yml`, and `beta` goes to the isolated beta droplet (`quran-tech-beta-api.itqan.dev`, its own database) via `.github/workflows/deploy-backend-beta.yml`.
 
 ## Getting Started
 

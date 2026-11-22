@@ -159,7 +159,7 @@ export interface EditableResource {
 export function docToForm(doc: PayloadResourceDoc): WizardForm {
   return {
     title_ar: doc.name, summary_ar: doc.short_description, readme_ar: doc.description,
-    resource_type: doc.type, license_spdx: doc.license, version: doc.version ?? '',
+    resource_type: doc.type, license_spdx: doc.license ?? '', version: doc.version ?? '',
     repository_url: doc.github_url ?? '', documentation_url: doc.documentation_url ?? '', website_url: doc.website_url ?? '',
   };
 }

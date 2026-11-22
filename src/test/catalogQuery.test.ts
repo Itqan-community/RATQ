@@ -1,7 +1,13 @@
 import { describe, expect, it } from 'vitest';
 import {
   CC_LICENSE_ROWS,
+  domainKeys,
+  domainOptions,
+  hasApiKeys,
+  hasApiOptions,
+  languageOptions,
   licenseRowHref,
+  matchesFacet,
   matchesLicenseFilter,
   matchesPublisherFilter,
   matchesSearch,
@@ -10,6 +16,7 @@ import {
   parseCatalogQuery,
   publisherKey,
   publisherOptions,
+  riwayahOptions,
   sortResources,
   withQuery,
 } from '@/lib/catalogQuery';
@@ -47,7 +54,7 @@ describe('normalizeArabic', () => {
 describe('parseCatalogQuery', () => {
   it('parseCatalogQuery_LiveParams_ReadsAllRepeatedValues', () => {
     const q = parseCatalogQuery(new URLSearchParams('search=tabari&type=recitation&license=CC0&license=CC-BY-4.0&publisher=cms:2&publisher=cms:3&sort=name_asc&page=2'));
-    expect(q).toEqual({ search: 'tabari', types: ['recitation'], licenses: ['CC0', 'CC-BY-4.0'], publishers: ['cms:2', 'cms:3'], sort: 'name_asc' });
+    expect(q).toEqual({ search: 'tabari', types: ['recitation'], licenses: ['CC0', 'CC-BY-4.0'], publishers: ['cms:2', 'cms:3'], domains: [], riwayat: [], languages: [], hasApi: [], sort: 'name_asc' });
   });
   it('parseCatalogQuery_LegacyQAlias_UsedOnlyWhenSearchAbsent', () => {
     expect(parseCatalogQuery(new URLSearchParams('q=abc')).search).toBe('abc');
@@ -179,5 +186,50 @@ describe('publisher filter', () => {
     const opts = publisherOptions([cms, cms, payload, none, community]);
     expect(opts.map((o) => o.key).sort()).toEqual(['cms:2', 'payload:5']);
     expect(opts.find((o) => o.key === 'cms:2')?.name).toBe('دار الإسلام');
+  });
+});
+
+describe('sheet facets', () => {
+  const a = res({ id: 'a', content_domain: { ar: 'تفسير', en: 'Tafsir' }, riwayah: { ar: 'حفص' }, source_languages: ['Arabic', 'English'], has_api: 'yes' });
+  const b = res({ id: 'b', content_domain: { ar: 'تفسير' }, source_languages: ['Arabic'], has_api: 'no' });
+  const c = res({ id: 'c', content_domain: { en: 'Audio' }, has_api: 'iframe' });
+  const d = res({ id: 'd' });
+  const all = [a, b, c, d];
+
+  it('parseCatalogQuery_FacetParams_ReadsDomainRiwayahLanguageHasApi', () => {
+    const q = parseCatalogQuery(new URLSearchParams('domain=x&domain=y&riwayah=r&language=l&has_api=yes'));
+    expect([q.domains, q.riwayat, q.languages, q.hasApi]).toEqual([['x', 'y'], ['r'], ['l'], ['yes']]);
+  });
+  it('withQuery_FacetPatch_RoundTripsAndResetsPage', () => {
+    const p = withQuery(new URLSearchParams('page=3&domain=old'), { domains: ['a', 'b'], hasApi: ['yes'] });
+    expect(p.getAll('domain')).toEqual(['a', 'b']);
+    expect(p.get('has_api')).toBe('yes');
+    expect(p.has('page')).toBe(false);
+    expect(withQuery(p, { domains: [] }).has('domain')).toBe(false);
+  });
+  it('matchesFacet_EmptySelection_MatchesEverythingElseNeedsAnOverlap', () => {
+    expect(matchesFacet(domainKeys(d), [])).toBe(true);
+    expect(matchesFacet(domainKeys(d), ['تفسير'])).toBe(false);
+    expect(matchesFacet(domainKeys(a), ['تفسير', 'x'])).toBe(true);
+    expect(matchesFacet(hasApiKeys(a), ['no'])).toBe(false);
+  });
+  it('domainOptions_Language_LabelsFollowUiAndFallBackToTheOtherLanguage', () => {
+    expect(domainOptions(all, false)).toEqual([
+      { key: 'تفسير', label: 'تفسير', count: 2 },
+      { key: 'Audio', label: 'Audio', count: 1 }, // ar collation: Arabic script first
+    ]);
+    expect(domainOptions(all, true).find((o) => o.key === 'تفسير')?.label).toBe('Tafsir');
+    expect(domainOptions([b], true)[0].label).toBe('تفسير'); // no English: never blank
+  });
+  it('languageOptions_AndRiwayah_CountResourcesAndSkipEmpty', () => {
+    expect(languageOptions(all, false)).toEqual([
+      { key: 'Arabic', label: 'Arabic', count: 2 },
+      { key: 'English', label: 'English', count: 1 },
+    ]);
+    expect(riwayahOptions(all, false)).toEqual([{ key: 'حفص', label: 'حفص', count: 1 }]);
+    expect(languageOptions([d], false)).toEqual([]);
+  });
+  it('hasApiOptions_OnlyYesNoPlannedInThatOrder_IframeExcluded', () => {
+    expect(hasApiOptions([...all, res({ has_api: 'planned' })]).map((o) => o.key)).toEqual(['yes', 'no', 'planned']);
   });
 });
