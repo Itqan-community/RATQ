@@ -11,10 +11,10 @@ afterEach(() => {
 })
 
 describe('sessionCookieDomain', () => {
-  it('sessionCookieDomain_productionWithoutEnv_keepsLegacyDomain', () => {
+  it('sessionCookieDomain_productionWithoutEnv_defaultsToQuranTech', () => {
     env.NODE_ENV = 'production'
     delete env.COOKIE_DOMAIN
-    expect(sessionCookieDomain()).toBe('.ratq.itqan.dev')
+    expect(sessionCookieDomain()).toBe('.quran.tech')
   })
 
   it('sessionCookieDomain_productionWithEnv_usesEnvDomain', () => {
@@ -23,10 +23,10 @@ describe('sessionCookieDomain', () => {
     expect(sessionCookieDomain()).toBe('.quran.tech')
   })
 
-  it('sessionCookieDomain_emptyEnv_fallsBackToLegacyDomain', () => {
+  it('sessionCookieDomain_emptyEnv_fallsBackToQuranTech', () => {
     env.NODE_ENV = 'production'
     env.COOKIE_DOMAIN = ''
-    expect(sessionCookieDomain()).toBe('.ratq.itqan.dev')
+    expect(sessionCookieDomain()).toBe('.quran.tech')
   })
 
   it('sessionCookieDomain_development_isUndefinedEvenWithEnv', () => {
