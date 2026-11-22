@@ -1,7 +1,10 @@
 // First sentence of a description, at most `max` characters, never cut mid-word (an ellipsis marks a cut).
 // A terminator only ends a sentence outside parentheses, before whitespace plus an uppercase or Arabic letter (or the
 // end), and not after a common abbreviation: versions like "v1.5" and "Dr. X" stay whole.
-const ABBREVIATIONS = new Set(['dr', 'mr', 'mrs', 'ms', 'st', 'prof', 'd', 'ed', 'e.g', 'i.e', 'vs', 'etc'])
+const ABBREVIATIONS = new Set(['dr', 'mr', 'mrs', 'ms', 'st', 'prof', 'ed', 'e.g', 'i.e', 'vs', 'etc', 'أ.د'])
+
+// A single letter is an initial ("Sofian S.", Arabic "د.").
+const isAbbreviation = (token: string) => ABBREVIATIONS.has(token) || /^\p{L}$/u.test(token)
 
 function sentenceEnd(flat: string): number {
   let depth = 0
@@ -10,7 +13,7 @@ function sentenceEnd(flat: string): number {
     if (ch === '(') depth++
     else if (ch === ')') depth = Math.max(0, depth - 1)
     else if (depth === 0 && /[.!?؟]/.test(ch) && /^(\s*$|\s[\p{Lu}؀-ۿ])/u.test(flat.slice(i + 1, i + 3))) {
-      if (ch === '.' && ABBREVIATIONS.has(/[A-Za-z.]*$/.exec(flat.slice(0, i))![0].toLowerCase())) continue
+      if (ch === '.' && isAbbreviation(/[\p{L}.]*$/u.exec(flat.slice(0, i))![0].toLowerCase())) continue
       return i
     }
   }
