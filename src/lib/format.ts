@@ -60,3 +60,6 @@ export function formatFileSize(bytes: number): string {
   const i = Math.floor(Math.log(bytes) / Math.log(k));
   return parseFloat((bytes / Math.pow(k, i)).toFixed(1)) + ' ' + sizes[i];
 }
+
+// Sheet versions arrive as free text ("v4", "No updates"); only a leading digit takes the "v" prefix.
+export const versionLabel = (v: string): string => (/^\d/.test(v) ? `v${v}` : v);

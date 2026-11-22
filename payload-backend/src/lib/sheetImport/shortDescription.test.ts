@@ -14,6 +14,21 @@ describe('shortDescription', () => {
     expect(shortDescription('Uses v1.5 of the font. More text.')).toBe('Uses v1.5 of the font.')
   })
 
+  it('shortDescription_AbbreviationDr_DoesNotCut', () => {
+    expect(shortDescription('Translated by Dr. Muhammad Taqi. Second sentence.')).toBe('Translated by Dr. Muhammad Taqi.')
+    expect(shortDescription('Edited by Prof. Ali and St. John, e.g. a team. Next one.')).toBe('Edited by Prof. Ali and St. John, e.g. a team.')
+  })
+
+  it('shortDescription_OpenParen_DoesNotCut', () => {
+    expect(shortDescription('A corpus (by Dr. Ali. Second part) of texts. More.')).toBe('A corpus (by Dr. Ali. Second part) of texts.')
+    expect(shortDescription('An unclosed (note. Still going')).toBe('An unclosed (note. Still going')
+  })
+
+  it('shortDescription_LowercaseAfterDot_DoesNotCut', () => {
+    expect(shortDescription('Hosted at example.org and more. Next.')).toBe('Hosted at example.org and more.')
+    expect(shortDescription('Ends here. نص عربي.')).toBe('Ends here.')
+  })
+
   it('keeps text without a terminator whole and collapses whitespace', () => {
     expect(shortDescription('one\n  two')).toBe('one two')
   })

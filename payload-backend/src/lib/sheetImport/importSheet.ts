@@ -35,6 +35,11 @@ function hasApi(value: string | undefined): Resource['has_api'] {
   return (m[1] === 'no' && m[2] ? m[2] : m[1]) as Resource['has_api']
 }
 
+// The sheet writes "Turkish (tr), left-to-right": drop the direction tokens and the ISO suffix so "Urdu (ur)" and "Urdu" merge.
+const languagesOf = (value: string): string[] => [
+  ...new Set(splitMulti(value).filter((t) => !/^(left|right)-to-(left|right)$/i.test(t)).map((t) => t.replace(/\s*\([a-z]{2,3}\)$/i, ''))),
+]
+
 function prepare(row: SheetRow) {
   const id = cell(row, 'id')
   const fail = (msg: string) => new Error(`Sheet row ${id ?? '(no id)'}: ${msg}`)
@@ -71,7 +76,7 @@ function prepare(row: SheetRow) {
     source_status: cell(row, 'status_en'),
     source_last_updated: cell(row, 'source_last_updated_en'),
     verified_on: cell(row, 'verified_on'),
-    languages: splitMulti(row.languages_en ?? ''),
+    languages: languagesOf(row.languages_en ?? ''),
     tags: splitMulti(row.tags_en ?? ''),
     data_formats: splitMulti(row.data_formats_en ?? ''),
     has_api: hasApi(row.has_api_en),

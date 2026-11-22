@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { toDesignResource, type PayloadResourceDoc } from '@/lib/payloadResources';
+import { hasLicenseBadge, licenseLabel } from '@/lib/resourceMapping';
 
 const doc: PayloadResourceDoc = {
   id: 7,
@@ -50,7 +51,42 @@ describe('toDesignResource', () => {
     const r = toDesignResource({ ...doc, license });
     expect(r.license?.name_en).toBe('Unspecified');
     expect(r.license?.id).toMatch(/^spdx-/);
-    expect(r.license_spdx).toBe('Unspecified');
+    expect(r.license_spdx).toBeUndefined();
+    expect(hasLicenseBadge(r)).toBe(false);
+  });
+
+  describe('license ids versus free text', () => {
+    const arabic = 'الترخيص مفتوح للاستخدام غير التجاري مع ذكر المصدر، ويرجى مراجعة الشروط الكاملة على موقع الجهة المالكة.';
+    const english = 'Free for non-commercial use with attribution; see the owner site for the full terms.';
+
+    it.each(['MIT', 'CC-BY-4.0', 'Apache-2.0'])('toDesignResource_License_%s_KeepsIdAndBadge', (license) => {
+      const r = toDesignResource({ ...doc, license });
+      expect(r.license_spdx).toBe(license);
+      expect(r.license_custom_text).toBeUndefined();
+      expect(hasLicenseBadge(r)).toBe(true);
+    });
+
+    it.each([arabic, english])('toDesignResource_FreeTextLicense_IsPlainTextNotAPill', (license) => {
+      const r = toDesignResource({ ...doc, license, sheet_id: 's1', license_en: english });
+      expect(r.license_spdx).toBeUndefined();
+      expect(r.license_custom_text).toBe(license);
+      expect(hasLicenseBadge(r)).toBe(false);
+      expect(licenseLabel(r, false)).toBe(license);
+      expect(licenseLabel(r, true)).toBe(english);
+    });
+
+    it('licenseLabel_ArabicOnlyInEnglishLocale_FallsBackToArabic', () => {
+      const r = toDesignResource({ ...doc, license: arabic, sheet_id: 's1' });
+      expect(licenseLabel(r, true)).toBe(arabic);
+    });
+
+    it('licenseLabel_SheetRowWithoutLicense_IsUndefinedSoTheViewShowsNotStated', () => {
+      expect(licenseLabel(toDesignResource({ ...doc, license: null, sheet_id: 's1' }), true)).toBeUndefined();
+    });
+
+    it('licenseLabel_NonSheetIdLicense_Unchanged', () => {
+      expect(licenseLabel(toDesignResource({ ...doc, license: 'MIT' }), true)).toBe('MIT');
+    });
   });
 
   it.each([

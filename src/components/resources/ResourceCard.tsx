@@ -12,6 +12,8 @@ import { clsx } from 'clsx';
 import { ResourceAppBadges } from '@/components/resources/ResourceAppBadges';
 import { getAppsUsingResource } from '@/lib/appEcosystem';
 import { localizeResource } from '@/lib/localizeResource';
+import { versionLabel } from '@/lib/format';
+import { hasLicenseBadge } from '@/lib/resourceMapping';
 
 export interface ResourceCardProps {
   resource: Resource;
@@ -157,7 +159,7 @@ export const ResourceCard: React.FC<ResourceCardProps> = ({
             isList && 'sm:pt-0 sm:border-t-0 sm:mt-0 sm:shrink-0 sm:gap-4'
           )}
         >
-          <LicenseBadge licenseId={resource.license_id} spdx={resource.license_spdx} size="sm" />
+          {hasLicenseBadge(resource) ? <LicenseBadge licenseId={resource.license_id} spdx={resource.license_spdx} size="sm" /> : <span />}
 
           <Link
             to={`/resources/${resource.slug}`}
@@ -185,12 +187,12 @@ export const ResourceCard: React.FC<ResourceCardProps> = ({
           <div className="flex flex-wrap items-center gap-1.5">
             <ItqanBadge level={resource.itqan_level} size="sm" />
             <AccessBadge level={resource.access_level} />
-            <LicenseBadge licenseId={resource.license_id} spdx={resource.license_spdx} />
+            {hasLicenseBadge(resource) && <LicenseBadge licenseId={resource.license_id} spdx={resource.license_spdx} />}
           </div>
 
           {resource.latest_version && (
             <span className="text-[11px] font-mono text-fg-subtle bg-muted px-2 py-0.5 rounded">
-              v{resource.latest_version}
+              {versionLabel(resource.latest_version)}
             </span>
           )}
         </div>

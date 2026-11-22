@@ -3,7 +3,7 @@
 import { DEMO_PUBLISHERS } from './mockData';
 import { mockRepo } from './supabase';
 import { cmsIdFromSlug, fetchCmsDetail, fetchCmsResources } from './cmsResources';
-import { categoriesFor, isHttpUrl, licenseFor, safeUrl, UNSPECIFIED_LICENSE } from './resourceMapping';
+import { categoriesFor, isHttpUrl, isLicenseId, licenseFor, safeUrl } from './resourceMapping';
 import { mediaUrl } from './resourceDetail';
 import type { Bilingual, Publisher, Resource } from '@/types';
 
@@ -119,7 +119,8 @@ function githubStats(doc: PayloadResourceDoc): Resource['github_stats'] {
 }
 
 export function toDesignResource(doc: PayloadResourceDoc): Resource {
-  const license = licenseFor(doc.license);
+  const spdx = isLicenseId(doc.license?.trim()) ? doc.license!.trim() : undefined;
+  const license = licenseFor(spdx);
   const publisher = publisherFor(doc);
   return {
     id: `payload_${doc.id}`,
@@ -131,7 +132,8 @@ export function toDesignResource(doc: PayloadResourceDoc): Resource {
     publisher_id: publisher.id,
     created_by: 'payload',
     license_id: license.id,
-    license_spdx: doc.license?.trim() || UNSPECIFIED_LICENSE,
+    license_spdx: spdx,
+    license_custom_text: spdx ? undefined : text(doc.license),
     access_level: 'open',
     status: doc.status,
     itqan_level: doc.itqan_badge ? 'verified' : 'none',

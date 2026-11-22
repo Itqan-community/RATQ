@@ -1,7 +1,7 @@
 // Mapping helpers shared by the Payload and CMS resource clients.
 import { DEMO_LICENSES } from './mockData';
 import { licenseRowIdFor } from './catalogQuery';
-import type { License } from '@/types';
+import type { License, Resource } from '@/types';
 
 // Resource type -> design category id (same grouping the beta snapshot in betaResources.ts used).
 const TYPE_CATEGORY: Record<string, string> = {
@@ -17,6 +17,16 @@ const TYPE_CATEGORY: Record<string, string> = {
 export const categoriesFor = (type: string): string[] => (TYPE_CATEGORY[type] ? [TYPE_CATEGORY[type]] : []);
 
 export const UNSPECIFIED_LICENSE = 'Unspecified';
+
+// A short token such as MIT or CC-BY-4.0; anything longer or with spaces is free text from the sources sheet.
+export const isLicenseId = (v?: string | null): v is string => !!v && v.length <= 40 && /^[A-Za-z0-9.+-]+$/.test(v);
+
+// Free-text and missing licenses have no id to show as a pill.
+export const hasLicenseBadge = (r: Resource): boolean => !!r.license_spdx || r.license_id !== licenseFor().id;
+
+// License text for the detail row. Undefined on a sheet row = nothing stated (the view shows "Not stated").
+export const licenseLabel = (r: Resource, en: boolean): string | undefined =>
+  (en && r.license_en) || r.license_spdx || r.license_custom_text || r.license_en || (r.sheet_id ? undefined : r.license?.name_en);
 
 // "CC-BY-NC-ND-4.0" -> "cc-by-nc-nd" (design license ids). Unknown licenses (MIT, Apache...) get a
 // neutral synthesized entry so the UI never claims CC terms the resource doesn't have.

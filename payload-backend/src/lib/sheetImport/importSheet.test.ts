@@ -286,6 +286,33 @@ describe('importSheet', () => {
     expect(fake.log).toEqual(['begin', 'rollback'])
   })
 
+  it('importSheet_DirectionTokensAndIsoCodes_AreDroppedAndVariantsMerge', async () => {
+    const fake = makeFake()
+    await importSheet(fake.payload, [row({ languages_en: 'Turkish (tr), left-to-right, Turkish, Urdu (ur), right-to-left' })])
+    expect(fake.resource('r1').languages).toEqual(['Turkish', 'Urdu'])
+  })
+
+  it('importSheet_FixtureLanguages_HaveNoDirectionTokensAndUrduMerges', async () => {
+    const rows = parseSheet(readFileSync(new URL('./__fixtures__/sheet.csv', import.meta.url), 'utf8'))
+    const fake = makeFake()
+    await importSheet(fake.payload, rows)
+
+    const all = fake.tables.resources.flatMap((r) => r.languages as string[])
+    expect(all.filter((l) => /^(left|right)-to-(left|right)$/i.test(l))).toEqual([])
+    expect(all.filter((l) => /\(\w{2,3}\)\s*$/.test(l))).toEqual([])
+    expect(all.filter((l) => l === 'Urdu')).toHaveLength(rows.filter((r) => /\bUrdu\b/.test(r.languages_en)).length)
+  })
+
+  it('importSheet_FixtureShortDescriptions_NeverEndInAbbreviationOrOpenParen', async () => {
+    const rows = parseSheet(readFileSync(new URL('./__fixtures__/sheet.csv', import.meta.url), 'utf8'))
+    const fake = makeFake()
+    await importSheet(fake.payload, rows)
+
+    const shorts = fake.tables.resources.flatMap((r) => [r.short_description, r.short_description_en]).filter(Boolean) as string[]
+    expect(shorts.filter((s) => /\b(Dr|Mr|Mrs|Prof|St)\.$/.test(s))).toEqual([])
+    expect(shorts.filter((s) => (s.match(/\(/g) ?? []).length !== (s.match(/\)/g) ?? []).length)).toEqual([])
+  })
+
   it('maps has_api by exact token: placeholders and "Not planned" stay empty', async () => {
     const values: [string, string | null][] = [
       ['Yes', 'yes'],
