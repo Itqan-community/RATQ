@@ -9,13 +9,18 @@ import { DEMO_LICENSES } from '@/lib/mockData';
 import { RotateCcw } from 'lucide-react';
 import { getLicenseColorClass } from '@/components/ui/LicenseBadge';
 import { FilterHelpTooltip } from './FilterHelpTooltip';
-import { CC_LICENSE_ROWS, NO_PUBLISHER_VALUE, type CatalogQuery, type PublisherOption } from '@/lib/catalogQuery';
+import { CC_LICENSE_ROWS, NO_PUBLISHER_VALUE, type CatalogQuery, type FacetOption, type PublisherOption } from '@/lib/catalogQuery';
 
 // Catalog page: type/license/publisher live in the URL (live's shape). Without it (design previews) they stay in the store.
 export interface CatalogUrlBinding {
   query: CatalogQuery;
   onChange: (patch: Partial<CatalogQuery>) => void;
   publishers: PublisherOption[];
+  // Sources-sheet facets, built from the loaded resources; an empty list hides its group.
+  domains: FacetOption[];
+  riwayat: FacetOption[];
+  languages: FacetOption[];
+  hasApi: FacetOption[];
 }
 
 const toggled = (list: string[], values: string[]) =>
@@ -65,7 +70,7 @@ export const ResourceFilters: React.FC<ResourceFiltersProps> = ({
     url ? row.values.some((v) => url.query.licenses.includes(v)) : selectedLicenses.includes(row.id);
   const resetAll = () => {
     resetFilters();
-    url?.onChange({ types: [], licenses: [], publishers: [] });
+    url?.onChange({ types: [], licenses: [], publishers: [], domains: [], riwayat: [], languages: [], hasApi: [] });
   };
 
   const accessOptions = [
@@ -207,6 +212,32 @@ export const ResourceFilters: React.FC<ResourceFiltersProps> = ({
           </div>
         </div>
       )}
+
+      {/* Sources-sheet facets (URL-backed catalog only; each shows only when the loaded data has options) */}
+      {url &&
+        ([
+          ['domains', 'filters.domain', url.domains],
+          ['riwayat', 'filters.riwayah', url.riwayat],
+          ['languages', 'filters.language', url.languages],
+          ['hasApi', 'filters.has_api', url.hasApi],
+        ] as const).map(([field, title, options]) =>
+          options.length > 0 ? (
+            <div key={field} className="flex flex-col gap-2.5">
+              <h4 className="text-xs font-bold text-fg">{t(title)}</h4>
+              <div className="flex flex-col gap-2 max-h-48 overflow-y-auto pe-1">
+                {options.map((o) => (
+                  <Checkbox
+                    key={o.key}
+                    label={`${field === 'hasApi' ? t(`filters.api_${o.key}`) : o.label} (${o.count})`}
+                    checked={url.query[field].includes(o.key)}
+                    onChange={() => url.onChange({ [field]: toggled(url.query[field], [o.key]) })}
+                    labelClassName="font-normal"
+                  />
+                ))}
+              </div>
+            </div>
+          ) : null,
+        )}
 
       {/* Tech Stack */}
       <div className="flex flex-col gap-2.5">

@@ -139,6 +139,7 @@ export interface User {
   id: number;
   display_name?: string | null;
   role?: ('developer' | 'publisher' | 'admin') | null;
+  system_account?: boolean | null;
   updatedAt: string;
   createdAt: string;
   email: string;
@@ -210,7 +211,7 @@ export interface Resource {
   website_url?: string | null;
   content_language?: ('ar' | 'en') | null;
   title_language?: ('ar' | 'en') | null;
-  license: string;
+  license?: string | null;
   itqan_badge?: boolean | null;
   status: 'draft' | 'published' | 'archived';
   version?: string | null;
@@ -265,6 +266,67 @@ export interface Resource {
    * Timestamp of the last successful GitHub API refresh.
    */
   github_stats_fetched_at?: string | null;
+  sheet_id?: string | null;
+  name_en?: string | null;
+  description_en?: string | null;
+  content_domain?: string | null;
+  riwayah?: string | null;
+  smallest_unit?: string | null;
+  query_units?: string | null;
+  numbering_reference?: string | null;
+  authentication?: string | null;
+  rate_limits?: string | null;
+  attribution?: string | null;
+  scholarly_review?: string | null;
+  content_domain_en?: string | null;
+  riwayah_en?: string | null;
+  smallest_unit_en?: string | null;
+  query_units_en?: string | null;
+  numbering_reference_en?: string | null;
+  authentication_en?: string | null;
+  rate_limits_en?: string | null;
+  attribution_en?: string | null;
+  scholarly_review_en?: string | null;
+  short_description_en?: string | null;
+  license_en?: string | null;
+  sample_request?: string | null;
+  source_status?: string | null;
+  source_type?: string | null;
+  source_last_updated?: string | null;
+  verified_on?: string | null;
+  base_url?: string | null;
+  api_key_url?: string | null;
+  playground_url?: string | null;
+  download_url?: string | null;
+  repository?: string | null;
+  languages?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
+  tags?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
+  data_formats?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
+  has_api?: ('yes' | 'no' | 'planned' | 'iframe') | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -478,6 +540,7 @@ export interface PayloadMigration {
 export interface UsersSelect<T extends boolean = true> {
   display_name?: T;
   role?: T;
+  system_account?: T;
   updatedAt?: T;
   createdAt?: T;
   email?: T;
@@ -550,6 +613,43 @@ export interface ResourcesSelect<T extends boolean = true> {
   github_commits?: T;
   github_topics?: T;
   github_stats_fetched_at?: T;
+  sheet_id?: T;
+  name_en?: T;
+  description_en?: T;
+  content_domain?: T;
+  riwayah?: T;
+  smallest_unit?: T;
+  query_units?: T;
+  numbering_reference?: T;
+  authentication?: T;
+  rate_limits?: T;
+  attribution?: T;
+  scholarly_review?: T;
+  content_domain_en?: T;
+  riwayah_en?: T;
+  smallest_unit_en?: T;
+  query_units_en?: T;
+  numbering_reference_en?: T;
+  authentication_en?: T;
+  rate_limits_en?: T;
+  attribution_en?: T;
+  scholarly_review_en?: T;
+  short_description_en?: T;
+  license_en?: T;
+  sample_request?: T;
+  source_status?: T;
+  source_type?: T;
+  source_last_updated?: T;
+  verified_on?: T;
+  base_url?: T;
+  api_key_url?: T;
+  playground_url?: T;
+  download_url?: T;
+  repository?: T;
+  languages?: T;
+  tags?: T;
+  data_formats?: T;
+  has_api?: T;
   updatedAt?: T;
   createdAt?: T;
 }

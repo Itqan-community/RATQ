@@ -69,5 +69,15 @@ export const Users: CollectionConfig = {
         update: isAdmin,
       },
     },
+    {
+      // Marks accounts made by the sheet importer; the importer only reuses accounts with this flag, so a public sign-up on the same email can never own imported rows.
+      name: 'system_account',
+      type: 'checkbox',
+      defaultValue: false,
+      access: {
+        create: isAdmin,
+        update: isAdmin,
+      },
+    },
   ],
 }

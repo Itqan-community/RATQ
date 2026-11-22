@@ -3,9 +3,9 @@
 import { DEMO_PUBLISHERS } from './mockData';
 import { mockRepo } from './supabase';
 import { cmsIdFromSlug, fetchCmsDetail, fetchCmsResources } from './cmsResources';
-import { categoriesFor, isHttpUrl, licenseFor, safeUrl } from './resourceMapping';
+import { categoriesFor, isHttpUrl, licenseFor, safeUrl, UNSPECIFIED_LICENSE } from './resourceMapping';
 import { mediaUrl } from './resourceDetail';
-import type { Publisher, Resource } from '@/types';
+import type { Bilingual, Publisher, Resource } from '@/types';
 
 export { isHttpUrl };
 
@@ -22,7 +22,7 @@ export interface PayloadResourceDoc {
   github_url: string | null;
   website_url?: string | null;
   content_language?: 'ar' | 'en' | null;
-  license: string;
+  license?: string | null;
   itqan_badge: boolean;
   status: 'draft' | 'published' | 'archived';
   version: string | null;
@@ -36,8 +36,61 @@ export interface PayloadResourceDoc {
   github_commits?: { sha: string; message: string; author: string; date: string; url: string }[] | null;
   github_topics?: unknown[] | null;
   github_stats_fetched_at?: string | null;
+  // Sources-sheet import (see Resources.ts sheetFields). Arabic text lives in the bare name, English in `_en`.
+  sheet_id?: string | null;
+  name_en?: string | null;
+  short_description_en?: string | null;
+  description_en?: string | null;
+  content_domain?: string | null; content_domain_en?: string | null;
+  riwayah?: string | null; riwayah_en?: string | null;
+  smallest_unit?: string | null; smallest_unit_en?: string | null;
+  query_units?: string | null; query_units_en?: string | null;
+  numbering_reference?: string | null; numbering_reference_en?: string | null;
+  authentication?: string | null; authentication_en?: string | null;
+  rate_limits?: string | null; rate_limits_en?: string | null;
+  attribution?: string | null; attribution_en?: string | null;
+  scholarly_review?: string | null; scholarly_review_en?: string | null;
+  license_en?: string | null;
+  sample_request?: string | null;
+  source_status?: string | null;
+  source_type?: string | null;
+  source_last_updated?: string | null;
+  verified_on?: string | null;
+  base_url?: string | null;
+  api_key_url?: string | null;
+  playground_url?: string | null;
+  download_url?: string | null;
+  repository?: string | null;
+  // json columns: untrusted, so read through strings()
+  languages?: unknown;
+  tags?: unknown;
+  data_formats?: unknown;
+  has_api?: string | null;
   createdAt: string;
   updatedAt: string;
+}
+
+const HAS_API = ['yes', 'no', 'planned', 'iframe'] as const;
+const text = (v?: string | null) => v?.trim() || undefined;
+const bilingual = (ar?: string | null, en?: string | null): Bilingual | undefined => {
+  const b = { ar: text(ar), en: text(en) };
+  return b.ar || b.en ? b : undefined;
+};
+const strings = (v: unknown): string[] =>
+  Array.isArray(v) ? v.filter((x): x is string => typeof x === 'string' && x.trim() !== '').map((x) => x.trim()) : [];
+
+// API block only when the doc carries any API data.
+function apiFor(doc: PayloadResourceDoc): Resource['api'] {
+  const api = {
+    base_url: safeUrl(doc.base_url),
+    api_key_url: safeUrl(doc.api_key_url),
+    playground_url: safeUrl(doc.playground_url),
+    sample_request: text(doc.sample_request),
+    authentication: bilingual(doc.authentication, doc.authentication_en),
+    rate_limits: bilingual(doc.rate_limits, doc.rate_limits_en),
+    data_formats: strings(doc.data_formats).length ? strings(doc.data_formats) : undefined,
+  };
+  return Object.values(api).some(Boolean) ? api : undefined;
 }
 
 export const PAYLOAD_API_URL = process.env.NEXT_PUBLIC_PAYLOAD_API_URL || '';
@@ -78,7 +131,7 @@ export function toDesignResource(doc: PayloadResourceDoc): Resource {
     publisher_id: publisher.id,
     created_by: 'payload',
     license_id: license.id,
-    license_spdx: doc.license,
+    license_spdx: doc.license?.trim() || UNSPECIFIED_LICENSE,
     access_level: 'open',
     status: doc.status,
     itqan_level: doc.itqan_badge ? 'verified' : 'none',
@@ -90,7 +143,7 @@ export function toDesignResource(doc: PayloadResourceDoc): Resource {
     languages: [doc.content_language ?? 'ar'],
     content_language: doc.content_language ?? undefined,
     categories: categoriesFor(doc.type),
-    tags: [],
+    tags: strings(doc.tags),
     contains_quranic_text: false,
     latest_version: doc.version ?? undefined,
     downloads_count: 0,
@@ -111,6 +164,27 @@ export function toDesignResource(doc: PayloadResourceDoc): Resource {
     github_topics: doc.github_topics?.filter((t): t is string => typeof t === 'string'),
     publisher,
     license,
+    sheet_id: text(doc.sheet_id),
+    title_en: text(doc.name_en),
+    summary_en: text(doc.short_description_en),
+    description_en: text(doc.description_en),
+    content_domain: bilingual(doc.content_domain, doc.content_domain_en),
+    riwayah: bilingual(doc.riwayah, doc.riwayah_en),
+    source_languages: strings(doc.languages).length ? strings(doc.languages) : undefined,
+    smallest_unit: bilingual(doc.smallest_unit, doc.smallest_unit_en),
+    query_units: bilingual(doc.query_units, doc.query_units_en),
+    numbering_reference: bilingual(doc.numbering_reference, doc.numbering_reference_en),
+    has_api: HAS_API.find((v) => v === doc.has_api),
+    api: apiFor(doc),
+    download_url: safeUrl(doc.download_url),
+    repository_url: safeUrl(doc.repository),
+    license_en: text(doc.license_en),
+    attribution: bilingual(doc.attribution, doc.attribution_en),
+    scholarly_review: bilingual(doc.scholarly_review, doc.scholarly_review_en),
+    source_status: text(doc.source_status),
+    source_type: text(doc.source_type),
+    source_last_updated: text(doc.source_last_updated),
+    verified_on: text(doc.verified_on),
   };
 }
 
@@ -136,7 +210,17 @@ async function fetchPayloadResources(): Promise<Resource[]> {
   const rest = await Promise.all(
     Array.from({ length: Math.max(0, totalPages - 1) }, (_, i) => fetchPayloadPage(i + 2).catch(() => null)),
   );
-  return [first, ...rest].filter((p): p is PayloadList => p !== null).flatMap((p) => p.docs.map(toDesignResource));
+  // One malformed doc must not reject the whole source.
+  return [first, ...rest].filter((p): p is PayloadList => p !== null).flatMap((p) =>
+    p.docs.flatMap((d) => {
+      try {
+        return [toDesignResource(d)];
+      } catch (e) {
+        console.error(`Skipping payload doc ${d?.id}:`, e);
+        return [];
+      }
+    }),
+  );
 }
 
 // Fetch every source once at boot and merge into the repo (CMS first, like live's SOURCES order). Each source

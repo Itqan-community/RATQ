@@ -16,9 +16,12 @@ const TYPE_CATEGORY: Record<string, string> = {
 
 export const categoriesFor = (type: string): string[] => (TYPE_CATEGORY[type] ? [TYPE_CATEGORY[type]] : []);
 
+export const UNSPECIFIED_LICENSE = 'Unspecified';
+
 // "CC-BY-NC-ND-4.0" -> "cc-by-nc-nd" (design license ids). Unknown licenses (MIT, Apache...) get a
 // neutral synthesized entry so the UI never claims CC terms the resource doesn't have.
-export function licenseFor(raw: string): License {
+export function licenseFor(value?: string | null): License {
+  const raw = value?.trim() || UNSPECIFIED_LICENSE; // imported sheet rows can have no license
   const id = licenseRowIdFor(raw) ?? raw.toLowerCase().replace(/-\d+(\.\d+)*$/, '');
   return (
     DEMO_LICENSES.find((l) => l.id === id) ?? {
