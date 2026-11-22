@@ -9,8 +9,8 @@ const A = { email: process.env.E2E_EMAIL, password: process.env.E2E_PASSWORD };
 const B = { email: process.env.E2E_EMAIL_B, password: process.env.E2E_PASSWORD_B };
 test.skip(!A.email || !A.password || !B.email || !B.password, 'two e2e accounts not set');
 
-const API = 'https://api.ratq.itqan.dev/api/';
-const ORIGIN = 'https://beta.ratq.itqan.dev';
+const API = 'https://api.quran.tech/api/';
+const ORIGIN = 'https://beta.quran.tech';
 
 async function signIn(page: Page, who: { email?: string; password?: string }) {
   await page.goto('/auth/sign-in');

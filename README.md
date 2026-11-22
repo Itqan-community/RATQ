@@ -3,13 +3,13 @@
 > **اكتشف بثقة. ابنِ بإتقان. شارك بمسؤولية.**
 > The directory and distribution hub for Quranic software resources.
 
-Production: https://ratq.itqan.dev · Beta: https://beta.ratq.itqan.dev
+Production: https://quran.tech · Beta: https://beta.quran.tech
 
 ## Stack
 - **App:** Next.js 15 serving a client-side `react-router-dom` app (`app/[[...slug]]` catch-all, routes in `src/router.tsx`), React 18, TypeScript, Tailwind CSS 3, RTL-first, `i18next` (Arabic default, English).
 - **State/data:** TanStack Query, Zustand.
 - **Backend:** the Payload CMS API in `payload-backend/` (Users, Resources, Comments, AccessRequests, APIKeys, Reports, Notifications, Announcements). The frontend only calls its REST API; no other backend.
-- **Hosting:** Cloudflare Pages (project `ratq-beta`), built by Cloudflare from `main` with `@cloudflare/next-on-pages`. A second Pages project builds the beta site from the `beta` branch with `NEXT_PUBLIC_BETA=1`. Every dynamic route must export `runtime = 'edge'`. The API is deployed separately (see `.github/workflows/deploy-backend.yml`).
+- **Hosting:** Cloudflare Pages (project `quran-tech`), built by Cloudflare from `main` with `@cloudflare/next-on-pages`. A second Pages project, `quran-tech-beta`, builds the beta site from the `beta` branch with `NEXT_PUBLIC_BETA=1`. Every dynamic route must export `runtime = 'edge'`. The API is deployed separately (see `.github/workflows/deploy-backend.yml`).
 - **Tests:** Vitest + Testing Library (unit), Playwright (`e2e/`).
 
 ## Live data vs Demo
@@ -34,7 +34,7 @@ To develop against a local Payload, start `payload-backend/` (see its README; it
 NEXT_PUBLIC_PAYLOAD_API_URL=http://localhost:3000/api pnpm exec next dev -p 3100
 ```
 
-The production API only allows the `ratq.itqan.dev` and `beta.ratq.itqan.dev` origins, so localhost cannot call it.
+The production API only allows the `quran.tech` and `beta.quran.tech` origins (plus the legacy `ratq.itqan.dev` hosts), so localhost cannot call it.
 
 ## Checks
 ```bash
@@ -55,12 +55,12 @@ Pushing to either branch deploys by itself: the Cloudflare Pages project builds 
 pnpm pages:build
 pnpm pages:dev                 # serves .vercel/output/static on http://localhost:8788
 ```
-Roll back from the Cloudflare dashboard (Pages, ratq-beta, Deployments, Rollback).
+Roll back from the Cloudflare dashboard (Pages, quran-tech, Deployments, Rollback).
 
 ## Contributing
 See [CONTRIBUTING.md](CONTRIBUTING.md) and our [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md). Features marked Demo are the best places to start. All contributions target the `beta` branch.
 
-Every merged contribution gets a shoutout on the [Contributors page](https://ratq.itqan.dev/contributors) and the community's [Hall of Fame](https://community.itqan.dev/d/658). Pick up a [good first issue](https://github.com/Itqan-community/RATQ/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22) and join them.
+Every merged contribution gets a shoutout on the [Contributors page](https://quran.tech/contributors) and the community's [Hall of Fame](https://community.itqan.dev/d/658). Pick up a [good first issue](https://github.com/Itqan-community/RATQ/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22) and join them.
 
 <img src="./docs/images/contributors-page.png" alt="Contributors page" width="600" />
 

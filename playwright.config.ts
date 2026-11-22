@@ -1,7 +1,7 @@
 import { defineConfig } from '@playwright/test';
 
-// BASE_URL defaults to beta; set it to https://ratq.itqan.dev for the read-only @prod specs.
-const baseURL = process.env.BASE_URL || 'https://beta.ratq.itqan.dev';
+// BASE_URL defaults to beta; set it to https://quran.tech for the read-only @prod specs.
+const baseURL = process.env.BASE_URL || 'https://beta.quran.tech';
 
 export default defineConfig({
   testDir: 'e2e',
