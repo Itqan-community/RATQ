@@ -1,6 +1,6 @@
 name: Deploy backend (beta)
 
-# Isolated beta API (ratq-beta-api.itqan.dev): its own droplet and database, a scrubbed copy of production data.
+# Isolated beta API (quran-tech-beta-api.itqan.dev): its own droplet and database, a scrubbed copy of production data.
 # Production deploys from main via deploy-backend.yml and is untouched by this workflow.
 on:
   push:
