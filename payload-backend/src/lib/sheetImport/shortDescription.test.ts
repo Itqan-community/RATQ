@@ -19,6 +19,12 @@ describe('shortDescription', () => {
     expect(shortDescription('Edited by Prof. Ali and St. John, e.g. a team. Next one.')).toBe('Edited by Prof. Ali and St. John, e.g. a team.')
   })
 
+  it('shortDescription_ArabicTitleAndInitial_DoesNotCut', () => {
+    expect(shortDescription('ترجمة د. محمد علي. جملة ثانية.')).toBe('ترجمة د. محمد علي.')
+    expect(shortDescription('إشراف أ.د. أحمد حسن. جملة ثانية.')).toBe('إشراف أ.د. أحمد حسن.')
+    expect(shortDescription('Built by Sofian S. Ahmed. Second.')).toBe('Built by Sofian S. Ahmed.')
+  })
+
   it('shortDescription_OpenParen_DoesNotCut', () => {
     expect(shortDescription('A corpus (by Dr. Ali. Second part) of texts. More.')).toBe('A corpus (by Dr. Ali. Second part) of texts.')
     expect(shortDescription('An unclosed (note. Still going')).toBe('An unclosed (note. Still going')
