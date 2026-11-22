@@ -96,7 +96,7 @@ describe('GitHub OAuth callback - first-time signup', () => {
     const response = await GET(new Request('https://api.ratq.itqan.dev/oauth/github/callback'))
 
     expect(response.headers.get('location')).toBe(
-      'https://ratq.itqan.dev/login?error=oauth_not_configured',
+      'https://quran.tech/login?error=oauth_not_configured',
     )
   })
 

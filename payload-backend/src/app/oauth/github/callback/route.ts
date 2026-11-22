@@ -28,7 +28,7 @@ function loginFailure(frontendUrl: string, reason: string) {
 }
 
 export async function GET(request: Request) {
-  const frontendUrl = process.env.FRONTEND_URL || 'https://ratq.itqan.dev'
+  const frontendUrl = process.env.FRONTEND_URL || 'https://quran.tech'
   const clientId = process.env.GITHUB_CLIENT_ID
   const clientSecret = process.env.GITHUB_CLIENT_SECRET
   const callbackUrl = process.env.OAUTH_CALLBACK_URL

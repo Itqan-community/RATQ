@@ -1,5 +1,5 @@
 // Itqan CMS assets -> design Resource. Port of live's repositories/cms.ts (same endpoints, same cms-<id> slugs).
-// The CMS answers browsers with CORS for ratq.itqan.dev and beta.ratq.itqan.dev (verified), so it is fetched directly.
+// The CMS answers browsers with CORS for quran.tech and beta.ratq.itqan.dev (verified), so it is fetched directly.
 import { categoriesFor, detectLang, isHttpUrl, licenseFor } from './resourceMapping';
 import type { Publisher, Resource } from '@/types';
 

@@ -2,7 +2,7 @@
 
 Quran Tech Directory is the developer marketplace at the center of the Itqan ecosystem: a place where developers discover, verify, and integrate Quranic-data resources, including libraries, SDKs, datasets, APIs, and tafsir sources.
 
-The site runs at [ratq.itqan.dev](https://ratq.itqan.dev); [beta.ratq.itqan.dev](https://beta.ratq.itqan.dev) is the beta site, built from the `beta` branch. All contributions target `beta`; maintainers promote `beta` into `main`, which is the live site. The frontend is now the Next 15 + react-router app under `app/` and `src/`, and the old structure is tagged `pre-new-design-2026-11-10`.
+The site runs at [quran.tech](https://quran.tech); [beta.quran.tech](https://beta.quran.tech) is the beta site, built from the `beta` branch. All contributions target `beta`; maintainers promote `beta` into `main`, which is the live site. The frontend is now the Next 15 + react-router app under `app/` and `src/`, and the old structure is tagged `pre-new-design-2026-11-10`.
 
 This project follows Itqan's [Community-first process](https://app.notion.com/p/3a97056925c880cf98d5db323853e93a): no work happens without a GitHub Issue, and community contributors work from the same queue as the internal team.
 

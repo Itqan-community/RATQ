@@ -27,7 +27,7 @@ for (const lang of ['en', 'ar'] as const) {
 }
 
 // NB: `a[href^="/resources/"]` also matches nav links such as /resources/roadmap; real API resources are /resources/payload-<slug>.
-const API = 'https://api.ratq.itqan.dev/api';
+const API = 'https://api.quran.tech/api';
 
 test('@prod live resource detail shows the real resource', async ({ page, request }) => {
   const problems: string[] = [];
