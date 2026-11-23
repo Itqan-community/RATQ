@@ -111,6 +111,18 @@ const row = (o: SheetRow = {}): SheetRow => ({
 const three = () => [row({ id: 'r1', name_en: 'A' }), row({ id: 'r2', name_en: 'B' }), row({ id: 'r3', name_en: 'C', source_en: 'Source Two' })]
 
 describe('importSheet', () => {
+  it('importSheet_RowAlsoInItqanCms_IsDraftAndFlipsExistingPublished', async () => {
+    const fake = makeFake()
+    await importSheet(fake.payload, [row({ id: 'kfgqpc-dev-hafs' }), row({ id: 'plain' })])
+    expect(fake.resource('kfgqpc-dev-hafs').status).toBe('draft')
+    expect(fake.resource('plain').status).toBe('published')
+
+    fake.resource('kfgqpc-dev-hafs').status = 'published'
+    const again = await importSheet(fake.payload, [row({ id: 'kfgqpc-dev-hafs' }), row({ id: 'plain' })])
+    expect(again).toMatchObject({ updated: 1, unchanged: 1 })
+    expect(fake.resource('kfgqpc-dev-hafs').status).toBe('draft')
+  })
+
   it('creates a published resource owned by a per-source system user', async () => {
     const fake = makeFake()
     const result = await importSheet(fake.payload, [row()])

@@ -2,6 +2,7 @@ import { randomUUID } from 'node:crypto'
 import type { Payload, PayloadRequest } from 'payload'
 import { bilingual, slugify } from '../../collections/Resources'
 import type { Resource } from '../../payload-types'
+import { CMS_OWNED_SHEET_IDS } from './cmsOwned'
 import { cleanCell, splitMulti, type SheetRow } from './parse'
 import { shortDescription } from './shortDescription'
 import { mapResourceType } from './typeMap'
@@ -80,6 +81,7 @@ function prepare(row: SheetRow) {
     tags: splitMulti(row.tags_en ?? ''),
     data_formats: splitMulti(row.data_formats_en ?? ''),
     has_api: hasApi(row.has_api_en),
+    ...(CMS_OWNED_SHEET_IDS.has(id) && { status: 'draft' as const }),
     ...Object.fromEntries(bilingual.flatMap((n) => [[n, cell(row, `${n}_ar`)], [`${n}_en`, cell(row, `${n}_en`)]])),
   }
   return { id, fields, source, slugBase: slugify(cell(row, 'name_en') ?? name) || 'resource' }
@@ -169,7 +171,7 @@ export async function importSheet(payload: Payload, rows: SheetRow[], { dryRun =
         const owner = await systemUser(source)
         await payload.create({
           collection: 'resources',
-          data: { ...fields, slug: await freeSlug(slugBase), owner: owner.id, status: 'published' },
+          data: { status: 'published', ...fields, slug: await freeSlug(slugBase), owner: owner.id },
           // `user` makes the collection's beforeChange hook stamp the owner; keepSlug stops the slug hook overwriting ours.
           user: { ...owner, collection: 'users' } as never,
           context: { keepSlug: true },
