@@ -195,6 +195,25 @@ describe('fetchAllResources', () => {
     expect(r.resources.map((x) => x.id)).toEqual(['payload_1']);
   });
 
+  it('fetchAllResources_NullLicenseDoc_StillMapsAndPayloadSourceStaysUp', async () => {
+    const { fetchAllResources } = await load(API);
+    stub({ payload: payloadOk([liveDoc(1, { license: null }), liveDoc(2)]), cms: cmsOk([]) });
+    const r = await fetchAllResources();
+    expect(r.failed).toEqual([]);
+    expect(r.resources.map((x) => x.id)).toEqual(['payload_1', 'payload_2']);
+  });
+
+  it('fetchAllResources_OneMalformedDoc_SkippedNotFatal', async () => {
+    const { fetchAllResources } = await load(API);
+    const err = vi.spyOn(console, 'error').mockImplementation(() => {});
+    stub({ payload: payloadOk([null, liveDoc(2)]), cms: cmsOk([]) });
+    const r = await fetchAllResources();
+    expect(r.failed).toEqual([]);
+    expect(r.resources.map((x) => x.id)).toEqual(['payload_2']);
+    expect(err).toHaveBeenCalled();
+    err.mockRestore();
+  });
+
   it('fetchAllResources_BothDown_NotOk', async () => {
     const { fetchAllResources } = await load(API);
     stub({});

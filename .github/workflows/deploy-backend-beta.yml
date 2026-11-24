@@ -1,0 +1,27 @@
+name: Deploy backend (beta)
+
+# Isolated beta API (quran-tech-beta-api.itqan.dev): its own droplet and database, a scrubbed copy of production data.
+# Production deploys from main via deploy-backend.yml and is untouched by this workflow.
+on:
+  push:
+    branches: [beta]
+    paths:
+      - 'payload-backend/**'
+  workflow_dispatch: {}
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    concurrency:
+      group: deploy-backend-beta
+      cancel-in-progress: false
+    steps:
+      - name: Deploy to beta droplet
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.BETA_DEPLOY_HOST }}
+          username: ${{ secrets.BETA_DEPLOY_USER }}
+          key: ${{ secrets.BETA_DEPLOY_SSH_KEY }}
+          # Forced-command key, same as production: the server ignores this and always runs
+          # /srv/ratq-repo/deploy-backend.sh on the beta droplet.
+          script: /srv/ratq-repo/deploy-backend.sh

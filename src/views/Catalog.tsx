@@ -11,12 +11,21 @@ import { ResourceFilters } from '@/components/resources/ResourceFilters';
 import { CatalogWizardHelper } from '@/components/resources/CatalogWizardHelper';
 import { useCatalogStore } from '@/store/useCatalogStore';
 import {
+  domainKeys,
+  domainOptions,
+  hasApiKeys,
+  hasApiOptions,
+  languageKeys,
+  languageOptions,
+  matchesFacet,
   matchesLicenseFilter,
   matchesPublisherFilter,
   matchesSearch,
   parseCatalogQuery,
   publisherKey,
   publisherOptions,
+  riwayahKeys,
+  riwayahOptions,
   sortResources,
   withQuery,
   CC_LICENSE_ROWS,
@@ -175,7 +184,7 @@ export const Catalog: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const allResources = useMemo(() => mockRepo.getResources(), []);
   const query = useMemo(() => parseCatalogQuery(searchParams), [searchParams]);
-  const { search: searchQuery, types: selectedTypes, licenses: selectedLicenseValues, publishers: selectedPublishers, sort } = query;
+  const { search: searchQuery, types: selectedTypes, licenses: selectedLicenseValues, publishers: selectedPublishers, domains, riwayat, languages, hasApi, sort } = query;
   // Back/Forward or a link changing ?search updates the box; typing replaces the entry so history is not flooded.
   const [searchDraft, setSearchDraft] = useState(searchQuery);
   useEffect(() => setSearchDraft(searchQuery), [searchQuery]);
@@ -206,9 +215,19 @@ export const Catalog: React.FC = () => {
 
   const resetFilters = () => {
     resetStoreFilters();
-    updateQuery({ search: '', types: [], licenses: [], publishers: [], sort: 'relevance' });
+    updateQuery({ search: '', types: [], licenses: [], publishers: [], domains: [], riwayat: [], languages: [], hasApi: [], sort: 'relevance' });
   };
   const publishers = useMemo(() => publisherOptions(allResources), [allResources]);
+  const facets = useMemo(
+    () => ({
+      domains: domainOptions(allResources, en),
+      riwayat: riwayahOptions(allResources, en),
+      languages: languageOptions(allResources, en),
+      hasApi: hasApiOptions(allResources),
+    }),
+    [allResources, en],
+  );
+  const facetCount = domains.length + riwayat.length + languages.length + hasApi.length;
   // A license row counts once however many raw values it stores in the URL.
   const selectedLicenseRows = CC_LICENSE_ROWS.filter((row) => row.values.some((v) => selectedLicenseValues.includes(v))).length;
 
@@ -241,10 +260,11 @@ export const Catalog: React.FC = () => {
       selectedTypes.length +
       selectedLicenseRows +
       selectedPublishers.length +
+      facetCount +
       selectedTech.length +
       (commercialOnly ? 1 : 0)
     );
-  }, [selectedTypes, selectedLicenseRows, selectedPublishers, selectedTech, commercialOnly]);
+  }, [selectedTypes, selectedLicenseRows, selectedPublishers, facetCount, selectedTech, commercialOnly]);
 
   // Total active filters count (including toolbar dropdowns + drawer)
   const activeFiltersCount = useMemo(() => {
@@ -252,6 +272,7 @@ export const Catalog: React.FC = () => {
       selectedTypes.length +
       selectedLicenseRows +
       selectedPublishers.length +
+      facetCount +
       selectedAccess.length +
       selectedBadges.length +
       selectedTech.length +
@@ -261,6 +282,7 @@ export const Catalog: React.FC = () => {
     selectedTypes,
     selectedLicenseRows,
     selectedPublishers,
+    facetCount,
     selectedAccess,
     selectedBadges,
     selectedTech,
@@ -285,6 +307,16 @@ export const Catalog: React.FC = () => {
 
       // 3b. Publisher Filter
       if (!matchesPublisherFilter(publisherKey(r), selectedPublishers)) {
+        return false;
+      }
+
+      // 3c. Sources-sheet facets
+      if (
+        !matchesFacet(domainKeys(r), domains) ||
+        !matchesFacet(riwayahKeys(r), riwayat) ||
+        !matchesFacet(languageKeys(r), languages) ||
+        !matchesFacet(hasApiKeys(r), hasApi)
+      ) {
         return false;
       }
 
@@ -321,6 +353,10 @@ export const Catalog: React.FC = () => {
     selectedTypes,
     selectedLicenseValues,
     selectedPublishers,
+    domains,
+    riwayat,
+    languages,
+    hasApi,
     selectedAccess,
     selectedBadges,
     selectedTech,
@@ -913,7 +949,7 @@ export const Catalog: React.FC = () => {
             </div>
 
             <div className="p-5 overflow-y-auto flex-1">
-              <ResourceFilters url={{ query, onChange: updateQuery, publishers }} />
+              <ResourceFilters url={{ query, onChange: updateQuery, publishers, ...facets }} />
             </div>
 
             <div className="p-4 border-t border-border bg-subtle/30 flex items-center justify-between gap-3">

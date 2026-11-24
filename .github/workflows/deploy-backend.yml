@@ -2,7 +2,7 @@ name: Deploy backend
 
 on:
   push:
-    # Beta shares the production API, so only main deploys the backend.
+    # Production API: only main deploys here. Beta has its own API and database (deploy-backend-beta.yml).
     branches: [main]
     paths:
       - 'payload-backend/**'

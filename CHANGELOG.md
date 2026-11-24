@@ -16,6 +16,10 @@ Internal names renamed: `qtd` color tokens, `qtd_` storage keys with a one-time 
 Beta moved to https://beta.quran.tech; beta.ratq.itqan.dev redirects there. The backend deploy script now deploys `main` only, so unpromoted beta work can no longer ship with a production push.
 
 ### Added
+Resources imported from the quran.tech sources sheet now show their sheet fields: the catalog filters by content domain, riwayah, language and whether an API exists, and the detail page lists API links, authentication, data formats, rate limits, download, repository, license, scholarly review, attribution and verification date (missing values read Not stated, English falls back to Arabic)
+
+Beta now has its own API and database (a scrubbed copy of production data), deployed from the `beta` branch, so beta work and imports no longer touch production
+
 Public GitHub Discussions link and this CHANGELOG, linked from README (#168)
 
 Separate beta site built from the `beta` branch: shows the Demo pages, stays noindex; contributor PRs target `beta` (#369)

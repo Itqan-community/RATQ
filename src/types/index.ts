@@ -151,6 +151,19 @@ export interface ResourceFile {
   scan_status: 'pending' | 'clean' | 'infected' | 'skipped';
 }
 
+// Arabic/English pair from the sources sheet; read it with pickText so an empty side never renders blank.
+export interface Bilingual { ar?: string; en?: string }
+
+export interface ResourceApi {
+  base_url?: string;
+  api_key_url?: string;
+  playground_url?: string;
+  sample_request?: string;
+  authentication?: Bilingual;
+  rate_limits?: Bilingual;
+  data_formats?: string[];
+}
+
 export interface Resource {
   id: string;
   slug: string;
@@ -212,6 +225,26 @@ export interface Resource {
   github_stats?: { stars: number | null; forks: number | null; open_issues: number | null; last_commit: string | null; fetched_at?: string | null };
   github_commits?: { sha: string; message: string; author: string; date: string; url: string }[];
   github_topics?: string[];
+
+  // Sources-sheet import (Payload only); sheet_id marks an imported row.
+  sheet_id?: string;
+  content_domain?: Bilingual;
+  riwayah?: Bilingual;
+  source_languages?: string[];
+  smallest_unit?: Bilingual;
+  query_units?: Bilingual;
+  numbering_reference?: Bilingual;
+  has_api?: 'yes' | 'no' | 'planned' | 'iframe';
+  api?: ResourceApi;
+  download_url?: string;
+  repository_url?: string;
+  license_en?: string;
+  attribution?: Bilingual;
+  scholarly_review?: Bilingual;
+  source_status?: string;
+  source_type?: string;
+  source_last_updated?: string;
+  verified_on?: string;
 
   // Joined fields for view
   publisher?: Publisher;

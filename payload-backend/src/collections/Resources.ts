@@ -1,4 +1,4 @@
-import type { Access,AccessResult, CollectionConfig, FieldAccess, Where } from 'payload'
+import type { Access,AccessResult, CollectionConfig, Field, FieldAccess, Where } from 'payload'
 
 const canReadResource: Access = ({ req }) => {
   if (req.user?.role === 'admin') return true
@@ -36,7 +36,7 @@ const isAdmin: FieldAccess = ({ req }) => req.user?.role === 'admin'
 
 // Unicode-aware so Arabic (and any other script) names produce a real slug
 // instead of collapsing to '' under an ASCII-only \w filter.
-function slugify(name: string): string {
+export function slugify(name: string): string {
   return name
     .toLowerCase()
     .trim()
@@ -46,7 +46,7 @@ function slugify(name: string): string {
 
 // Mirrors src/types/resource.ts ResourceType, minus CMS-only entries that
 // don't apply to natively-authored Payload resources.
-const RESOURCE_TYPES = [
+export const RESOURCE_TYPES = [
   'library',
   'sdk',
   'dataset',
@@ -65,6 +65,63 @@ const RESOURCE_TYPES = [
   'tajweed',
 ] as const
 
+// Must be a real http(s) URL when set: other schemes (ftp:, javascript:, mailto:, ...) are
+// rejected so a frontend link can never render broken or unsafe.
+const httpUrl = (value: unknown) => {
+  if (!value) return true
+  try {
+    const url = new URL(String(value))
+    if (url.protocol === 'http:' || url.protocol === 'https:') return true
+  } catch {
+    // fall through to the error below
+  }
+  return 'Please enter a valid http:// or https:// URL.'
+}
+
+// json fields are rendered by the frontend: bound them to a short list of short strings.
+const shortStringList = (value: unknown) =>
+  value == null ||
+  (Array.isArray(value) && value.length <= 100 && value.every((v) => typeof v === 'string' && v.length <= 200)) ||
+  'Must be a list of at most 100 strings, each at most 200 characters.'
+
+// Optional columns imported from the quran.tech sources sheet. All optional so existing
+// resources keep validating; `_en` twins hold the English column beside the Arabic one.
+export const bilingual = [
+  'content_domain',
+  'riwayah',
+  'smallest_unit',
+  'query_units',
+  'numbering_reference',
+  'authentication',
+  'rate_limits',
+  'attribution',
+  'scholarly_review',
+]
+// Provenance the importer owns (it writes with overrideAccess): an owner must not forge it.
+const importerOnly = { create: isAdmin, update: isAdmin }
+const importerOwned = new Set(['verified_on', 'source_status', 'source_type', 'source_last_updated', 'scholarly_review', 'scholarly_review_en', 'attribution', 'attribution_en'])
+const sheetFields: Field[] = [
+  { name: 'sheet_id', type: 'text', unique: true, index: true, access: importerOnly },
+  { name: 'name_en', type: 'text' },
+  { name: 'description_en', type: 'textarea' },
+  ...[
+    ...bilingual,
+    ...bilingual.map((n) => `${n}_en`),
+    'short_description_en',
+    'license_en',
+    'sample_request',
+    'source_status',
+    'source_type',
+    'source_last_updated',
+    'verified_on',
+  ].map((name): Field => ({ name, type: 'text', ...(importerOwned.has(name) && { access: importerOnly }) })),
+  ...['base_url', 'api_key_url', 'playground_url', 'download_url', 'repository'].map(
+    (name): Field => ({ name, type: 'text', validate: httpUrl }),
+  ),
+  ...['languages', 'tags', 'data_formats'].map((name): Field => ({ name, type: 'json', validate: shortStringList })),
+  { name: 'has_api', type: 'select', options: ['yes', 'no', 'planned', 'iframe'] },
+]
+
 export const Resources: CollectionConfig = {
   slug: 'resources',
   access: {
@@ -78,8 +135,10 @@ export const Resources: CollectionConfig = {
   },
   hooks: {
     beforeValidate: [
-      async ({ req, data, operation }) => {
+      async ({ req, data, operation, context }) => {
         if (!data || operation !== 'create') return data
+        // The sheet importer picks collision-free slugs itself (inside its transaction, where this count cannot see them).
+        if (context?.keepSlug && data.slug) return data
         const base = slugify(data.name || '') || 'resource'
         let candidate = base
         let suffix = 0
@@ -163,16 +222,7 @@ export const Resources: CollectionConfig = {
       // rejected so the frontend CTA can never render a broken/unsafe link.
       name: 'website_url',
       type: 'text',
-      validate: (value: unknown) => {
-        if (!value) return true
-        try {
-          const url = new URL(String(value))
-          if (url.protocol === 'http:' || url.protocol === 'https:') return true
-        } catch {
-          // fall through to the error below
-        }
-        return 'Please enter a valid http:// or https:// URL.'
-      },
+      validate: httpUrl,
     },
     {
       // Language of the description, set in the admin (name has title_language).
@@ -189,7 +239,6 @@ export const Resources: CollectionConfig = {
     {
       name: 'license',
       type: 'text',
-      required: true,
     },
     {
       name: 'itqan_badge',
@@ -292,5 +341,6 @@ export const Resources: CollectionConfig = {
       access: { create: () => false, update: () => false },
       admin: { description: 'Timestamp of the last successful GitHub API refresh.' },
     },
+    ...sheetFields,
   ],
 }

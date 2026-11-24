@@ -1,7 +1,7 @@
 // Picks the title/summary/description a resource shows for the site locale and the reading direction of that text.
 // Port of live's localize-resource.ts. Payload has a single name/description (often English, e.g. Tanzil), so
 // direction comes from the text actually shown, never from the page locale.
-import type { Resource } from '@/types';
+import type { Bilingual, Resource } from '@/types';
 
 type Language = 'ar' | 'en';
 
@@ -18,6 +18,9 @@ export function detectLanguage(text?: string | null): Language | undefined {
   if (!ar && !en) return undefined;
   return ar > en ? 'ar' : 'en';
 }
+
+// Sheet text in the site language, falling back to the other side so a half-filled row never shows blank.
+export const pickText = (b: Bilingual | undefined, en: boolean) => (en ? b?.en || b?.ar : b?.ar || b?.en) || undefined;
 
 type Localizable = Pick<Resource, 'title_ar' | 'summary_ar' | 'description_ar'> &
   Partial<Pick<Resource, 'title_en' | 'summary_en' | 'description_en' | 'content_language'>>;
