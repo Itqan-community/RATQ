@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { toDesignResource, type PayloadResourceDoc } from '@/lib/payloadResources';
-import { hasLicenseBadge, licenseLabel } from '@/lib/resourceMapping';
+import { hasLicenseBadge, isOpenAccess, licenseLabel } from '@/lib/resourceMapping';
 
 const doc: PayloadResourceDoc = {
   id: 7,
@@ -53,6 +53,18 @@ describe('toDesignResource', () => {
     expect(r.license?.id).toMatch(/^spdx-/);
     expect(r.license_spdx).toBeUndefined();
     expect(hasLicenseBadge(r)).toBe(false);
+  });
+
+  describe('isOpenAccess', () => {
+    it('isOpenAccess_AllRightsReservedSheetRow_IsFalse', () => {
+      const r = toDesignResource({ ...doc, license: 'غير مذكور (جميع الحقوق محفوظة)', sheet_id: 's1', license_en: 'Not explicitly stated (all rights reserved by default)' });
+      expect(isOpenAccess(r)).toBe(false);
+    });
+
+    it('isOpenAccess_OtherLicensesAndPlainRows_IsTrue', () => {
+      expect(isOpenAccess(toDesignResource(doc))).toBe(true);
+      expect(isOpenAccess(toDesignResource({ ...doc, sheet_id: 's2', license: 'Free to use', license_en: 'Free to use' }))).toBe(true);
+    });
   });
 
   describe('license ids versus free text', () => {

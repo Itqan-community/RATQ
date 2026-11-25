@@ -24,6 +24,9 @@ export const isLicenseId = (v?: string | null): v is string => !!v && v.length <
 // Free-text and missing licenses have no id to show as a pill.
 export const hasLicenseBadge = (r: Resource): boolean => !!r.license_spdx || r.license_id !== licenseFor().id;
 
+// "Open access" is only claimed when the license does not say all rights are reserved (the sheet's wording for no stated license).
+export const isOpenAccess = (r: Resource): boolean => r.access_level === 'open' && !/all rights reserved/i.test(r.license_en ?? '');
+
 // License text for the detail row. Undefined on a sheet row = nothing stated (the view shows "Not stated").
 export const licenseLabel = (r: Resource, en: boolean): string | undefined =>
   (en && r.license_en) || r.license_spdx || r.license_custom_text || r.license_en || (r.sheet_id ? undefined : r.license?.name_en);

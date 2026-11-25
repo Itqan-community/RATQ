@@ -1,6 +1,6 @@
 // Catalog URL state and filter semantics, ported from live (?search,type,license xN,publisher xN,sort) so
 // bookmarked links keep working. Pure functions only; the Catalog view owns the router wiring.
-import { normalizeArabic } from './format';
+import { languageName, normalizeArabic } from './format';
 import { pickText } from './localizeResource';
 import type { Bilingual, Resource } from '@/types';
 
@@ -170,7 +170,7 @@ function facetOptions(list: Resource[], keysOf: (r: Resource) => string[], label
 
 export const domainOptions = (list: Resource[], en: boolean) => facetOptions(list, domainKeys, (r, k) => pickText(r.content_domain, en) ?? k, en);
 export const riwayahOptions = (list: Resource[], en: boolean) => facetOptions(list, riwayahKeys, (r, k) => pickText(r.riwayah, en) ?? k, en);
-export const languageOptions = (list: Resource[], en: boolean) => facetOptions(list, languageKeys, (_, k) => k, en);
+export const languageOptions = (list: Resource[], en: boolean) => facetOptions(list, languageKeys, (_, k) => languageName(k, en), en);
 
 // Yes/No/Planned only ('iframe' is an embed detail, not something a visitor filters by); label is the translation key suffix.
 const HAS_API_FILTER = ['yes', 'no', 'planned'];
