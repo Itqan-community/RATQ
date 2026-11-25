@@ -24,7 +24,8 @@ import { useAuthStore } from '@/store/useAuthStore';
 import { deleteComment, fetchComments, postComment } from '@/lib/payloadComments';
 import { formatDate, versionLabel } from '@/lib/format';
 import { localizeResource } from '@/lib/localizeResource';
-import { hasLicenseBadge, isHttpUrl, licenseLabel } from '@/lib/resourceMapping';
+import { RESOURCE_TYPES } from '@/lib/constants';
+import { hasLicenseBadge, isHttpUrl, isOpenAccess, licenseLabel } from '@/lib/resourceMapping';
 import { sourceRows } from '@/lib/sourceDetails';
 import { isLive } from '@/lib/payloadAuth';
 import { resourceMeta, SITE_NAME } from '@/lib/seoMeta';
@@ -216,7 +217,7 @@ export const ResourceDetails: React.FC = () => {
               )}
 
               <div className="flex flex-wrap items-center gap-2">
-                <AccessBadge level={resource.access_level} />
+                {(resource.access_level !== 'open' || isOpenAccess(resource)) && <AccessBadge level={resource.access_level} />}
                 {hasLicenseBadge(resource) && <LicenseBadge licenseId={resource.license_id} spdx={resource.license_spdx} />}
                 {resource.latest_version && (
                   <span className="text-xs font-mono text-fg-subtle bg-white/80 dark:bg-slate-900/80 border border-border/70 px-2 py-0.5 rounded shadow-2xs">
@@ -235,14 +236,16 @@ export const ResourceDetails: React.FC = () => {
           {/* Action CTAs */}
           <div className="flex flex-wrap items-center gap-2.5">
             {resource.access_level === 'open' ? (
-              <Button
-                variant="primary"
-                size="md"
-                onClick={() => setActiveTab('install')}
-                startIcon={<Download className="w-4 h-4" />}
-              >
-                {t('detail.download_use')}
-              </Button>
+              isOpenAccess(resource) && (
+                <Button
+                  variant="primary"
+                  size="md"
+                  onClick={() => setActiveTab('install')}
+                  startIcon={<Download className="w-4 h-4" />}
+                >
+                  {t('detail.download_use')}
+                </Button>
+              )
             ) : (
               <Button
                 variant="gold"
@@ -651,12 +654,14 @@ export const ResourceDetails: React.FC = () => {
               <span className="text-fg-subtle">{t('detail.stat_updated')}</span>
               <span className="font-medium text-fg">{formatDate(resource.updated_at)}</span>
             </div>
-            <div className="flex justify-between py-1.5">
-              <span className="text-fg-subtle">{t('detail.stat_access')}</span>
-              <span className="font-semibold text-fg">
-                {resource.access_level === 'open' ? t('detail.access_open') : t('detail.access_request')}
-              </span>
-            </div>
+            {(resource.access_level !== 'open' || isOpenAccess(resource)) && (
+              <div className="flex justify-between py-1.5">
+                <span className="text-fg-subtle">{t('detail.stat_access')}</span>
+                <span className="font-semibold text-fg">
+                  {resource.access_level === 'open' ? t('detail.access_open') : t('detail.access_request')}
+                </span>
+              </div>
+            )}
           </div>
 
           {/* Technical details (old prod's "quick summary" + "technical details") */}
@@ -666,7 +671,7 @@ export const ResourceDetails: React.FC = () => {
             </span>
             {([
               [t('detail.tech_publisher'), resource.publisher?.name_ar],
-              [t('detail.tech_type'), resource.resource_type],
+              [t('detail.tech_type'), (() => { const ty = RESOURCE_TYPES.find((x) => x.code === resource.resource_type); return ty ? (locale === 'en' ? ty.name_en : ty.name_ar) : resource.resource_type; })()],
               [t('detail.tech_version'), resource.latest_version && versionLabel(resource.latest_version)],
               [t('detail.tech_published'), resource.created_at && formatDate(resource.created_at)],
               [t('detail.tech_license'), licenseLabel(resource, locale === 'en') ?? (resource.sheet_id ? <span className="text-fg-subtle font-normal">{t('detail.src_not_stated')}</span> : undefined)],

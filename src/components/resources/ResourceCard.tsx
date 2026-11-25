@@ -13,7 +13,7 @@ import { ResourceAppBadges } from '@/components/resources/ResourceAppBadges';
 import { getAppsUsingResource } from '@/lib/appEcosystem';
 import { localizeResource } from '@/lib/localizeResource';
 import { versionLabel } from '@/lib/format';
-import { hasLicenseBadge } from '@/lib/resourceMapping';
+import { hasLicenseBadge, isOpenAccess } from '@/lib/resourceMapping';
 
 export interface ResourceCardProps {
   resource: Resource;
@@ -186,7 +186,7 @@ export const ResourceCard: React.FC<ResourceCardProps> = ({
         <div className="flex flex-wrap items-center justify-between gap-2 mb-2.5">
           <div className="flex flex-wrap items-center gap-1.5">
             <ItqanBadge level={resource.itqan_level} size="sm" />
-            <AccessBadge level={resource.access_level} />
+            {(resource.access_level !== 'open' || isOpenAccess(resource)) && <AccessBadge level={resource.access_level} />}
             {hasLicenseBadge(resource) && <LicenseBadge licenseId={resource.license_id} spdx={resource.license_spdx} />}
           </div>
 

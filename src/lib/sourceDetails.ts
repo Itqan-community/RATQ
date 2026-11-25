@@ -1,5 +1,6 @@
 // Rows of the "technical details" card that come from the sources-sheet import. Pure: the view maps `key` to a
 // translated label (detail.src_<key>) and renders an undefined value as the localized "Not stated".
+import { languageName } from './format';
 import { pickText } from './localizeResource';
 import type { Resource } from '@/types';
 
@@ -13,7 +14,7 @@ export function sourceRows(r: Resource, en: boolean): SourceRow[] {
   return [
     row('domain', pickText(r.content_domain, en)),
     row('riwayah', pickText(r.riwayah, en)),
-    row('languages', r.source_languages?.join(', ')),
+    row('languages', r.source_languages?.map((l) => languageName(l, en)).join(en ? ', ' : '، ')),
     row('smallest_unit', pickText(r.smallest_unit, en)),
     row('query_units', pickText(r.query_units, en)),
     row('numbering', pickText(r.numbering_reference, en)),

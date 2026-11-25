@@ -30,7 +30,9 @@ describe('sourceRows', () => {
   });
   it('sourceRows_ListsJoinedAndUrlsFlagged', () => {
     const r = res({ sheet_id: 'S', source_languages: ['Arabic', 'English'], download_url: 'https://d.test' });
-    expect(val(r, 'languages')).toBe('Arabic, English');
+    expect(val(r, 'languages', true)).toBe('Arabic, English');
+    const ar = new Intl.DisplayNames('ar', { type: 'language' });
+    expect(val(r, 'languages')).toBe(`${ar.of('ar')}، ${ar.of('en')}`);
     expect(sourceRows(r, false).find((x) => x.key === 'download')?.url).toBe(true);
   });
 });

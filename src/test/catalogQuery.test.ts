@@ -222,7 +222,14 @@ describe('sheet facets', () => {
     expect(domainOptions([b], true)[0].label).toBe('تفسير'); // no English: never blank
   });
   it('languageOptions_AndRiwayah_CountResourcesAndSkipEmpty', () => {
-    expect(languageOptions(all, false)).toEqual([
+    const ar = new Intl.DisplayNames('ar', { type: 'language' });
+    expect(languageOptions(all, false)).toEqual(
+      [
+        { key: 'Arabic', label: ar.of('ar'), count: 2 },
+        { key: 'English', label: ar.of('en'), count: 1 },
+      ].sort((a, b) => a.label!.localeCompare(b.label!, 'ar')),
+    );
+    expect(languageOptions(all, true)).toEqual([
       { key: 'Arabic', label: 'Arabic', count: 2 },
       { key: 'English', label: 'English', count: 1 },
     ]);
